@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="schedule">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="version" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="conference">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice maxOccurs="unbounded">
+                <xs:element type="xs:string"  name="acronym" minOccurs="1" maxOccurs="1"/>
+                <xs:element type="xs:string"  name="title"   minOccurs="1" maxOccurs="1"/>
+                <xs:element type="xs:date"    name="start"   minOccurs="1" maxOccurs="1"/>
+                <xs:element type="xs:date"    name="end"     minOccurs="1" maxOccurs="1"/>
+                <xs:element type="xs:integer" name="days"    minOccurs="1" maxOccurs="1"/>
+                <xs:element name="timeslot_duration"         minOccurs="1" maxOccurs="1">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="([0-9]{1,2}:[0-9]{2})|([0-9]{1,2}:[0-9]{2}:[0-9]{1,2})"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:element>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="day" maxOccurs="unbounded" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="room" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType mixed="true">
+                  <xs:sequence>
+                    <xs:element name="event" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:choice maxOccurs="unbounded">
+                            <xs:element type="xs:dateTime" name="date" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="start"                   minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:pattern value="([0-2][0-9]:[0-5][0-9])|([0-2][0-9]:[0-5][0-9]:[0-5][0-9])"/>
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="duration">
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:pattern value="([0-9]{1,2}:[0-9]{2})|([0-9]{1,2}:[0-9]{2}:[0-9]{1,2})"/>
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="slug" minOccurs="0" maxOccurs="1"/>
+                            <xs:element type="xs:string" name="room" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="recording" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element type="xs:string" name="license"/>
+                                  <xs:element name="optout">
+                                    <xs:simpleType>
+                                      <xs:restriction base="xs:string">
+                                        <xs:enumeration value="true"/>
+                                        <xs:enumeration value="false"/>
+                                      </xs:restriction>
+                                    </xs:simpleType>
+                                  </xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="title" minOccurs="1" maxOccurs="1"/>
+                            <xs:element type="xs:string" name="subtitle"/>
+                            <xs:element type="xs:string" name="track"/>
+                            <xs:element type="xs:string" name="type"/>
+                            <xs:element type="xs:string" name="language"/>
+                            <xs:element type="xs:string" name="abstract"/>
+                            <xs:element type="xs:string" name="description"/>
+                            <xs:element name="persons">
+                              <xs:complexType mixed="true">
+                                <xs:sequence>
+                                  <xs:element name="person" maxOccurs="unbounded" minOccurs="0">
+                                    <xs:complexType>
+                                      <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                          <xs:attribute type="xs:positiveInteger" name="id" use="optional"/>
+                                        </xs:extension>
+                                      </xs:simpleContent>
+                                    </xs:complexType>
+                                  </xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                            <xs:element name="links">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element name="link" maxOccurs="unbounded" minOccurs="0">
+                                    <xs:complexType>
+                                      <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                          <xs:attribute type="xs:string" name="href" use="optional"/>
+                                        </xs:extension>
+                                      </xs:simpleContent>
+                                    </xs:complexType>
+                                  </xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                          </xs:choice>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+                        <xs:attribute name="guid" type="xs:string" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="name" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:date" name="date" use="optional"/>
+            <xs:attribute type="xs:dateTime" name="end" use="optional"/>
+            <xs:attribute type="xs:positiveInteger" name="index" use="optional"/>
+            <xs:attribute type="xs:dateTime" name="start" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
