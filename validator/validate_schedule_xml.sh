@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 xmllint_cmd=`command -v xmllint`
 curl_cmd=`command -v curl`
@@ -24,11 +24,12 @@ if [ ! -e "${xsd_file}" ]; then
   exit 1
 fi
 
-if [[ $1 == "http://"* || $1 == "https://"* ]]; then
-  $curl_cmd $1 2>/dev/null | $xmllint_cmd --noout --schema ${xsd_file} -
-else
-  $xmllint_cmd --noout --schema ${xsd_file} $1
-fi
+case "$1" in
+  http://*|https://*)
+    $curl_cmd $1 2>/dev/null | $xmllint_cmd --noout --schema ${xsd_file} -;;
+  *)
+    $xmllint_cmd --noout --schema ${xsd_file} $1;;
+esac
 
 xmllint_err=$?
 if [ 0 -eq $xmllint_err ]; then
