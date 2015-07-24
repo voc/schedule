@@ -21,13 +21,12 @@ Validates given schedule.xml against xsd file in same folder.
     * event attribute: id
 
   * mqtt fahrplan provider
-    * conference: conference
+    * conference: title
     * conference: acronym
     * event: room
-    * event: start
     * event: title
     * event: type
-    * event: id
-    * event: duration
+    * event: date
     * event: start
-    * event: end
+    * event: duration
+    * event attribute: id
