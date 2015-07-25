@@ -1,0 +1,15 @@
+%h1 Validate schedule.xml
+
+- if @errors && @errors.count > 0
+  %ul
+    - @errors.each do |error|
+      %li= error
+- elsif @errors && @errors.count == 0
+  %p
+    Submitted schedule.xml is valid!
+
+%form(method="post" action='/validate' )
+  %textarea{name: "schedulexml", rows: 40, cols: 100}= params[:schedulexml]
+  %br
+  %input(type='submit' value='Validate')
+  %a{href: XSD_URL} (schedule.xml.xsd)
