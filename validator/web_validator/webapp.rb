@@ -26,12 +26,28 @@ get '/' do
 end
 
 post '/validate' do
+  if params[:schedulexml] =~ /\Ahttp/
+    params[:schedulexml] = get_schedule(params[:schedulexml])
+  end
+
   @errors = validate_xml(params[:schedulexml], settings.xsd)
 
   haml :index
 end
 
 helpers do
+  def get_schedule(url)
+    uri  = URI.parse(url)
+    http = Net::HTTP.new(uri.host, uri.port)
+    if uri.scheme == 'https'
+      http.use_ssl = true
+    end
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response = http.request(request)
+
+    response.body
+  end
+
   def validate_xml(xml, xsd)
     doc = Nokogiri::XML(xml)
 
