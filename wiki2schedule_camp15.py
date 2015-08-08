@@ -7,6 +7,7 @@ import dateutil.parser
 from datetime import datetime
 import pytz
 import os
+import sys
 
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
@@ -15,6 +16,10 @@ de_tz = pytz.timezone('Europe/Amsterdam')
 import voc.tools
 
 output_dir = "/srv/www/schedule/camp15"
+
+if len(sys.argv) == 2:
+    output_dir = sys.argv[1]
+
 if not os.path.exists(output_dir):
     os.mkdir(output_dir) 
 os.chdir(output_dir)
