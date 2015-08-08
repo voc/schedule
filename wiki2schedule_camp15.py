@@ -109,6 +109,7 @@ def main():
         room = ''
         workshop_room_session = False
         # TODO can one Event take place in multiple rooms? 
+        # WORKAROND If that is the case just pick the first one
         if len(event['Has session location']) == 1:
             #print event['Has session location']
             room = event['Has session location'][0]['fulltext'].split(':', 1)[1]
@@ -117,7 +118,8 @@ def main():
         elif len(event['Has session location']) == 0:
             print "  has no room yet"
         else:
-            raise "  has multiple rooms ???"
+            print "WARNING: has multiple rooms ???, just picking the first one…"
+            event['Has session location'] = event['Has session location'][0]
         
         session = sessions[session_wiki_name]['printouts'];
         session['Has title'] = [session_wiki_name.split(':', 2)[1]]
