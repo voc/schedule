@@ -7,6 +7,7 @@ import dateutil.parser
 from datetime import datetime
 import pytz
 import os
+import sys
 
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
@@ -14,7 +15,11 @@ de_tz = pytz.timezone('Europe/Amsterdam')
 # some functions used in multiple files of this collection
 import voc.tools
 
-output_dir = "31C3"
+output_dir = "/srv/www/schedule/camp15"
+
+if len(sys.argv) == 2:
+    output_dir = sys.argv[1]
+
 if not os.path.exists(output_dir):
     os.mkdir(output_dir) 
 os.chdir(output_dir)
@@ -23,7 +28,7 @@ os.chdir(output_dir)
 def main():
     print "Requesting sessions"
     sessions_r = requests.get(
-        'https://events.ccc.de/congress/2014/wiki/index.php?title=Special:Ask', 
+        'https://events.ccc.de/camp/2015/wiki/index.php?title=Special:Ask', 
         params=(
             ('q', '[[Category:Session]]'),
             ('po', "\r\n".join([
@@ -41,7 +46,7 @@ def main():
     
     print "Requesting events"
     events_r = requests.get(
-        'https://events.ccc.de/congress/2014/wiki/index.php?title=Special:Ask', 
+        'https://events.ccc.de/camp/2015/wiki/index.php?title=Special:Ask', 
         params=(
             ('q', '[[Has object type::Event]]'),
             ('po', "\r\n".join([
@@ -59,7 +64,7 @@ def main():
     
     print "Requesting schedule"
     schedule_r = requests.get(
-        'https://events.ccc.de/congress/2014/Fahrplan/schedule.json', 
+        'https://events.ccc.de/camp/2015/Fahrplan/schedule.json', 
         verify=False #'cacert.pem'
     )
     
@@ -104,6 +109,7 @@ def main():
         room = ''
         workshop_room_session = False
         # TODO can one Event take place in multiple rooms? 
+        # WORKAROND If that is the case just pick the first one
         if len(event['Has session location']) == 1:
             #print event['Has session location']
             room = event['Has session location'][0]['fulltext'].split(':', 1)[1]
@@ -112,7 +118,8 @@ def main():
         elif len(event['Has session location']) == 0:
             print "  has no room yet"
         else:
-            raise "  has multiple rooms ???"
+            print "WARNING: has multiple rooms ???, just picking the first one…"
+            event['Has session location'] = event['Has session location'][0]
         
         session = sessions[session_wiki_name]['printouts'];
         session['Has title'] = [session_wiki_name.split(':', 2)[1]]
@@ -126,7 +133,8 @@ def main():
         #print json.dumps(combined, indent=4)    
         
         out[event_wiki_name] = combined
-        if workshop_room_session and day_s is not None and event['Has duration']:
+        #if workshop_room_session and day_s is not None and event['Has duration']:
+        if day_s is not None and event['Has duration']:
             '''
             if day_s not in schedule:
                 schedule[day_s] = dict()
@@ -248,5 +256,5 @@ if __name__ == '__main__':
 with open("_sos_ids.json", "w") as fp:
     json.dump(voc.tools.sos_ids, fp, indent=4)
     
-#os.system("git add *.json")
-#os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
+os.system("git add *.json *.xml")
+os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
