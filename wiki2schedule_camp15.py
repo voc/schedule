@@ -15,6 +15,9 @@ de_tz = pytz.timezone('Europe/Amsterdam')
 # some functions used in multiple files of this collection
 import voc.tools
 
+wiki_url = 'https://events.ccc.de/camp/2015/wiki'
+main_schedule_url = 'https://events.ccc.de/camp/2015/Fahrplan/schedule.json'
+schedule2_url = 'https://frab.camp.berlin.ccc.de/en/ber15/public/schedule.json'
 output_dir = "/srv/www/schedule/camp15"
 
 if len(sys.argv) == 2:
@@ -25,72 +28,8 @@ if not os.path.exists(output_dir):
 os.chdir(output_dir)
 
 
-def main():
-    print "Requesting sessions"
-    sessions_r = requests.get(
-        'https://events.ccc.de/camp/2015/wiki/index.php?title=Special:Ask', 
-        params=(
-            ('q', '[[Category:Session]]'),
-            ('po', "\r\n".join([
-                '?Has description',
-                '?Has session type', 
-                '?Held in language', 
-                '?Is organized by', 
-                '?Has website'])
-            ),
-            ('p[format]', 'json'),
-            ('p[limit]', 500),
-        ),
-        verify=False #'cacert.pem'
-    )
-    
-    print "Requesting events"
-    events_r = requests.get(
-        'https://events.ccc.de/camp/2015/wiki/index.php?title=Special:Ask', 
-        params=(
-            ('q', '[[Has object type::Event]]'),
-            ('po', "\r\n".join([
-                '?Has subtitle',
-                '?Has start time', '?Has end time', '?Has duration',
-                '?Has session location', 
-                '?Has event track',
-                '?Has color'])
-            ),
-            ('p[format]', 'json'),
-            ('p[limit]', 500),
-        ),
-        verify=False #'cacert.pem'
-    )
-    
-    print "Requesting schedule"
-    schedule_r = requests.get(
-        'https://events.ccc.de/camp/2015/Fahrplan/schedule.json', 
-        verify=False #'cacert.pem'
-    )
-    
-    # this more complex way instead of sessions_r.json()['results'] is necessary 
-    # to maintain the same order as in the input file
-    sessions = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(sessions_r.text)['results']
-    events = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(events_r.text)['results']
-    full_schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
-    
-    workshop_schedule = voc.tools.copy_base_structure(full_schedule, 5);
-    
-    for day in workshop_schedule["schedule"]["conference"]["days"]:
-        days.append({
-            'index' : day['index'],
-            'data' : day['date'],
-            'start': dateutil.parser.parse(day['day_start']),
-            'end': dateutil.parser.parse(day['day_end']),
-        })
-    
-    #print json.dumps(workshop_schedule, indent=2)
-    #print json.dumps(days, indent=2);
-    
-    print "Processing" 
-    
-    out = {}
-    halfnarp_out = []
+def process_wiki_events(events, sessions):
+    global out, halfnarp_out, full_schedule, workshop_schedule
     
     for event_wiki_name, event_r in events.iteritems():
         print event_wiki_name
@@ -199,8 +138,109 @@ def main():
                 ("abstract", event_n['abstract']),
                 ("speakers", ", ".join([p['full_public_name'] for p in event_n['persons']])),
             ]))
-            
+
+def add_events_from_frab_schedule(other_schedule):
+    
+    for day in other_schedule["schedule"]["conference"]["days"]:
+        if day["date"] != full_schedule["schedule"]["conference"]["days"][day["index"]]["date"]:
+            print("the other schedule's days have to be the same like primary schedule")
+            return False
         
+        for room in day["rooms"]:
+            full_schedule["schedule"]["conference"]["days"][day["index"]]["rooms"][room] = day["rooms"][room]
+        
+    
+    return
+
+def main():
+    global wiki_url
+    
+    print "Requesting sessions"
+    sessions_r = requests.get(
+        wiki_url + '/index.php?title=Special:Ask', 
+        params=(
+            ('q', '[[Category:Session]]'),
+            ('po', "\r\n".join([
+                '?Has description',
+                '?Has session type', 
+                '?Held in language', 
+                '?Is organized by', 
+                '?Has website'])
+            ),
+            ('p[format]', 'json'),
+            ('p[limit]', 500),
+        ),
+        verify=False #'cacert.pem'
+    )
+    print sessions_r.text
+    
+    print "Requesting events"
+    events_r = requests.get(
+        wiki_url + '/index.php?title=Special:Ask', 
+        params=(
+            ('q', '[[Has object type::Event]]'),
+            ('po', "\r\n".join([
+                '?Has subtitle',
+                '?Has start time', '?Has end time', '?Has duration',
+                '?Has session location', 
+                '?Has event track',
+                '?Has color'])
+            ),
+            ('p[format]', 'json'),
+            ('p[limit]', 500),
+        ),
+        verify=False #'cacert.pem'
+    )
+    
+    print "Requesting schedule"
+    schedule_r = requests.get(
+        main_schedule_url, 
+        verify=False #'cacert.pem'
+    )
+    
+    print "Requesting schedule from second frab" # , e.g. BER or Sendezentrum
+    schedule2_r = requests.get(
+        schedule2_url, 
+        verify=False #'cacert.pem'
+    )
+    
+    
+    global full_schedule, workshop_schedule
+        
+    # this more complex way instead of sessions_r.json()['results'] is necessary 
+    # to maintain the same order as in the input file
+    sessions = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(sessions_r.text)['results']
+    events = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(events_r.text)['results']
+    full_schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
+    schedule2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule2_r.text)
+    
+    workshop_schedule = voc.tools.copy_base_structure(full_schedule, 5);
+    
+    # copy header for workshop schedule.xml/json from main frab schedule
+    for day in workshop_schedule["schedule"]["conference"]["days"]:
+        days.append({
+            'index' : day['index'],
+            'data' : day['date'],
+            'start': dateutil.parser.parse(day['day_start']),
+            'end': dateutil.parser.parse(day['day_end']),
+        })
+    
+    #print json.dumps(workshop_schedule, indent=2)
+    #print json.dumps(days, indent=2);
+    
+    print "Processing" 
+    
+    global out, halfnarp_out 
+    out = {}
+    halfnarp_out = []
+
+    # add frab events from schedule2 to full_schedule
+    add_events_from_frab_schedule(schedule2)
+    
+    # fill full_schedule, out and halfnarp_out
+    process_wiki_events(events, sessions)
+    
+
     #print json.dumps(workshop_schedule, indent=2)
     
     with open("sessions_complete.json", "w") as fp:
@@ -256,5 +296,5 @@ if __name__ == '__main__':
 with open("_sos_ids.json", "w") as fp:
     json.dump(voc.tools.sos_ids, fp, indent=4)
     
-os.system("git add *.json *.xml")
-os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
+#os.system("git add *.json *.xml")
+#os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")

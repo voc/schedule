@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 sos_ids = {}
-next_id = 100
+next_id = 1000
 
 def set_base_id(value):
     global next_id
