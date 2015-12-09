@@ -67,7 +67,9 @@ def _set_attrib(tag, k, v):
 # TODO:
 #  * check links conversion
 #  * ' vs " in xml
+#  * conference acronym in xml but not in json
 #  * logo is in json but not in xml
+#  * recording license information in xml but not in json
 
 def dict_to_schedule_xml(d):
     root_node = None
@@ -129,7 +131,13 @@ def dict_to_schedule_xml(d):
                     # different notation for conference length in days
                     elif parent == 'conference' and k == 'daysCount':
                         k = 'days'
-                    
+                    # special handling for do_not_record flag
+                    elif k == 'do_not_record':
+                        k = 'recording'
+                        # not in schedule.json: license information for an event
+                        v = {'license': '', 
+                             'optout': ( 'true' if v else 'false')}
+
                     if isinstance(v, list):
                         for element in v:
                             _to_etree(element, ET.SubElement(node_, k), k)
