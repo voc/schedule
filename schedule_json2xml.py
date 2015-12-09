@@ -19,7 +19,7 @@ for opt, arg in options:
     if opt in ('-i', '--in'):
         input_file = arg
         if output_file is None:
-            output_file = os.path.splitext(input_file)[0]
+            output_file = os.path.splitext(input_file)[0] + ".xml"
     if opt in ('-o', '--out'):
         output_file = arg
 
