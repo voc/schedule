@@ -112,7 +112,9 @@ def dict_to_schedule_xml(d):
                     node_ = node
 
                     if parent == 'room':
-                        node.set('name', k)
+                        # create room tag for each instance of a room name
+                        node_ = ET.SubElement(node, 'room')
+                        node_.set('name', k)
                         k = 'event'
                         
                     if k == 'days':
@@ -141,6 +143,9 @@ def dict_to_schedule_xml(d):
                     if isinstance(v, list):
                         for element in v:
                             _to_etree(element, ET.SubElement(node_, k), k)
+                     # don't single empty room tag, as we have to create one for each room, see above
+                    elif parent == 'day' and k == 'room':
+                        _to_etree(v, node_, k)
                     else:
                         _to_etree(v, ET.SubElement(node_, k), k)
         else: assert d == 'invalid type'
