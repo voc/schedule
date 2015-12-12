@@ -86,6 +86,7 @@ def dict_to_schedule_xml(d):
             # count variable is used to check how many items actually end as elements 
             # (as they are mapped to an attribute)
             count = len(d)
+            recording_license = ''
             for k,v in d.items():
                 if parent == 'day':
                     if k[:4] == 'day_':
@@ -137,11 +138,16 @@ def dict_to_schedule_xml(d):
                     # different notation for conference length in days
                     elif parent == 'conference' and k == 'daysCount':
                         k = 'days'
-                    # special handling for do_not_record flag
+                    # special handling for recoding_licence and do_not_record flag
+                    elif k == 'recording_license':
+                        # store value for next loop iteration 
+                        recording_license = v
+                        # skip forward to next loop iteration
+                        continue       
                     elif k == 'do_not_record':
                         k = 'recording'
                         # not in schedule.json: license information for an event
-                        v = {'license': '', 
+                        v = {'license': recording_license, 
                              'optout': ( 'true' if v else 'false')}
 
                     if isinstance(v, list):
