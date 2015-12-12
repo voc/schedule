@@ -9,6 +9,10 @@ import pytz
 import os
 import sys
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
 
