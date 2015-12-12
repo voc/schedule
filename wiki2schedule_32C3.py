@@ -112,8 +112,8 @@ def process_wiki_events(events, sessions):
                 ('description', "\n".join(session['Has description'])),
                 ('persons', [ OrderedDict([
                     ('id', 0),
-                    ('full_public_name', p['fulltext'].split(':', 1)[1]),
                     ('url', p['fullurl']),
+                    ('public_name', p['fulltext'].split(':', 1)[1]), # must be last element so that transformation to xml works 
                 ]) for p in session['Is organized by'] ]),
                 ('links', session['Has website'] + [session['fullurl']])             
             ])
@@ -138,7 +138,7 @@ def process_wiki_events(events, sessions):
                 ("duration", duration*60),
                 ("title", event_n['title']),
                 ("abstract", event_n['abstract']),
-                ("speakers", ", ".join([p['full_public_name'] for p in event_n['persons']])),
+                ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
             ]))
 
 def add_events_from_frab_schedule(other_schedule):

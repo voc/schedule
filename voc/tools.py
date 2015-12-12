@@ -83,6 +83,8 @@ def dict_to_schedule_xml(d):
         elif isinstance(d, int):
             node.text = str(d)
         elif (isinstance(d, dict) or isinstance(d, OrderedDict)):
+            # count variable is used to check how many items actually end as elements 
+            # (as they are mapped to an attribute)
             count = len(d)
             for k,v in d.items():
                 if parent == 'day':
@@ -96,9 +98,11 @@ def dict_to_schedule_xml(d):
                 if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (basestring, int))):
                     _set_attrib(node, k, v)
                     count -= 1
-                elif k == 'url' and parent == 'link':
+                elif k == 'url':
                     _set_attrib(node, 'href', v)
                     count -= 1
+                # if all the previous items got mapped to an attribute, drop additional element name
+                # and write value as ctext
                 elif count == 1 and isinstance(v, basestring):
                     node.text = v
                 # elif k.startswith('#'):
