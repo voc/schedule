@@ -35,6 +35,22 @@ if not os.path.exists(output_dir):
 os.chdir(output_dir)
 
 
+def get_room_id(room_name):
+    room_map = {
+        'Hall 13':  1013,
+        'Hall 14':  1014,
+        'Hall A.1': 1111,
+        'Hall A.2': 1112,
+        'Hall B':   1120,
+        'Hall C.1': 1131,
+        'Hall C.2': 1132,
+        'Hall C.3': 1133,
+        'Hall C.4': 1134,
+        'Hall F':   1230,
+    }
+    return room_map[room_name]
+
+
 def process_wiki_events(events, sessions):
     global out, halfnarp_out, full_schedule, workshop_schedule
     
@@ -122,28 +138,30 @@ def process_wiki_events(events, sessions):
                 ('links', session['Has website'] + [session['fullurl']])             
             ])
             
-            wsdr = workshop_schedule["schedule"]["conference"]["days"][day]["rooms"]
-            if room not in wsdr:
-                wsdr[room] = list();
-            wsdr[room].append(event_n);
             
             fsdr = full_schedule["schedule"]["conference"]["days"][day]["rooms"]
             if room not in fsdr:
                 fsdr[room] = list();
             fsdr[room].append(event_n);
             
-            halfnarp_out.append(OrderedDict([
-                ("event_id", event_n['id']),
-                ("track_id", 10),
-                ("track_name", "Session"),
-                ("room_id", 0),
-                ("room_name", event_n['room']),
-                ("start_time", event_n['date']),
-                ("duration", duration*60),
-                ("title", event_n['title']),
-                ("abstract", event_n['abstract']),
-                ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
-            ]))
+            if workshop_room_session:
+                wsdr = workshop_schedule["schedule"]["conference"]["days"][day]["rooms"]
+                if room not in wsdr:
+                    wsdr[room] = list();
+                wsdr[room].append(event_n);
+            
+                halfnarp_out.append(OrderedDict([
+                    ("event_id", event_n['id']),
+                    ("track_id", 10),
+                    ("track_name", "Session"),
+                    ("room_id", get_room_id(event_n['room'])),
+                    ("room_name", event_n['room']),
+                    ("start_time", event_n['date']),
+                    ("duration", duration*60),
+                    ("title", event_n['title']),
+                    ("abstract", event_n['description']),
+                    ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
+                ]))
 
 def add_events_from_frab_schedule(other_schedule):
     
