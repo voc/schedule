@@ -24,7 +24,7 @@ wiki_url = 'https://events.ccc.de/congress/2015/wiki'
 main_schedule_url = 'https://events.ccc.de/congress/2015/Fahrplan/schedule.json'
 schedule2_url = 'https://frab.sendegate.de/de/32c3/public/schedule.json'
 output_dir = "/srv/www/schedule/32C3"
-#output_dir = "./32C3"
+# output_dir = "./32C3"
 
 
 if len(sys.argv) == 2:
