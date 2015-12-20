@@ -83,7 +83,16 @@ def process_wiki_events(events, sessions):
             print "WARNING: has multiple rooms ???, just picking the first one…"
             event['Has session location'] = event['Has session location'][0]
         
-        session = sessions[session_wiki_name]['printouts'];
+        try:
+            wiki_session = sessions[session_wiki_name]
+        except KeyError as error:
+            continue
+        
+        # print ""
+        # print json.dumps(sessions, indent=4)
+        # print ""
+        # print json.dumps(wiki_session, indent=4)
+        session = wiki_session['printouts'];
         session['Has title'] = [session_wiki_name.split(':', 2)[1]]
         session['fullurl'] = sessions[session_wiki_name]['fullurl']
         
@@ -235,7 +244,11 @@ def main():
     sessions = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(sessions_r.text)['results']
     events = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(events_r.text)['results']
     full_schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
-    schedule2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule2_r.text)
+    try:
+        schedule2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule2_r.text)
+    except ValueError as error:
+        schedule2 = {'schedule': {'conference': {'days': []}}}
+    
     
     workshop_schedule = voc.tools.copy_base_structure(full_schedule, 5);
     
