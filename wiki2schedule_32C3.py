@@ -134,7 +134,7 @@ def process_wiki_events(events, sessions):
                 ('slug', ''),
                 ('title', session['Has title'][0]),
                 ('subtitle', "\n".join(event['Has subtitle']) ),
-                ('track', 'self orgnaized sessions'),
+                ('track', 'self organized sessions'),
                 ('type', " ".join(session['Has session type']).lower()),
                 ('language', lang ),
                 ('abstract', ''),

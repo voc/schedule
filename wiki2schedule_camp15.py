@@ -103,7 +103,7 @@ def process_wiki_events(events, sessions):
                 #('slug', '31c3_-_6561_-_en_-_saal_1_-_201412271100_-_31c3_opening_event_-_erdgeist_-_geraldine_de_bastion',
                 ('title', session['Has title'][0]),
                 ('subtitle', "\n".join(event['Has subtitle']) ),
-                ('track', 'self orgnaized sessions'),
+                ('track', 'self organized sessions'),
                 ('type', " ".join(session['Has session type']).lower()),
                 ('language', lang ),
                 ('abstract', ''),
