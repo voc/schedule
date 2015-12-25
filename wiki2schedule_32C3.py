@@ -317,7 +317,8 @@ def get_day(start_time):
         if day['start'] > start_time < day['end']:
             return day['index']
     
-    return '0'
+    print("  illegal start time:" + start_time.isoformat())   
+    return None
 
 def first(x):
     if len(x) == 0:
