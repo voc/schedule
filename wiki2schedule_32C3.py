@@ -65,7 +65,9 @@ def process_wiki_events(events, sessions):
             print "  has no start time"
             day_s = None
         else:
-            start_time = de_tz.localize(datetime.fromtimestamp(int(event['Has start time'][0])))
+            time_stamp = event['Has start time'][0]
+            date_time = datetime.fromtimestamp(int(time_stamp))
+            start_time = de_tz.localize(date_time)
             day_s = get_day(start_time)
 
         room = ''
