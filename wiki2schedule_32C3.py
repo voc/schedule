@@ -151,6 +151,14 @@ def process_wiki_events(events, sessions):
             fsdr = full_schedule["schedule"]["conference"]["days"][day]["rooms"]
             if room not in fsdr:
                 fsdr[room] = list();
+
+            # Break if conference day date and event date do not match
+            conference_day_date = workshop_schedule["schedule"]["conference"]["days"][day]["date"]
+            event_n_date = event_n.get('date')
+            if conference_day_date not in event_n_date:
+                raise Exception("Current conference day {0} does not match current event {1} with date {2}."
+                    .format(conference_day_date, event_n["id"], event_n_date))
+
             fsdr[room].append(event_n);
             
             if workshop_room_session:
