@@ -16,6 +16,7 @@ sys.setdefaultencoding('utf-8')
 
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
+local = False
 
 # some functions used in multiple files of this collection
 import voc.tools
@@ -36,6 +37,7 @@ if not os.path.exists(output_dir):
         os.mkdir(output_dir) 
     else:
         output_dir = secondary_output_dir
+        local = True
 os.chdir(output_dir)
 
 
@@ -377,6 +379,7 @@ if __name__ == '__main__':
 #write sos_ids to disk
 with open("_sos_ids.json", "w") as fp:
     json.dump(voc.tools.sos_ids, fp, indent=4)
-    
-#os.system("git add *.json *.xml")
-#os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
+
+if not local:  
+    os.system("git add *.json *.xml")
+    os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
