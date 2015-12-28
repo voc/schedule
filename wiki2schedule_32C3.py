@@ -278,10 +278,7 @@ def main():
     sessions = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(sessions_r.text)['results']
     events = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(events_r.text)['results']
     full_schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
-    try:
-        schedule2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule2_r.text)
-    except ValueError as error:
-        schedule2 = {'schedule': {'conference': {'days': []}}}
+    schedule2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule2_r.text)
     
     
     workshop_schedule = voc.tools.copy_base_structure(full_schedule, 5);
@@ -353,7 +350,7 @@ def get_day(start_time):
             # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'].strftime("%s"), start_time.strftime("%s"), day['end'].strftime("%s"))
             return day['index']
     
-    print("  illegal start time:" + start_time.isoformat())   
+    print("  illegal start time: " + start_time.isoformat())   
     return None
 
 def first(x):
