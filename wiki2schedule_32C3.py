@@ -146,12 +146,20 @@ def process_wiki_events(events, sessions):
                 ]) for p in session['Is organized by'] ]),
                 ('links', session['Has website'] + [session['fullurl']])             
             ])
-            
+
+            # Break if conference day date and event date do not match
+            conference_day_start = dateutil.parser.parse(workshop_schedule["schedule"]["conference"]["days"][day]["day_start"])
+            conference_day_end = dateutil.parser.parse(workshop_schedule["schedule"]["conference"]["days"][day]["day_end"])
+            event_n_date = dateutil.parser.parse(event_n.get('date'))
+            if not conference_day_start <= event_n_date < conference_day_end:
+                raise Exception("Current conference day from {0} to {1} does not match current event {2} with date {3}."
+                    .format(conference_day_start, conference_day_end, event_n["id"], event_n_date))
             
             fsdr = full_schedule["schedule"]["conference"]["days"][day]["rooms"]
             if room not in fsdr:
                 fsdr[room] = list();
             fsdr[room].append(event_n);
+
             
             if workshop_room_session:
                 wsdr = workshop_schedule["schedule"]["conference"]["days"][day]["rooms"]
