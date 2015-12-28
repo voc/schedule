@@ -208,50 +208,51 @@ def add_events_from_frab_schedule(other_schedule):
     
     return
 
+def wiki_request(q, po):
+    r = None
+    
+    # Retry up to three times
+    for _ in range(3):
+        r = requests.get(
+            wiki_url + '/index.php?title=Special:Ask', 
+            params=(
+                ('q', q),
+                ('po', "\r\n".join(po)
+                ),
+                ('p[format]', 'json'),
+                ('p[limit]', 500),
+            ),
+            verify=False #'cacert.pem'
+        )
+        if r.ok is True:
+            break
+        print(".")
+        
+    
+    if r.ok is False:
+        raise Exception("   Requesting failed, HTTP {0}.".format(r.status_code))
+    return r
+
 def main():
     global wiki_url
     
     print "Requesting wiki sessions"
-    sessions_r = requests.get(
-        wiki_url + '/index.php?title=Special:Ask', 
-        params=(
-            ('q', '[[Category:Session]]'),
-            ('po', "\r\n".join([
-                '?Has description',
-                '?Has session type', 
-                '?Held in language', 
-                '?Is organized by', 
-                '?Has website'])
-            ),
-            ('p[format]', 'json'),
-            ('p[limit]', 500),
-        ),
-        verify=False #'cacert.pem'
-    )
+    sessions_r = wiki_request('[[Category:Session]]', [
+        '?Has description',
+        '?Has session type', 
+        '?Held in language', 
+        '?Is organized by', 
+        '?Has website'
+    ])
     
-    if sessions_r.ok is False:
-        raise Exception("Requesting wiki sessions failed, HTTP {0}.".format(sessions_r.status_code))
-
     print "Requesting wiki events"
-    events_r = requests.get(
-        wiki_url + '/index.php?title=Special:Ask', 
-        params=(
-            ('q', '[[Has object type::Event]]'),
-            ('po', "\r\n".join([
-                '?Has subtitle',
-                '?Has start time', '?Has end time', '?Has duration',
-                '?Has session location', 
-                '?Has event track',
-                '?Has color'])
-            ),
-            ('p[format]', 'json'),
-            ('p[limit]', 500),
-        ),
-        verify=False #'cacert.pem'
-    )
-    
-    if events_r.ok is False:
-        raise Exception("Requesting wiki events failed, HTTP {0}.".format(events_r.status_code))
+    events_r = wiki_request('[[Has object type::Event]]', [
+        '?Has subtitle',
+        '?Has start time', '?Has end time', '?Has duration',
+        '?Has session location', 
+        '?Has event track',
+        '?Has color'
+    ])
 
     print "Requesting main schedule"
     schedule_r = requests.get(
@@ -260,7 +261,7 @@ def main():
     )
     
     if schedule_r.ok is False:
-        raise Exception("Requesting main schedule failed, HTTP {0}.".format(schedule_r.status_code))
+        raise Exception("  Requesting main schedule failed, HTTP {0}.".format(schedule_r.status_code))
 
     print "Requesting schedule from second frab" # , e.g. BER or Sendezentrum
     schedule2_r = requests.get(
@@ -269,7 +270,7 @@ def main():
     )
     
     if schedule2_r.ok is False:
-        raise Exception("Requesting schedule from second frab failed, HTTP {0}.".format(schedule2_r.status_code))
+        raise Exception("  Requesting schedule from second frab failed, HTTP {0}.".format(schedule2_r.status_code))
 
     global full_schedule, workshop_schedule
         
