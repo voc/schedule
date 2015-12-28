@@ -188,7 +188,7 @@ def add_events_from_frab_schedule(other_schedule):
 def main():
     global wiki_url
     
-    print "Requesting sessions"
+    print "Requesting wiki sessions"
     sessions_r = requests.get(
         wiki_url + '/index.php?title=Special:Ask', 
         params=(
@@ -206,7 +206,10 @@ def main():
         verify=False #'cacert.pem'
     )
     
-    print "Requesting events"
+    if sessions_r.ok is False:
+        raise Exception("Requesting wiki sessions failed, HTTP {0}.".format(sessions_r.status_code))
+
+    print "Requesting wiki events"
     events_r = requests.get(
         wiki_url + '/index.php?title=Special:Ask', 
         params=(
@@ -224,19 +227,27 @@ def main():
         verify=False #'cacert.pem'
     )
     
-    print "Requesting schedule"
+    if events_r.ok is False:
+        raise Exception("Requesting wiki events failed, HTTP {0}.".format(events_r.status_code))
+
+    print "Requesting main schedule"
     schedule_r = requests.get(
         main_schedule_url, 
         verify=False #'cacert.pem'
     )
     
+    if schedule_r.ok is False:
+        raise Exception("Requesting main schedule failed, HTTP {0}.".format(schedule_r.status_code))
+
     print "Requesting schedule from second frab" # , e.g. BER or Sendezentrum
     schedule2_r = requests.get(
         schedule2_url, 
         verify=False #'cacert.pem'
     )
     
-    
+    if schedule2_r.ok is False:
+        raise Exception("Requesting schedule from second frab failed, HTTP {0}.".format(schedule2_r.status_code))
+
     global full_schedule, workshop_schedule
         
     # this more complex way instead of sessions_r.json()['results'] is necessary 
