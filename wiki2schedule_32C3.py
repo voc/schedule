@@ -93,7 +93,11 @@ def process_wiki_events(events, sessions):
         # print ""
         # print json.dumps(wiki_session, indent=4)
         session = wiki_session['printouts'];
-        session['Has title'] = [session_wiki_name.split(':', 2)[1]]
+        try:
+            session['Has title'] = [session_wiki_name.split(':', 2)[1]]
+        except IndexError, e:
+            print "Skipping malformed session wiki name {0}.".format(session_wiki_name)
+            continue
         session['fullurl'] = sessions[session_wiki_name]['fullurl']
         
         # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
