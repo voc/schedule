@@ -8,6 +8,7 @@ from datetime import datetime
 import pytz
 import os
 import sys
+import traceback
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -53,6 +54,11 @@ def get_room_id(room_name):
     }
     return room_map[room_name]
 
+def remove_prefix(foo):
+    if ':' in foo:
+        return foo.split(':', 1)[1]
+    else:
+        return foo
 
 def process_wiki_events(events, sessions):
     global out, halfnarp_out, full_schedule, workshop_schedule
@@ -80,7 +86,7 @@ def process_wiki_events(events, sessions):
             # WORKAROND If that is the case just pick the first one
             if len(event['Has session location']) == 1:
                 #print event['Has session location']
-                room = event['Has session location'][0]['fulltext'].split(':', 1)[1]
+                room = remove_prefix(event['Has session location'][0]['fulltext'])
             
                 workshop_room_session = (event['Has session location'][0]['fulltext'].split(':', 1)[0] == 'Room')
             elif len(event['Has session location']) == 0:
@@ -100,6 +106,7 @@ def process_wiki_events(events, sessions):
             # print json.dumps(wiki_session, indent=4)
             session = wiki_session['printouts'];
             try:
+                # TODO: use remove_prefix()?
                 session['Has title'] = [session_wiki_name.split(':', 2)[1]]
             except IndexError, e:
                 print "Skipping malformed session wiki name {0}.".format(session_wiki_name)
@@ -152,7 +159,7 @@ def process_wiki_events(events, sessions):
                     ('persons', [ OrderedDict([
                         ('id', 0),
                         ('url', p['fullurl']),
-                        ('public_name', p['fulltext'].split(':', 1)[1]), # must be last element so that transformation to xml works 
+                        ('public_name', remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works 
                     ]) for p in session['Is organized by'] ]),
                     ('links', session['Has website'] + [session['fullurl']])             
                 ])
@@ -191,8 +198,9 @@ def process_wiki_events(events, sessions):
                     ]))
                 
         except:
-            print("  unexpected error: ", sys.exc_info()[0])
-            print(session)
+            print("  unexpected error: " + str(sys.exc_info()[0]))
+            traceback.print_exc()
+            print(json.dumps(event, indent=4))
             
 
 def add_events_from_frab_schedule(other_schedule):
@@ -236,7 +244,7 @@ def wiki_request(q, po):
 def main():
     global wiki_url
     
-    print "Requesting wiki sessions"
+    print("Requesting wiki sessions")
     sessions_r = wiki_request('[[Category:Session]]', [
         '?Has description',
         '?Has session type', 
@@ -245,7 +253,7 @@ def main():
         '?Has website'
     ])
     
-    print "Requesting wiki events"
+    print("Requesting wiki events")
     events_r = wiki_request('[[Has object type::Event]]', [
         '?Has subtitle',
         '?Has start time', '?Has end time', '?Has duration',
@@ -254,7 +262,7 @@ def main():
         '?Has color'
     ])
 
-    print "Requesting main schedule"
+    print("Requesting main schedule")
     schedule_r = requests.get(
         main_schedule_url, 
         verify=False #'cacert.pem'
@@ -263,7 +271,7 @@ def main():
     if schedule_r.ok is False:
         raise Exception("  Requesting main schedule failed, HTTP {0}.".format(schedule_r.status_code))
 
-    print "Requesting schedule from second frab" # , e.g. BER or Sendezentrum
+    print("Requesting schedule from second frab") # , e.g. BER or Sendezentrum
     schedule2_r = requests.get(
         schedule2_url, 
         verify=False #'cacert.pem'
@@ -271,6 +279,9 @@ def main():
     
     if schedule2_r.ok is False:
         raise Exception("  Requesting schedule from second frab failed, HTTP {0}.".format(schedule2_r.status_code))
+
+
+    print("Processing...")
 
     global full_schedule, workshop_schedule
         
@@ -332,7 +343,7 @@ def main():
         fp.write(voc.tools.dict_to_schedule_xml(full_schedule))   
 
     
-    print 'end'
+    print('end')
 
 
 if os.path.isfile("_sos_ids.json"):
