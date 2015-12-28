@@ -327,7 +327,9 @@ if os.path.isfile("_sos_ids.json"):
 
 def get_day(start_time):
     for day in days:
-        if day['start'] > start_time < day['end']:
+        if day['start'] <= start_time < day['end']:
+            # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'], start_time, day['end'])
+            # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'].strftime("%s"), start_time.strftime("%s"), day['end'].strftime("%s"))
             return day['index']
     
     print("  illegal start time:" + start_time.isoformat())   
