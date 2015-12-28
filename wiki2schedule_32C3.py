@@ -59,135 +59,141 @@ def process_wiki_events(events, sessions):
     
     for event_wiki_name, event_r in events.iteritems():
         print event_wiki_name
-        event = event_r['printouts']
-        temp = event_wiki_name.split('# ', 2);
-        session_wiki_name = temp[0]
-        guid = temp[1]
-        
-        if len(event['Has start time']) < 1:
-            print "  has no start time"
-            day_s = None
-        else:
-            time_stamp = event['Has start time'][0]
-            date_time = datetime.fromtimestamp(int(time_stamp))
-            start_time = de_tz.localize(date_time)
-            day_s = get_day(start_time)
-
-        room = ''
-        workshop_room_session = False
-        # TODO can one Event take place in multiple rooms? 
-        # WORKAROND If that is the case just pick the first one
-        if len(event['Has session location']) == 1:
-            #print event['Has session location']
-            room = event['Has session location'][0]['fulltext'].split(':', 1)[1]
-        
-            workshop_room_session = (event['Has session location'][0]['fulltext'].split(':', 1)[0] == 'Room')
-        elif len(event['Has session location']) == 0:
-            print "  has no room yet"
-        else:
-            print "WARNING: has multiple rooms ???, just picking the first one…"
-            event['Has session location'] = event['Has session location'][0]
-        
         try:
-            wiki_session = sessions[session_wiki_name]
-        except KeyError as error:
-            continue
-        
-        # print ""
-        # print json.dumps(sessions, indent=4)
-        # print ""
-        # print json.dumps(wiki_session, indent=4)
-        session = wiki_session['printouts'];
-        try:
-            session['Has title'] = [session_wiki_name.split(':', 2)[1]]
-        except IndexError, e:
-            print "Skipping malformed session wiki name {0}.".format(session_wiki_name)
-            continue
-        session['fullurl'] = sessions[session_wiki_name]['fullurl']
-        
-        # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
-        # This will only work if there are unique keys in each json string.
-        combined = dict(session.items() + event.items())
-        
-        
-        #print json.dumps(combined, indent=4)    
-        
-        out[event_wiki_name] = combined
-        #if workshop_room_session and day_s is not None and event['Has duration']:
-        if day_s is not None and event['Has duration']:
-            '''
-            if day_s not in schedule:
-                schedule[day_s] = dict()
-            if room not in schedule[day]:
-                schedule[day_s][room] = list()
-            schedule[day_s][room].append(combined)
-            '''
+            event = event_r['printouts']
+            temp = event_wiki_name.split('# ', 2);
+            session_wiki_name = temp[0]
+            guid = temp[1]
             
-            day = int(day_s)
-            duration = 0
-            if event['Has duration']:
-                duration = event['Has duration'][0];
-            lang = ''
-            if session['Held in language'] and len(session['Held in language']) > 0:
-                lang = str(session['Held in language'][0]).split(' - ', 1)[0]
+            if len(event['Has start time']) < 1:
+                print "  has no start time"
+                day_s = None
+            else:
+                time_stamp = event['Has start time'][0]
+                date_time = datetime.fromtimestamp(int(time_stamp))
+                start_time = de_tz.localize(date_time)
+                day_s = get_day(start_time)
+    
+            room = ''
+            workshop_room_session = False
+            # TODO can one Event take place in multiple rooms? 
+            # WORKAROND If that is the case just pick the first one
+            if len(event['Has session location']) == 1:
+                #print event['Has session location']
+                room = event['Has session location'][0]['fulltext'].split(':', 1)[1]
             
-            event_n = OrderedDict([
-                ('id', voc.tools.get_id(guid)),
-                ('guid', guid),
-                ('logo', None),
-                ('date', start_time.isoformat()),
-                ('start', start_time.strftime('%H:%M')),
-                #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
-                ('duration', '%d:%02d' % divmod(duration, 60) ),
-                ('room', room),
-                ('slug', ''),
-                ('title', session['Has title'][0]),
-                ('subtitle', "\n".join(event['Has subtitle']) ),
-                ('track', 'self organized sessions'),
-                ('type', " ".join(session['Has session type']).lower()),
-                ('language', lang ),
-                ('abstract', ''),
-                ('description', "\n".join(session['Has description'])),
-                ('persons', [ OrderedDict([
-                    ('id', 0),
-                    ('url', p['fullurl']),
-                    ('public_name', p['fulltext'].split(':', 1)[1]), # must be last element so that transformation to xml works 
-                ]) for p in session['Is organized by'] ]),
-                ('links', session['Has website'] + [session['fullurl']])             
-            ])
-
-            # Break if conference day date and event date do not match
-            conference_day_start = dateutil.parser.parse(workshop_schedule["schedule"]["conference"]["days"][day]["day_start"])
-            conference_day_end = dateutil.parser.parse(workshop_schedule["schedule"]["conference"]["days"][day]["day_end"])
-            event_n_date = dateutil.parser.parse(event_n.get('date'))
-            if not conference_day_start <= event_n_date < conference_day_end:
-                raise Exception("Current conference day from {0} to {1} does not match current event {2} with date {3}."
-                    .format(conference_day_start, conference_day_end, event_n["id"], event_n_date))
+                workshop_room_session = (event['Has session location'][0]['fulltext'].split(':', 1)[0] == 'Room')
+            elif len(event['Has session location']) == 0:
+                print "  has no room yet"
+            else:
+                print "WARNING: has multiple rooms ???, just picking the first one…"
+                event['Has session location'] = event['Has session location'][0]
             
-            fsdr = full_schedule["schedule"]["conference"]["days"][day]["rooms"]
-            if room not in fsdr:
-                fsdr[room] = list();
-            fsdr[room].append(event_n);
-
+            try:
+                wiki_session = sessions[session_wiki_name]
+            except KeyError as error:
+                continue
             
-            if workshop_room_session:
-                wsdr = workshop_schedule["schedule"]["conference"]["days"][day]["rooms"]
-                if room not in wsdr:
-                    wsdr[room] = list();
-                wsdr[room].append(event_n);
+            # print ""
+            # print json.dumps(sessions, indent=4)
+            # print ""
+            # print json.dumps(wiki_session, indent=4)
+            session = wiki_session['printouts'];
+            try:
+                session['Has title'] = [session_wiki_name.split(':', 2)[1]]
+            except IndexError, e:
+                print "Skipping malformed session wiki name {0}.".format(session_wiki_name)
+                continue
+            session['fullurl'] = sessions[session_wiki_name]['fullurl']
             
-                halfnarp_out.append(OrderedDict([
-                    ("event_id", event_n['id']),
-                    ("track_id", 10),
-                    ("track_name", "Session"),
-                    ("room_id", get_room_id(event_n['room'])),
-                    ("room_name", event_n['room']),
-                    ("start_time", event_n['date']),
-                    ("duration", duration*60),
-                    ("title", event_n['title']),
-                    ("abstract", event_n['description']),
-                    ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
-                ]))
+            # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
+            # This will only work if there are unique keys in each json string.
+            combined = dict(session.items() + event.items())
+            
+            
+            #print json.dumps(combined, indent=4)    
+            
+            out[event_wiki_name] = combined
+            #if workshop_room_session and day_s is not None and event['Has duration']:
+            if day_s is not None and event['Has duration']:
+                '''
+                if day_s not in schedule:
+                    schedule[day_s] = dict()
+                if room not in schedule[day]:
+                    schedule[day_s][room] = list()
+                schedule[day_s][room].append(combined)
+                '''
+                
+                day = int(day_s)
+                duration = 0
+                if event['Has duration']:
+                    duration = event['Has duration'][0];
+                lang = ''
+                if session['Held in language'] and len(session['Held in language']) > 0:
+                    lang = str(session['Held in language'][0]).split(' - ', 1)[0]
+                
+                event_n = OrderedDict([
+                    ('id', voc.tools.get_id(guid)),
+                    ('guid', guid),
+                    ('logo', None),
+                    ('date', start_time.isoformat()),
+                    ('start', start_time.strftime('%H:%M')),
+                    #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
+                    ('duration', '%d:%02d' % divmod(duration, 60) ),
+                    ('room', room),
+                    ('slug', ''),
+                    ('title', session['Has title'][0]),
+                    ('subtitle', "\n".join(event['Has subtitle']) ),
+                    ('track', 'self organized sessions'),
+                    ('type', " ".join(session['Has session type']).lower()),
+                    ('language', lang ),
+                    ('abstract', ''),
+                    ('description', "\n".join(session['Has description'])),
+                    ('persons', [ OrderedDict([
+                        ('id', 0),
+                        ('url', p['fullurl']),
+                        ('public_name', p['fulltext'].split(':', 1)[1]), # must be last element so that transformation to xml works 
+                    ]) for p in session['Is organized by'] ]),
+                    ('links', session['Has website'] + [session['fullurl']])             
+                ])
+    
+                # Break if conference day date and event date do not match
+                conference_day_start = dateutil.parser.parse(workshop_schedule["schedule"]["conference"]["days"][day]["day_start"])
+                conference_day_end = dateutil.parser.parse(workshop_schedule["schedule"]["conference"]["days"][day]["day_end"])
+                event_n_date = dateutil.parser.parse(event_n.get('date'))
+                if not conference_day_start <= event_n_date < conference_day_end:
+                    raise Exception("Current conference day from {0} to {1} does not match current event {2} with date {3}."
+                        .format(conference_day_start, conference_day_end, event_n["id"], event_n_date))
+                
+                fsdr = full_schedule["schedule"]["conference"]["days"][day]["rooms"]
+                if room not in fsdr:
+                    fsdr[room] = list();
+                fsdr[room].append(event_n);
+    
+                
+                if workshop_room_session:
+                    wsdr = workshop_schedule["schedule"]["conference"]["days"][day]["rooms"]
+                    if room not in wsdr:
+                        wsdr[room] = list()
+                    wsdr[room].append(event_n)
+                
+                    halfnarp_out.append(OrderedDict([
+                        ("event_id", event_n['id']),
+                        ("track_id", 10),
+                        ("track_name", "Session"),
+                        ("room_id", get_room_id(event_n['room'])),
+                        ("room_name", event_n['room']),
+                        ("start_time", event_n['date']),
+                        ("duration", duration*60),
+                        ("title", event_n['title']),
+                        ("abstract", event_n['description']),
+                        ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
+                    ]))
+                
+        except:
+            print("  unexpected error: ", sys.exc_info()[0])
+            print(session)
+            
 
 def add_events_from_frab_schedule(other_schedule):
     
