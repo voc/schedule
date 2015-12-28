@@ -53,8 +53,12 @@ def get_room_id(room_name):
         'Hall C.3': 1133,
         'Hall C.4': 1134,
         'Hall F':   1230,
+        'Lounge':   1090,
     }
-    return room_map[room_name]
+    if room_name in room_map:
+        return room_map[room_name]
+    else:
+        return 0;
 
 def remove_prefix(foo):
     if ':' in foo:
