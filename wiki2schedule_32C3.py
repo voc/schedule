@@ -24,7 +24,7 @@ import voc.tools
 
 wiki_url = 'https://events.ccc.de/congress/2015/wiki'
 main_schedule_url = 'https://events.ccc.de/congress/2015/Fahrplan/schedule.json'
-schedule2_url = 'https://frab.sendegate.de/de/32c3/public/schedule.json'
+schedule2_url = 'https://frab.das-sendezentrum.de/de/32c3/public/schedule.json'
 output_dir = "/srv/www/schedule/32C3"
 secondary_output_dir = "./32C3"
 
@@ -41,8 +41,12 @@ if not os.path.exists(output_dir):
 os.chdir(output_dir)
 
 room_map = OrderedDict([
-    ('Sendezentrum Buehne', 1050),
-    ('Podcaster Tisch', 1051),
+    ('Hall 1', 359),
+    ('Hall 2', 360),
+    ('Hall G', 361),
+    ('Hall 6', 362),    
+    ('B\u00fchne', 1050),
+    # ('Podcaster Tisch', 1051),
     ('Hall A.1', 1111),
     ('Hall A.2', 1112),
     ('Hall B',   1120),
