@@ -260,6 +260,24 @@ def schedule_to_halfnarp(schedule):
                     if len(duration) > 2:
                         raise "  duration with three colons!?"
                     
+                    text = ""
+                    # if event_n['abstract']: 
+                    #     text += event_n['abstract']
+                    
+                    if event_n['title'] == 'Lounge':
+                        track_name = 'Session'
+                        event_n['title'] = event_n['subtitle']
+                        event_n['persons'] = []
+                        text += event_n['description']
+                    
+                    elif track_name == 'self organized sessions':
+                        track_name = 'Session'
+                        text += event_n['subtitle'] + " \n"
+                        text += event_n['description'][:200]
+                    #if event_n['subtitle']:
+                    #    title += " - " + event_n['subtitle']
+                    
+                    
                     out.append(OrderedDict([
                         ("event_id", event_n['id']),
                         ("track_id", track_id),
@@ -269,7 +287,7 @@ def schedule_to_halfnarp(schedule):
                         ("start_time", event_n['date']),
                         ("duration", int(duration[0])*3600+int(duration[1])*60),
                         ("title", event_n['title']),
-                        ("abstract", event_n['description']),
+                        ("abstract", text),
                         ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
                     ]))
     return out
