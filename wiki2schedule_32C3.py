@@ -40,21 +40,25 @@ if not os.path.exists(output_dir):
         local = True
 os.chdir(output_dir)
 
+room_map = OrderedDict([
+    ('Sendezentrum Buehne', 1050),
+    ('Podcaster Tisch', 1051),
+    ('Hall A.1', 1111),
+    ('Hall A.2', 1112),
+    ('Hall B',   1120),
+    ('Hall C.1', 1131),
+    ('Hall C.2', 1132),
+    ('Hall C.3', 1133),
+    ('Hall C.4', 1134),
+    ('Hall F',   1230),
+    ('Hall 13',  1013),
+    ('Hall 14',  1014),
+    ('Lounge',   1090),
+    # TODO: Anti Error Lounge
+])
 
 def get_room_id(room_name):
-    room_map = {
-        'Hall 13':  1013,
-        'Hall 14':  1014,
-        'Hall A.1': 1111,
-        'Hall A.2': 1112,
-        'Hall B':   1120,
-        'Hall C.1': 1131,
-        'Hall C.2': 1132,
-        'Hall C.3': 1133,
-        'Hall C.4': 1134,
-        'Hall F':   1230,
-        'Lounge':   1090,
-    }
+
     if room_name in room_map:
         return room_map[room_name]
     else:
@@ -313,7 +317,7 @@ def main():
     #print json.dumps(workshop_schedule, indent=2)
     #print json.dumps(days, indent=2);
     
-    print "Processing" 
+    print "Combining data..." 
     
     global out, halfnarp_out 
     out = {}
@@ -321,6 +325,13 @@ def main():
 
     # add frab events from schedule2 to full_schedule
     add_events_from_frab_schedule(schedule2)
+    
+    # add rooms now, to they are in the correct order
+    for day in full_schedule["schedule"]["conference"]["days"]:
+        for key in room_map.keys():
+            if key not in day['rooms']:
+                day['rooms'][key] = list()
+    
     
     # fill full_schedule, out and halfnarp_out
     process_wiki_events(events, sessions)
@@ -387,3 +398,4 @@ with open("_sos_ids.json", "w") as fp:
 if not local:  
     os.system("git add *.json *.xml")
     os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
+    os.system("git push")
