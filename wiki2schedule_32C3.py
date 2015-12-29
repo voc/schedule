@@ -64,6 +64,24 @@ def get_room_id(room_name):
     else:
         return 0;
 
+track_map = {
+  # cat talks_32c3.json | jq -c '.[] | [.track_name, .track_id]' | sort | uniq 
+  "Art & Culture": 291,
+  "CCC": 300,
+  "Ethics, Society & Politics": 294,
+  "Failosophy": 299,
+  "Hardware & Making": 295,
+  "Science": 297,
+  "Security": 298,
+}
+
+def get_track_id(track_name):
+    if track_name in track_map:
+        return track_map[track_name]
+    else:
+        return 10;
+
+
 def remove_prefix(foo):
     if ':' in foo:
         return foo.split(':', 1)[1]
@@ -234,18 +252,22 @@ def schedule_to_halfnarp(schedule):
                 room_id = get_room_id(event_n['room'])
                 
                 if room_id != 0:
+                    
+                    track_id = get_track_id(event_n['track'])
+                    track_name = event_n['track']
+                    
                     duration = event_n['duration'].split(':')
                     if len(duration) > 2:
                         raise "  duration with three colons!?"
                     
                     out.append(OrderedDict([
                         ("event_id", event_n['id']),
-                        ("track_id", 10),
-                        ("track_name", "Session"),
+                        ("track_id", track_id),
+                        ("track_name", track_name),
                         ("room_id", room_id),
                         ("room_name", event_n['room']),
                         ("start_time", event_n['date']),
-                        ("duration", int(duration[0])*60+int(duration[1])),
+                        ("duration", int(duration[0])*3600+int(duration[1])*60),
                         ("title", event_n['title']),
                         ("abstract", event_n['description']),
                         ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
