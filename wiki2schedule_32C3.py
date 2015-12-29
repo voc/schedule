@@ -143,7 +143,7 @@ def process_wiki_events(events, sessions):
                     duration = event['Has duration'][0];
                 lang = ''
                 if session['Held in language'] and len(session['Held in language']) > 0:
-                    lang = str(session['Held in language'][0]).split(' - ', 1)[0]
+                    lang = session['Held in language'][0]['fulltext'].split(' - ', 1)[0]
                 
                 event_n = OrderedDict([
                     ('id', voc.tools.get_id(guid)),
