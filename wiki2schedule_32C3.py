@@ -226,6 +226,31 @@ def add_events_from_frab_schedule(other_schedule):
     
     return
 
+def schedule_to_halfnarp(schedule):
+    out = []
+    for day in schedule["schedule"]["conference"]["days"]:
+        for room in day['rooms']:
+            for event_n in day['rooms'][room]:
+                room_id = get_room_id(event_n['room'])
+                
+                if room_id != 0:
+                    duration = event_n['duration'].split(':')
+                    if len(duration) > 2:
+                        raise "  duration with three colons!?"
+                    
+                    out.append(OrderedDict([
+                        ("event_id", event_n['id']),
+                        ("track_id", 10),
+                        ("track_name", "Session"),
+                        ("room_id", room_id),
+                        ("room_name", event_n['room']),
+                        ("start_time", event_n['date']),
+                        ("duration", int(duration[0])*60+int(duration[1])),
+                        ("title", event_n['title']),
+                        ("abstract", event_n['description']),
+                        ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
+                    ]))
+    return out
 def wiki_request(q, po):
     r = None
     
@@ -358,6 +383,11 @@ def main():
     
     with open('everything.schedule.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(full_schedule))   
+
+    # TODO only main + second + workshops + lounge
+    with open('common.halfnarp.json', 'w') as fp:
+        json.dump(schedule_to_halfnarp(full_schedule), fp, indent=4)
+        
 
     
     print('end')
