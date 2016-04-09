@@ -75,7 +75,7 @@
       <xs:element type="attachments" name="attachments" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
-    <xs:attribute name="guid" type="xs:string" use="optional"/>
+    <xs:attribute name="guid" type="uuid" use="required"/>
   </xs:complexType>
 
   <xs:simpleType name="duration">
@@ -87,6 +87,12 @@
   <xs:simpleType name="start">
     <xs:restriction base="xs:string">
       <xs:pattern value="([0-2][0-9]:[0-5][0-9])|([0-2][0-9]:[0-5][0-9]:[0-5][0-9])"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="uuid">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"/>
     </xs:restriction>
   </xs:simpleType>
 
