@@ -62,6 +62,7 @@
       <xs:element type="start" name="start"/>
       <xs:element type="duration" name="duration"/>
 
+      <xs:element type="xs:string" name="logo" minOccurs="0"/>
       <xs:element type="persons" name="persons" minOccurs="0"/>
       <xs:element type="xs:string" name="language" minOccurs="0"/>
       <xs:element type="xs:string" name="abstract" minOccurs="1"/>
@@ -71,6 +72,7 @@
       <xs:element type="xs:string" name="subtitle" minOccurs="1"/>
       <xs:element type="xs:string" name="track" minOccurs="1"/>
       <xs:element type="links" name="links" minOccurs="0"/>
+      <xs:element type="attachments" name="attachments" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
     <xs:attribute name="guid" type="xs:string" use="optional"/>
@@ -112,6 +114,20 @@
   <xs:complexType name="links">
     <xs:sequence>
       <xs:element name="link" maxOccurs="unbounded" minOccurs="0">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute type="xs:string" name="href" use="optional"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="attachments">
+    <xs:sequence>
+      <xs:element name="attachment" maxOccurs="unbounded" minOccurs="0">
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="xs:string">
