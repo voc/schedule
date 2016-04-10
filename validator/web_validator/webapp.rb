@@ -3,18 +3,30 @@ require 'sinatra'
 require 'haml'
 require 'nokogiri'
 require 'net/http'
+require 'digest'
 
 XSD_URL = "https://raw.githubusercontent.com/voc/schedule/master/validator/"\
           "xsd/schedule.xml.xsd"
 
-set :xsd do
+set :raw_xsd do
   uri  = URI.parse(XSD_URL)
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true
   request = Net::HTTP::Get.new(uri.request_uri)
   response = http.request(request)
 
-  Nokogiri::XML::Schema(response.body)
+  response.body
+end
+
+set :xsd do
+  Nokogiri::XML::Schema(settings.raw_xsd)
+end
+
+set :xsd_md5 do
+  md5 = Digest::MD5.hexdigest(settings.raw_xsd)
+  datetime = DateTime.now.strftime("%d.%m.%Y %H:%M")
+
+  { md5: md5, datetime: datetime}
 end
 
 error 400..510 do
@@ -57,5 +69,9 @@ helpers do
     end
 
     errors
+  end
+
+  def xsd_md5(raw_xsd)
+    Digest::Md5.hexdigest(raw_xsd)
   end
 end

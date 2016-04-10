@@ -9,7 +9,9 @@
     Submitted schedule.xml is valid!
 
 %form(method="post" action="#{url('/validate')}" )
-  %textarea{name: "schedulexml", rows: 40, cols: 100}= params[:schedulexml]
+  %textarea{name: "schedulexml", rows: 40, cols: 100, value: "bla"}
+    = params[:schedulexml] || "enter a URL or plain XML"
   %br
   %input(type='submit' value='Validate')
-  %a{href: XSD_URL} (schedule.xml.xsd)
+  %a{href: XSD_URL}= "(schedule.xml.xsd"
+  = "version: #{settings.xsd_md5[:datetime]} | #{settings.xsd_md5[:md5]})"
