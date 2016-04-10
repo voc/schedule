@@ -49,12 +49,12 @@
 
       <xs:element type="persons" name="persons" minOccurs="0"/>
       <xs:element type="xs:string" name="language" minOccurs="0"/>
-      <xs:element type="xs:string" name="abstract" minOccurs="0"/>
+      <xs:element type="xs:string" name="abstract" minOccurs="1"/>
       <xs:element type="xs:string" name="description" minOccurs="0"/>
-      <xs:element type="xs:string" name="slug" minOccurs="0"/>
+      <xs:element type="xs:string" name="slug" minOccurs="1"/>
       <xs:element type="recording" name="recording" minOccurs="0"/>
-      <xs:element type="xs:string" name="subtitle" minOccurs="0"/>
-      <xs:element type="xs:string" name="track" minOccurs="0"/>
+      <xs:element type="xs:string" name="subtitle" minOccurs="1"/>
+      <xs:element type="xs:string" name="track" minOccurs="1"/>
       <xs:element type="links" name="links" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
