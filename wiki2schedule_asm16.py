@@ -155,14 +155,21 @@ def main():
         
         guid = hashlib.md5(event['wo'] + event['wann'] + conference_start_date.isoformat() + event['titel']).hexdigest()   
         wann = time.strptime(event['wann'], "%A %H:%M")
-        duration = event['dauer']
+        duration = event['dauer'].split(' ', 2)[0]
+
+        # if duration is a approximation (e.g. '4-6 std') take  max value 
+        if '-' in duration: 
+            duration = duration.split('-')[1]
+        # convert hours to minutes
+        duration = int(duration)*60
+        
         
         # event starts with Friday (day=0), which is wday 4
         day = 3 - wann.tm_wday
 
         start_time = days[day]['date'] + timedelta(hours=wann.tm_hour, minutes=wann.tm_min)
-        end_time = start_time + timedelta(hours=1.5) 
-        duration = (end_time - start_time).seconds/60    
+        end_time = start_time + timedelta(minutes=duration) 
+  
         
         room = event['wo']
 
