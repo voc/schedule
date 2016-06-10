@@ -29,9 +29,9 @@ voc.tools.set_base_id(1000)
 
 #config
 offline = True and False
-date_format = '%Y-%m-%d %H:%M'
 
 source_csv_url = 'https://docs.google.com/spreadsheets/d/1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w/export?format=csv&id=1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w&gid=0'
+date_format = '%Y-%m-%d %H:%M'
 output_dir = '/srv/www/schedule/jh16'
 secondary_output_dir = "./jh16"
 
@@ -215,10 +215,10 @@ def main():
     
     #print json.dumps(schedule, indent=2)
     
-    with open('jugendhackt16.schedule.json', 'w') as fp:
+    with open('schedule.json', 'w') as fp:
         json.dump(out, fp, indent=4)
         
-    with open('jugendhackt16.schedule.xml', 'w') as fp:
+    with open('schedule.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out));
             
     print 'end'
