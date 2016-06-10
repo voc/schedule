@@ -86,15 +86,6 @@ def get_room_id(room_name):
 def get_track_id(track_name):
     return 10
             
-
-def foreach_event(schedule, func):
-    out = []
-    for day in schedule["schedule"]["conference"]["days"]:
-        for room in day['rooms']:
-            for event in day['rooms'][room]:    
-                out.append(func(event))
-    
-    return out
             
 
 def main():

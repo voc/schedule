@@ -24,7 +24,7 @@ for opt, arg in options:
         output_file = arg
 
 if input_file is None:
-    print " Usage: " + os.path.basename(sys.argv[0]) + " -i input.json [-o output.xml]"
+    print(" Usage: " + os.path.basename(sys.argv[0]) + " -i input.json [-o output.xml]")
     exit(-1)
 
 # do the actual work

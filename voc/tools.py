@@ -1,7 +1,8 @@
 from collections import OrderedDict
-
+import uuid
 sos_ids = {}
 next_id = 1000
+uuid_namespace = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
 
 def set_base_id(value):
     global next_id
@@ -15,6 +16,21 @@ def get_id(guid):
         next_id = next_id + 1  
     
     return sos_ids[guid]
+
+def gen_random_uuid():
+    return uuid.uuid4()
+
+def gen_uuid(name):
+    return str(uuid.uuid5(uuid_namespace, name))
+
+def foreach_event(schedule, func):
+    out = []
+    for day in schedule["schedule"]["conference"]["days"]:
+        for room in day['rooms']:
+            for event in day['rooms'][room]:    
+                out.append(func(event))
+    
+    return out
 
 
 def copy_base_structure(subtree, level):  
@@ -42,6 +58,15 @@ def copy_base_structure_list(subtree, level):
     return ret
 
 
+def normalise_time(timestr):
+    timestr = timestr.replace('p.m.', 'pm')
+    timestr = timestr.replace('a.m.', 'am')
+    ## workaround for failure in input file format
+    if timestr.startswith('0:00'):
+        timestr = timestr.replace('0:00', '12:00')
+        
+    return timestr
+
 
 
 from lxml import etree as ET
@@ -58,7 +83,7 @@ def _set_attrib(tag, k, v):
     elif isinstance(v, int):
         tag.set(k, str(v))
     else:
-        print "  error: unknown attribute type %s=%s" % (k, v)
+        print("  error: unknown attribute type %s=%s" % (k, v))
 
 
 
