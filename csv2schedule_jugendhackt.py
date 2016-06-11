@@ -30,7 +30,6 @@ voc.tools.set_base_id(1000)
 #config
 offline = True and False
 
-source_csv_url = 'https://docs.google.com/spreadsheets/d/1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w/export?format=csv&id=1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w&gid=0'
 date_format = '%Y-%m-%d %H:%M'
 output_dir = '/srv/www/schedule/jh16'
 secondary_output_dir = "./jh16"
@@ -40,6 +39,7 @@ template = { "schedule": {
         "version": "1.0",
         "conference": {
             "title": "Jugend Hackt 2016",
+            "acronym": "jh16",
             "daysCount": 3,
             "start": "2016-06-10",
             "end":   "2016-06-12",
@@ -78,10 +78,21 @@ os.chdir(output_dir)
 
 
 
-
-
 def main():
-    global source_csv_url, template, days
+    
+    # source_csv_url = 'https://docs.google.com/spreadsheets/d/1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w/export?format=csv&id=1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w&gid=0'
+
+    process('sued', 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
+    process('nord', 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
+    #process('west', 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
+
+
+
+def process(ort, source_csv_url):
+    global template, days
+    
+    print('')
+    print(ort)
     
     out = template
     
@@ -124,12 +135,12 @@ def main():
         if schedule_r.ok is False:
             raise Exception("  Requesting schedule from CSV source url failed, HTTP code {0}.".format(schedule_r.status_code))
         
-        with open('schedule.csv', 'w') as f:
+        with open('schedule-' + ort + '.csv', 'w') as f:
             f.write(schedule_r.text)
 
     
     csv_schedule = []
-    with open('schedule.csv', 'r') as f:
+    with open('schedule-' + ort + '.csv', 'r') as f:
         reader = csv.reader(f)
         
         # first header
@@ -156,11 +167,13 @@ def main():
                 if keys2[i] != '' and value != '':
                     items[keys[i]][keys2[i]] = value.decode('utf-8')
                 i += 1
-            csv_schedule.append(items)       
+            
+            if len(items['meta']) > 0 and 'Projektname' in items['meta']:
+                csv_schedule.append(items)       
     
     #print json.dumps(csv_schedule, indent=4) 
     
-    for event in csv_schedule:
+    for event in csv_schedule:         
                 
         room = event['meta']['Ort']
         guid = voc.tools.gen_uuid(hashlib.md5(room + event['meta']['Projektname']).hexdigest())
@@ -215,10 +228,10 @@ def main():
     
     #print json.dumps(schedule, indent=2)
     
-    with open('schedule.json', 'w') as fp:
+    with open('schedule-' + ort + '.json', 'w') as fp:
         json.dump(out, fp, indent=4)
         
-    with open('schedule.xml', 'w') as fp:
+    with open('schedule-' + ort + '.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out));
             
     print 'end'
