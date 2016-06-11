@@ -36,7 +36,7 @@ secondary_output_dir = "./jh16"
 
 
 template = { "schedule": {
-        "version": "1.0",
+        "version": "1.1",
         "conference": {
             "title": "Jugend Hackt 2016",
             "acronym": "jh16",
@@ -190,9 +190,10 @@ def process(ort, source_csv_url):
         
         # event starts with Friday (day=0), which is wday 4
         day = 3
+        id = voc.tools.get_id(guid)
         
         event_n = OrderedDict([
-            ('id', voc.tools.get_id(guid)),
+            ('id', id),
             ('guid', guid),
             # ('logo', None),
             ('date', start_time.isoformat()),
@@ -200,8 +201,7 @@ def process(ort, source_csv_url):
             #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
-            ('slug', ''),
-            #('slug', '31c3_-_6561_-_en_-_saal_1_-_201412271100_-_31c3_opening_event_-_erdgeist_-_geraldine_de_bastion',
+            ('slug', 'jh16-' + id,
             ('title', event['meta']['Projektname']),
             ('subtitle', ''),
             ('track', ''),
