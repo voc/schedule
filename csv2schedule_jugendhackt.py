@@ -24,9 +24,6 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 # some functions used in multiple files of this collection
 import voc.tools
 
-voc.tools.set_base_id(1000)
-
-
 #config
 offline = True and False
 
@@ -35,18 +32,18 @@ output_dir = '/srv/www/schedule/jh16'
 secondary_output_dir = "./jh16"
 
 
-template = { "schedule": {
-        "version": "1.1",
-        "conference": {
-            "title": "Jugend Hackt 2016",
-            "acronym": "jh16",
-            "daysCount": 3,
-            "start": "2016-06-10",
-            "end":   "2016-06-12",
-            "timeslot_duration": "00:10",
-            "days" : []
-        },
-    }
+template = { "schedule":  OrderedDict([
+        ("version", "1.1"),
+        ("conference",  OrderedDict([
+            ("title", "Jugend Hackt 2016"),
+            ("acronym", "jh16"),
+            ("daysCount", 3),
+            ("start", "2016-06-10"),
+            ("end",   "2016-06-12"),
+            ("timeslot_duration", "00:10"),
+            ("days", [])
+        ]))
+    ])
 }
 
 room_map = OrderedDict([
@@ -54,7 +51,6 @@ room_map = OrderedDict([
 ])
 
 def get_room_id(room_name):
-
     if room_name in room_map:
         return room_map[room_name]
     else:
@@ -82,19 +78,19 @@ def main():
     
     # source_csv_url = 'https://docs.google.com/spreadsheets/d/1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w/export?format=csv&id=1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w&gid=0'
 
-    process('sued', 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
-    process('nord', 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
-    #process('west', 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
+    process('sued', 1000, 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
+    process('nord', 2000, 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
+    process('west', 3000, 'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
 
 
 
-def process(ort, source_csv_url):
+def process(ort, base_id, source_csv_url):
     global template, days
     
-    print('')
-    print(ort)
-    
     out = template
+    
+    
+    print('Processing ' + ort)
     
     conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
     
@@ -119,7 +115,6 @@ def process(ort, source_csv_url):
         ]))
         
 
-    print 'Processing' 
     
     
     if not offline:
@@ -175,13 +170,12 @@ def process(ort, source_csv_url):
     
     for event in csv_schedule:         
                 
-        room = event['meta']['Ort']
-        guid = voc.tools.gen_uuid(hashlib.md5(room + event['meta']['Projektname']).hexdigest())
         #guid =  voc.tools.gen_uuid(room + event['meta']['Projektname'])
         #guid = voc.tools.gen_random_uuid()
         
         start_time = datetime.strptime( event['meta']['Datum'] + ' ' + event['meta']['Uhrzeit'], date_format)
-        end_time   = start_time + timedelta(minutes=10) 
+        # TODO use start_time of next event as end_time
+        end_time   = start_time + timedelta(minutes=3) 
         duration   = (end_time - start_time).seconds/60
         
         ## Chaos Communication Congress always starts at the 27th which is day 1
@@ -189,8 +183,11 @@ def process(ort, source_csv_url):
         #day = int(start_time.strftime('%d')) - 26
         
         # event starts with Friday (day=0), which is wday 4
-        day = 3
-        id = voc.tools.get_id(guid)
+        day = 3 #TODO
+        id = base_id + int(event['meta']['ID'])
+        room = event['meta']['Ort']
+        guid = voc.tools.gen_uuid(hashlib.md5(ort + room + event['meta']['ID']).hexdigest())
+
         
         event_n = OrderedDict([
             ('id', id),
@@ -201,7 +198,7 @@ def process(ort, source_csv_url):
             #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
-            ('slug', 'jh16-' + id,
+            ('slug', 'jh16-' + id ),
             ('title', event['meta']['Projektname']),
             ('subtitle', ''),
             ('track', ''),
