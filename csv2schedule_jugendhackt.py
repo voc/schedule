@@ -35,7 +35,7 @@ secondary_output_dir = "./jh16"
 template = { "schedule":  OrderedDict([
         ("version", "1.1"),
         ("conference",  OrderedDict([
-            ("title", "Jugend Hackt 2016"),
+            ("title", "Jugend hackt 2016"),
             ("acronym", "jh16"),
             ("daysCount", 3),
             ("start", "2016-06-10"),
@@ -118,7 +118,7 @@ def process(ort, base_id, source_csv_url):
     
     
     if not offline:
-        print("Requesting schedule source url") # , e.g. BER or Sendezentrum
+        print(" Requesting schedule source url")
         schedule_r = requests.get(
             source_csv_url, 
             verify=False #'cacert.pem'
@@ -182,12 +182,11 @@ def process(ort, base_id, source_csv_url):
         ## Maybe TODO: Use days[0]['start'] instead
         #day = int(start_time.strftime('%d')) - 26
         
-        # event starts with Friday (day=0), which is wday 4
-        day = 3 #TODO
-        id = base_id + int(event['meta']['ID'])
+        day = 3 #TODO : generate day from date
+        
+        id = str(base_id + int(event['meta']['ID']))
         room = event['meta']['Ort']
         guid = voc.tools.gen_uuid(hashlib.md5(ort + room + event['meta']['ID']).hexdigest())
-
         
         event_n = OrderedDict([
             ('id', id),
@@ -198,7 +197,9 @@ def process(ort, base_id, source_csv_url):
             #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
-            ('slug', 'jh16-' + id ),
+            ('slug', '-'.join([template['schedule']['conference']['acronym'], id, ort, 
+                              voc.tools.normalise_string(event['meta']['Projektname'])])
+            ),
             ('title', event['meta']['Projektname']),
             ('subtitle', ''),
             ('track', ''),
@@ -231,7 +232,7 @@ def process(ort, base_id, source_csv_url):
     with open('schedule-' + ort + '.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out));
             
-    print 'end'
+    print(' end')
     
 
 

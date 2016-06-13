@@ -1,5 +1,7 @@
 from collections import OrderedDict
 import uuid
+import re
+
 sos_ids = {}
 next_id = 1000
 uuid_namespace = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
@@ -57,6 +59,14 @@ def copy_base_structure_list(subtree, level):
                 ret.append(copy_base_structure(value, level-1)) 
     return ret
 
+
+def normalise_string(string):
+    string = re.sub('\W+', '\_', string.strip())
+    string = string.lower()
+    # string = filter(unicode.isalnum, string)
+    string = re.sub('[^a-z0-9_]+', '', string)  
+
+    return string
 
 def normalise_time(timestr):
     timestr = timestr.replace('p.m.', 'pm')
