@@ -3,12 +3,13 @@
   <xs:element name="schedule">
     <xs:complexType>
       <xs:sequence>
-        <xs:element type="xs:string" name="version" minOccurs="1"/>
+        <xs:element type="xs:string" name="version"/>
         <xs:element name="conference">
           <xs:complexType>
             <xs:all>
               <xs:element type="xs:string"  name="title"/>
               <xs:element type="xs:string"  name="acronym"/>
+
               <xs:element type="xs:date"    name="start" minOccurs="0"/>
               <xs:element type="xs:date"    name="end" minOccurs="0"/>
               <xs:element type="xs:integer" name="days" minOccurs="0"/>
@@ -40,37 +41,37 @@
     <xs:sequence>
       <xs:element type="room" name="room" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute type="xs:date" name="date" use="optional"/>
-    <xs:attribute type="xs:dateTime" name="start" use="optional"/>
-    <xs:attribute type="xs:dateTime" name="end" use="optional"/>
-    <xs:attribute type="xs:positiveInteger" name="index" use="optional"/>
+    <xs:attribute type="xs:date" name="date"/>
+    <xs:attribute type="xs:dateTime" name="start"/>
+    <xs:attribute type="xs:dateTime" name="end"/>
+    <xs:attribute type="xs:positiveInteger" name="index"/>
   </xs:complexType>
 
   <xs:complexType name="room">
     <xs:sequence>
       <xs:element type="event" name="event" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute type="xs:string" name="name" use="optional"/>
+    <xs:attribute type="xs:string" name="name"/>
   </xs:complexType>
 
   <xs:complexType name="event">
     <xs:all>
       <xs:element type="xs:string" name="room"/>
       <xs:element type="xs:string" name="title"/>
+      <xs:element type="xs:string" name="subtitle"/>
       <xs:element type="xs:string" name="type"/>
       <xs:element type="xs:dateTime" name="date"/>
       <xs:element type="start" name="start"/>
       <xs:element type="duration" name="duration"/>
+      <xs:element type="xs:string" name="abstract"/>
+      <xs:element type="xs:string" name="slug"/>
+      <xs:element type="xs:string" name="track"/>
 
       <xs:element type="xs:string" name="logo" minOccurs="0"/>
       <xs:element type="persons" name="persons" minOccurs="0"/>
       <xs:element type="xs:string" name="language" minOccurs="0"/>
-      <xs:element type="xs:string" name="abstract" minOccurs="1"/>
       <xs:element type="xs:string" name="description" minOccurs="0"/>
-      <xs:element type="xs:string" name="slug" minOccurs="1"/>
       <xs:element type="recording" name="recording" minOccurs="0"/>
-      <xs:element type="xs:string" name="subtitle" minOccurs="1"/>
-      <xs:element type="xs:string" name="track" minOccurs="1"/>
       <xs:element type="links" name="links" minOccurs="0"/>
       <xs:element type="attachments" name="attachments" minOccurs="0"/>
     </xs:all>
@@ -109,7 +110,7 @@
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="xs:string">
-              <xs:attribute type="xs:positiveInteger" name="id" use="optional"/>
+              <xs:attribute type="xs:positiveInteger" name="id"/>
             </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
@@ -123,7 +124,7 @@
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="xs:string">
-              <xs:attribute type="xs:string" name="href" use="optional"/>
+              <xs:attribute type="xs:string" name="href"/>
             </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
@@ -137,7 +138,7 @@
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="xs:string">
-              <xs:attribute type="xs:string" name="href" use="optional"/>
+              <xs:attribute type="xs:string" name="href"/>
             </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
