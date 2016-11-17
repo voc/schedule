@@ -85,7 +85,7 @@ os.chdir(output_dir)  # todo handle exception
 # todo this should be part of the template
 def main():
     process('darmstadtium', 4000,
-            'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
+            'https://docs.google.com/spreadsheets/d/1IL0STExafw1zQwGQYu9J_9LQAgTtIfgfk3wIaAfIZqU/export?format=csv')
     # todo => config
 
 
@@ -178,20 +178,21 @@ def process(ort, base_id, source_csv_url):
         sys.exit(-1)
 
     for event in csv_schedule:
-        event_id = str(base_id + int(event['meta']['ID']))
-        guid = voc.tools.gen_uuid(hashlib.md5(ort + room + event['meta']['ID']).hexdigest())
-        start_time = datetime.strptime(event['meta']['Date'] + ' ' + event['meta']['Start'], date_format)
+        meta = event['meta']
+        event_id = str(base_id + int(meta.get('ID'))
+        guid = voc.tools.gen_uuid(hashlib.md5(ort + meta['Room'] + meta['ID']).hexdigest())
+        start_time = datetime.strptime(meta['Date'] + ' ' + meta['Start'], date_format)
         # todo use duration from CSV
         end_time = start_time + timedelta(minutes=3)
         duration = (end_time - start_time).seconds / 60
-        room = event['meta']['Room']
-        title = event['meta']['Title']
-        subtitle = event['meta']['Subtitle']
-        track = event['meta']['Track']
-        event_type = event['meta']['Type']
-        language = event['meta']['Language']
-        abstract = event['meta']['Abstract']
-        description = event['meta']['Description']
+        room = meta['Room']
+        title = meta['Title']
+        subtitle = meta.get('Subtitle', '')
+        track = meta.get('Track', '')
+        event_type = meta.get('Type')
+        language = meta.get('Language', '')
+        abstract = meta.get('Abstract', '')
+        description = meta.get('Description', '')
 
         # todo fix day logic to frab defaults
         # Chaos Communication Congress always starts at the 27th which is day 1
@@ -209,7 +210,7 @@ def process(ort, base_id, source_csv_url):
             ('duration', '%d:%02d' % divmod(duration, 60)),
             ('room', room),
             ('slug', '-'.join([template['schedule']['conference']['acronym'], event_id, ort,
-                               voc.tools.normalise_string(event['meta']['Title'])])
+                               voc.tools.normalise_string(event.get('Title', ''))])
              ),
             ('title', title),
             ('subtitle', subtitle),
@@ -217,7 +218,7 @@ def process(ort, base_id, source_csv_url):
             ('type', event_type),
             ('language', language),
             ('abstract', abstract),
-            ('description', ''),
+            ('description', description),
             ('persons', [OrderedDict([
                 ('id', 0),
                 ('full_public_name', p.strip()),
