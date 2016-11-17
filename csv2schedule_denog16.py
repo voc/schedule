@@ -179,18 +179,19 @@ def process(ort, base_id, source_csv_url):
 
     for event in csv_schedule:
         meta = event['meta']
-        event_id = str(base_id + int(meta.get('ID'))
+        print(meta)
+        event_id = str(base_id + int(meta.get('ID')))
         guid = voc.tools.gen_uuid(hashlib.md5(ort + meta['Room'] + meta['ID']).hexdigest())
         start_time = datetime.strptime(meta['Date'] + ' ' + meta['Start'], date_format)
         # todo use duration from CSV
         end_time = start_time + timedelta(minutes=3)
         duration = (end_time - start_time).seconds / 60
-        room = meta['Room']
-        title = meta['Title']
+        room = meta.get('Room', '')
+        title = meta.get('Title')
         subtitle = meta.get('Subtitle', '')
         track = meta.get('Track', '')
-        event_type = meta.get('Type')
-        language = meta.get('Language', '')
+        event_type = meta.get('Type', '')
+        language = meta.get('Language')
         abstract = meta.get('Abstract', '')
         description = meta.get('Description', '')
 
@@ -199,6 +200,12 @@ def process(ort, base_id, source_csv_url):
         # Maybe use days[0]['start'] instead
         # day = int(start_time.strftime('%d')) - 26
         day = 1  # TODO : generate day from date or csv
+
+        # check mandatory fields ( they should have no default above)
+        mand = [event_id, guid, start_time, duration, title, language]
+        for item in mand:
+            if not item:
+                print('ERROR: not all mandatory files could be found in the CSV' + str(item))
 
         event_n = OrderedDict([
             ('id', event_id),
