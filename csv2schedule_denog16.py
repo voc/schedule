@@ -12,7 +12,7 @@ from datetime import datetime
 from datetime import timedelta
 import csv
 import hashlib
-import pytz
+#import pytz
 import sys
 import os
 import locale
@@ -29,17 +29,18 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 days = []
-de_tz = pytz.timezone('Europe/Amsterdam')
+#de_tz = pytz.timezone('Europe/Amsterdam')
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+
 
 # config
 offline = True and False  # todo => config
-# offline = False
 
 date_format = '%Y-%m-%d %H:%M'
-output_dir = '/srv/www/schedule/denog16'
-secondary_output_dir = "./denog16"
+output_dir = '/srv/www/schedule/denog16'  # todo => config
+secondary_output_dir = "./denog16"  # todo => config
 
+# fill the template for the conference with conference information
 template = {"schedule": OrderedDict([
     ("version", "1.0"),  # todo => config
     ("conference", OrderedDict([
@@ -58,18 +59,6 @@ room_map = OrderedDict([
     ('darmstadtium', 1)  # todo => config
 ])
 
-
-# def get_room_id(room_name):
-#     if room_name in room_map:
-#         return room_map[room_name]
-#     else:
-#         return 0
-#
-#
-# def get_track_id(track_name):
-#     return 10
-
-
 if len(sys.argv) == 2:  # todo print a help message that people know whats this for
     output_dir = sys.argv[1]
 
@@ -83,13 +72,15 @@ os.chdir(output_dir)  # todo handle exception
 
 
 # todo this should be part of the template
+# todo remove "ort" and make the offset optional
 def main():
     process('darmstadtium', 4000,
-            'https://docs.google.com/spreadsheets/d/1IL0STExafw1zQwGQYu9J_9LQAgTtIfgfk3wIaAfIZqU/export?format=csv')
+            'https://docs.google.com/spreadsheets/d/XXX/export?format=csv')
     # todo => config
 
 
 def process(ort, base_id, source_csv_url):
+    ''' Process the CSV data into a json / xml suitable for frab schedule based applications '''
     global template, days
 
     out = template
@@ -179,13 +170,11 @@ def process(ort, base_id, source_csv_url):
 
     for event in csv_schedule:
         meta = event['meta']
-        print(meta)
+        print(meta)  # debug
         event_id = str(base_id + int(meta.get('ID')))
         guid = voc.tools.gen_uuid(hashlib.md5(ort + meta['Room'] + meta['ID']).hexdigest())
         start_time = datetime.strptime(meta['Date'] + ' ' + meta['Start'], date_format)
-        # todo use duration from CSV
-        end_time = start_time + timedelta(minutes=3)
-        duration = (end_time - start_time).seconds / 60
+        duration = int(meta.get('Duration'))
         room = meta.get('Room', '')
         title = meta.get('Title')
         subtitle = meta.get('Subtitle', '')
@@ -196,16 +185,13 @@ def process(ort, base_id, source_csv_url):
         description = meta.get('Description', '')
 
         # todo fix day logic to frab defaults
-        # Chaos Communication Congress always starts at the 27th which is day 1
-        # Maybe use days[0]['start'] instead
-        # day = int(start_time.strftime('%d')) - 26
         day = 1  # TODO : generate day from date or csv
 
         # check mandatory fields ( they should have no default above)
         mand = [event_id, guid, start_time, duration, title, language]
         for item in mand:
             if not item:
-                print('ERROR: not all mandatory files could be found in the CSV' + str(item))
+                print('ERROR: not all mandatory files could be found in the CSV ' + str(item))
 
         event_n = OrderedDict([
             ('id', event_id),
@@ -213,11 +199,10 @@ def process(ort, base_id, source_csv_url):
             # ('logo', None),
             ('date', start_time.isoformat()),
             ('start', start_time.strftime('%H:%M')),
-            # ('duration', str(timedelta(minutes=event['Has duration'][0])) ),
             ('duration', '%d:%02d' % divmod(duration, 60)),
             ('room', room),
-            ('slug', '-'.join([template['schedule']['conference']['acronym'], event_id, ort,
-                               voc.tools.normalise_string(event.get('Title', ''))])
+            ('slug', '-'.join([template['schedule']['conference']['acronym'], event_id,
+                               voc.tools.normalise_string(meta.get('Title'))])
              ),
             ('title', title),
             ('subtitle', subtitle),
@@ -227,7 +212,7 @@ def process(ort, base_id, source_csv_url):
             ('abstract', abstract),
             ('description', description),
             ('persons', [OrderedDict([
-                ('id', 0),
+                ('id', 0), # todo if no id supplied store generated per event in file to regenerate
                 ('full_public_name', p.strip()),
             ]) for p in event['Speaker'].values()]),
             ('links', [])
