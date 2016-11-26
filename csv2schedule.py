@@ -12,24 +12,24 @@ from datetime import datetime
 from datetime import timedelta
 import csv
 import hashlib
-#import pytz
 import sys
 import os
 import locale
+import configparser
 
 import voc.tools
 
-# todo add config support
 # todo add proper logging
 # todo add error handling
 # todo make second out dir optional
-# todo remove all german names / variables
+
+config = configparser.ConfigParser()
+config.read('config.conf')
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 days = []
-#de_tz = pytz.timezone('Europe/Amsterdam')
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
 
@@ -37,26 +37,26 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 offline = True and False  # todo => config
 
 date_format = '%Y-%m-%d %H:%M'
-output_dir = '/srv/www/schedule/denog16'  # todo => config
-secondary_output_dir = "./denog16"  # todo => config
+output_dir = config['main']['output_dir']
+secondary_output_dir = config['main']['secondary_output_dir']
 
 # fill the template for the conference with conference information
 template = {"schedule": OrderedDict([
-    ("version", "1.0"),  # todo => config
+    ("version", config['main']['version']),
     ("conference", OrderedDict([
-        ("title", "DENOG8"),  # todo => config
-        ("acronym", "denog16"),  # todo => config
-        ("daysCount", 2),  # todo calc this from date
-        ("start", "2016-11-23"),  # todo => config
-        ("end", "2016-11-24"),  # todo => config
-        ("timeslot_duration", "00:10"),  # todo => config
+        ("title", config['main']['title']),
+        ("acronym", config['main']['acronym']),
+        ("daysCount", int(config['main']['daysCount'])),  # todo calc this from date
+        ("start", config['main']['start']),
+        ("end", config['main']['end']),
+        ("timeslot_duration", config['main']['timeslot_duration']),
         ("days", [])
     ]))
 ])
 }
 
 room_map = OrderedDict([
-    ('darmstadtium', 1)  # todo => config
+    (config['rooms']['room1'], 1)  # make this dynamic
 ])
 
 if len(sys.argv) == 2:  # todo print a help message that people know whats this for
@@ -72,20 +72,15 @@ os.chdir(output_dir)  # todo handle exception
 
 
 # todo this should be part of the template
-# todo remove "ort" and make the offset optional
 def main():
-    process('darmstadtium', 4000,
-            'https://docs.google.com/spreadsheets/d/1IL0STExafw1zQwGQYu9J_9LQAgTtIfgfk3wIaAfIZqU/export?format=csv')
-    # todo => config
+    process(int(config['main']['id_offset']), config['main']['csv_url'])
 
 
-def process(ort, base_id, source_csv_url):
+def process(base_id, source_csv_url):
     ''' Process the CSV data into a json / xml suitable for frab schedule based applications '''
+
     global template, days
-
     out = template
-    print('Processing ' + ort)
-
     conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
 
     for i in range(out['schedule']['conference']['daysCount']):
@@ -127,11 +122,11 @@ def process(ort, base_id, source_csv_url):
                 "Requesting schedule from CSV source url failed, HTTP code {0}.".format(schedule_r.status_code))
 
         # write the csv file to a file
-        with open('schedule-' + ort + '.csv', 'w') as f:
+        with open('schedule.csv', 'w') as f:
             f.write(schedule_r.text)
 
     csv_schedule = []  # csv data
-    with open('schedule-' + ort + '.csv', 'r') as f:
+    with open('schedule.csv', 'r') as f:
         reader = csv.reader(f)
 
         # first header
@@ -172,7 +167,7 @@ def process(ort, base_id, source_csv_url):
         meta = event['meta']
         #print(meta)  # debug
         event_id = str(base_id + int(meta.get('ID')))
-        guid = voc.tools.gen_uuid(hashlib.md5(ort + meta['Room'] + meta['ID']).hexdigest())
+        guid = voc.tools.gen_uuid(hashlib.md5(meta['Room'] + meta['ID']).hexdigest())
         start_time = datetime.strptime(meta['Date'] + ' ' + meta['Start'], date_format)
         duration = int(meta.get('Duration'))
         room = meta.get('Room', '')
@@ -183,9 +178,8 @@ def process(ort, base_id, source_csv_url):
         language = meta.get('Language')
         abstract = meta.get('Abstract', '')
         description = meta.get('Description', '')
-
-        # todo fix day logic to frab defaults
-        day = 1  # TODO : generate day from date or csv
+	tmp_day = start_time - conference_start_date
+	day = tmp_day.days + 1
 
         # check mandatory fields ( they should have no default above)
 	
@@ -193,6 +187,7 @@ def process(ort, base_id, source_csv_url):
         for item in mand:
             if not item:
                 print('ERROR: not all mandatory files could be found in the CSV ' + str(item))
+		print('event_id: ' + str(event_id) + ' guid: ' + str(guid) + ' start_time: ' + str(start_time) + ' duration: ' + str(duration) + ' title: ' + title + ' language: ' + language)
 
         event_n = OrderedDict([
             ('id', event_id),
@@ -226,11 +221,11 @@ def process(ort, base_id, source_csv_url):
 	
 
     # write json schedule to file
-    with open('schedule-' + ort + '.json', 'w+') as fp:
-	json.dump(out, fp, indent=4)
+    with open('schedule.json', 'w+') as fp:
+        json.dump(out, fp, indent=4)
     
     # write xml schedule to file
-    with open('schedule-' + ort + '.xml', 'w') as fp:
+    with open('schedule.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out))
 
     print(' end')
