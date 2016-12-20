@@ -34,14 +34,13 @@ parser.add_option('--show-assembly-warnings', action="store_true", dest="show_as
 options, args = parser.parse_args()
 local = False
 use_offline_frab_schedules = False
-only_workshops = True
+only_workshops = False
 
 
 wiki_url = 'https://events.ccc.de/congress/2016/wiki'
-#main_schedule_url = 'https://events.ccc.de/congress/2016/Fahrplan/schedule.json' # this year probably a different host -> url will change
-main_schedule_url = 'https://frab.cccv.de/en/33c3/public/schedule/schedule.json'  # not accessible without user account
-schedule2_url = 'https://frab.das-sendezentrum.de/de/33c3/public/schedule.json'   # not accessible without user account, might also become part of main schedule this year
-output_dir = "/srv/www/schedule/33C3"
+main_schedule_url = 'https://fahrplan.events.ccc.de/congress/2016/Fahrplan/schedule.json' 
+schedule2_url = 'https://frab.das-sendezentrum.de/de/33c3/public/schedule.json' 
+output_dir = "/srv/www/33C3"
 secondary_output_dir = "./33C3"
 
 
@@ -62,8 +61,8 @@ room_map = OrderedDict([
     ('Hall G', 361),
     ('Hall 6', 362), 
     #TODO   
-    (u'SZ-Bühne', 1050),
-    ('SZ-Tisch', 1051),
+    (u'Sendezentrumsbühne', 1050),
+    ('Podcastingtisch', 1051),
     ('Hall A.1', 1111),
     ('Hall A.2', 1112),
     ('Hall B',   1120),
@@ -74,8 +73,8 @@ room_map = OrderedDict([
     ('Hall F',   1230),
     ('Hall 13-14',  1013),
     #('Hall 14',  1014),
-    ('Lounge',   1090),
-    # TODO: Anti Error Lounge
+    ('Lounge DisKo',   1090),
+    # TODO: Lounge Section9
 ])
 
 
@@ -489,10 +488,10 @@ def json_request(url):
     if schedule_r.ok is False:
         raise Exception("  Request failed, HTTP {0}.".format(schedule_r.status_code))
 
-    print("Requesting schedule from second frab") # , e.g. BER or Sendezentrum
+    print("Requesting schedule frab") 
     schedule2_r = requests.get(
         schedule2_url, 
-        verify=False #'cacert.pem'
+        verify=True #'cacert.pem'
     )
     schedule = parse_json(schedule_r.text)
     
@@ -525,7 +524,7 @@ def main():
         with open("schedule_sendezentrum.json", "r") as fp:    
             schedule2 = parse_json(fp.read()) 
         
-    elif options.online:
+    else:
         main_schedule = json_request(main_schedule_url)
         schedule2 = json_request(schedule2_url)
 
