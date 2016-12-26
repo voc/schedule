@@ -273,8 +273,7 @@ def process_wiki_events(events, sessions):
             # print json.dumps(wiki_session, indent=4)
             session = wiki_session['printouts'];
             try:
-                # TODO: use remove_prefix()?
-                session['Has title'] = [session_wiki_name.split(':', 2)[1]]
+                session['Has title'] = [remove_prefix(session_wiki_name)]
             except IndexError as e:
                 warn("  Skipping malformed session wiki name {0}.".format(session_wiki_name))
                 continue
