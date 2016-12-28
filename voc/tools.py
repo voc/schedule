@@ -200,4 +200,4 @@ def dict_to_schedule_xml(d):
 
     root_node = ET.Element(tag)
     _to_etree(body, root_node)
-    return ET.tostring(root_node, pretty_print = True)
+    return ET.tostring(root_node, pretty_print = True, encoding='UTF-8')
