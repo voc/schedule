@@ -23,7 +23,7 @@ def gen_random_uuid():
     return uuid.uuid4()
 
 def gen_uuid(name):
-    return str(uuid.uuid5(uuid_namespace, name))
+    return str(uuid.uuid5(uuid_namespace, str(name)))
 
 def foreach_event(schedule, func):
     out = []

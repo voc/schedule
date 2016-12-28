@@ -226,7 +226,7 @@ def process_wiki_events(events, sessions):
             event = event_r['printouts']
             temp = event_wiki_name.split('# ', 2);
             session_wiki_name = temp[0]
-            guid = temp[1]
+
             room = ''
             is_workshop_room_session = False
             
@@ -306,7 +306,8 @@ def process_wiki_events(events, sessions):
                 lang = ''
                 if session['Held in language'] and len(session['Held in language']) > 0:
                     lang = session['Held in language'][0].split(' - ', 1)[0]
-
+                
+                guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 
                 event_n = OrderedDict([
                     ('id', voc.tools.get_id(guid)),
