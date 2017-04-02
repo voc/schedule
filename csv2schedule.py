@@ -32,7 +32,6 @@ sys.setdefaultencoding('utf-8')
 days = []
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
-
 # config
 offline = True and False  # todo => config
 
@@ -105,7 +104,7 @@ def process(base_id, source_csv_url):
 
     if not offline:
         ''' Get a remote csv file. This can be a google doc'''
-        print(" Requesting schedule source url")
+        print("Requesting schedule source url " + source_csv_url)
 
         # download schedule csv
         schedule_r = requests.get(
@@ -124,6 +123,7 @@ def process(base_id, source_csv_url):
         # write the csv file to a file
         with open('schedule.csv', 'w') as f:
             f.write(schedule_r.text)
+        print('schedule downloaded successful')
 
     csv_schedule = []  # csv data
     with open('schedule.csv', 'r') as f:
@@ -142,7 +142,7 @@ def process(base_id, source_csv_url):
 
         # second header
         keys2 = reader.next()
-        #print('keys2' + str(keys2))
+        # print('keys2' + str(keys2))
 
         # data rows
         for row in reader:
@@ -165,7 +165,7 @@ def process(base_id, source_csv_url):
 
     for event in csv_schedule:
         meta = event['meta']
-        #print(meta)  # debug
+        # print(meta)  # debug
         event_id = str(base_id + int(meta.get('ID')))
         guid = voc.tools.gen_uuid(hashlib.md5(meta['Room'] + meta['ID']).hexdigest())
         start_time = datetime.strptime(meta['Date'] + ' ' + meta['Start'], date_format)
@@ -178,16 +178,17 @@ def process(base_id, source_csv_url):
         language = meta.get('Language')
         abstract = meta.get('Abstract', '')
         description = meta.get('Description', '')
-	tmp_day = start_time - conference_start_date
-	day = tmp_day.days + 1
+        tmp_day = start_time - conference_start_date
+        day = tmp_day.days + 1
 
         # check mandatory fields ( they should have no default above)
-	
+
         mand = [event_id, guid, start_time, duration, title, language]
         for item in mand:
             if not item:
                 print('ERROR: not all mandatory files could be found in the CSV ' + str(item))
-		print('event_id: ' + str(event_id) + ' guid: ' + str(guid) + ' start_time: ' + str(start_time) + ' duration: ' + str(duration) + ' title: ' + title + ' language: ' + language)
+                print('event_id: ' + str(event_id) + ' guid: ' + str(guid) + ' start_time: ' + str(
+                    start_time) + ' duration: ' + str(duration) + ' title: ' + title + ' language: ' + language)
 
         event_n = OrderedDict([
             ('id', event_id),
@@ -208,22 +209,21 @@ def process(base_id, source_csv_url):
             ('abstract', abstract),
             ('description', description),
             ('persons', [OrderedDict([
-                ('id', 0), # todo if no id supplied store generated per event in file to regenerate
+                ('id', 0),  # todo if no id supplied store generated per event in file to regenerate
                 ('full_public_name', p.strip()),
             ]) for p in event['Speaker'].values()]),
             ('links', [])
         ])
 
-        day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
+        day_rooms = out['schedule']['conference']['days'][day - 1]['rooms']
         if room not in day_rooms:
             day_rooms[room] = list()
         day_rooms[room].append(event_n)
-	
 
     # write json schedule to file
     with open('schedule.json', 'w+') as fp:
         json.dump(out, fp, indent=4)
-    
+
     # write xml schedule to file
     with open('schedule.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out))
