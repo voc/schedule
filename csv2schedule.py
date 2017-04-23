@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # dependecies py-dateutil requests pytz
 # deps for voc.tools lxml
@@ -23,32 +23,27 @@ import voc.tools
 # todo add error handling
 # todo make second out dir optional
 
-config = configparser.ConfigParser()
-config.read('config.conf')
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 days = []
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+date_format = '%Y-%m-%d %H:%M'
 
 # config
-offline = True and False  # todo => config
-
-date_format = '%Y-%m-%d %H:%M'
-output_dir = config['main']['output_dir']
-secondary_output_dir = config['main']['secondary_output_dir']
+config = configparser.ConfigParser()
+config.read('config.conf')
+offline = config.getboolean('main', 'offline')
+output_dir = config.get('main', 'output_dir')
+secondary_output_dir = config.get('main', 'secondary_output_dir')
 
 # fill the template for the conference with conference information
 template = {"schedule": OrderedDict([
-    ("version", config['main']['version']),
+    ("version", config.get('main', 'version')),
     ("conference", OrderedDict([
-        ("title", config['main']['title']),
-        ("acronym", config['main']['acronym']),
-        ("daysCount", int(config['main']['daysCount'])),  # todo calc this from date
-        ("start", config['main']['start']),
-        ("end", config['main']['end']),
-        ("timeslot_duration", config['main']['timeslot_duration']),
+        ("title", config.get('main', 'title')),
+        ("acronym", config.get('main', 'acronym')),
+        ("daysCount", config.getint('main', 'daysCount')),  # todo calc this from date
+        ("start", config.get('main', 'start')),
+        ("end", config.get('main', 'end')),
+        ("timeslot_duration", config.get('main', 'timeslot_duration')),
         ("days", [])
     ]))
 ])
@@ -70,13 +65,17 @@ if not os.path.exists(output_dir):  # todo this is unreadable => refactor
 os.chdir(output_dir)  # todo handle exception
 
 
-# todo this should be part of the template
 def main():
-    process(int(config['main']['id_offset']), config['main']['csv_url'])
+    process(config.getint('main', 'id_offset'), config.get('main', 'csv_url'))
 
 
 def process(base_id, source_csv_url):
-    ''' Process the CSV data into a json / xml suitable for frab schedule based applications '''
+    """
+     Process the CSV data into a json / xml suitable for frab schedule based applications
+    :param base_id:
+    :param source_csv_url:
+    :return:
+    """
 
     global template, days
     out = template
@@ -104,7 +103,7 @@ def process(base_id, source_csv_url):
 
     if not offline:
         ''' Get a remote csv file. This can be a google doc'''
-        print("Requesting schedule source url " + source_csv_url)
+        print(("Requesting schedule source url " + source_csv_url))
 
         # download schedule csv
         schedule_r = requests.get(
@@ -130,8 +129,8 @@ def process(base_id, source_csv_url):
         reader = csv.reader(f)
 
         # first header
-        keys = reader.next()
-        #print('keys1' + str(keys))
+        keys = next(reader)
+        # print('keys1' + str(keys))
         last = keys[0] = 'meta'
         keys_uniq = []
         for i, k in enumerate(keys):
@@ -141,7 +140,7 @@ def process(base_id, source_csv_url):
             keys[i] = last
 
         # second header
-        keys2 = reader.next()
+        keys2 = next(reader)
         # print('keys2' + str(keys2))
 
         # data rows
@@ -153,7 +152,7 @@ def process(base_id, source_csv_url):
             for value in row_iter:
                 value = value.strip()
                 if keys2[i] != '' and value != '':
-                    items[keys[i]][keys2[i]] = value.decode('utf-8')
+                    items[keys[i]][keys2[i]] = value
                 i += 1
 
             if items['meta'] and 'Title' in items['meta']:
@@ -167,7 +166,7 @@ def process(base_id, source_csv_url):
         meta = event['meta']
         # print(meta)  # debug
         event_id = str(base_id + int(meta.get('ID')))
-        guid = voc.tools.gen_uuid(hashlib.md5(meta['Room'] + meta['ID']).hexdigest())
+        guid = voc.tools.gen_uuid(hashlib.md5((meta['Room'] + meta['ID']).encode('utf-8')).hexdigest())
         start_time = datetime.strptime(meta['Date'] + ' ' + meta['Start'], date_format)
         duration = int(meta.get('Duration'))
         room = meta.get('Room', '')
@@ -178,17 +177,17 @@ def process(base_id, source_csv_url):
         language = meta.get('Language')
         abstract = meta.get('Abstract', '')
         description = meta.get('Description', '')
+        download_url = meta.get('File URL', '')
         tmp_day = start_time - conference_start_date
         day = tmp_day.days + 1
 
         # check mandatory fields ( they should have no default above)
-
         mand = [event_id, guid, start_time, duration, title, language]
         for item in mand:
             if not item:
-                print('ERROR: not all mandatory files could be found in the CSV ' + str(item))
-                print('event_id: ' + str(event_id) + ' guid: ' + str(guid) + ' start_time: ' + str(
-                    start_time) + ' duration: ' + str(duration) + ' title: ' + title + ' language: ' + language)
+                print(('ERROR: not all mandatory files could be found in the CSV ' + str(item)))
+                print(('event_id: ' + str(event_id) + ' guid: ' + str(guid) + ' start_time: ' + str(
+                    start_time) + ' duration: ' + str(duration) + ' title: ' + title + ' language: ' + language))
 
         event_n = OrderedDict([
             ('id', event_id),
@@ -211,11 +210,13 @@ def process(base_id, source_csv_url):
             ('persons', [OrderedDict([
                 ('id', 0),  # todo if no id supplied store generated per event in file to regenerate
                 ('full_public_name', p.strip()),
-            ]) for p in event['Speaker'].values()]),
-            ('links', [])
+            ]) for p in list(event['Speaker'].values())]),
+            ('links', []),
+            ('downloadurl', download_url)
         ])
 
-        day_rooms = out['schedule']['conference']['days'][day - 1]['rooms']
+        print('day ' + str(day)  )
+        day_rooms = out['schedule']['conference']['days'][day]['rooms']
         if room not in day_rooms:
             day_rooms[room] = list()
         day_rooms[room].append(event_n)
