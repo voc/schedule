@@ -121,13 +121,14 @@ def process(ort, base_id, source_csv_url):
 
     
     csv_schedule = []
-        reader = csv.reader(f)
     with open('schedule-' + ort + '.csv', 'r') as f:
+        reader = csv.reader(f)
         
         # first header
         keys = reader.next()
         # store conference title from top left cell into schedule
-        out['schedule']['conference']['title'] = keys[0]
+        out['schedule']['conference']['title'] = keys[0].split('#')[0]
+        out['schedule']['conference']['version'] = keys[0].split('#')[1]
         last = keys[0] = 'meta'
         keys_uniq = []
         for i, k in enumerate(keys):
@@ -163,8 +164,8 @@ def process(ort, base_id, source_csv_url):
         duration   = (end_time - start_time).seconds/60
         
         id = str(base_id + int(event['meta']['ID']))
-        room = event['meta']['Ort']
         guid = voc.tools.gen_uuid(hashlib.md5(ort + room + id).hexdigest())
+        room = event['meta']['Raum']
         
         event_n = OrderedDict([
             ('id', id),
@@ -174,8 +175,7 @@ def process(ort, base_id, source_csv_url):
             ('start', start_time.strftime('%H:%M')),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
-            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['meta']['Titel'])])
-            ),
+            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['meta']['Titel'])])),
             ('title', event['meta']['Titel']),
             ('subtitle', event['meta'].get('Untertitel', '')),
             ('track', ''),
