@@ -24,22 +24,27 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 # some functions used in multiple files of this collection
 import voc.tools
 
-#config
+#begin config
 offline = True # and False
 
+acronym = 'mm17'
+default_talk_length = timedelta(minutes=30)
+# source_csv_url = 'https://docs.google.com/spreadsheets/d/1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w/export?format=csv&id=1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w&gid=0
+
+#end config
+
+
 date_format = '%Y-%m-%d %H:%M'
-output_dir = '/srv/www/schedule/ogtm16'
-secondary_output_dir = "./ogtm16/"
 
 
 template = { "schedule":  OrderedDict([
         ("version", "1.0"),
         ("conference",  OrderedDict([
-            ("title", u"Open Government Tage München 2016"),
-            ("acronym", "ogtm16"),
-            ("daysCount", 1),
-            ("start", "2016-10-27"),
-            ("end",   "2016-10-27"),
+            ("title", ""), 
+            ("acronym", acronym),
+            ("daysCount", 2),
+            ("start", "2017-05-06"),
+            ("end",   "2017-05-07"),
             ("timeslot_duration", "00:15"),
             ("days", [])
         ]))
@@ -61,6 +66,8 @@ def get_track_id(track_name):
     return 10
             
 
+output_dir = '/srv/www/schedule/' + acronym
+secondary_output_dir = "./{}/".format(acronym)
 
 if len(sys.argv) == 2:
     output_dir = sys.argv[1]
@@ -76,13 +83,7 @@ os.chdir(output_dir)
 
 
 def main():
-    
-    # source_csv_url = 'https://docs.google.com/spreadsheets/d/1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w/export?format=csv&id=1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w&gid=0'
-
-    process('ogtm16', 1000, 'file:///Users/andi/Desktop/OGTM/Vortragsliste für Videoaufnahme - OGTM-2016.csv')
-
-
-
+    process(acronym, 0, source_csv_file)
 
 def process(ort, base_id, source_csv_url):
     global template, days
@@ -135,11 +136,13 @@ def process(ort, base_id, source_csv_url):
 
     
     csv_schedule = []
-    with open('schedule-' + ort + '.csv', 'r') as f:
         reader = csv.reader(f)
+    with open('schedule-' + ort + '.csv', 'r') as f:
         
         # first header
         keys = reader.next()
+        # store conference title from top left cell into schedule
+        out['schedule']['conference']['title'] = keys[0]
         last = keys[0] = 'meta'
         keys_uniq = []
         for i, k in enumerate(keys):
@@ -168,25 +171,15 @@ def process(ort, base_id, source_csv_url):
     
     #print json.dumps(csv_schedule, indent=4) 
     
-    for event in csv_schedule:         
-                
-        #guid =  voc.tools.gen_uuid(room + event['meta']['Projektname'])
-        #guid = voc.tools.gen_random_uuid()
-        
+    for event in csv_schedule:
         start_time = datetime.strptime( event['meta']['Datum'] + ' ' + event['meta']['Uhrzeit'], date_format)
-        # TODO use start_time of next event as end_time
-        end_time   = start_time + timedelta(minutes=3) 
+        # TODO check if start_time of next (or other) event overlaps with end_time calculated from default_talk_length
+        end_time   = start_time + default_talk_length 
         duration   = (end_time - start_time).seconds/60
-        
-        ## Chaos Communication Congress always starts at the 27th which is day 1
-        ## Maybe TODO: Use days[0]['start'] instead
-        #day = int(start_time.strftime('%d')) - 26
-        
-        day = 1 #TODO : generate day from date
         
         id = str(base_id + int(event['meta']['ID']))
         room = event['meta']['Ort']
-        guid = voc.tools.gen_uuid(hashlib.md5(ort + room + event['meta']['ID']).hexdigest())
+        guid = voc.tools.gen_uuid(hashlib.md5(ort + room + id).hexdigest())
         
         event_n = OrderedDict([
             ('id', id),
@@ -194,11 +187,9 @@ def process(ort, base_id, source_csv_url):
             # ('logo', None),
             ('date', start_time.isoformat()),
             ('start', start_time.strftime('%H:%M')),
-            #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
-            ('slug', '-'.join([template['schedule']['conference']['acronym'], id, 
-                              voc.tools.normalise_string(event['meta']['Titel'])])
+            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['meta']['Titel'])])
             ),
             ('title', event['meta']['Titel']),
             ('subtitle', event['meta'].get('Untertitel', '')),
@@ -216,6 +207,9 @@ def process(ort, base_id, source_csv_url):
         ])
         
         #print event_n['title']
+        
+        tmp_day = start_time - conference_start_date
+        day = tmp_day.days + 1
         
         day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
         if room not in day_rooms:
