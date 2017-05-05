@@ -82,8 +82,8 @@ def process(ort, base_id, source_csv_url):
     
     for i in range(out['schedule']['conference']['daysCount']):
         date = conference_start_date + timedelta(days=i)
-        start = date + timedelta(hours=11)     # conference day starts at 11:00
-        end = start + timedelta(hours=17) # conference day lasts 17 hours
+        start = date + timedelta(hours=11) # conference day starts at 11:00
+        end = start + timedelta(hours=17)  # conference day lasts 17 hours
         
         days.append( OrderedDict([
             ('index', i),
@@ -110,7 +110,7 @@ def process(ort, base_id, source_csv_url):
             verify=False #'cacert.pem'
         )
         
-        # don't ask me why google docs announces by header? it will send latin1 and sends utf8...
+        # don't ask me why google docs announces by header? it will send latin1 and then sends utf8...
         schedule_r.encoding = 'utf-8'
         
         if schedule_r.ok is False:
@@ -211,6 +211,7 @@ def process(ort, base_id, source_csv_url):
     with open('schedule-' + ort + '.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out));
             
+    # TODO: Validate XML via schema file
     print(' end')
     
 
