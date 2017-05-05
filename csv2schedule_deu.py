@@ -51,21 +51,6 @@ template = { "schedule":  OrderedDict([
     ])
 }
 
-room_map = OrderedDict([
-    ('Altes Rathaus', 1),
-    ('Ratstrinkstube', 2)
-])
-
-def get_room_id(room_name):
-    if room_name in room_map:
-        return room_map[room_name]
-    else:
-        return 0
-
-def get_track_id(track_name):
-    return 10
-            
-
 output_dir = '/srv/www/schedule/' + acronym
 secondary_output_dir = "./{}/".format(acronym)
 
