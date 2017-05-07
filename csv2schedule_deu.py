@@ -68,7 +68,7 @@ os.chdir(output_dir)
 
 
 def main():
-    process(acronym, 0, source_csv_file)
+    process(acronym, 0, source_csv_url)
 
 def process(ort, base_id, source_csv_url):
     global template, days
@@ -128,7 +128,7 @@ def process(ort, base_id, source_csv_url):
         keys = reader.next()
         # store conference title from top left cell into schedule
         out['schedule']['conference']['title'] = keys[0].split('#')[0]
-        out['schedule']['conference']['version'] = keys[0].split('#')[1]
+        out['schedule']['version'] = keys[0].split('#')[1]
         last = keys[0] = 'meta'
         keys_uniq = []
         for i, k in enumerate(keys):
@@ -153,7 +153,7 @@ def process(ort, base_id, source_csv_url):
                 i += 1
             
             if len(items['meta']) > 0 and 'Titel' in items['meta']:
-                csv_schedule.append(items)       
+                csv_schedule.append(items)
     
     #print json.dumps(csv_schedule, indent=4) 
     
@@ -164,8 +164,8 @@ def process(ort, base_id, source_csv_url):
         duration   = (end_time - start_time).seconds/60
         
         id = str(base_id + int(event['meta']['ID']))
-        guid = voc.tools.gen_uuid(hashlib.md5(ort + room + id).hexdigest())
         room = event['meta']['Raum']
+        guid = voc.tools.gen_uuid(hashlib.md5(ort + room + id).hexdigest())
         
         event_n = OrderedDict([
             ('id', id),
@@ -180,15 +180,16 @@ def process(ort, base_id, source_csv_url):
             ('subtitle', event['meta'].get('Untertitel', '')),
             ('track', ''),
             ('type', ''),
-            ('language', 'de' ),
+            ('language', event['meta'].get('Sprache', 'de') ),
             ('abstract', ''),
             ('description', event['meta'].get('Beschreibung', '') ),
+            ('do_not_record', event['meta'].get('Aufzeichnung?', '') == 'nein'),
             ('persons', [ OrderedDict([
                 ('id', 0),
                 ('full_public_name', p.strip()),
                 #('#text', p),
             ]) for p in event['Vortragende'].values() ]),
-            ('links', [])             
+            ('links', [])
         ])
         
         #print event_n['title']
