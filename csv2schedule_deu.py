@@ -13,8 +13,9 @@ import sys, os
 import locale
 
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+if sys.version_info[0] < 3:
+  reload(sys)
+  sys.setdefaultencoding('utf-8')
 
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
@@ -97,10 +98,10 @@ def process(ort, base_id, source_csv_url):
     print(" Parsing CSV file")
     csv_schedule = []
     with open('schedule-' + ort + '.csv', 'r') as f:
-        reader = csv.reader(f)
+        reader = csv.reader(f) #, encoding='utf-8'
         
         # first header
-        keys = reader.next()
+        keys = next(reader)
         # store conference title from top left cell into schedule
         out['schedule']['conference']['title'] = keys[0].split('#')[0]
         out['schedule']['version'] = keys[0].split('#')[1]
@@ -113,7 +114,7 @@ def process(ort, base_id, source_csv_url):
             keys[i] = last
         
         # second header
-        keys2 = reader.next()
+        keys2 = next(reader)
 
         # data rows
         for row in reader:
