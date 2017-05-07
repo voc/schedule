@@ -78,31 +78,6 @@ def process(ort, base_id, source_csv_url):
     
     print('Processing ' + ort)
     
-    conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
-    
-    for i in range(out['schedule']['conference']['daysCount']):
-        date = conference_start_date + timedelta(days=i)
-        start = date + timedelta(hours=11) # conference day starts at 11:00
-        end = start + timedelta(hours=17)  # conference day lasts 17 hours
-        
-        days.append( OrderedDict([
-            ('index', i),
-            ('date' , date),
-            ('start', start),
-            ('end', end),
-        ]))
-             
-        out['schedule']['conference']['days'].append(OrderedDict([
-            ('index', i),
-            ('date' , date.strftime('%Y-%m-%d')),
-            ('start', start.isoformat()),
-            ('end', end.isoformat()),
-            ('rooms', OrderedDict())
-        ]))
-        
-
-    
-    
     if not offline:
         print(" Requesting schedule source url")
         schedule_r = requests.get(
@@ -156,6 +131,29 @@ def process(ort, base_id, source_csv_url):
                 csv_schedule.append(items)
     
     #print json.dumps(csv_schedule, indent=4) 
+    
+    print(" converting to schedule ")
+    conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
+
+    for i in range(out['schedule']['conference']['daysCount']):
+        date = conference_start_date + timedelta(days=i)
+        start = date + timedelta(hours=10) # conference day starts at 10:00
+        end = start + timedelta(hours=17)  # conference day lasts 17 hours
+        
+        days.append( OrderedDict([
+            ('index', i),
+            ('date' , date),
+            ('start', start),
+            ('end', end),
+        ]))
+             
+        out['schedule']['conference']['days'].append(OrderedDict([
+            ('index', i),
+            ('date' , date.strftime('%Y-%m-%d')),
+            ('start', start.isoformat()),
+            ('end', end.isoformat()),
+            ('rooms', OrderedDict())
+        ]))
     
     for event in csv_schedule:
         start_time = datetime.strptime( event['meta']['Datum'] + ' ' + event['meta']['Uhrzeit'], date_format)
