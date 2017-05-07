@@ -80,7 +80,7 @@ def process(ort, base_id, source_csv_url):
     print('Processing ' + ort)
     
     if not offline:
-        print(" Requesting schedule source url")
+        print(" requesting schedule source from url")
         schedule_r = requests.get(
             source_csv_url, 
             verify=False #'cacert.pem'
@@ -90,12 +90,14 @@ def process(ort, base_id, source_csv_url):
         schedule_r.encoding = 'utf-8'
         
         if schedule_r.ok is False:
-            raise Exception("  Requesting schedule from CSV source url failed, HTTP code {0}.".format(schedule_r.status_code))
+            raise Exception("  Requesting schedule from CSV source url failed, HTTP code {0} from {1}.".format(schedule_r.status_code, source_csv_url))
         
         with open('schedule-' + ort + '.csv', 'w') as f:
             f.write(schedule_r.text)
+    else:
+        print(" offline mode – using CSV from disk")
 
-    print(" Parsing CSV file")
+    print(" parsing CSV file")
     csv_schedule = []
     with open('schedule-' + ort + '.csv', 'r') as f:
         reader = csv.reader(f) #, encoding='utf-8'
@@ -103,8 +105,8 @@ def process(ort, base_id, source_csv_url):
         # first header
         keys = next(reader)
         # store conference title from top left cell into schedule
-        out['schedule']['conference']['title'] = keys[0].split('#')[0]
-        out['schedule']['version'] = keys[0].split('#')[1]
+        out['schedule']['conference']['title'] = keys[0].split('#')[0].strip()
+        out['schedule']['version'] = keys[0].split('#')[1].replace('Version', '').strip()
         last = keys[0] = 'meta'
         keys_uniq = []
         for i, k in enumerate(keys):
