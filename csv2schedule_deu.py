@@ -119,7 +119,7 @@ def process(ort, base_id, source_csv_url):
         with open('schedule-' + ort + '.csv', 'w') as f:
             f.write(schedule_r.text)
 
-    
+    print(" Parsing CSV file")
     csv_schedule = []
     with open('schedule-' + ort + '.csv', 'r') as f:
         reader = csv.reader(f)
@@ -206,6 +206,7 @@ def process(ort, base_id, source_csv_url):
     
     #print json.dumps(schedule, indent=2)
     
+    print(" writing results to disk")
     with open('schedule-' + ort + '.json', 'w') as fp:
         json.dump(out, fp, indent=4)
         
