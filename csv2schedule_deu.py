@@ -43,9 +43,9 @@ template = { "schedule":  OrderedDict([
         ("conference",  OrderedDict([
             ("title", ""), 
             ("acronym", acronym),
-            ("daysCount", 2),
-            ("start", "2017-05-06"),
-            ("end",   "2017-05-07"),
+            ("daysCount", 1),
+            ("start", ""),
+            ("end",   ""),
             ("timeslot_duration", "00:15"),
             ("days", [])
         ]))
@@ -99,6 +99,8 @@ def process(ort, base_id, source_csv_url):
 
     print(" parsing CSV file")
     csv_schedule = []
+    max_date = None
+    min_date = None
     with open('schedule-' + ort + '.csv', 'r') as f:
         reader = csv.reader(f) #, encoding='utf-8'
         
@@ -132,8 +134,18 @@ def process(ort, base_id, source_csv_url):
             
             if len(items['meta']) > 0 and 'Titel' in items['meta']:
                 csv_schedule.append(items)
+                start_time = datetime.strptime( items['meta']['Datum'] + ' ' + items['meta']['Uhrzeit'], date_format)
+                if min_date is None or start_time < min_date:
+                    min_date = start_time
+                if max_date is None or start_time > max_date:
+                    max_date = start_time
     
     #print json.dumps(csv_schedule, indent=4) 
+    
+    
+    out['schedule']['conference']['start'] = min_date.strftime('%Y-%m-%d')
+    out['schedule']['conference']['end'] = max_date.strftime('%Y-%m-%d')
+    out['schedule']['conference']['daysCont'] = (max_date - min_date).days + 1
     
     print(" converting to schedule ")
     conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
