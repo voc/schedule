@@ -13,8 +13,8 @@ import pytz
 
 
 if sys.version_info[0] < 3:
-  reload(sys)
-  sys.setdefaultencoding('utf-8')
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
@@ -107,8 +107,6 @@ def process(ort, base_id, source_csv_url):
         
         with open('schedule-' + ort + '.csv', 'w') as f:
             f.write(schedule_r.text)
-    else:
-        print(" offline mode – using CSV from disk")
 
     print(" parsing CSV file")
     csv_schedule = []
@@ -220,13 +218,11 @@ def process(ort, base_id, source_csv_url):
         
         #print event_n['title']
         
-        tmp_day = start_time - conference_start_date
-        day = tmp_day.days + 1
-        
+        day = (start_time - conference_start_date).days + 1
         day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
         if room not in day_rooms:
-            day_rooms[room] = list();
-        day_rooms[room].append(event_n);
+            day_rooms[room] = list()
+        day_rooms[room].append(event_n)
         
         
     
@@ -238,7 +234,7 @@ def process(ort, base_id, source_csv_url):
         
     with open('schedule-' + ort + '.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out));
-            
+    
     # TODO: Validate XML via schema file
     print(' end')
     
