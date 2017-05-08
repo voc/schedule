@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+import sys, os, locale, argparse
 import requests
 import json
 from collections import OrderedDict
@@ -9,8 +10,6 @@ from datetime import timedelta
 import csv
 import hashlib
 import pytz
-import sys, os
-import locale
 
 
 if sys.version_info[0] < 3:
@@ -25,17 +24,31 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 # some functions used in multiple files of this collection
 import voc.tools
 
-#begin config
-offline = True # and False
+parser = argparse.ArgumentParser()
+parser.add_argument('acronym', help='the event acronym')
+parser.add_argument('--offline', action='store_true')
+parser.add_argument('--url', action='store')
 
-acronym = 'mm17'
+parser.add_argument('-f', '--my-foo', default='foobar')
+
+
+print('')
+
+args = parser.parse_args()
+acronym = args.acronym
+if args.url:
+    source_csv_url = args.url
+    offline = args.offline
+else:
+    offline = True
+    print("No URL given, using CSV file from disk\n")
+
+# specifies the date format used in the CSV file respectivly the google docs spreadsheet
+date_format = '%Y-%m-%d %H:%M' 
 default_talk_length = timedelta(minutes=30)
-# source_csv_url = 'https://docs.google.com/spreadsheets/d/1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w/export?format=csv&id=1maNYpcrD1RHCCCD1HyemuUS5tN6FG6bdHJZr3qv-V1w&gid=0
 
 #end config
 
-
-date_format = '%Y-%m-%d %H:%M'
 
 
 template = { "schedule":  OrderedDict([
@@ -52,12 +65,10 @@ template = { "schedule":  OrderedDict([
     ])
 }
 
-output_dir = '/srv/www/schedule/' + acronym
 secondary_output_dir = "./{}/".format(acronym)
 
-if len(sys.argv) == 2:
-    output_dir = sys.argv[1]
-
+'''
+#output_dir = '/srv/www/schedule/' + acronym
 if not os.path.exists(output_dir):
     if not os.path.exists(secondary_output_dir):
         os.mkdir(output_dir) 
@@ -65,7 +76,9 @@ if not os.path.exists(output_dir):
         output_dir = secondary_output_dir
         local = True
 os.chdir(output_dir)
+'''
 
+os.chdir(secondary_output_dir)
 
 
 def main():
