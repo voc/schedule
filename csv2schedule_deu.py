@@ -65,20 +65,11 @@ template = { "schedule":  OrderedDict([
     ])
 }
 
-secondary_output_dir = "./{}/".format(acronym)
-
-'''
+output_dir = "./{}/".format(acronym)
 #output_dir = '/srv/www/schedule/' + acronym
 if not os.path.exists(output_dir):
-    if not os.path.exists(secondary_output_dir):
-        os.mkdir(output_dir) 
-    else:
-        output_dir = secondary_output_dir
-        local = True
+    os.mkdir(output_dir) 
 os.chdir(output_dir)
-'''
-
-os.chdir(secondary_output_dir)
 
 
 def main():
