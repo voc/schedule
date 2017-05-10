@@ -153,7 +153,7 @@ def process(ort, base_id, source_csv_url):
     print(" converting to schedule ")
     conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
 
-    for i in range(out['schedule']['conference']['daysCount']):
+    for i in range(out['schedule']['conference']['daysCount']+1):
         date = conference_start_date + timedelta(days=i)
         start = date + timedelta(hours=10) # conference day starts at 10:00
         end = start + timedelta(hours=17)  # conference day lasts 17 hours
