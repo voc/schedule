@@ -77,10 +77,7 @@ def main():
     process(acronym, 0, source_csv_url)
 
 def process(ort, base_id, source_csv_url):
-    global template, days
-    
     out = template
-    
     
     print('Processing ' + ort)
     
@@ -158,13 +155,6 @@ def process(ort, base_id, source_csv_url):
         start = date + timedelta(hours=10) # conference day starts at 10:00
         end = start + timedelta(hours=17)  # conference day lasts 17 hours
         
-        days.append( OrderedDict([
-            ('index', i),
-            ('date' , date),
-            ('start', start),
-            ('end', end),
-        ]))
-             
         out['schedule']['conference']['days'].append(OrderedDict([
             ('index', i),
             ('date' , date.strftime('%Y-%m-%d')),
