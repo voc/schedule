@@ -28,9 +28,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument('acronym', help='the event acronym')
 parser.add_argument('--offline', action='store_true')
 parser.add_argument('--url', action='store')
+parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
+parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=30, help='default length of a talk in minutes, will be cut when overlapping with other talk')
 
-parser.add_argument('-f', '--my-foo', default='foobar')
 
+# output file name (prefix)?
+# output dir (base) as config option?
 
 print('')
 
@@ -45,10 +48,8 @@ else:
 
 # specifies the date format used in the CSV file respectivly the google docs spreadsheet
 date_format = '%Y-%m-%d %H:%M' 
-default_talk_length = timedelta(minutes=30)
-
-#end config
-
+default_talk_length = timedelta(minutes=args.default_talk_length)
+# end config
 
 
 template = { "schedule":  OrderedDict([
@@ -195,7 +196,7 @@ def process(ort, base_id, source_csv_url):
             ('subtitle', event['meta'].get('Untertitel', '')),
             ('track', ''),
             ('type', ''),
-            ('language', event['meta'].get('Sprache', 'de') ),
+            ('language', event['meta'].get('Sprache', args.default_language) ),
             ('abstract', ''),
             ('description', event['meta'].get('Beschreibung', '') ),
             ('do_not_record', event['meta'].get('Aufzeichnung?', '') == 'nein'),
