@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from collections import OrderedDict
 import uuid
 import re
@@ -61,10 +63,14 @@ def copy_base_structure_list(subtree, level):
 
 
 def normalise_string(string):
-    string = re.sub('\W+', '\_', string.strip())
     string = string.lower()
+    string = string.replace(u"ä", 'ae')
+    string = string.replace(u'ö', 'oe')
+    string = string.replace(u'ü', 'ue')
+    string = string.replace(u'ß', 'ss')
+    string = re.sub('\W+', '\_', string.strip()) # replace whitespace with _
     # string = filter(unicode.isalnum, string)
-    string = re.sub('[^a-z0-9_]+', '', string)  
+    string = re.sub('[^a-z0-9_]+', '', string) # TODO: is this not already done with \W+  line above?
 
     return string
 
