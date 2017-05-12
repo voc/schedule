@@ -121,6 +121,7 @@ def process(acronym, base_id, source_csv_url):
         keys2 = next(reader)
 
         # data rows
+        last = None
         for row in reader:
             i = 0
             items = OrderedDict([ (k, OrderedDict()) for k in keys_uniq ])
@@ -132,13 +133,29 @@ def process(acronym, base_id, source_csv_url):
                     items[keys[i]][keys2[i]] = value.decode('utf-8')
                 i += 1
             
-            if len(items['meta']) > 0 and 'Titel' in items['meta']:
-                csv_schedule.append(items)
-                start_time = datetime.strptime( items['meta']['Datum'] + ' ' + items['meta']['Uhrzeit'], date_format)
-                if min_date is None or start_time < min_date:
-                    min_date = start_time
-                if max_date is None or start_time > max_date:
-                    max_date = start_time
+            try:
+              start_time = datetime.strptime( items['meta']['Datum'] + ' ' + items['meta']['Uhrzeit'], date_format)
+              items['start_time'] = start_time
+              items['end_time'] = start_time + default_talk_length
+              
+              # only accept valid entries
+              if len(items['meta']) > 0 and 'Titel' in items['meta']:
+                  csv_schedule.append(items)
+                  
+                  if min_date is None or start_time < min_date:
+                      min_date = start_time
+                  if max_date is None or start_time > max_date:
+                      max_date = start_time
+                  
+                  # check if end_time of previous event (calculated from default_talk_length) overlaps with start_time 
+                  # long term TODO: check also other events not only the previous one
+                  if last is not None and last['end_time'] > start_time:
+                      last['end_time'] = start_time
+                  last = items
+              else:
+                print(" ignoring empty/invalid row in CSV file")
+            except:
+              print(" ignoring row with invalid date in CSV file")
     
     #print json.dumps(csv_schedule, indent=4) 
     
@@ -164,21 +181,17 @@ def process(acronym, base_id, source_csv_url):
         ]))
     
     for event in csv_schedule:
-        start_time = datetime.strptime( event['meta']['Datum'] + ' ' + event['meta']['Uhrzeit'], date_format)
-        # TODO check if start_time of next (or other) event overlaps with end_time calculated from default_talk_length
-        end_time   = start_time + default_talk_length 
-        duration   = (end_time - start_time).seconds/60
-        
         id = str(base_id + int(event['meta']['ID']))
         room = event['meta']['Raum']
-        guid = voc.tools.gen_uuid(hashlib.md5(ort + room + id).hexdigest())
+        guid = voc.tools.gen_uuid(hashlib.md5(acronym + id).hexdigest())
+        duration = (event['end_time'] - event['start_time']).seconds/60
         
         event_n = OrderedDict([
             ('id', id),
             ('guid', guid),
             # ('logo', None),
-            ('date', start_time.isoformat()),
-            ('start', start_time.strftime('%H:%M')),
+            ('date', event['start_time'].isoformat()),
+            ('start', event['start_time'].strftime('%H:%M')),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
             ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['meta']['Titel'])])),
@@ -200,7 +213,7 @@ def process(acronym, base_id, source_csv_url):
         
         #print event_n['title']
         
-        day = (start_time - conference_start_date).days + 1
+        day = (event['start_time'] - conference_start_date).days + 1
         day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
         if room not in day_rooms:
             day_rooms[room] = list()
