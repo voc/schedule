@@ -18,10 +18,9 @@ if sys.version_info[0] < 3:
 
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
-#local = False
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
-# some functions used in multiple files of this collection
+# some functions used in multiple files of this script collection
 import voc.tools
 
 parser = argparse.ArgumentParser()
@@ -43,6 +42,7 @@ if args.url:
     source_csv_url = args.url
     offline = args.offline
 else:
+    source_csv_url = None
     offline = True
     print("No URL given, using CSV file from disk\n")
 
@@ -76,10 +76,10 @@ os.chdir(output_dir)
 def main():
     process(acronym, 0, source_csv_url)
 
-def process(ort, base_id, source_csv_url):
+def process(acronym, base_id, source_csv_url):
     out = template
     
-    print('Processing ' + ort)
+    print('Processing ' + acronym)
     
     if not offline:
         print(" requesting schedule source from url")
@@ -88,20 +88,20 @@ def process(ort, base_id, source_csv_url):
             verify=False #'cacert.pem'
         )
         
-        # don't ask me why google docs announces by header? it will send latin1 and then sends utf8...
+        # don't ask me why google docs announces by header? that it will send latin1 and then sends utf8...
         schedule_r.encoding = 'utf-8'
         
         if schedule_r.ok is False:
             raise Exception("  Requesting schedule from CSV source url failed, HTTP code {0} from {1}.".format(schedule_r.status_code, source_csv_url))
         
-        with open('schedule-' + ort + '.csv', 'w') as f:
+        with open('schedule-' + acronym + '.csv', 'w') as f:
             f.write(schedule_r.text)
 
     print(" parsing CSV file")
     csv_schedule = []
     max_date = None
     min_date = None
-    with open('schedule-' + ort + '.csv', 'r') as f:
+    with open('schedule-' + acronym + '.csv', 'r') as f:
         reader = csv.reader(f) #, encoding='utf-8'
         
         # first header
@@ -211,10 +211,10 @@ def process(ort, base_id, source_csv_url):
     #print json.dumps(schedule, indent=2)
     
     print(" writing results to disk")
-    with open('schedule-' + ort + '.json', 'w') as fp:
+    with open('schedule-' + acronym + '.json', 'w') as fp:
         json.dump(out, fp, indent=4)
         
-    with open('schedule-' + ort + '.xml', 'w') as fp:
+    with open('schedule-' + acronym + '.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out));
     
     # TODO: Validate XML via schema file
