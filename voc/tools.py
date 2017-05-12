@@ -15,7 +15,7 @@ def get_id(guid):
     if guid not in sos_ids:
         #generate new id
         sos_ids[guid] = next_id
-        next_id = next_id + 1  
+        next_id = next_id + 1
     
     return sos_ids[guid]
 
@@ -29,13 +29,13 @@ def foreach_event(schedule, func):
     out = []
     for day in schedule["schedule"]["conference"]["days"]:
         for room in day['rooms']:
-            for event in day['rooms'][room]:    
+            for event in day['rooms'][room]:
                 out.append(func(event))
     
     return out
 
 
-def copy_base_structure(subtree, level):  
+def copy_base_structure(subtree, level):
     ret = OrderedDict()
     if level > 0:
         for key, value in subtree.iteritems():
@@ -47,7 +47,7 @@ def copy_base_structure(subtree, level):
                 ret[key] = copy_base_structure(value, level-1) 
     return ret
 
-def copy_base_structure_list(subtree, level):  
+def copy_base_structure_list(subtree, level):
     ret = []
     if level > 0:
         for value in subtree:
@@ -86,7 +86,7 @@ def dict_to_attrib(d, root):
     assert isinstance(d, dict)
     for k,v in d.items():
         assert _set_attrib(root, k, v)
-            
+
 def _set_attrib(tag, k, v):
     if isinstance(v, basestring):
         tag.set(k, v)
