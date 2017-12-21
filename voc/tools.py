@@ -3,6 +3,7 @@
 from collections import OrderedDict
 import uuid
 import re
+import sys
 
 sos_ids = {}
 next_id = 1000
@@ -88,6 +89,10 @@ def normalise_time(timestr):
 from lxml import etree as ET
 #from xml.etree import cElementTree as ET
 
+#workaround to be python 3 compatible
+if sys.version_info[0] >= 3:
+    basestring = str
+
 def dict_to_attrib(d, root):
     assert isinstance(d, dict)
     for k,v in d.items():
@@ -101,8 +106,6 @@ def _set_attrib(tag, k, v):
     else:
         print("  error: unknown attribute type %s=%s" % (k, v))
 
-
-
 # dict_to_etree from http://stackoverflow.com/a/10076823
 
 # TODO:
@@ -114,7 +117,6 @@ def _set_attrib(tag, k, v):
 
 def dict_to_schedule_xml(d):
     root_node = None
-    
     
     def _to_etree(d, node, parent = ''):
         if not d:
@@ -206,4 +208,8 @@ def dict_to_schedule_xml(d):
 
     root_node = ET.Element(tag)
     _to_etree(body, root_node)
-    return ET.tostring(root_node, pretty_print = True, encoding='UTF-8')
+    
+    if sys.version_info[0] >= 3:
+        return ET.tounicode(root_node, pretty_print = True)
+    else:
+        return ET.tostring(root_node, pretty_print = True, encoding='UTF-8')

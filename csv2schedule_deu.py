@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 import sys, os, locale, argparse
@@ -101,8 +102,15 @@ def process(acronym, base_id, source_csv_url):
     csv_schedule = []
     max_date = None
     min_date = None
-    with open('schedule-' + acronym + '.csv', 'r') as f:
-        reader = csv.reader(f) #, encoding='utf-8'
+    
+    filename = 'schedule-' + acronym + '.csv'
+    if sys.version_info[0] < 3: 
+        infile = open(filename, 'rb')
+    else:
+        infile = open(filename, 'r', newline='', encoding='utf8')
+
+    with infile as f:
+        reader = csv.reader(f)
         
         # first header
         keys = next(reader)
@@ -130,7 +138,11 @@ def process(acronym, base_id, source_csv_url):
             for value in row_iter:
                 value = value.strip()
                 if keys2[i] != '' and value != '':
-                    items[keys[i]][keys2[i]] = value.decode('utf-8')
+                    try:
+                      items[keys[i]][keys2[i]] = value#.decode('utf-8')
+                    except AttributeError as e:
+                      print("Error in row {}, cell {} value: {}".format(keys[i],keys2[i], value))
+                      raise e
                 i += 1
             
             try:
@@ -183,7 +195,7 @@ def process(acronym, base_id, source_csv_url):
     for event in csv_schedule:
         id = str(base_id + int(event['meta']['ID']))
         room = event['meta']['Raum']
-        guid = voc.tools.gen_uuid(hashlib.md5(acronym + id).hexdigest())
+        guid = voc.tools.gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
         duration = (event['end_time'] - event['start_time']).seconds/60
         
         event_n = OrderedDict([
