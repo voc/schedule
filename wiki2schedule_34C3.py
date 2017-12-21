@@ -499,6 +499,6 @@ with open("_sos_ids.json", "w") as fp:
     json.dump(voc.tools.sos_ids, fp, indent=4)
 
 if not local:  
-    os.system("git add *.json *.xml")
-    os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
-    os.system("git push")
+    os.system("/usr/bin/git add *.json *.xml")
+    os.system("/usr/bin/git commit -m 'updates from " + str(datetime.now()) +  "'")
+    os.system("/usr/bin/git push")
