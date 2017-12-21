@@ -406,16 +406,17 @@ def main():
         '?Has color'
     ])   
     
+    schedule2 = None
     if use_offline_frab_schedules:
         # python3: , encoding='utf-8'
         with open("schedule_main_rooms.json", "r") as fp:
             main_schedule = parse_json(fp.read())
-        with open("schedule_sendezentrum.json", "r") as fp:    
-            schedule2 = parse_json(fp.read()) 
+        #with open("schedule_sendezentrum.json", "r") as fp:
+        #    schedule2 = parse_json(fp.read())
         
     else:
         main_schedule = json_request(main_schedule_url)
-        schedule2 = json_request(schedule2_url)
+        #schedule2 = json_request(schedule2_url)
 
     print("Processing...")
 
@@ -432,7 +433,7 @@ def main():
         full_schedule = main_schedule.copy()
 
         # add frab events from schedule2 to full_schedule
-        add_events_from_frab_schedule(schedule2)
+        #add_events_from_frab_schedule(schedule2)
     
         # add rooms now, so they are in the correct order
         for day in full_schedule["schedule"]["conference"]["days"]:
