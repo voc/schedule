@@ -55,28 +55,6 @@ if not os.path.exists(output_dir):
         local = True
 os.chdir(output_dir)
 
-room_map = OrderedDict([
-    ('Hall 1', 359),
-    ('Hall 2', 360),
-    ('Hall G', 361),
-    ('Hall 6', 362), 
-    #TODO   
-    (u'Sendezentrumsbühne', 1050),
-    ('Podcastingtisch', 1051),
-    ('Hall A.1', 1111),
-    ('Hall A.2', 1112),
-    ('Hall B',   1120),
-    ('Hall C.1', 1131),
-    ('Hall C.2', 1132),
-    ('Hall C.3', 1133),
-    ('Hall C.4', 1134),
-    ('Hall F',   1230),
-    ('Hall 13-14',  1013),
-    #('Hall 14',  1014),
-    ('Lounge DisKo',   1090),
-    # TODO: Lounge Section9
-])
-
 
 wsh_tpl = {
   "schedule": {
@@ -130,37 +108,11 @@ wsh_tpl = {
 }
 
 
-def get_room_id(room_name):
-
-    if room_name in room_map:
-        return room_map[room_name]
-    else:
-        return 0;
-
-#TODO update for 33C3 or get halfnarp json form frab instead converting schedule.xml
-track_map = {
-  # cat talks_32c3.json | jq -c '.[] | [.track_name, .track_id]' | sort | uniq 
-  "Art & Culture": 291,
-  "CCC": 300,
-  "Ethics, Society & Politics": 294,
-  "Failosophy": 299,
-  "Hardware & Making": 295,
-  "Science": 297,
-  "Security": 298,
-}
-
-def get_track_id(track_name):
-    if track_name in track_map:
-        return track_map[track_name]
-    else:
-        return 10;
-
-
 warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
 def process_wiki_events(events, sessions):
-    global out, halfnarp_out, full_schedule, workshop_schedule, warnings
+    global out, full_schedule, workshop_schedule, warnings
     events_total = 0
     events_successful = 0
     events_in_halls = 0 # aka workshops
@@ -358,19 +310,6 @@ def process_wiki_events(events, sessions):
                         wsdr[room] = list()
                     wsdr[room].append(event_n)
                 
-                    halfnarp_out.append(OrderedDict([
-                        ("event_id", event_n['id']),
-                        ("track_id", 10),
-                        ("track_name", "Session"),
-                        ("room_id", get_room_id(event_n['room'])),
-                        ("room_name", event_n['room']),
-                        ("start_time", event_n['date']),
-                        ("duration", duration*60),
-                        ("title", event_n['title']),
-                        ("abstract", event_n['description']),
-                        ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
-                    ]))
-                
                 events_successful += 1
         except:
             print("  unexpected error: " + str(sys.exc_info()[0]))
@@ -395,55 +334,6 @@ def add_events_from_frab_schedule(other_schedule):
         
     
     return
-
-def schedule_to_halfnarp(schedule):
-    out = []
-    for day in schedule["schedule"]["conference"]["days"]:
-        for room in day['rooms']:
-            for event_n in day['rooms'][room]:
-                room_id = get_room_id(event_n['room'])
-                
-                if room_id != 0:
-                    
-                    track_id = get_track_id(event_n['track'])
-                    track_name = event_n['track']
-                    
-                    duration = event_n['duration'].split(':')
-                    if len(duration) > 2:
-                        raise "  duration with three colons!?"
-                    
-                    text = ""
-                    # if event_n['abstract']: 
-                    #     text += event_n['abstract']
-                    
-                    if event_n['title'] == 'Lounge':
-                        track_name = 'Session'
-                        event_n['title'] = event_n['subtitle']
-                        event_n['persons'] = []
-                        text += event_n['description']
-                    
-                    elif track_name == 'self organized sessions':
-                        track_name = 'Session'
-                        text += event_n['subtitle'] + " \n"
-                        text += event_n['description'][:200]
-                    #if event_n['subtitle']:
-                    #    title += " - " + event_n['subtitle']
-                    
-                    
-                    out.append(OrderedDict([
-                        ("event_id", event_n['id']),
-                        ("track_id", track_id),
-                        ("track_name", track_name),
-                        ("room_id", room_id),
-                        ("room_name", event_n['room']),
-                        ("start_time", event_n['date']),
-                        ("duration", int(duration[0])*3600+int(duration[1])*60),
-                        ("title", event_n['title']),
-                        ("abstract", text),
-                        ("speakers", ", ".join([p['public_name'] for p in event_n['persons']])),
-                    ]))
-    return out
-
 
 def parse_json(text):
     # this more complex way is necessary 
@@ -535,9 +425,8 @@ def main():
 
     print("Combining data...") 
     
-    global out, halfnarp_out 
+    global out
     out = {}
-    halfnarp_out = []
 
 
     if not only_workshops:
@@ -553,7 +442,7 @@ def main():
                     day['rooms'][key] = list()
     
     
-    # fill full_schedule, out and halfnarp_out
+    # fill full_schedule and out
     process_wiki_events(events, sessions)
     
 
@@ -568,9 +457,7 @@ def main():
     
     with open('workshops.schedule.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(workshop_schedule))
-    
-    with open("workshops.halfnarp.json", "w") as fp:
-        json.dump(halfnarp_out, fp, indent=4)
+
     
     if not only_workshops:    
         with open("everything.schedule.json", "w") as fp:
@@ -579,10 +466,6 @@ def main():
         with open('everything.schedule.xml', 'w') as fp:
             fp.write(voc.tools.dict_to_schedule_xml(full_schedule))   
     
-        # TODO only main + second + workshops + lounge
-        with open('common.halfnarp.json', 'w') as fp:
-            json.dump(schedule_to_halfnarp(full_schedule), fp, indent=4)
-            
 
     
     print('done')
