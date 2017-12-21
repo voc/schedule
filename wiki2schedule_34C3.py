@@ -169,7 +169,7 @@ def process_wiki_events(events, sessions):
             return foo
     
     for event_wiki_name, event_r in events.iteritems(): #python2
-    #for event_wiki_name, event_r in events.items(): #pyhton3
+    #for event_wiki_name, event_r in events.items(): #python3
         wiki_page_name = event_wiki_name.split('#')[0].replace(' ', '_') # or see fullurl property
         wiki_edit_url = wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
         
@@ -238,7 +238,7 @@ def process_wiki_events(events, sessions):
             # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
             # This will only work if there are unique keys in each json string.
             combined = dict(session.items() + event.items()) #python2
-            #combined = session.copy() #ptyhon3 TOOD test if this really leads to the same result
+            #combined = session.copy() #python3 TOOD test if this really leads to the same result
             #combined.update(event)
             
             
