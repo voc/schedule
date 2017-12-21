@@ -37,11 +37,15 @@ use_offline_frab_schedules = False
 only_workshops = False
 
 
-wiki_url = 'https://events.ccc.de/congress/2016/wiki'
-main_schedule_url = 'https://fahrplan.events.ccc.de/congress/2016/Fahrplan/schedule.json' 
-schedule2_url = 'https://frab.das-sendezentrum.de/de/33c3/public/schedule.json' 
-output_dir = "/srv/www/33C3"
-secondary_output_dir = "./33C3"
+congress_nr = 34
+year = "2017"
+xc3 = "34C3"
+
+wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
+main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
+schedule2_url = ''
+output_dir = "/srv/www/" + xc3
+secondary_output_dir = "./" + xc3
 
 
 if len(sys.argv) == 2:
@@ -60,46 +64,46 @@ wsh_tpl = {
   "schedule": {
     "version": "XXX", 
     "conference": OrderedDict([
-      ("acronym", "33c3"), 
-      ("title", "33. Chaos Communication Congress"), 
-      ("start", "2016-12-27"), 
-      ("end", "2016-12-30"), 
+      ("acronym", xc3),
+      ("title", "{}. Chaos Communication Congress".format(congress_nr)),
+      ("start", year+"-12-27"),
+      ("end", year+"-12-30"),
       ("daysCount", 5), 
       ("timeslot_duration", "00:15"), 
       ("days", [
         {
           "index": 0, 
-          "date": "2016-12-26", 
-          "day_start": "2016-12-26T06:00:00+01:00", 
-          "day_end": "2016-12-27T04:00:00+01:00", 
+          "date": year+"-12-26",
+          "day_start": year+"-12-26T06:00:00+01:00",
+          "day_end": year+"-12-27T04:00:00+01:00",
           "rooms": {}
         }, 
         {
           "index": 1, 
-          "date": "2016-12-27", 
-          "day_start": "2016-12-27T06:00:00+01:00", 
-          "day_end": "2016-12-28T04:00:00+01:00", 
+          "date": year+"-12-27",
+          "day_start": year+"-12-27T06:00:00+01:00",
+          "day_end": year+"-12-28T04:00:00+01:00",
           "rooms": {}
         }, 
         {
           "index": 2, 
-          "date": "2016-12-28", 
-          "day_start": "2016-12-28T06:00:00+01:00", 
-          "day_end": "2016-12-29T04:00:00+01:00", 
+          "date": year+"-12-28",
+          "day_start": year+"-12-28T06:00:00+01:00",
+          "day_end": year+"-12-29T04:00:00+01:00",
           "rooms": {}
         }, 
         {
           "index": 3, 
-          "date": "2016-12-29", 
-          "day_start": "2016-12-29T06:00:00+01:00", 
-          "day_end": "2016-12-30T04:00:00+01:00", 
+          "date": year+"-12-29",
+          "day_start": year+"-12-29T06:00:00+01:00",
+          "day_end": year+"-12-30T04:00:00+01:00",
           "rooms": {}
         }, 
         {
           "index": 4, 
-          "date": "2016-12-30", 
-          "day_start": "2016-12-30T06:00:00+01:00", 
-          "day_end": "2016-12-30T23:00:00+01:00", 
+          "date": year+"-12-30",
+          "day_start": year+"-12-30T06:00:00+01:00",
+          "day_end": year+"-12-30T23:00:00+01:00",
           "rooms": {}
         } 
       ])
