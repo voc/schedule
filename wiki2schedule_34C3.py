@@ -382,11 +382,6 @@ def json_request(url):
     if schedule_r.ok is False:
         raise Exception("  Request failed, HTTP {0}.".format(schedule_r.status_code))
 
-    print("Requesting schedule frab") 
-    schedule2_r = requests.get(
-        schedule2_url, 
-        verify=True #'cacert.pem'
-    )
     schedule = parse_json(schedule_r.text)
     
     return schedule
