@@ -90,11 +90,7 @@ def process(acronym, base_id, source_csv_url):
     
     if not offline:
         print(" requesting schedule source from url")
-        schedule_r = requests.get(
-            source_csv_url, 
-            verify=False #'cacert.pem'
-        )
-        
+        schedule_r = requests.get(source_csv_url)
         # don't ask me why google docs announces by header? that it will send latin1 and then sends utf8...
         schedule_r.encoding = 'utf-8'
         
