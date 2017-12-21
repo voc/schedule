@@ -31,7 +31,7 @@ parser.add_argument('--url', action='store')
 parser.add_argument('--output-folder', '-o', action='store', dest='output_folder')
 parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
 parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=30, help='default length of a talk in minutes, will be cut when overlapping with other talk')
-
+parser.add_argument('--split-persons', action='store_true', dest='split_persons')
 
 # output file name (prefix)?
 # output dir (base) as config option?
@@ -199,6 +199,9 @@ def process(acronym, base_id, source_csv_url):
         room = event['meta']['Raum']
         guid = voc.tools.gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
         duration = (event['end_time'] - event['start_time']).seconds/60
+
+	if args.split_persons:
+	    event['Vortragende'] = event['Vortragende'].split(',')
         
         event_n = OrderedDict([
             ('id', id),
