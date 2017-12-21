@@ -28,6 +28,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('acronym', help='the event acronym')
 parser.add_argument('--offline', action='store_true')
 parser.add_argument('--url', action='store')
+parser.add_argument('--output-folder', '-o', action='store', dest='output_folder')
 parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
 parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=30, help='default length of a talk in minutes, will be cut when overlapping with other talk')
 
@@ -46,6 +47,13 @@ else:
     source_csv_url = None
     offline = True
     print("No URL given, using CSV file from disk\n")
+
+if args.output_folder:
+    output_dir = args.output_folder
+else:
+    output_dir = "./{}/".format(acronym)
+#output_dir = '/srv/www/schedule/' + acronym
+
 
 # specifies the date format used in the CSV file respectivly the google docs spreadsheet
 date_format = '%Y-%m-%d %H:%M' 
@@ -67,8 +75,6 @@ template = { "schedule":  OrderedDict([
     ])
 }
 
-output_dir = "./{}/".format(acronym)
-#output_dir = '/srv/www/schedule/' + acronym
 if not os.path.exists(output_dir):
     os.mkdir(output_dir) 
 os.chdir(output_dir)
