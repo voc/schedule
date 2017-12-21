@@ -200,8 +200,8 @@ def process(acronym, base_id, source_csv_url):
         guid = voc.tools.gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
         duration = (event['end_time'] - event['start_time']).seconds/60
 
-	if args.split_persons:
-	    event['Vortragende'] = event['Vortragende'].split(',')
+    if args.split_persons:
+        event['Vortragende'] = event['Vortragende'].split(',')
         
         event_n = OrderedDict([
             ('id', id),
