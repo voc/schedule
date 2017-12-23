@@ -27,10 +27,11 @@ import voc.tools
 parser = argparse.ArgumentParser()
 parser.add_argument('acronym', help='the event acronym')
 parser.add_argument('--offline', action='store_true')
+parser.add_argument('-v', action='store_true', dest='verbose')
 parser.add_argument('--url', action='store')
 parser.add_argument('--output-folder', '-o', action='store', dest='output_folder')
 parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
-parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=30, help='default length of a talk in minutes, will be cut when overlapping with other talk')
+parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=45, help='default length of a talk in minutes, will be cut when overlapping with other talk')
 parser.add_argument('--split-persons', action='store_true', dest='split_persons')
 
 # output file name (prefix)?
@@ -81,7 +82,7 @@ os.chdir(output_dir)
 
 
 def main():
-    process(acronym, 0, source_csv_url)
+    process(acronym, 1000, source_csv_url)
 
 def process(acronym, base_id, source_csv_url):
     out = template
@@ -119,57 +120,55 @@ def process(acronym, base_id, source_csv_url):
         # store conference title from top left cell into schedule
         out['schedule']['conference']['title'] = keys[0].split('#')[0].strip()
         out['schedule']['version'] = keys[0].split('#')[1].replace('Version', '').strip()
-        last = keys[0] = 'meta'
-        keys_uniq = []
-        for i, k in enumerate(keys):
-            if k != '': 
-                last = k.strip()
-                keys_uniq.append(last)
-            keys[i] = last
-        
-        # second header
-        keys2 = next(reader)
+
+        # skip day header
+        next(reader)
+
+        # real column header
+        keys = next(reader)
 
         # data rows
         last = None
         for row in reader:
             i = 0
-            items = OrderedDict([ (k, OrderedDict()) for k in keys_uniq ])
+            items = OrderedDict()
             row_iter = iter(row)
             
             for value in row_iter:
                 value = value.strip()
-                if keys2[i] != '' and value != '':
+                if keys[i] != '' and value != '':
                     try:
-                      items[keys[i]][keys2[i]] = value#.decode('utf-8')
+                      items[keys[i]] = value#.decode('utf-8')
                     except AttributeError as e:
-                      print("Error in row {}, cell {} value: {}".format(keys[i],keys2[i], value))
+                      print("Error in cell {} value: {}".format(keys[i], value))
                       raise e
                 i += 1
+
+
             
-            try:
-              start_time = datetime.strptime( items['meta']['Datum'] + ' ' + items['meta']['Uhrzeit'], date_format)
-              items['start_time'] = start_time
-              items['end_time'] = start_time + default_talk_length
-              
-              # only accept valid entries
-              if len(items['meta']) > 0 and 'Titel' in items['meta']:
-                  csv_schedule.append(items)
-                  
-                  if min_date is None or start_time < min_date:
-                      min_date = start_time
-                  if max_date is None or start_time > max_date:
-                      max_date = start_time
-                  
-                  # check if end_time of previous event (calculated from default_talk_length) overlaps with start_time 
-                  # long term TODO: check also other events not only the previous one
-                  if last is not None and last['end_time'] > start_time:
-                      last['end_time'] = start_time
-                  last = items
-              else:
-                print(" ignoring empty/invalid row in CSV file")
-            except:
-              print(" ignoring row with invalid date in CSV file")
+            #try:
+            # only accept valid entries
+            if len(items) > 1 and 'Tag' in items:
+                # ignore repeating headers
+                if items['Tag'] == 'Tag':
+                    continue
+
+                day = 26 + int(items['Tag'])
+                items['start_time'] = datetime.strptime("2017-12-{} {}".format(day, items['Zeit von']),
+                                                      date_format)
+                items['end_time'] = datetime.strptime("2017-12-{} {}".format(day, items['Zeit bis']),
+                                                    date_format)
+
+                csv_schedule.append(items)
+
+                if min_date is None or items['start_time'] < min_date:
+                    min_date = items['start_time']
+                if max_date is None or items['end_time'] > max_date:
+                    max_date = items['end_time']
+            else:
+                if args.verbose: print(" ignoring empty/invalid row in CSV file")
+            #except:
+            #    print(" ignoring row with invalid date in CSV file")
     
     #print json.dumps(csv_schedule, indent=4) 
     
@@ -195,13 +194,11 @@ def process(acronym, base_id, source_csv_url):
         ]))
     
     for event in csv_schedule:
-        id = str(base_id + int(event['meta']['ID']))
-        room = event['meta']['Raum']
+        id = str(base_id + int(event['ID']))
         guid = voc.tools.gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
         duration = (event['end_time'] - event['start_time']).seconds/60
+        room = event['Ort']
 
-    if args.split_persons:
-        event['Vortragende'] = event['Vortragende'].split(',')
         
         event_n = OrderedDict([
             ('id', id),
@@ -211,20 +208,20 @@ def process(acronym, base_id, source_csv_url):
             ('start', event['start_time'].strftime('%H:%M')),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
-            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['meta']['Titel'])])),
-            ('title', event['meta']['Titel']),
-            ('subtitle', event['meta'].get('Untertitel', '')),
+            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['Aktion'])])),
+            ('title', event['Aktion']),
+            ('subtitle', event.get('Untertitel', '')),
             ('track', ''),
             ('type', ''),
-            ('language', event['meta'].get('Sprache', args.default_language) ),
+            ('language', event.get('Sprache', args.default_language) ),
             ('abstract', ''),
-            ('description', event['meta'].get('Beschreibung', '') ),
-            ('do_not_record', event['meta'].get('Aufzeichnung?', '') == 'nein'),
+            ('description', event.get('Beschreibung', '') ),
+            ('do_not_record', event.get('Aufzeichnung?', '') == 'nein'),
             ('persons', [ OrderedDict([
                 ('id', 0),
                 ('full_public_name', p.strip()),
                 #('#text', p),
-            ]) for p in event['Vortragende'].values() ]),
+            ]) for p in event['Wer?'].split(',') ]),
             ('links', [])
         ])
         
