@@ -31,8 +31,6 @@ parser.add_argument('-v', action='store_true', dest='verbose')
 parser.add_argument('--url', action='store')
 parser.add_argument('--output-folder', '-o', action='store', dest='output_folder')
 parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
-parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=45, help='default length of a talk in minutes, will be cut when overlapping with other talk')
-parser.add_argument('--split-persons', action='store_true', dest='split_persons')
 
 # output file name (prefix)?
 # output dir (base) as config option?
@@ -55,17 +53,13 @@ else:
     output_dir = "./{}/".format(acronym)
 #output_dir = '/srv/www/schedule/' + acronym
 
-
-# specifies the date format used in the CSV file respectivly the google docs spreadsheet
-date_format = '%Y-%m-%d %H:%M' 
-default_talk_length = timedelta(minutes=args.default_talk_length)
 # end config
 
 
 template = { "schedule":  OrderedDict([
-        ("version", "1.0"),
+        ("version", "undefined"),
         ("conference",  OrderedDict([
-            ("title", ""), 
+            ("title", "34C3 – DLF"),
             ("acronym", acronym),
             ("daysCount", 1),
             ("start", ""),
@@ -82,7 +76,7 @@ os.chdir(output_dir)
 
 
 def main():
-    process(acronym, 1000, source_csv_url)
+    process(acronym, 2000, source_csv_url)
 
 def process(acronym, base_id, source_csv_url):
     out = template
@@ -115,16 +109,7 @@ def process(acronym, base_id, source_csv_url):
     with infile as f:
         reader = csv.reader(f)
         
-        # first header
-        keys = next(reader)
-        # store conference title from top left cell into schedule
-        out['schedule']['conference']['title'] = keys[0].split('#')[0].strip()
-        out['schedule']['version'] = keys[0].split('#')[1].replace('Version', '').strip()
-
-        # skip day header
-        next(reader)
-
-        # real column header
+        # header
         keys = next(reader)
 
         # data rows
@@ -143,30 +128,28 @@ def process(acronym, base_id, source_csv_url):
                       print("Error in cell {} value: {}".format(keys[i], value))
                       raise e
                 i += 1
-
-
             
             #try:
-            # only accept valid entries
-            if len(items) > 1 and 'Tag' in items:
-                # ignore repeating headers
-                if items['Tag'] == 'Tag':
-                    continue
+            # specifies the date format used in the CSV file respectivly the google docs spreadsheet
 
-                day = 26 + int(items['Tag'])
-                items['start_time'] = datetime.strptime("2017-12-{} {}".format(day, items['Zeit von']),
-                                                      date_format)
-                items['end_time'] = datetime.strptime("2017-12-{} {}".format(day, items['Zeit bis']),
-                                                    date_format)
+            #print(items)
+
+            # only accept valid entries
+            if len(items) > 3 and 'ID' in items:
+                date_format = '%d.%m.%Y %H:%M:%S'
+                start_time = datetime.strptime(items['Datum'] + ' ' + items['Von'], date_format)
+                items['start_time'] = start_time
+                end_time = datetime.strptime(items['Datum'] + ' ' + items['Bis'], date_format)
+                items['end_time'] = end_time
 
                 csv_schedule.append(items)
 
-                if min_date is None or items['start_time'] < min_date:
-                    min_date = items['start_time']
-                if max_date is None or items['end_time'] > max_date:
-                    max_date = items['end_time']
-            else:
-                if args.verbose: print(" ignoring empty/invalid row in CSV file")
+                if min_date is None or start_time < min_date:
+                    min_date = start_time
+                if max_date is None or start_time > max_date:
+                    max_date = start_time
+            #else:
+            #    print(" ignoring empty/invalid row in CSV file")
             #except:
             #    print(" ignoring row with invalid date in CSV file")
     
@@ -197,8 +180,16 @@ def process(acronym, base_id, source_csv_url):
         id = str(base_id + int(event['ID']))
         guid = voc.tools.gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
         duration = (event['end_time'] - event['start_time']).seconds/60
-        room = event['Ort']
 
+        title = event['Was']
+        if 'Thema' in event:
+            thema = event['Thema'].split("\n", 1)
+            if len(thema) > 1:
+                title, description = thema
+            else:
+                description = event.get('Thema', '')
+
+        room = 'CCL Hall 2'
         
         event_n = OrderedDict([
             ('id', id),
@@ -208,20 +199,20 @@ def process(acronym, base_id, source_csv_url):
             ('start', event['start_time'].strftime('%H:%M')),
             ('duration', '%d:%02d' % divmod(duration, 60) ),
             ('room', room),
-            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['Aktion'])])),
-            ('title', event['Aktion']),
+            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(title)])),
+            ('title', title),
             ('subtitle', event.get('Untertitel', '')),
             ('track', ''),
             ('type', ''),
             ('language', event.get('Sprache', args.default_language) ),
             ('abstract', ''),
-            ('description', event.get('Beschreibung', '') ),
+            ('description', description.strip()),
             ('do_not_record', event.get('Aufzeichnung?', '') == 'nein'),
             ('persons', [ OrderedDict([
                 ('id', 0),
                 ('full_public_name', p.strip()),
                 #('#text', p),
-            ]) for p in event['Wer?'].split(',') ]),
+            ]) for p in event['Wer'].split(',') ]),
             ('links', [])
         ])
         
@@ -235,7 +226,7 @@ def process(acronym, base_id, source_csv_url):
         
         
     
-    #print json.dumps(schedule, indent=2)
+    #print(json.dumps(out, indent=2))
     
     print(" writing results to disk")
     with open('schedule-' + acronym + '.json', 'w') as fp:
