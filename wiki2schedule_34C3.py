@@ -111,10 +111,25 @@ wsh_tpl = {
   }
 }
 
-
+# this list/map is required to sort the events in the schedule.xml in a consistant way
+rooms = {
+    "Lecture room 11",
+    "Seminar room 14-15",
+    "Lecture room 12",
+    "Seminar room 13",
+    "CCL Hall 3",
+    "Chaos West Stage",
+    "Hive Stage",
+    "Komona Aquarius",
+    "Komona Coral Reef",
+    "Komona D.Ressrosa",
+    "Komona Blue Princess",
+    "Kidspace"
+}
 warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
+
 def process_wiki_events(events, sessions):
     global out, full_schedule, workshop_schedule, warnings
     events_total = 0
@@ -262,8 +277,11 @@ def process_wiki_events(events, sessions):
                 lang = ''
                 if session['Held in language'] and len(session['Held in language']) > 0:
                     lang = session['Held in language'][0].split(' - ', 1)[0]
-                
-                guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
+
+                if len(event['GUID']) > 0:
+                    guid = event['GUID'][0]
+                else:
+                    guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 
                 event_n = OrderedDict([
                     ('id', voc.tools.get_id(guid)),
@@ -403,7 +421,9 @@ def main():
         '?Has start time', '?Has end time', '?Has duration',
         '?Has session location', 
         '?Has event track',
-        '?Has color'
+    
+        '?Has color',
+        '?GUID'
     ])   
     
     schedule2 = None
@@ -421,14 +441,15 @@ def main():
     print("Processing...")
 
     workshop_schedule = wsh_tpl# voc.tools.copy_base_structure(main_schedule, 5);
-    
 
-    print("Combining data...") 
+    # add rooms now, so they are in the correct order
+    for day in workshop_schedule["schedule"]["conference"]["days"]:
+        for key in rooms:
+            if key not in day['rooms']:
+                day['rooms'][key] = list()
     
-    global out
-    out = {}
-    room_map = {}
-
+    
+    print("Combining data...")
 
     if not only_workshops:
         full_schedule = main_schedule.copy()
@@ -438,11 +459,12 @@ def main():
     
         # add rooms now, so they are in the correct order
         for day in full_schedule["schedule"]["conference"]["days"]:
-            for key in room_map.keys():
+            for key in rooms:
                 if key not in day['rooms']:
                     day['rooms'][key] = list()
-    
-    
+
+    global out
+    out = {}
     # fill full_schedule and out
     process_wiki_events(events, sessions)
     
