@@ -31,8 +31,6 @@ parser.add_argument('-v', action='store_true', dest='verbose')
 parser.add_argument('--url', action='store')
 parser.add_argument('--output-folder', '-o', action='store', dest='output_folder')
 parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
-parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=45, help='default length of a talk in minutes, will be cut when overlapping with other talk')
-parser.add_argument('--split-persons', action='store_true', dest='split_persons')
 
 # output file name (prefix)?
 # output dir (base) as config option?
@@ -53,12 +51,10 @@ if args.output_folder:
     output_dir = args.output_folder
 else:
     output_dir = "./{}/".format(acronym)
-#output_dir = '/srv/www/schedule/' + acronym
 
 
 # specifies the date format used in the CSV file respectivly the google docs spreadsheet
 date_format = '%Y-%m-%d %H:%M' 
-default_talk_length = timedelta(minutes=args.default_talk_length)
 # end config
 
 

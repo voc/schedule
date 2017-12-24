@@ -212,7 +212,7 @@ def process(acronym, base_id, source_csv_url):
                 ('id', 0),
                 ('full_public_name', p.strip()),
                 #('#text', p),
-            ]) for p in event['Wer'].split(',') ]),
+            ]) for p in event.get('Wer', '').split(',') ]),
             ('links', [])
         ])
         

@@ -111,7 +111,8 @@ wsh_tpl = {
   }
 }
 
-# this list/map is required to sort the events in the schedule.xml in a consistant way
+# this list/map is required to sort the events in the schedule.xml in the correct way
+# other rooms/assemblies are added at the end on demand.
 rooms = {
     "Lecture room 11",
     "Seminar room 14-15",
@@ -421,7 +422,6 @@ def main():
         '?Has start time', '?Has end time', '?Has duration',
         '?Has session location', 
         '?Has event track',
-    
         '?Has color',
         '?GUID'
     ])   
