@@ -24,7 +24,7 @@ if sys.version_info.major < 3:
 # * fix NameError: name 'basestring' is not defined in voc.tools.dict_to_schedule_xml()
 
 tz = pytz.timezone('Europe/Amsterdam')
-time_stamp_offset = -3600 #  Workaround until MediaWiki server will be fixed
+time_stamp_offset = 0 #  Workaround until MediaWiki server will be fixed
 
 parser = optparse.OptionParser()
 parser.add_option('--online', action="store_true", dest="online", default=False)
