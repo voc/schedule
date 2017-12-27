@@ -135,9 +135,6 @@ def dict_to_schedule_xml(d):
                     if k[:4] == 'day_':
                         # remove day_ prefix from items
                         k = k[4:]
-                    if k == 'index':
-                        # in json the first index is 0, in the xml the first day has index 1
-                        v += 1
                 
                 if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (basestring, int))):
                     _set_attrib(node, k, v)
