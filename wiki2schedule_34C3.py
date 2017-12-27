@@ -43,7 +43,7 @@ xc3 = "34C3"
 
 wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
-schedule2_url = ''
+schedule2_url = 'https://frab.txtfile.eu/en/34c3-ffc/public/schedule.json'
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
 
@@ -62,8 +62,8 @@ os.chdir(output_dir)
 
 wsh_tpl = {
   "schedule": {
-    "version": "XXX", 
-    "conference": OrderedDict([
+      "version": datetime.now().strftime('%Y-%m-%d %H:%M'), 
+      "conference": OrderedDict([
       ("acronym", xc3),
       ("title", "{}. Chaos Communication Congress".format(congress_nr)),
       ("start", year+"-12-27"),
@@ -113,7 +113,7 @@ wsh_tpl = {
 
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
-rooms = {
+rooms = [
     "Lecture room 11",
     "Seminar room 14-15",
     "Lecture room 12",
@@ -126,7 +126,7 @@ rooms = {
     "Komona D.Ressrosa",
     "Komona Blue Princess",
     "Kidspace"
-}
+]
 warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
@@ -426,17 +426,17 @@ def main():
         '?GUID'
     ])   
     
-    schedule2 = None
+    #schedule2 = None
     if use_offline_frab_schedules:
         # python3: , encoding='utf-8'
         with open("schedule_main_rooms.json", "r") as fp:
             main_schedule = parse_json(fp.read())
-        #with open("schedule_sendezentrum.json", "r") as fp:
-        #    schedule2 = parse_json(fp.read())
+        with open("schedule_sendezentrum.json", "r") as fp:
+            schedule2 = parse_json(fp.read())
         
     else:
         main_schedule = json_request(main_schedule_url)
-        #schedule2 = json_request(schedule2_url)
+        schedule2 = json_request(schedule2_url)
 
     print("Processing...")
 
@@ -454,15 +454,16 @@ def main():
     if not only_workshops:
         full_schedule = main_schedule.copy()
 
-        # add frab events from schedule2 to full_schedule
-        #add_events_from_frab_schedule(schedule2)
-    
+ 
         # add rooms now, so they are in the correct order
         for day in full_schedule["schedule"]["conference"]["days"]:
             for key in rooms:
                 if key not in day['rooms']:
                     day['rooms'][key] = list()
 
+        # add frab events from schedule2 to full_schedule
+        add_events_from_frab_schedule(schedule2)
+   
     global out
     out = {}
     # fill full_schedule and out
