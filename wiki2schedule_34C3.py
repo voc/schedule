@@ -348,12 +348,14 @@ def process_wiki_events(events, sessions):
 def add_events_from_frab_schedule(other_schedule):
     
     for day in other_schedule["schedule"]["conference"]["days"]:
-        if day["date"] != full_schedule["schedule"]["conference"]["days"][day["index"]]["date"]:
-            print("the other schedule's days have to be the same like primary schedule")
+        if day["date"] != full_schedule["schedule"]["conference"]["days"][day["index"]-1]["date"]:
+            print()
+            print("  WARNING: the other schedule's days have to be the same like primary schedule!")
+            print()
             return False
         
         for room in day["rooms"]:
-            full_schedule["schedule"]["conference"]["days"][day["index"]]["rooms"][room] = day["rooms"][room]
+            full_schedule["schedule"]["conference"]["days"][day["index"]-1]["rooms"][room] = day["rooms"][room]
         
     
     return
