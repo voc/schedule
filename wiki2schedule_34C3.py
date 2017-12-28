@@ -38,8 +38,8 @@ only_workshops = False
 
 
 congress_nr = 34
-year = "2017"
-xc3 = "34C3"
+year = str(1983 + congress_nr) #="2017"
+xc3 = "{x}C3".format(x=congress_nr)
 
 wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
@@ -62,11 +62,11 @@ os.chdir(output_dir)
 
 wsh_tpl = {
   "schedule": {
-      "version": datetime.now().strftime('%Y-%m-%d %H:%M'), 
-      "conference": OrderedDict([
-      ("acronym", xc3),
-      ("title", "{}. Chaos Communication Congress".format(congress_nr)),
-      ("start", year+"-12-27"),
+    "version": datetime.now().strftime('%Y-%m-%d %H:%M'),
+    "conference": OrderedDict([
+      ("acronym", u"{}C3-workshops".format(congress_nr) ),
+      ("title", u"{}. Chaos Communication Congress - Workshops".format(congress_nr)),
+      ("start", year+"-12-26"),
       ("end", year+"-12-30"),
       ("daysCount", 5), 
       ("timeslot_duration", "00:15"), 
@@ -125,7 +125,10 @@ rooms = [
     "Komona Coral Reef",
     "Komona D.Ressrosa",
     "Komona Blue Princess",
-    "Kidspace"
+    "Kidspace",
+    "Open Infra Stage",
+    "Meetup Domo",
+    "Workshop Area"
 ]
 warnings = False
 events_with_warnings = 0
@@ -433,7 +436,7 @@ def main():
         # python3: , encoding='utf-8'
         with open("schedule_main_rooms.json", "r") as fp:
             main_schedule = parse_json(fp.read())
-        with open("schedule_sendezentrum.json", "r") as fp:
+        with open("schedule_open-infra.json", "r") as fp:
             schedule2 = parse_json(fp.read())
         
     else:
@@ -455,7 +458,7 @@ def main():
 
     if not only_workshops:
         full_schedule = main_schedule.copy()
-
+        full_schedule["schedule"]["version"] += " " + workshop_schedule["schedule"]["version"]
  
         # add rooms now, so they are in the correct order
         for day in full_schedule["schedule"]["conference"]["days"]:
