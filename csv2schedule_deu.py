@@ -172,19 +172,19 @@ def process(acronym, base_id, source_csv_url):
                 print(" ignoring row with invalid date in CSV file")
                 print(e)
 
-    #print json.dumps(csv_schedule, indent=4)
-
+    #print(json.dumps(csv_schedule, indent=4))
+    # does no longer work as datetime is not json serializable
 
     out['schedule']['conference']['start'] = min_date.strftime('%Y-%m-%d')
     out['schedule']['conference']['end'] = max_date.strftime('%Y-%m-%d')
-    out['schedule']['conference']['daysCount'] = (max_date - min_date).days + 1
+    out['schedule']['conference']['daysCount'] = (max_date.date() - min_date.date()).days + 1
 
     print(" converting to schedule ")
     conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
 
     for i in range(out['schedule']['conference']['daysCount']):
         date = conference_start_date + timedelta(days=i)
-        start = date + timedelta(hours=10) # conference day starts at 10:00
+        start = date + timedelta(hours=8) # conference day starts at 8:00
         end = start + timedelta(hours=17)  # conference day lasts 17 hours
 
         out['schedule']['conference']['days'].append(OrderedDict([
@@ -229,15 +229,15 @@ def process(acronym, base_id, source_csv_url):
             ('links', [])
         ])
 
-        #print event_n['title']
-
+        #print(event_n['title'])
+        
         day = (event['start_time'] - conference_start_date).days + 1
         day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
         if room not in day_rooms:
             day_rooms[room] = list()
         day_rooms[room].append(event_n)
 
-    #print json.dumps(schedule, indent=2)
+    #print(json.dumps(schedule, indent=2))
 
     print(" writing results to disk")
     with open('schedule-' + acronym + '.json', 'w') as fp:
