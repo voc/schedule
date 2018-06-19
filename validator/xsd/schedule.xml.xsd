@@ -14,7 +14,7 @@
               <xs:element type="xs:date"    name="end" minOccurs="0"/>
               <xs:element type="xs:integer" name="days" minOccurs="0"/>
               <xs:element type="duration"   name="timeslot_duration" minOccurs="0"/>
-              <xs:element type="base_url"   name="base_url" minOccurs="0"/>
+              <xs:element type="xs:anyURI"   name="base_url" minOccurs="0"/>
             </xs:all>
           </xs:complexType>
         </xs:element>
@@ -75,8 +75,8 @@
       <xs:element type="recording" name="recording" minOccurs="0"/>
       <xs:element type="links" name="links" minOccurs="0"/>
       <xs:element type="attachments" name="attachments" minOccurs="0"/>
-      <xs:element type="video_download_url" name="video_download_url" minOccurs="0"/>
-      <xs:element type="event_fahrplan_url" name="url" minOccurs="0"/>
+      <xs:element type="xs:anyURI" name="video_download_url" minOccurs="0"/>
+      <xs:element type="xs:anyURI" name="url" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
     <xs:attribute name="guid" type="uuid" use="required"/>
@@ -97,24 +97,6 @@
   <xs:simpleType name="uuid">
     <xs:restriction base="xs:string">
       <xs:pattern value="[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="video_download_url">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="http.+"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="event_fahrplan_url">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="http.+"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="base_url">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="http.+"/>
     </xs:restriction>
   </xs:simpleType>
 
