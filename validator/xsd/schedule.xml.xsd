@@ -102,19 +102,19 @@
 
   <xs:simpleType name="video_download_url">
     <xs:restriction base="xs:string">
-      <xs:pattern value="http[:/.0-9a-zA-Z]+"/>
+      <xs:pattern value="http.+"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="event_fahrplan_url">
     <xs:restriction base="xs:string">
-      <xs:pattern value="http[:/.0-9a-zA-Z]+"/>
+      <xs:pattern value="http.+"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="base_url">
     <xs:restriction base="xs:string">
-      <xs:pattern value="http[:/.0-9a-zA-Z]+"/>
+      <xs:pattern value="http.+"/>
     </xs:restriction>
   </xs:simpleType>
 
