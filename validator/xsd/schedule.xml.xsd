@@ -75,6 +75,7 @@
       <xs:element type="links" name="links" minOccurs="0"/>
       <xs:element type="attachments" name="attachments" minOccurs="0"/>
       <xs:element type="video_download_url" name="video_download_url" minOccurs="0"/>
+      <xs:element type="event_fahrplan_url" name="url" minOccurs="0" maxOccurs="1"/>
     </xs:all>
     <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
     <xs:attribute name="guid" type="uuid" use="required"/>
@@ -99,6 +100,12 @@
   </xs:simpleType>
 
   <xs:simpleType name="video_download_url">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="http[:/.0-9a-zA-Z]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="event_fahrplan_url">
     <xs:restriction base="xs:string">
       <xs:pattern value="http[:/.0-9a-zA-Z]+"/>
     </xs:restriction>
