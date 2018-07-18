@@ -8,7 +8,7 @@
   %p
     Submitted schedule.xml is valid!
 
-%form(method="post" action="#{url('/validate')}" )
+%form(method="post" action="#{url(settings.sub_path + '/validate')}" )
   %textarea{name: "schedulexml", rows: 40, cols: 100, value: "bla"}
     = params[:schedulexml] || "enter a URL or plain XML"
   %br

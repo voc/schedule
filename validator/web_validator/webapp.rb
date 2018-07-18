@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'sinatra'
+require 'sinatra/namespace'
 require 'haml'
 require 'nokogiri'
 require 'net/http'
@@ -7,6 +8,8 @@ require 'digest'
 
 XSD_URL = "https://raw.githubusercontent.com/voc/schedule/master/validator/"\
           "xsd/schedule.xml.xsd"
+
+set :sub_path, ""
 
 set :raw_xsd do
   uri  = URI.parse(XSD_URL)
@@ -33,18 +36,20 @@ error 400..510 do
   'Boom'
 end
 
-get '/' do
-  haml :index
-end
-
-post '/validate' do
-  if params[:schedulexml] =~ /\Ahttp/
-    params[:schedulexml] = get_schedule(params[:schedulexml])
+namespace "#{settings.sub_path}" do
+  get '/' do
+    haml :index
   end
 
-  @errors = validate_xml(params[:schedulexml], settings.xsd)
+  post '/validate' do
+    if params[:schedulexml] =~ /\Ahttp/
+      params[:schedulexml] = get_schedule(params[:schedulexml])
+    end
 
-  haml :index
+    @errors = validate_xml(params[:schedulexml], settings.xsd)
+
+    haml :index
+  end
 end
 
 helpers do
