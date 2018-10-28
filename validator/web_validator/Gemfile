@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'sinatra', '~> 2.0.3'
-gem 'sinatra-contrib', '~>2.0.3'
+gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'nokogiri'
-gem 'haml', '~> 5.0.4'
+gem 'haml'
