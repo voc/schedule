@@ -55,7 +55,8 @@ namespace "#{settings.sub_path}" do
         "xsd_datetime" => settings.xsd_md5[:datetime],
         "xsd_md5" => settings.xsd_md5[:md5],
         "xsd_url" => XSD_URL,
-        "request_url" => request.url }.to_json
+        "request_url" => request.url,
+        "acronym" => get_acronym(params[:schedulexml]) }.to_json
     else
       haml :index
     end
@@ -84,6 +85,13 @@ helpers do
     end
 
     errors
+  end
+
+  def get_acronym(xml)
+    doc = Nokogiri::XML(xml)
+    acronym_element = doc.xpath('.//acronym')
+
+    acronym_element.text
   end
 
   def xsd_md5(raw_xsd)
