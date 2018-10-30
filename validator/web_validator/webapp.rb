@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'sinatra'
 require 'sinatra/namespace'
+
 require 'haml'
 require 'nokogiri'
 require 'net/http'
@@ -48,7 +49,16 @@ namespace "#{settings.sub_path}" do
 
     @errors = validate_xml(params[:schedulexml], settings.xsd)
 
-    haml :index
+    case request.content_type
+    when /application\/json/
+      { "errors" => @errors, "error_count" => @errors.count,
+        "xsd_datetime" => settings.xsd_md5[:datetime],
+        "xsd_md5" => settings.xsd_md5[:md5],
+        "xsd_url" => XSD_URL,
+        "request_url" => request.url }.to_json
+    else
+      haml :index
+    end
   end
 end
 
