@@ -27,6 +27,7 @@ import voc.tools
 parser = argparse.ArgumentParser()
 parser.add_argument('acronym', help='the event acronym')
 parser.add_argument('--offline', action='store_true')
+parser.add_argument('--verbose', '-v', action='store_true')
 parser.add_argument('--url', action='store')
 parser.add_argument('--output-folder', '-o', action='store', dest='output_folder')
 parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
@@ -172,12 +173,12 @@ def process(acronym, base_id, source_csv_url):
                 print(" ignoring row with invalid date in CSV file")
                 print(e)
 
-    #print(json.dumps(csv_schedule, indent=4))
-    # does no longer work as datetime is not json serializable
+    if args.verbose:
+        print(json.dumps(csv_schedule, indent=4, default=str))
 
     out['schedule']['conference']['start'] = min_date.strftime('%Y-%m-%d')
     out['schedule']['conference']['end'] = max_date.strftime('%Y-%m-%d')
-    out['schedule']['conference']['daysCount'] = (max_date.date() - min_date.date()).days + 1
+    out['schedule']['conference']['daysCount'] = (max_date - min_date).days + 1
 
     print(" converting to schedule ")
     conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
@@ -188,7 +189,7 @@ def process(acronym, base_id, source_csv_url):
         end = start + timedelta(hours=17)  # conference day lasts 17 hours
 
         out['schedule']['conference']['days'].append(OrderedDict([
-            ('index', i),
+            ('index', i+1),
             ('date' , date.strftime('%Y-%m-%d')),
             ('start', start.isoformat()),
             ('end', end.isoformat()),
@@ -229,15 +230,17 @@ def process(acronym, base_id, source_csv_url):
             ('links', [])
         ])
 
-        #print(event_n['title'])
-        
+        if args.verbose:
+            print(event_n['title'])
+
         day = (event['start_time'] - conference_start_date).days + 1
         day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
         if room not in day_rooms:
             day_rooms[room] = list()
         day_rooms[room].append(event_n)
 
-    #print(json.dumps(schedule, indent=2))
+    if args.verbose:
+        print(json.dumps(out, indent=2))
 
     print(" writing results to disk")
     with open('schedule-' + acronym + '.json', 'w') as fp:
