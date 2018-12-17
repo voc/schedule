@@ -37,13 +37,19 @@ use_offline_frab_schedules = False
 only_workshops = False
 
 
-congress_nr = 34
-year = str(1983 + congress_nr) #="2017"
+congress_nr = 35
+year = str(1983 + congress_nr)
 xc3 = "{x}C3".format(x=congress_nr)
 
 wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
-schedule2_url = 'https://frab.txtfile.eu/en/34c3-ffc/public/schedule.json'
+additional_schedule_urls = OrderedDict([
+    ('chaos-west', 'https://fahrplan.chaos-west.de/35c3chaoswest/schedule/export/schedule.json'),
+    ('open-infra', 'https://pretalx.35c3oio.freifunk.space/35c3oio/schedule/export/schedule.json'),
+    ('sendezentrum', 'https://35c3.studio-link.de/35c3/schedule/export/schedule.json'),
+    ('wikipaka', 'https://cfp.verschwoerhaus.de/35c3/schedule/export/schedule.json')
+])
+
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
 
@@ -120,19 +126,22 @@ wsh_tpl = {
 rooms = [
     "Lecture room 11",
     "Seminar room 14-15",
-    "Lecture room 12",
     "Seminar room 13",
-    "CCL Hall 3",
+    "Lecture room M1",
+    "Lecture room M2",
+    "Lecture room M3",
     "Chaos West Stage",
-    "Hive Stage",
-    "Komona Aquarius",
-    "Komona Coral Reef",
-    "Komona D.Ressrosa",
-    "Komona Blue Princess",
-    "Kidspace",
-    "Open Infra Stage",
-    "Meetup Domo",
-    "Workshop Area"
+    "OIO lecture arena",
+    "Vintage Computing Cluster",
+    "c-base",
+ #   "Hive Stage",
+ #   "Komona Aquarius",
+ #   "Komona Coral Reef",
+ #   "Komona D.Ressrosa",
+ #   "Komona Blue Princess",
+ #   "Kidspace",
+ #   "Meetup Domo",
+ #   "Workshop Area"
 ]
 warnings = False
 events_with_warnings = 0
