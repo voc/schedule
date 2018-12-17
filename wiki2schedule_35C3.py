@@ -458,12 +458,8 @@ def main():
         # python3: , encoding='utf-8'
         with open("schedule_main_rooms.json", "r") as fp:
             main_schedule = parse_json(fp.read())
-        with open("schedule_open-infra.json", "r") as fp:
-            schedule2 = parse_json(fp.read())
-        
     else:
         main_schedule = json_request(main_schedule_url)
-        schedule2 = json_request(schedule2_url)
 
     print("Processing...")
 
@@ -480,17 +476,39 @@ def main():
 
     if not only_workshops:
         full_schedule = main_schedule.copy()
-        full_schedule["schedule"]["version"] += " " + workshop_schedule["schedule"]["version"]
- 
+
         # add rooms now, so they are in the correct order
         for day in full_schedule["schedule"]["conference"]["days"]:
             for key in rooms:
                 if key not in day['rooms']:
                     day['rooms'][key] = list()
 
-        # add frab events from schedule2 to full_schedule
-        add_events_from_frab_schedule(schedule2)
-   
+        # add frab events from additional_schedule's to full_schedule
+        for key in additional_schedule_urls:
+            try:
+                if use_offline_frab_schedules:
+                    # python3: , encoding='utf-8'
+                    with open("schedule_{}.json".format(key), "r") as fp:
+                        other_schedule = parse_json(fp.read())
+                else:
+                    other_schedule = json_request(additional_schedule_urls[key])
+                
+                if add_events_from_frab_schedule(other_schedule):
+                    print("  success")
+                full_schedule["schedule"]["version"] += " " + other_schedule["schedule"]["version"]
+
+                
+            except Exception as e:
+                print("  ERROR:" + str(e))
+            except:
+                print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
+
+        
+        full_schedule["schedule"]["version"] += " " + workshop_schedule["schedule"]["version"]
+
+    # write all imported schedules in to one merged schedule.json/xml
+    export_schedule("import-merged", full_schedule)
+
     global out
     out = {}
     # fill full_schedule and out
