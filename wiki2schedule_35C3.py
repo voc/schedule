@@ -52,11 +52,15 @@ if len(sys.argv) == 2:
     output_dir = sys.argv[1]
 
 if not os.path.exists(output_dir):
-    if not os.path.exists(secondary_output_dir):
-        os.mkdir(output_dir) 
-    else:
-        output_dir = secondary_output_dir
-        local = True
+    try:
+        if not os.path.exists(secondary_output_dir):
+            os.mkdir(output_dir) 
+        else:
+            output_dir = secondary_output_dir
+            local = True
+    except:
+        print('Please create directory named {} if you want to run in local mode'.format(secondary_output_dir))
+        exit(-1)
 os.chdir(output_dir)
 
 
@@ -236,7 +240,7 @@ def process_wiki_events(events, sessions):
                 warn("  has no start time")
                 day_s = None
             else:
-                time_stamp = event['Has start time'][0]
+                time_stamp = event['Has start time'][0]['timestamp']
                 date_time = datetime.fromtimestamp(int(time_stamp) + time_stamp_offset)
                 start_time = tz.localize(date_time)
                 day_s = get_day(start_time)
@@ -324,8 +328,8 @@ def process_wiki_events(events, sessions):
                 if day != 0 and not only_workshops:      
                     fsdr = full_schedule["schedule"]["conference"]["days"][day-1]["rooms"]
                     if room not in fsdr:
-                        fsdr[room] = list();
-                    fsdr[room].append(event_n);
+                        fsdr[room] = list()
+                    fsdr[room].append(event_n)
     
                 
                 if is_workshop_room_session:
@@ -410,6 +414,15 @@ def json_request(url):
     
     return schedule
 
+def export_schedule(filename, schedule):
+    with open("{}.schedule.json".format(filename), "w") as fp:
+        json.dump(schedule, fp, indent=4)
+    
+    with open('{}.schedule.xml'.format(filename), 'w') as fp:
+        fp.write(voc.tools.dict_to_schedule_xml(schedule))
+
+
+
 
 def main():
     global full_schedule, workshop_schedule
@@ -476,33 +489,23 @@ def main():
     
 
     #print json.dumps(workshop_schedule, indent=2)
-    
+
+    # write imported data from wiki to one merged file   
     with open("sessions_complete.json", "w") as fp:
         json.dump(out, fp, indent=4)
-    
 
-    with open("workshops.schedule.json", "w") as fp:
-        json.dump(workshop_schedule, fp, indent=4)
-    
-    with open('workshops.schedule.xml', 'w') as fp:
-        fp.write(voc.tools.dict_to_schedule_xml(workshop_schedule))
+    # write all sessions in workshop rooms to an additional schedule.json/xml
+    export_schedule("workshops", workshop_schedule)
 
-    
+    # write all events to one big schedule.json/xml
     if not only_workshops:    
-        with open("everything.schedule.json", "w") as fp:
-            json.dump(full_schedule, fp, indent=4)
-        
-        with open('everything.schedule.xml', 'w') as fp:
-            fp.write(voc.tools.dict_to_schedule_xml(full_schedule))   
-    
-
+        export_schedule("everything", full_schedule)
     
     print('done')
 
 
 if os.path.isfile("_sos_ids.json"):
     with open("_sos_ids.json", "r") as fp:
-        #sos_ids = json.load(fp) 
         # maintain order from file
         temp = fp.read()
         sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
