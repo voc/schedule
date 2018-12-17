@@ -362,19 +362,37 @@ def process_wiki_events(events, sessions):
         print(" (use --show-assembly-warnings cli option to show all warnings)")   
 
 def add_events_from_frab_schedule(other_schedule):
-    
+
+    primary_start = dateutil.parser.parse(full_schedule["schedule"]["conference"]["start"])
+    other_start = dateutil.parser.parse(other_schedule["schedule"]["conference"]["start"])
+    offset = (other_start - primary_start).days
+
+    '''   try:
+        while other_schedule["schedule"]["conference"]["days"][offset]["date"] != full_schedule["schedule"]["conference"]["days"][0]["date"]:
+            offset += 1
+    except:
+        print("  ERROR: no overlap between other schedule and primary schedule")
+        return False  '''
+
     for day in other_schedule["schedule"]["conference"]["days"]:
-        if day["date"] != full_schedule["schedule"]["conference"]["days"][day["index"]-1]["date"]:
-            print()
-            print("  WARNING: the other schedule's days have to be the same like primary schedule!")
-            print()
+        target_day = day["index"] - 1 + offset 
+
+        if target_day < 0:
+            print( "  ignoring day {} from {}, as primary schedule starts at {}".format(
+                day["date"], other_schedule["schedule"]["conference"]["acronym"], full_schedule["schedule"]["conference"]["start"]) 
+            )
+            continue
+
+        if day["date"] != full_schedule["schedule"]["conference"]["days"][target_day]["date"]:
+            print(target_day)
+            print("  WARNING: the other schedule's days have to match primary schedule, in some extend!")
             return False
         
         for room in day["rooms"]:
-            full_schedule["schedule"]["conference"]["days"][day["index"]-1]["rooms"][room] = day["rooms"][room]
+            full_schedule["schedule"]["conference"]["days"][target_day]["rooms"][room] = day["rooms"][room]
         
     
-    return
+    return True
 
 def parse_json(text):
     # this more complex way is necessary 
