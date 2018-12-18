@@ -394,6 +394,15 @@ def add_events_from_frab_schedule(other_schedule):
     
     return True
 
+def get_schedule(name, url):
+    if use_offline_frab_schedules:
+        # python3: , encoding='utf-8'
+        with open("schedule_{}.json".format(name), "r") as fp:
+            return parse_json(fp.read())
+    else:
+        return json_request(url)
+
+
 def parse_json(text):
     # this more complex way is necessary 
     # to maintain the same order as in the input file
@@ -470,15 +479,9 @@ def main():
         '?Has color',
         '?GUID'
     ])   
-    
-    #schedule2 = None
-    if use_offline_frab_schedules:
-        # python3: , encoding='utf-8'
-        with open("schedule_main_rooms.json", "r") as fp:
-            main_schedule = parse_json(fp.read())
-    else:
-        main_schedule = json_request(main_schedule_url)
 
+
+    main_schedule = get_schedule('main_rooms', main_schedule_url)
     print("Processing...")
 
     workshop_schedule = wsh_tpl# voc.tools.copy_base_structure(main_schedule, 5);
@@ -504,12 +507,7 @@ def main():
         # add frab events from additional_schedule's to full_schedule
         for key in additional_schedule_urls:
             try:
-                if use_offline_frab_schedules:
-                    # python3: , encoding='utf-8'
-                    with open("schedule_{}.json".format(key), "r") as fp:
-                        other_schedule = parse_json(fp.read())
-                else:
-                    other_schedule = json_request(additional_schedule_urls[key])
+                other_schedule = get_schedule(key, additional_schedule_urls[key])
                 
                 if add_events_from_frab_schedule(other_schedule):
                     print("  success")
