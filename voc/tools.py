@@ -139,9 +139,10 @@ def dict_to_schedule_xml(d):
                 if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (basestring, int))):
                     _set_attrib(node, k, v)
                     count -= 1
-                elif k == 'url':
-                    _set_attrib(node, 'href', v)
-                    count -= 1
+                # for what was this url->href workaround for?
+                #elif k == 'url':
+                #    _set_attrib(node, 'href', v)
+                #    count -= 1
                 # if all the previous items got mapped to an attribute, drop additional element name
                 # and write value as ctext
                 elif count == 1 and isinstance(v, basestring):
