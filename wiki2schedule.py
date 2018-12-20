@@ -31,6 +31,8 @@ parser = optparse.OptionParser()
 parser.add_option('--online', action="store_true", dest="online", default=False)
 parser.add_option('--show-assembly-warnings', action="store_true", dest="show_assembly_warnings", default=False)
 parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
+parser.add_option('--git', action="store_true", dest="git", default=False)
+
 
 options, args = parser.parse_args()
 local = False
@@ -366,12 +368,12 @@ if os.path.isfile("_sos_ids.json"):
     with open("_sos_ids.json", "r") as fp:
         # maintain order from file
         temp = fp.read()
-        sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
+        voc.tools.sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
     
     if sys.version_info.major < 3:
-        next_id = max(sos_ids.itervalues())+1
+        voc.tools.next_id = max(voc.tools.sos_ids.itervalues())+1
     else:
-        next_id = max(sos_ids.values())+1
+        voc.tools.next_id = max(voc.tools.sos_ids.values())+1
 
 if __name__ == '__main__':
     generate_wiki_schedules()
@@ -379,3 +381,9 @@ if __name__ == '__main__':
 #write sos_ids to disk
 with open("_sos_ids.json", "w") as fp:
     json.dump(voc.tools.sos_ids, fp, indent=4)
+
+
+if not local or options.git:  
+    os.system("/usr/bin/git add *.json *.xml")
+    os.system("/usr/bin/git commit -m 'updates from " + str(datetime.now()) +  "'")
+    #os.system("/usr/bin/git push")

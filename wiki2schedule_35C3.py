@@ -456,7 +456,7 @@ def export_schedule(filename, schedule):
         json.dump(schedule, fp, indent=4)
     
     with open('{}.schedule.xml'.format(filename), 'w') as fp:
-        fp.write(voc.tools.dict_to_schedule_xml(schedule))
+        fp.write(Schedule(json=schedule).xml())
 
 
 
@@ -527,7 +527,7 @@ def main():
     export_schedule("import-merged", full_schedule)
 
     global out
-    out = {}
+    out = OrderedDict()
     # fill full_schedule and out
     process_wiki_events(events, sessions)
     
@@ -552,12 +552,12 @@ if os.path.isfile("_sos_ids.json"):
     with open("_sos_ids.json", "r") as fp:
         # maintain order from file
         temp = fp.read()
-        sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
+        voc.tools.sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
     
     if sys.version_info.major < 3:
-        next_id = max(sos_ids.itervalues())+1
+        voc.tools.next_id = max(voc.tools.sos_ids.itervalues())+1
     else:
-        next_id = max(sos_ids.values())+1
+        voc.tools.next_id = max(voc.tools.sos_ids.values())+1
 
 
 def first(x):
