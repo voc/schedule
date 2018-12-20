@@ -249,6 +249,9 @@ class Schedule:
                     if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (basestring, int))):
                         _set_attrib(node, k, v)
                         count -= 1
+                    elif k == 'url' and parent != 'event':
+                        _set_attrib(node, 'href', v)
+                        count -= 1
                     elif count == 1 and isinstance(v, basestring):
                         node.text = v
                     else:
