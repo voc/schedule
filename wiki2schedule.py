@@ -258,7 +258,8 @@ def process_wiki_events(events, sessions):
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                     warn('   GUID was empty, generated one for now. Not shure if its stable...')
                 if guid in used_guids:
-                    raise Warning(' GUID {} was already used before, ignoring this event. Please fix the session wiki page to ensure GUID uniqueness!'.format(guid))
+                    warn('   GUID {} was already used before, generated a random one for now. Please fix the session wiki page to ensure users can stay subscribed to event!'.format(guid))
+                    guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 used_guids.append(guid)
 
                 event_n = Event([
