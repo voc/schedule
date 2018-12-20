@@ -14,6 +14,7 @@ import optparse
 
 # some functions used in multiple files of this collection
 import voc.tools
+from voc.schedule import Schedule
 
 # reconfigure default encoding to utf8 for python2
 if sys.version_info.major < 3:
@@ -212,7 +213,7 @@ def process_wiki_events(events, sessions):
         
         try:
             event = event_r['printouts']
-            temp = event_wiki_name.split('# ', 2);
+            temp = event_wiki_name.split('# ', 2)
             session_wiki_name = temp[0]
 
             room = ''
@@ -259,7 +260,7 @@ def process_wiki_events(events, sessions):
             # print json.dumps(sessions, indent=4)
             # print ""
             # print json.dumps(wiki_session, indent=4)
-            session = wiki_session['printouts'];
+            session = wiki_session['printouts']
             try:
                 session['Has title'] = [remove_prefix(session_wiki_name)]
             except IndexError as e:
@@ -290,7 +291,7 @@ def process_wiki_events(events, sessions):
                 day = int(day_s)
                 duration = 0
                 if event['Has duration']:
-                    duration = event['Has duration'][0];
+                    duration = event['Has duration'][0]
                 lang = ''
                 if session['Held in language'] and len(session['Held in language']) > 0:
                     lang = session['Held in language'][0].split(' - ', 1)[0]
@@ -484,7 +485,7 @@ def main():
     main_schedule = get_schedule('main_rooms', main_schedule_url)
     print("Processing...")
 
-    workshop_schedule = wsh_tpl# voc.tools.copy_base_structure(main_schedule, 5);
+    workshop_schedule = wsh_tpl# voc.tools.copy_base_structure(main_schedule, 5)
 
     # add rooms now, so they are in the correct order
     for day in workshop_schedule["schedule"]["conference"]["days"]:
