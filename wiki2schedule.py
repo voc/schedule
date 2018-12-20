@@ -89,23 +89,8 @@ rooms = [
 
 def generate_wiki_schedules():
     global wiki_schedule, workshop_schedule
-        
-    sessions = wiki_request('[[Category:Session]]', [
-        '?Has description',
-        '?Has session type', 
-        '?Held in language', 
-        '?Is organized by', 
-        '?Has website'
-    ])
-
-    events = wiki_request('[[Has object type::Event]]', [
-        '?Has subtitle',
-        '?Has start time', '?Has end time', '?Has duration',
-        '?Has session location', 
-        '?Has event track',
-        '?Has color',
-        '?GUID'
-    ])   
+    
+    data = Wiki(wiki_url)
 
     print("Processing...")
 
@@ -118,15 +103,15 @@ def generate_wiki_schedules():
     
     print("Combining data...")
 
-    global out
-    out = {}
+    global sessions_complete
+    sessions_complete = OrderedDict()
 
-    # process_wiki_events() fills global variables out, wiki_schedule, workshop_schedule,
-    process_wiki_events(events, sessions)
+    # process_wiki_events() fills global variables out, wiki_schedule, workshop_schedule
+    process_wiki_events(data)
     
     # write imported data from wiki to one merged file   
     with open("sessions_complete.json", "w") as fp:
-        json.dump(out, fp, indent=4)
+        json.dump(sessions_complete, fp, indent=4)
 
     wiki_schedule.export("wiki")
     # write all sessions in workshop rooms to an additional schedule.json/xml
@@ -138,8 +123,8 @@ warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
 
-def process_wiki_events(events, sessions):
-    global out, wiki_schedule, workshop_schedule, warnings
+def process_wiki_events(wiki):
+    global sessions_complete, wiki_schedule, workshop_schedule, warnings
     events_total = 0
     events_successful = 0
     events_in_halls = 0 # aka workshops
@@ -156,22 +141,17 @@ def process_wiki_events(events, sessions):
             if is_workshop_room_session or options.show_assembly_warnings:
                 print('')
                 print(event_wiki_name)
-                if room: print('  at ' + room )
+                if start_time: print('  at ' + start_time.isoformat() )
+                if room: print('  in ' + room )
                 print('  ' + wiki_edit_url)
             
         #if not is_workshop_room_session:
         #    msg += ' – at assembly?'
         if is_workshop_room_session or options.show_assembly_warnings:
             print(msg)
-
-    def remove_prefix(foo):
-        if ':' in foo:
-            return foo.split(':', 1)[1]
-        else:
-            return foo
     
-    for event_wiki_name, event_r in events.iteritems(): #python2
-    #for event_wiki_name, event_r in events.items(): #python3
+    for event_wiki_name, event_r in wiki.events.iteritems(): #python2
+    #for event_wiki_name, event_r in wiki.events.items(): #python3
         
         warnings = False
         sys.stdout.write('.')
@@ -179,40 +159,22 @@ def process_wiki_events(events, sessions):
         try:
             wiki_page_name = event_wiki_name.split('#')[0].replace(' ', '_') # or see fullurl property
             wiki_edit_url = wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
-            #print(event_wiki_name + ' ' + wiki_edit_url)
-
+            
+            session = wiki.parent_of_event(event_wiki_name)
             event = event_r['printouts']
-            session_wiki_name = event_wiki_name.split('# ', 2)[0]
-
-            room = ''
-            is_workshop_room_session = False
-            
-            if session_wiki_name in sessions:
-                wiki_session = sessions[session_wiki_name]
-            else: 
-                #is_workshop_room_session = True # workaround/don't ask 
-                # This happens for imported events like these at the bottom of [[Static:Schedule]]
-                warn('  event without session? -> ignore event')
-                continue
-            
-            session = wiki_session['printouts']
-            try:
-                session['Has title'] = [remove_prefix(session_wiki_name)]
-            except IndexError:
-                warn("  Skipping malformed session wiki name {0}.".format(session_wiki_name))
-                continue
-            session['fullurl'] = sessions[session_wiki_name]['fullurl']
-        
+            event_n = None
             events_total += 1
                     
-            # TODO can one Event take place in multiple rooms? – yes...
+            # One Event take place in multiple rooms...
             # WORKAROND If that is the case just pick the first one
+            room = ''
+            is_workshop_room_session = False
             if len(event['Has session location']) == 1:
                 room = event['Has session location'][0]['fulltext']
                 
                 if room.split(':', 1)[0] == 'Room':
                     is_workshop_room_session = True
-                    room = remove_prefix(room)
+                    room = Wiki.remove_prefix(room)
             
             elif len(event['Has session location']) == 0:
                 warn("  has no room yet")
@@ -220,31 +182,23 @@ def process_wiki_events(events, sessions):
                 warn("  WARNING: has multiple rooms ???, just picking the first one…")
                 event['Has session location'] = event['Has session location'][0]
             
-            
-            
-            if len(event['Has start time']) < 1:
-                warn("  has no start time")
-                day_s = None
-            else:
-                time_stamp = event['Has start time'][0]['timestamp']
-                date_time = datetime.fromtimestamp(int(time_stamp) + time_stamp_offset)
-                start_time = tz.localize(date_time)
-                day_s = workshop_schedule.get_day_from_time(start_time)
-    
-            
             # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
             # This will only work if there are unique keys in each json string.
             combined = dict(session.items() + event.items()) #python2
             #combined = session.copy() #python3 TOOD test if this really leads to the same result
             #combined.update(event)
+            sessions_complete[event_wiki_name] = combined         
             
-            
-            #print json.dumps(combined, indent=4)    
-            
-            out[event_wiki_name] = combined
-            #if is_workshop_room_session and day_s is not None and event['Has duration']:
-            if day_s is not None and event['Has duration']:                
-                day = int(day_s)
+            if len(event['Has start time']) < 1:
+                warn("  has no start time")
+                day = None
+            else:
+                date_time = datetime.fromtimestamp(int(event['Has start time'][0]['timestamp']) + time_stamp_offset)
+                start_time = tz.localize(date_time)
+                day = workshop_schedule.get_day_from_time(start_time)
+    
+            #if is_workshop_room_session and day is not None and event['Has duration']:
+            if day is not None and event['Has duration']:                
                 duration = 0
                 if event['Has duration']:
                     duration = event['Has duration'][0]
@@ -282,7 +236,7 @@ def process_wiki_events(events, sessions):
                     ('persons', [ OrderedDict([
                         ('id', 0),
                         ('url', p['fullurl']),
-                        ('public_name', remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works 
+                        ('public_name', Wiki.remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works 
                     ]) for p in session['Is organized by'] ]),
                     ('links', session['Has website'] + [session['fullurl']])             
                 ], start_time)
@@ -318,37 +272,92 @@ def process_wiki_events(events, sessions):
     if not options.show_assembly_warnings:
         print(" (use --show-assembly-warnings cli option to show all warnings)")   
 
+class Wiki:
+    '''
+    This class is a container for self-organized sessions from a Semantic Mediawiki instance.
+    One session can have one or multiple events (aka slots) when it takes place.
+    '''
+    wiki_url = None
+    sessions = []
+    events = []
 
+    def __init__(self, wiki_url):
+        self.wiki_url = wiki_url
+        self.sessions = self.query('[[Category:Session]]', [
+            '?Has description',
+            '?Has session type', 
+            '?Held in language', 
+            '?Is organized by', 
+            '?Has website'
+        ])
 
-def wiki_request(q, po):
-    r = None
-    
-    print("Requesting wiki " + q)
-    
-    # Retry up to three times
-    for _ in range(3):
-        r = requests.get(
-            wiki_url + '/index.php?title=Special:Ask', 
-            params=(
-                ('q', q),
-                ('po', "\r\n".join(po)),
-                ('p[format]', 'json'),
-                ('p[limit]', 500),
-            )
-        )
-        if r.ok is True:
-            break
-        print(".")
+        self.events = self.query('[[Has object type::Event]]', [
+            '?Has subtitle',
+            '?Has start time', '?Has end time', '?Has duration',
+            '?Has session location', 
+            '?Has event track',
+            '?Has color',
+            '?GUID'
+        ])
+
+    def query(self, q, po):
+        r = None
         
+        print("Requesting wiki " + q)
+        
+        # Retry up to three times
+        for _ in range(3):
+            r = requests.get(
+                self.wiki_url + '/index.php?title=Special:Ask', 
+                params=(
+                    ('q', q),
+                    ('po', "\r\n".join(po)),
+                    ('p[format]', 'json'),
+                    ('p[limit]', 500),
+                )
+            )
+            if r.ok is True:
+                break
+            print(".")
+            
+        
+        if r.ok is False:
+            raise Exception("   Requesting failed, HTTP {0}.".format(r.status_code))
+        
+        # this more complex way instead of sessions_r.json()['results'] is necessary 
+        # to maintain the same order as in the input file
+        results = voc.tools.parse_json(r.text)['results'] 
+        
+        return results
+
     
-    if r.ok is False:
-        raise Exception("   Requesting failed, HTTP {0}.".format(r.status_code))
+    def parent_of_event(self, event_wiki_name):
+        session_wiki_name = event_wiki_name.split('# ', 2)[0]
+
+        if session_wiki_name in self.sessions:
+            wiki_session = self.sessions[session_wiki_name]
+        else: 
+            #is_workshop_room_session = True # workaround/don't ask 
+            # This happens for imported events like these at the bottom of [[Static:Schedule]]
+            raise Warning('  event without session? -> ignore event')
+
+        session = wiki_session['printouts']
+        session['fullurl'] = wiki_session['fullurl']
+
+        try:
+            session['Has title'] = [Wiki.remove_prefix(session_wiki_name)]
+        except IndexError:
+            raise Warning("  Skipping malformed session wiki name {0}.".format(session_wiki_name))
+
+        return session
+
     
-    # this more complex way instead of sessions_r.json()['results'] is necessary 
-    # to maintain the same order as in the input file
-    results = voc.tools.parse_json(r.text)['results'] 
-    
-    return results
+    @classmethod
+    def remove_prefix(cls, foo):
+        if ':' in foo:
+            return foo.split(':', 1)[1]
+        else:
+            return foo
 
 
 
