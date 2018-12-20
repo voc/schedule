@@ -143,6 +143,7 @@ def process_wiki_events(events, sessions):
     events_total = 0
     events_successful = 0
     events_in_halls = 0 # aka workshops
+    used_guids = []
 
     def warn(msg):
         global warnings, events_with_warnings, events_in_halls_with_warnings
@@ -255,7 +256,11 @@ def process_wiki_events(events, sessions):
                     guid = event['GUID'][0]
                 else:
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
-                
+                    warn('   GUID was empty, generated one for now. Not shure if its stable...')
+                if guid in used_guids:
+                    raise Warning(' GUID {} was already used before, ignoring this event. Please fix the session wiki page to ensure GUID uniqueness!'.format(guid))
+                used_guids.append(guid)
+
                 event_n = Event([
                     ('id', voc.tools.get_id(guid)),
                     ('guid', guid),
