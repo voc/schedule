@@ -73,19 +73,7 @@ rooms = [
     "Seminar room 13",
     "Lecture room M1",
     "Lecture room M2",
-    "Lecture room M3",
-    "Chaos West Stage",
-    "OIO lecture arena",
-    "Vintage Computing Cluster",
-    "c-base",
- #   "Hive Stage",
- #   "Komona Aquarius",
- #   "Komona Coral Reef",
- #   "Komona D.Ressrosa",
- #   "Komona Blue Princess",
- #   "Kidspace",
- #   "Meetup Domo",
- #   "Workshop Area"
+    "Lecture room M3"
 ]
 
 
