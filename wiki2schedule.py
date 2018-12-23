@@ -206,8 +206,10 @@ def process_wiki_events(wiki):
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 used_guids.append(guid)
 
+                local_id = voc.tools.get_id(guid)
+
                 event_n = Event([
-                    ('id', voc.tools.get_id(guid)),
+                    ('id', local_id),
                     ('guid', guid),
                     ('logo', None),
                     ('date', start_time.isoformat()),
@@ -215,7 +217,11 @@ def process_wiki_events(wiki):
                     #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
                     ('duration', '%d:%02d' % divmod(duration, 60) ),
                     ('room', room),
-                    ('slug', ''),
+                    ('slug', '{slug}-{id}-{name}'.format(
+                        slug=xc3.lower(),
+                        id=local_id, 
+                        name=voc.tools.normalise_string(session['wiki_name'].lower())
+                    )),
                     ('title', session['Has title'][0]),
                     ('subtitle', "\n".join(event['Has subtitle']) ),
                     ('track', 'self organized sessions'),
@@ -333,6 +339,7 @@ class Wiki:
 
         session = wiki_session['printouts']
         session['fullurl'] = wiki_session['fullurl']
+        session['wiki_name'] = session_wiki_name
 
         try:
             session['Has title'] = [Wiki.remove_prefix(session_wiki_name)]

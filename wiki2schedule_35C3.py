@@ -53,7 +53,8 @@ additional_schedule_urls = OrderedDict([
 
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
-
+#validator = sys.path[0] + "/validator/xsd/validate_schedule_xml.sh"
+validator = "xmllint --noout --schema {path}/validator/xsd/schedule-without-person.xml.xsd".format(path=sys.path[0])
 
 if len(sys.argv) == 2:
     output_dir = sys.argv[1]
@@ -72,9 +73,9 @@ os.chdir(output_dir)
 
 
 wsh_tpl = {
-  "schedule": {
-    "version": datetime.now().strftime('%Y-%m-%d %H:%M'),
-    "conference": OrderedDict([
+  "schedule": OrderedDict([
+    ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
+    ("conference", OrderedDict([
       ("acronym", u"{}C3-workshops".format(congress_nr) ),
       ("title", u"{}. Chaos Communication Congress - Workshops".format(congress_nr)),
       ("start", year+"-12-26"),
@@ -118,8 +119,8 @@ wsh_tpl = {
           "rooms": {}
         } 
       ])
-    ]) 
-  }
+    ])) 
+  ])
 }
 
 # this list/map is required to sort the events in the schedule.xml in the correct way
@@ -308,8 +309,13 @@ def process_wiki_events(events, sessions):
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 used_guids.append(guid)
                 
+                local_id = voc.tools.get_id(guid)
+                #if id in used_ids:
+                #    warn('   ID {} was already used before. Please fix the offsets to ensure users can stay subscribed to a event!'.format(guid))
+                #used_ids.append(local_id)
+                
                 event_n = OrderedDict([
-                    ('id', voc.tools.get_id(guid)),
+                    ('id', local_id),
                     ('guid', guid),
                     ('logo', None),
                     ('date', start_time.isoformat()),
@@ -317,7 +323,8 @@ def process_wiki_events(events, sessions):
                     #('duration', str(timedelta(minutes=event['Has duration'][0])) ),
                     ('duration', '%d:%02d' % divmod(duration, 60) ),
                     ('room', room),
-                    ('slug', ''),
+                    # TODO use xc3.lower()
+                    ('slug', '35c3-{id}-{name}'.format(id=local_id, name=voc.tools.normalise_string(session_wiki_name.lower()))),
                     ('title', session['Has title'][0]),
                     ('subtitle', "\n".join(event['Has subtitle']) ),
                     ('track', 'self organized sessions'),
@@ -464,6 +471,10 @@ def export_schedule(filename, schedule):
     
     with open('{}.schedule.xml'.format(filename), 'w') as fp:
         fp.write(Schedule(json=schedule).xml())
+
+    # validate xml
+    os.system('{} {}.schedule.xml'.format(validator, filename))
+
 
 
 

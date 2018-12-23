@@ -4,6 +4,7 @@ from collections import OrderedDict
 import dateutil.parser
 from datetime import datetime
 import sys
+import os
 from lxml import etree as ET
 #from xml.etree import cElementTree as ET
 
@@ -14,6 +15,10 @@ import tools
 #workaround to be python 3 compatible
 if sys.version_info[0] >= 3:
     basestring = str
+
+
+#validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
+validator = 'xmllint --noout --schema {path}/validator/xsd/schedule-without-person.xml.xsd'.format(path=sys.path[0])
 
 
 class Day:
@@ -104,9 +109,9 @@ class Schedule:
         year = str(1983 + congress_nr)
         
         schedule = {
-            "schedule": {
-                "version": datetime.now().strftime('%Y-%m-%d %H:%M'),
-                "conference": OrderedDict([
+            "schedule": OrderedDict([
+                ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
+                ("conference", OrderedDict([
                     ("acronym", u"{}C3-{}".format(congress_nr, name.lower()) ),
                     ("title", u"{}. Chaos Communication Congress - {}".format(congress_nr, name)),
                     ("start", "{}-12-{}".format(year, start_day)),
@@ -114,8 +119,8 @@ class Schedule:
                     ("daysCount", days_count), 
                     ("timeslot_duration", "00:15"), 
                     ("days", [])
-                ]) 
-            }
+                ])) 
+            ])
         }
         days = schedule['schedule']['conference']['days']
         day = start_day 
@@ -198,6 +203,9 @@ class Schedule:
     
         with open('{}.schedule.xml'.format(prefix), 'w') as fp:
             fp.write(self.xml())
+
+        # validate xml
+        os.system('{validator} {prefix}.schedule.xml'.format(validator=validator, prefix=prefix))
 
 
     def __str__(self):
