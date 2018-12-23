@@ -217,7 +217,7 @@ class Schedule:
                 
         def dict_to_attrib(d, root):
             assert isinstance(d, dict)
-            for k,v in d.items():
+            for k, v in d.items():
                 assert _set_attrib(root, k, v)
 
         def _set_attrib(tag, k, v):
@@ -236,6 +236,10 @@ class Schedule:
             elif isinstance(d, int):
                 node.text = str(d)
             elif isinstance(d, dict) or isinstance(d, OrderedDict) or isinstance(d, Event):
+                if parent == 'schedule' and 'base_url' in d:
+                    d['conference']['base_url'] = d['base_url']
+                    del d['base_url']
+
                 # count variable is used to check how many items actually end as elements 
                 # (as they are mapped to an attribute)
                 count = len(d)
@@ -300,12 +304,11 @@ class Schedule:
                         else:
                             _to_etree(v, ET.SubElement(node_, k), k)
             else: assert d == 'invalid type'
-        #print d
         assert isinstance(self._schedule, dict) and len(self._schedule) == 1
         tag, body = next(iter(self._schedule.items()))
 
         root_node = ET.Element(tag)
-        _to_etree(body, root_node)
+        _to_etree(body, root_node, 'schedule')
         
         if sys.version_info[0] >= 3:
             return ET.tounicode(root_node, pretty_print = True)
