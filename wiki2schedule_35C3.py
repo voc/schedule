@@ -48,11 +48,39 @@ wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
 additional_schedule_urls = [
     { 'name': 'chaos-west',     'url': 'https://fahrplan.chaos-west.de/35c3chaoswest/schedule/export/schedule.json',    'id_offset': 100},
-    { 'name': 'open-infra',     'url': 'https://pretalx.35c3oio.freifunk.space/35c3oio/schedule/export/schedule.json',  'id_offset': 200},
-    { 'name': 'sendezentrum',   'url': 'https://35c3.studio-link.de/35c3/schedule/export/schedule.json',                'id_offset': 400},
+    { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/35c3/schedule/export/schedule.json',                   'id_offset': 700, 'options': { 
+      'room-map': {
+          'ChaosZone Stage @ 35c3': 'ChaosZone'
+      }}
+    },
+    { 'name': 'sendezentrum',   'url': 'https://35c3.studio-link.de/35c3/schedule/export/schedule.json',                'id_offset': 400, 'options': { 
+      'room-map': {
+          u'Bühne': 'CCL Saal 3'
+      }}
+    },
     { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/35c3/schedule/export/schedule.json',              'id_offset': 500},
     { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2018/Lineup/schedule.json',             'id_offset': None},
+    { 'name': 'open-infra',     'url': 'https://pretalx.35c3oio.freifunk.space/35c3oio/schedule/export/schedule.json',  'id_offset': 200},
 #    { 'name': 'lightning',      'url': 'https://c3lt.de/35c3/schedule/export/schedule.json',                            'id_offset': 3000}
+]
+
+
+# this list/map is required to sort the events in the schedule.xml in the correct way
+# other rooms/assemblies are added at the end on demand.
+rooms = [
+    "Lecture room 11",
+    "Seminar room 14-15",
+    "Seminar room 13",
+    "Lecture room M1",
+    "Lecture room M2",
+    "Lecture room M3",
+    "Kidspace",
+    "CCL Saal 3",
+    u"Chaos West Bühne",
+    "ChaosZone",
+    "OIO Vortrags-Arena",
+    "OIO Workshop-Domo",
+ 
 ]
 
 output_dir = "/srv/www/" + xc3
@@ -126,30 +154,6 @@ wsh_tpl = {
     ])) 
   ])
 }
-
-# this list/map is required to sort the events in the schedule.xml in the correct way
-# other rooms/assemblies are added at the end on demand.
-rooms = [
-    u"Chaos West Bühne",
-    "OIO Vortrags-Arena",
-    u"Bühne",
-    "Lecture room 11",
-    "Seminar room 14-15",
-    "Seminar room 13",
-    "Lecture room M1",
-    "Lecture room M2",
-    "Lecture room M3",
-    "Vintage Computing Cluster",
-    "c-base",
- #   "Hive Stage",
- #   "Komona Aquarius",
- #   "Komona Coral Reef",
- #   "Komona D.Ressrosa",
- #   "Komona Blue Princess",
- #   "Kidspace",
- #   "Meetup Domo",
- #   "Workshop Area"
-]
 warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
@@ -381,7 +385,7 @@ def process_wiki_events(events, sessions):
     if not options.show_assembly_warnings:
         print(" (use --show-assembly-warnings cli option to show all warnings)")   
 
-def add_events_from_frab_schedule(other_schedule, id_offset = None):
+def add_events_from_frab_schedule(other_schedule, id_offset = None, options = None):
 
     primary_start = dateutil.parser.parse(full_schedule["schedule"]["conference"]["start"])
     other_start = dateutil.parser.parse(other_schedule["schedule"]["conference"]["start"])
@@ -409,12 +413,17 @@ def add_events_from_frab_schedule(other_schedule, id_offset = None):
             return False
     
         for room in day["rooms"]:
+            target_room = room
+            if options and 'room-map' in options and room in options['room-map']:
+                target_room = options['room-map'][room]
+
             if id_offset:
                 for event in day["rooms"][room]:
                     event['id'] = int(event['id']) + id_offset
+                    event['room'] = target_room
                 # TODO? offset for person IDs?
 
-            full_schedule["schedule"]["conference"]["days"][target_day]["rooms"][room] = day["rooms"][room]
+            full_schedule["schedule"]["conference"]["days"][target_day]["rooms"][target_room] = day["rooms"][room]
         
     
     return True
@@ -538,13 +547,13 @@ def main():
             try:
                 other_schedule = get_schedule(entry['name'], entry['url'])
                 
-                if add_events_from_frab_schedule(other_schedule, id_offset=entry['id_offset']):
+                if add_events_from_frab_schedule(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
                     print("  success")
-                full_schedule["schedule"]["version"] += " " + other_schedule["schedule"]["version"]
+                if 'version' in other_schedule["schedule"]:
+                    full_schedule["schedule"]["version"] += " " + other_schedule["schedule"]["version"]
+                else:
+                    print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
 
-                
-            except Exception as e:
-                print("  ERROR:" + str(e))
             except:
                 print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
 
