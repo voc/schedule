@@ -44,12 +44,14 @@ xc3 = "{x}C3".format(x=congress_nr)
 
 wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
-additional_schedule_urls = OrderedDict([
-    ('chaos-west', 'https://fahrplan.chaos-west.de/35c3chaoswest/schedule/export/schedule.json'),
-    ('open-infra', 'https://pretalx.35c3oio.freifunk.space/35c3oio/schedule/export/schedule.json'),
-    ('sendezentrum', 'https://35c3.studio-link.de/35c3/schedule/export/schedule.json'),
-    ('wikipaka', 'https://cfp.verschwoerhaus.de/35c3/schedule/export/schedule.json')
-])
+additional_schedule_urls = [
+    { 'name': 'chaos-west',     'url': 'https://fahrplan.chaos-west.de/35c3chaoswest/schedule/export/schedule.json',    'id_offset': 100},
+    { 'name': 'open-infra',     'url': 'https://pretalx.35c3oio.freifunk.space/35c3oio/schedule/export/schedule.json',  'id_offset': 200},
+    { 'name': 'sendezentrum',   'url': 'https://35c3.studio-link.de/35c3/schedule/export/schedule.json',                'id_offset': 400},
+    { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/35c3/schedule/export/schedule.json',              'id_offset': 500},
+    { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2018/Lineup/schedule.json',             'id_offset': None},
+#    { 'name': 'lightning',      'url': 'https://c3lt.de/35c3/schedule/export/schedule.json',                            'id_offset': 3000}
+]
 
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
@@ -126,14 +128,15 @@ wsh_tpl = {
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [
+    "Chaos West Stage",
+    "OIO lecture arena",
+    u"Bühne"
     "Lecture room 11",
     "Seminar room 14-15",
     "Seminar room 13",
     "Lecture room M1",
     "Lecture room M2",
     "Lecture room M3",
-    "Chaos West Stage",
-    "OIO lecture arena",
     "Vintage Computing Cluster",
     "c-base",
  #   "Hive Stage",
@@ -376,7 +379,7 @@ def process_wiki_events(events, sessions):
     if not options.show_assembly_warnings:
         print(" (use --show-assembly-warnings cli option to show all warnings)")   
 
-def add_events_from_frab_schedule(other_schedule):
+def add_events_from_frab_schedule(other_schedule, id_offset = None):
 
     primary_start = dateutil.parser.parse(full_schedule["schedule"]["conference"]["start"])
     other_start = dateutil.parser.parse(other_schedule["schedule"]["conference"]["start"])
@@ -402,8 +405,13 @@ def add_events_from_frab_schedule(other_schedule):
             print(target_day)
             print("  WARNING: the other schedule's days have to match primary schedule, in some extend!")
             return False
-        
+    
         for room in day["rooms"]:
+            if id_offset:
+                for event in day["rooms"][room]:
+                    event['id'] = int(event['id']) + id_offset
+                # TODO? offset for person IDs?
+
             full_schedule["schedule"]["conference"]["days"][target_day]["rooms"][room] = day["rooms"][room]
         
     
@@ -524,11 +532,11 @@ def main():
                     day['rooms'][key] = list()
 
         # add frab events from additional_schedule's to full_schedule
-        for key in additional_schedule_urls:
+        for entry in additional_schedule_urls:
             try:
-                other_schedule = get_schedule(key, additional_schedule_urls[key])
+                other_schedule = get_schedule(entry['name'], entry['url'])
                 
-                if add_events_from_frab_schedule(other_schedule):
+                if add_events_from_frab_schedule(other_schedule, id_offset=entry['id_offset']):
                     print("  success")
                 full_schedule["schedule"]["version"] += " " + other_schedule["schedule"]["version"]
 
