@@ -132,7 +132,7 @@ wsh_tpl = {
 rooms = [
     u"Chaos West Bühne",
     "OIO Vortrags-Arena",
-    u"Bühne"
+    u"Bühne",
     "Lecture room 11",
     "Seminar room 14-15",
     "Seminar room 13",
