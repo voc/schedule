@@ -31,6 +31,8 @@ parser = optparse.OptionParser()
 parser.add_option('--online', action="store_true", dest="online", default=False)
 parser.add_option('--show-assembly-warnings', action="store_true", dest="show_assembly_warnings", default=False)
 #parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
+parser.add_option('--git', action="store_true", dest="git", default=False)
+
 
 options, args = parser.parse_args()
 local = False
@@ -546,11 +548,11 @@ def main():
             except:
                 print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
 
-        
-        full_schedule["schedule"]["version"] += " " + workshop_schedule["schedule"]["version"]
-
     # write all imported schedules in to one merged schedule.json/xml
     export_schedule("import-merged", full_schedule)
+
+    full_schedule["schedule"]["version"] += " " + workshop_schedule["schedule"]["version"]
+
 
     global out
     out = OrderedDict()
@@ -571,7 +573,7 @@ def main():
     if not only_workshops:    
         export_schedule("everything", full_schedule)
     
-    print('done')
+    print('files generation done')
 
 
 if os.path.isfile("_sos_ids.json"):
@@ -599,7 +601,16 @@ if __name__ == '__main__':
 with open("_sos_ids.json", "w") as fp:
     json.dump(voc.tools.sos_ids, fp, indent=4)
 
-if not local:  
-    os.system("/usr/bin/git add *.json *.xml")
-    os.system("/usr/bin/git commit -m 'updates from " + str(datetime.now()) +  "'")
-    os.system("/usr/bin/git push")
+if not local or options.git:      
+    content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
+
+    def git(args):
+        os.system('/usr/bin/env git {}'.format(args))
+
+    if content_did_not_change:
+        print('nothing relevant changed, reverting to previous state')
+        git('reset --hard')
+    else:
+        git('add *.json *.xml')
+        git('commit -m "version {} with {} new self-organized session(s)"'.format(full_schedule["schedule"]["version"], voc.tools.generated_ids))
+        git('push')
