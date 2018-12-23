@@ -77,6 +77,7 @@
       <xs:element type="attachments" name="attachments" minOccurs="0"/>
       <xs:element type="httpURI" name="video_download_url" minOccurs="0"/>
       <xs:element type="httpURI" name="url" minOccurs="0"/>
+      <xs:element type="answers" name="answers" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
     <xs:attribute name="guid" type="uuid" use="required"/>
@@ -153,4 +154,6 @@
       </xs:element>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:complexType name="answers" />
 </xs:schema>
