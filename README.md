@@ -4,6 +4,11 @@ Scripts to generate & validate [schedule files](https://c3voc.de/wiki/schedule) 
 which use the [frab conference system][frab-website].
 
 
+## 35C3
+
+TBD
+
+
 ## 34C3
 
 see https://github.com/voc/schedule/blob/34C3/docs/data_flow_34C3_v0.7.pdf to get an overview and talk to @saerdnaer aka Andi if you have questions.
@@ -13,7 +18,7 @@ see https://github.com/voc/schedule/blob/34C3/docs/data_flow_34C3_v0.7.pdf to ge
 
 ### Debian and similar
 ``` bash
-sudo apt-get install python python-pip python-lxml libxslt1-dev
+sudo apt-get install python python-pip python-lxml libxslt1-dev libxml2-utils
 pip install -r requirements.txt
 ```
 

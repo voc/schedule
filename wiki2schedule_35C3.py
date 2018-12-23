@@ -128,8 +128,8 @@ wsh_tpl = {
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [
-    "Chaos West Stage",
-    "OIO lecture arena",
+    u"Chaos West Bühne",
+    "OIO Vortrags-Arena",
     u"Bühne"
     "Lecture room 11",
     "Seminar room 14-15",

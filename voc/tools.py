@@ -8,6 +8,7 @@ import sys
 
 sos_ids = {}
 next_id = 1000
+generated_ids = 0
 uuid_namespace = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
 
 def set_base_id(value):
@@ -15,11 +16,12 @@ def set_base_id(value):
     next_id = value
 
 def get_id(guid):
-    global sos_ids, next_id
+    global sos_ids, next_id, generated_ids
     if guid not in sos_ids:
         #generate new id
         sos_ids[guid] = next_id
-        next_id = next_id + 1
+        next_id += 1
+        generated_ids += 1
     
     return sos_ids[guid]
 
@@ -29,6 +31,8 @@ def gen_random_uuid():
 def gen_uuid(name):
     return str(uuid.uuid5(uuid_namespace, str(name)))
 
+# depreacated, use Schedule.foreach_event() instead
+# TODO remove
 def foreach_event(schedule, func):
     out = []
     for day in schedule["schedule"]["conference"]["days"]:
