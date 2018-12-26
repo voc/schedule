@@ -60,6 +60,7 @@ additional_schedule_urls = [
     },
     { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/35c3/schedule/export/schedule.json',              'id_offset': 500},
     { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2018/Lineup/schedule.json',             'id_offset': None},
+    { 'name': 'komona',         'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json',                   'id_offset': 800},
     { 'name': 'open-infra',     'url': 'https://pretalx.35c3oio.freifunk.space/35c3oio/schedule/export/schedule.json',  'id_offset': 200},
 #    { 'name': 'lightning',      'url': 'https://c3lt.de/35c3/schedule/export/schedule.json',                            'id_offset': 3000}
 ]
