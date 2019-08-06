@@ -11,13 +11,8 @@ import os
 import sys
 import traceback
 import optparse
-
-# some functions used in multiple files of this collection
 from voc.schedule import Schedule
-import voc.tools
 
-#TODO for python3: 
-# * fix NameError: name 'basestring' is not defined in voc.tools.dict_to_schedule_xml()
 
 tz = pytz.timezone('Europe/Amsterdam')
 
@@ -72,106 +67,70 @@ if not os.path.exists(output_dir):
         exit(-1)
 os.chdir(output_dir)
 
-
-def get_schedule(name, url):
-    if use_offline_frab_schedules:
-        # python3: , encoding='utf-8'
-        with open("schedule_{}.json".format(name), "r") as fp:
-            return parse_json(fp.read())
-    else:
-        print("Requesting " + url)
-        schedule_r = requests.get(url) #, verify=False)
-        
-        if schedule_r.ok is False:
-            raise Exception("  Request failed, HTTP {0}.".format(schedule_r.status_code))
-
-        schedule = parse_json(schedule_r.text)
-        return schedule
-
-def parse_json(text):
-    # this more complex way is necessary 
-    # to maintain the same order as in the input file
-    return json.JSONDecoder(object_pairs_hook=OrderedDict).decode(text)
-
-
-def export_schedule(filename, schedule):
-    print('  writing files...')
-    with open("{}.schedule.json".format(filename), "w") as fp:
-        json.dump(schedule, fp, indent=4)
-    
-    with open('{}.schedule.xml'.format(filename), 'w') as fp:
-        fp.write(Schedule(json=schedule).xml())
-
-    sys.stdout.write('  ')
-    sys.stdout.flush()
-
-    # validate xml
-    os.system('{} {}.schedule.xml'.format(validator, filename))
-
-
-
-
 def main():
     global full_schedule
         
-    main_schedule = get_schedule('main_rooms', main_schedule_url)
+    #main_schedule = get_schedule('main_rooms', main_schedule_url)
+    full_schedule = Schedule.from_url(main_schedule_url)
 
-    full_schedule = main_schedule.copy()
-
-    # add rooms now, so they are in the correct order
-    for day in full_schedule["schedule"]["conference"]["days"]:
-        for key in rooms:
-            if key not in day['rooms']:
-                day['rooms'][key] = list()
+    # add addional rooms from this local config now, so they are in the correct order
+    full_schedule.add_rooms(rooms)
 
     # add frab events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
         try:
-            other_schedule = get_schedule(entry['name'], entry['url'])
+            #other_schedule = get_schedule(entry['name'], entry['url'])
+            other_schedule = Schedule.from_url(entry['url'])
             
             if add_events_from_frab_schedule(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
                 print("  success")
-            if 'version' in other_schedule["schedule"]:
-                full_schedule["schedule"]["version"] += " " + other_schedule["schedule"]["version"]
+
+            if 'version' in other_schedule.schedule():
+                full_schedule._schedule["schedule"]["version"] += " " + other_schedule.version()
             else:
                 print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
 
         except:
             print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
 
-    print("Processing...")
+    print('Processing...')
+    sys.stdout.write('  ')
+    sys.stdout.flush()
 
     # write all events to one big schedule.json/xml  
-    export_schedule("everything", full_schedule)
+    #export_schedule("everything", full_schedule)
+    full_schedule.export('everything')
     
     print('Done')
 
 def add_events_from_frab_schedule(other_schedule, id_offset = None, options = None):
     global full_schedule
 
-    primary_start = dateutil.parser.parse(full_schedule["schedule"]["conference"]["start"])
-    other_start = dateutil.parser.parse(other_schedule["schedule"]["conference"]["start"])
+    primary_start = dateutil.parser.parse(full_schedule.conference()["start"])
+    other_start = dateutil.parser.parse(other_schedule.conference()["start"])
     offset = (other_start - primary_start).days
 
     try:
-        while other_schedule["schedule"]["conference"]["days"][offset]["date"] != full_schedule["schedule"]["conference"]["days"][0]["date"]:
+        while other_schedule.day(1+offset)["date"] != full_schedule.day(1)["date"]:
             offset += 1
     except:
         print("  ERROR: no overlap between other schedule and primary schedule")
         return False
 
-    for day in other_schedule["schedule"]["conference"]["days"]:
-        target_day = day["index"] - 1 + offset 
+    print ("  calculated conference start day offset: {}".format(offset))
 
-        if target_day < 0:
+    for day in other_schedule.days():
+        target_day = day["index"] + offset 
+
+        if target_day < 1:
             print( "  ignoring day {} from {}, as primary schedule starts at {}".format(
-                day["date"], other_schedule["schedule"]["conference"]["acronym"], full_schedule["schedule"]["conference"]["start"]) 
+                day["date"], other_schedule.conference()["acronym"], full_schedule.conference()["start"]) 
             )
             continue
 
-        if day["date"] != full_schedule["schedule"]["conference"]["days"][target_day]["date"]:
-            print(target_day)
-            print("  WARNING: the other schedule's days have to match primary schedule, in some extend!")
+        if day["date"] != full_schedule.day(target_day)["date"]:
+            #print(target_day)
+            print("  ERROR: the other schedule's days have to match primary schedule, in some extend!")
             return False
     
         for room in day["rooms"]:
@@ -179,14 +138,15 @@ def add_events_from_frab_schedule(other_schedule, id_offset = None, options = No
             if options and 'room-map' in options and room in options['room-map']:
                 target_room = options['room-map'][room]
 
-            if id_offset:
+            if id_offset or target_room != room:
                 for event in day["rooms"][room]:
                     event['id'] = int(event['id']) + id_offset
                     event['room'] = target_room
                 # TODO? offset for person IDs?
 
-            full_schedule["schedule"]["conference"]["days"][target_day]["rooms"][target_room] = day["rooms"][room]
-        
+            # copy whole day_room to target schedule
+            full_schedule.add_room_with_events(target_day, target_room, day["rooms"][room])
+    
     
     return True
 
@@ -207,5 +167,5 @@ if __name__ == '__main__':
             git('reset --hard')
         else:
             git('add *.json *.xml')
-            git('commit -m "version {} with {} new self-organized session(s)"'.format(full_schedule["schedule"]["version"], voc.tools.generated_ids))
+            git('commit -m "version {}"'.format(full_schedule["schedule"]["version"]))
             git('push')

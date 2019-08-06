@@ -9,7 +9,7 @@ from lxml import etree as ET
 #from xml.etree import cElementTree as ET
 
 
-import voc.tools
+import voc.tools as tools
 
 
 #workaround to be python 3 compatible
@@ -75,34 +75,36 @@ class Schedule:
     _days = []
 
     def __init__(self, name = None, url = None, json = None):
-        if url:
-            self.from_url(url)
+        # TODO remove or revert class methods below to object methods
+        #if url:
+        #    self.from_url(url)
         if json:
             self._schedule = json
 
         self._days = [None] * self.conference()['daysCount']
 
-    def from_url(self, url):
+    @classmethod
+    def from_url(cls, url):
         print("Requesting " + url)
         schedule_r = requests.get(url) #, verify=False)
         
         if schedule_r.ok is False:
             raise Exception("  Request failed, HTTP {0}.".format(schedule_r.status_code))
 
-
         #self.schedule = tools.parse_json(schedule_r.text) 
 
         # this more complex way is necessary 
         # to maintain the same order as in the input file
-        self._schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text) 
+        schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text) 
 
-        return self
+        return Schedule(json=schedule)
 
-    def from_file(self, name):
+    @classmethod
+    def from_file(cls, name):
         with open("schedule_{}.json".format(name), "r") as fp:
-            self._schedule = tools.parse_json(fp.read())
+            schedule = tools.parse_json(fp.read())
 
-        return self
+        return Schedule(json=schedule)
 
     @classmethod
     def from_XC3_template(cls, name, congress_nr, start_day, days_count):
@@ -149,6 +151,7 @@ class Schedule:
         return self._schedule['schedule']['conference']
     
     def days(self):
+        # TODO return _days object list instead of raw dict/json?
         return self._schedule['schedule']['conference']['days']
 
     def day(self, day):
@@ -168,6 +171,9 @@ class Schedule:
     
     def add_room(self, day, room):
         self.days()[day-1]['rooms'][room] = list()
+
+    def add_room_with_events(self, day, target_room, data):
+        self.days()[day-1]['rooms'][target_room] = data
 
     def add_event(self, event):
         day = self.get_day_from_time(event.start)
