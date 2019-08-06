@@ -77,17 +77,18 @@ rooms = [
 ]
 
 
-def generate_wiki_schedules():
+def generate_wiki_schedules(wiki_url):
     global wiki_schedule, workshop_schedule
     
     data = Wiki(wiki_url)
 
     print("Processing...")
 
-    wiki_schedule = Schedule.from_template('Wiki', congress_nr, 27, 4)
+    wiki_schedule = Schedule.from_XC3_template('Wiki', congress_nr, 27, 4)
     wiki_schedule.add_rooms(rooms)
 
-    workshop_schedule = Schedule.from_template('Workshops', congress_nr, 26, 5)
+    # workshops are all events from the wiki, which are in workshop rooms – starting from day 0 (the 26.)
+    workshop_schedule = Schedule.from_XC3_template('Workshops', congress_nr, 26, 5)
     workshop_schedule.add_rooms(rooms)
     
     
@@ -96,7 +97,7 @@ def generate_wiki_schedules():
     global sessions_complete
     sessions_complete = OrderedDict()
 
-    # process_wiki_events() fills global variables out, wiki_schedule, workshop_schedule
+    # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
     process_wiki_events(data)
     
     # write imported data from wiki to one merged file   
@@ -284,7 +285,8 @@ class Wiki:
             '?Has session type', 
             '?Held in language', 
             '?Is organized by', 
-            '?Has website'
+            '?Has website',
+            '?Modification date'
         ])
 
         self.events = self.query('[[Has object type::Event]]', [
@@ -358,27 +360,30 @@ class Wiki:
 
 
 
+def load_sos_ids():
+    if os.path.isfile("_sos_ids.json"):
+        with open("_sos_ids.json", "r") as fp:
+            # maintain order from file
+            temp = fp.read()
+            voc.tools.sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
+        
+        if sys.version_info.major < 3:
+            voc.tools.next_id = max(voc.tools.sos_ids.itervalues())+1
+        else:
+            voc.tools.next_id = max(voc.tools.sos_ids.values())+1
 
-if os.path.isfile("_sos_ids.json"):
-    with open("_sos_ids.json", "r") as fp:
-        # maintain order from file
-        temp = fp.read()
-        voc.tools.sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
-    
-    if sys.version_info.major < 3:
-        voc.tools.next_id = max(voc.tools.sos_ids.itervalues())+1
-    else:
-        voc.tools.next_id = max(voc.tools.sos_ids.values())+1
+def store_sos_ids():
+    #write sos_ids to disk
+    with open("_sos_ids.json", "w") as fp:
+        json.dump(voc.tools.sos_ids, fp, indent=4)
+
+load_sos_ids()
 
 if __name__ == '__main__':
-    generate_wiki_schedules()
-    
-#write sos_ids to disk
-with open("_sos_ids.json", "w") as fp:
-    json.dump(voc.tools.sos_ids, fp, indent=4)
+    generate_wiki_schedules(wiki_url)
+    store_sos_ids()
 
-
-if not local or options.git:  
-    os.system("/usr/bin/git add *.json *.xml")
-    os.system("/usr/bin/git commit -m 'updates from " + str(datetime.now()) +  "'")
-    #os.system("/usr/bin/git push")
+    if not local or options.git:  
+        os.system("/usr/bin/env git add *.json *.xml")
+        os.system("/usr/bin/env git commit -m 'updates from " + str(datetime.now()) +  "'")
+        #os.system("/usr/bin/env git push")

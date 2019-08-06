@@ -9,7 +9,7 @@ from lxml import etree as ET
 #from xml.etree import cElementTree as ET
 
 
-import tools
+import voc.tools
 
 
 #workaround to be python 3 compatible
@@ -105,7 +105,7 @@ class Schedule:
         return self
 
     @classmethod
-    def from_template(cls, name, congress_nr, start_day, days_count):
+    def from_XC3_template(cls, name, congress_nr, start_day, days_count):
         year = str(1983 + congress_nr)
         
         schedule = {
