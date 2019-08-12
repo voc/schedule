@@ -98,13 +98,10 @@ def main():
     # write all events to one big schedule.json/xml  
     #export_schedule("everything", full_schedule)
     full_schedule.export('everything')
+
+
     
     print('Done')
-
-
-if __name__ == '__main__':
-    main()
-    
 
     if not local or options.git:      
         content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
@@ -117,5 +114,10 @@ if __name__ == '__main__':
             git('reset --hard')
         else:
             git('add *.json *.xml')
-            git('commit -m "version {}"'.format(full_schedule["schedule"]["version"]))
+            git('commit -m "version {}"'.format(full_schedule.version()))
             git('push')
+
+if __name__ == '__main__':
+    main()
+    
+
