@@ -33,12 +33,12 @@ year = str(2019)
 xc3 = 'camp{year}'.format(year=year)
 
 wiki_url = 'https://events.ccc.de/camp/{year}/wiki'.format(year=year)
-main_schedule_url = 'http://fahrplan.events.ccc.de/camp/{year}/Fahrplan/schedule.json'.format(year=year)
+main_schedule_url = 'https://fahrplan.events.ccc.de/camp/{year}/Fahrplan/schedule.json'.format(year=year)
 additional_schedule_urls = [
     { 'name': 'thm',     'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json',    'id_offset': 100},
 #    { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2018/Lineup/schedule.json',             'id_offset': None},
 #    { 'name': 'komona',         'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json',                   'id_offset': 800},
-#    { 'name': 'lightning',      'url': 'https://c3lt.de/35c3/schedule/export/schedule.json',                            'id_offset': 3000}
+#    { 'name': 'lightning',      'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json',                            'id_offset': 3000}
 ]
 
 
