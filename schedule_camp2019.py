@@ -103,7 +103,7 @@ def main():
     #full_schedule.foreach_event(lambda event: event.export('events/'))
     def export_event(event):
         with open("events/{}.json".format(event['guid']), "w") as fp:
-            json.dump(event, fp, indent=4)
+            json.dump(event, fp, indent=2)
 
     full_schedule.foreach_event(export_event)
 

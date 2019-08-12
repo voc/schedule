@@ -68,7 +68,7 @@ class Event:
 
     def export(self, prefix):
         with open("{}{}.json".format(prefix, self._event.guid), "w") as fp:
-            json.dump(self._event, fp, indent=4)
+            json.dump(self._event, fp, indent=2)
 
 
 class Schedule:
@@ -209,7 +209,7 @@ class Schedule:
 
     def export(self, prefix):
         with open("{}.schedule.json".format(prefix), "w") as fp:
-            json.dump(self._schedule, fp, indent=4, cls=ScheduleEncoder)
+            json.dump(self._schedule, fp, indent=2, cls=ScheduleEncoder)
     
         with open('{}.schedule.xml'.format(prefix), 'w') as fp:
             fp.write(self.xml())
