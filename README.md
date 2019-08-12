@@ -1,10 +1,9 @@
 # schedule
 
-Scripts to generate & validate [schedule files](https://c3voc.de/wiki/schedule) for events 
-which use the [frab conference system][frab-website].
+Scripts to generate & validate [schedule files](https://c3voc.de/wiki/schedule) for events which use the [frab conference system][frab-website], [pretalx](https://github.com/pretalx/pretalx), or every other system able to generate schedule.json or CSV files in the correct format.
 
 
-## 35C3
+## Camp 2019
 
 TBD
 
@@ -31,4 +30,5 @@ or see https://stackoverflow.com/a/26544099/521791 on how to install lxml
 
 
 [frab-website]: http://frab.github.io/frab/
+
 
