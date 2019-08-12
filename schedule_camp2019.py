@@ -99,6 +99,13 @@ def main():
     #export_schedule("everything", full_schedule)
     full_schedule.export('everything')
 
+    # write seperate file for each event, to get better git diffs
+    #full_schedule.foreach_event(lambda event: event.export('events/'))
+    def export_event(event):
+        with open("events/{}.json".format(event['guid']), "w") as fp:
+            json.dump(event, fp, indent=4)
+
+    full_schedule.foreach_event(export_event)
 
     
     print('Done')

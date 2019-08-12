@@ -66,6 +66,10 @@ class Event:
     def __str__(self):
         return json.dumps(self._event, indent=2)
 
+    def export(self, prefix):
+        with open("{}{}.json".format(prefix, self._event.guid), "w") as fp:
+            json.dump(self._event, fp, indent=4)
+
 
 class Schedule:
     ''' 
