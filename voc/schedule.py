@@ -355,8 +355,10 @@ class Schedule:
                         elif k == 'do_not_record':
                             k = 'recording'
                             # not in schedule.json: license information for an event
-                            v = {'license': recording_license, 
-                                'optout': ( 'true' if v else 'false')}
+                            v = OrderedDict([
+                                ('license', recording_license), 
+                                ('optout', 'true' if v else 'false')
+                            ])
 
                         if isinstance(v, list):
                             for element in v:
