@@ -217,14 +217,59 @@ class Schedule:
     def __str__(self):
         return json.dumps(self._schedule, indent=2, cls=ScheduleEncoder)
 
+    def add_events_from(self, other_schedule, id_offset = None, options = None):
+        primary_start = dateutil.parser.parse(self.conference()["start"])
+        other_start = dateutil.parser.parse(other_schedule.conference()["start"])
+        offset = (other_start - primary_start).days
+
+        try:
+            while other_schedule.day(1+offset)["date"] != self.day(1)["date"]:
+                offset += 1
+        except:
+            print("  ERROR: no overlap between other schedule and primary schedule")
+            return False
+
+        print ("  calculated conference start day offset: {}".format(offset))
+
+        for day in other_schedule.days():
+            target_day = day["index"] + offset 
+
+            if target_day < 1:
+                print( "  ignoring day {} from {}, as primary schedule starts at {}".format(
+                    day["date"], other_schedule.conference()["acronym"], self.conference()["start"]) 
+                )
+                continue
+
+            if day["date"] != self.day(target_day)["date"]:
+                #print(target_day)
+                print("  ERROR: the other schedule's days have to match primary schedule, in some extend!")
+                return False
+        
+            for room in day["rooms"]:
+                target_room = room
+                if options and 'room-map' in options and room in options['room-map']:
+                    target_room = options['room-map'][room]
+
+                if id_offset or target_room != room:
+                    for event in day["rooms"][room]:
+                        event['id'] = int(event['id']) + id_offset
+                        event['room'] = target_room
+                    # TODO? offset for person IDs?
+
+                # copy whole day_room to target schedule
+                self.add_room_with_events(target_day, target_room, day["rooms"][room])
+        
+        
+        return True
+
+
+
     # dict_to_etree from http://stackoverflow.com/a/10076823
 
     # TODO:
     #  * check links conversion
     #  * ' vs " in xml
-    #  * conference acronym in xml but not in json
     #  * logo is in json but not in xml
-    #  * recording license information in xml but not in json
 
     def xml(self):
         root_node = None

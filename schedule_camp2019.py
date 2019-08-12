@@ -67,22 +67,20 @@ if not os.path.exists(output_dir):
         exit(-1)
 os.chdir(output_dir)
 
-def main():
-    global full_schedule
-        
+def main():        
     #main_schedule = get_schedule('main_rooms', main_schedule_url)
     full_schedule = Schedule.from_url(main_schedule_url)
 
     # add addional rooms from this local config now, so they are in the correct order
     full_schedule.add_rooms(rooms)
 
-    # add frab events from additional_schedule's to full_schedule
+    # add events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
         try:
             #other_schedule = get_schedule(entry['name'], entry['url'])
             other_schedule = Schedule.from_url(entry['url'])
             
-            if add_events_from_frab_schedule(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
+            if full_schedule.add_events_from(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
                 print("  success")
 
             if 'version' in other_schedule.schedule():
@@ -102,54 +100,6 @@ def main():
     full_schedule.export('everything')
     
     print('Done')
-
-def add_events_from_frab_schedule(other_schedule, id_offset = None, options = None):
-    global full_schedule
-
-    primary_start = dateutil.parser.parse(full_schedule.conference()["start"])
-    other_start = dateutil.parser.parse(other_schedule.conference()["start"])
-    offset = (other_start - primary_start).days
-
-    try:
-        while other_schedule.day(1+offset)["date"] != full_schedule.day(1)["date"]:
-            offset += 1
-    except:
-        print("  ERROR: no overlap between other schedule and primary schedule")
-        return False
-
-    print ("  calculated conference start day offset: {}".format(offset))
-
-    for day in other_schedule.days():
-        target_day = day["index"] + offset 
-
-        if target_day < 1:
-            print( "  ignoring day {} from {}, as primary schedule starts at {}".format(
-                day["date"], other_schedule.conference()["acronym"], full_schedule.conference()["start"]) 
-            )
-            continue
-
-        if day["date"] != full_schedule.day(target_day)["date"]:
-            #print(target_day)
-            print("  ERROR: the other schedule's days have to match primary schedule, in some extend!")
-            return False
-    
-        for room in day["rooms"]:
-            target_room = room
-            if options and 'room-map' in options and room in options['room-map']:
-                target_room = options['room-map'][room]
-
-            if id_offset or target_room != room:
-                for event in day["rooms"][room]:
-                    event['id'] = int(event['id']) + id_offset
-                    event['room'] = target_room
-                # TODO? offset for person IDs?
-
-            # copy whole day_room to target schedule
-            full_schedule.add_room_with_events(target_day, target_room, day["rooms"][room])
-    
-    
-    return True
-
 
 
 if __name__ == '__main__':
