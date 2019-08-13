@@ -39,42 +39,42 @@ local = False
 use_offline_frab_schedules = False
 only_workshops = False
 
+if __name__ == '__main__':
+    congress_nr = 35
+    year = str(1983 + congress_nr)
+    xc3 = "{x}C3".format(x=congress_nr)
 
-congress_nr = 35
-year = str(1983 + congress_nr)
-xc3 = "{x}C3".format(x=congress_nr)
+    wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 
-wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
+    output_dir = "/srv/www/" + xc3
+    secondary_output_dir = "./" + xc3
 
-output_dir = "/srv/www/" + xc3
-secondary_output_dir = "./" + xc3
+    if len(sys.argv) == 2:
+        output_dir = sys.argv[1]
 
-if len(sys.argv) == 2:
-    output_dir = sys.argv[1]
-
-if not os.path.exists(output_dir):
-    try:
-        if not os.path.exists(secondary_output_dir):
-            os.mkdir(output_dir) 
-        else:
-            output_dir = secondary_output_dir
-            local = True
-    except:
-        print('Please create directory named {} if you want to run in local mode'.format(secondary_output_dir))
-        exit(-1)
-os.chdir(output_dir)
+    if not os.path.exists(output_dir):
+        try:
+            if not os.path.exists(secondary_output_dir):
+                os.mkdir(output_dir) 
+            else:
+                output_dir = secondary_output_dir
+                local = True
+        except:
+            print('Please create directory named {} if you want to run in local mode'.format(secondary_output_dir))
+            exit(-1)
+    os.chdir(output_dir)
 
 
-# this list/map is required to sort the events in the schedule.xml in the correct way
-# other rooms/assemblies are added at the end on demand.
-rooms = [
-    "Lecture room 11",
-    "Seminar room 14-15",
-    "Seminar room 13",
-    "Lecture room M1",
-    "Lecture room M2",
-    "Lecture room M3"
-]
+    # this list/map is required to sort the events in the schedule.xml in the correct way
+    # other rooms/assemblies are added at the end on demand.
+    rooms = [
+        "Lecture room 11",
+        "Seminar room 14-15",
+        "Seminar room 13",
+        "Lecture room M1",
+        "Lecture room M2",
+        "Lecture room M3"
+    ]
 
 
 def generate_wiki_schedules(wiki_url):
@@ -98,7 +98,7 @@ def generate_wiki_schedules(wiki_url):
     sessions_complete = OrderedDict()
 
     # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
-    process_wiki_events(data)
+    process_wiki_events(data, wiki_schedule, workshop_schedule)
     
     # write imported data from wiki to one merged file   
     with open("sessions_complete.json", "w") as fp:
@@ -109,13 +109,15 @@ def generate_wiki_schedules(wiki_url):
     workshop_schedule.export("workshops")
     
     print('done')
+    return wiki_schedule
 
 warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
 
-def process_wiki_events(wiki):
-    global sessions_complete, wiki_schedule, workshop_schedule, warnings
+def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None):
+    global sessions_complete, warnings
+    sessions_complete = OrderedDict()
     events_total = 0
     events_successful = 0
     events_in_halls = 0 # aka workshops
@@ -141,15 +143,15 @@ def process_wiki_events(wiki):
         if is_workshop_room_session or options.show_assembly_warnings:
             print(msg)
     
-    for event_wiki_name, event_r in wiki.events.iteritems(): #python2
-    #for event_wiki_name, event_r in wiki.events.items(): #python3
+    #for event_wiki_name, event_r in wiki.events.iteritems(): #python2
+    for event_wiki_name, event_r in wiki.events.items(): #python3
         
         warnings = False
         sys.stdout.write('.')
         
         try:
             wiki_page_name = event_wiki_name.split('#')[0].replace(' ', '_') # or see fullurl property
-            wiki_edit_url = wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
+            wiki_edit_url = wiki.wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
             
             session = wiki.parent_of_event(event_wiki_name)
             event = event_r['printouts']
@@ -175,9 +177,9 @@ def process_wiki_events(wiki):
             
             # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
             # This will only work if there are unique keys in each json string.
-            combined = dict(session.items() + event.items()) #python2
-            #combined = session.copy() #python3 TOOD test if this really leads to the same result
-            #combined.update(event)
+            #combined = dict(session.items() + event.items()) #python2
+            combined = session.copy() #python3 TOOD test if this really leads to the same result
+            combined.update(event)
             sessions_complete[event_wiki_name] = combined         
             
             if len(event['Has start time']) < 1:
@@ -186,13 +188,19 @@ def process_wiki_events(wiki):
             else:
                 date_time = datetime.fromtimestamp(int(event['Has start time'][0]['timestamp']) + time_stamp_offset)
                 start_time = tz.localize(date_time)
-                day = workshop_schedule.get_day_from_time(start_time)
+                day = wiki_schedule.get_day_from_time(start_time)
     
             #if is_workshop_room_session and day is not None and event['Has duration']:
             if day is not None and event['Has duration']:                
                 duration = 0
                 if event['Has duration']:
-                    duration = event['Has duration'][0]
+                    duration = event['Has duration'][0]['value']
+
+                if duration > 60*24:
+                    warn('   event takes longer than 24h, skipping...')
+                    continue
+
+
                 lang = ''
                 if session['Held in language'] and len(session['Held in language']) > 0:
                     lang = session['Held in language'][0].split(' - ', 1)[0]
@@ -219,7 +227,7 @@ def process_wiki_events(wiki):
                     ('duration', '%d:%02d' % divmod(duration, 60) ),
                     ('room', room),
                     ('slug', '{slug}-{id}-{name}'.format(
-                        slug=xc3.lower(),
+                        slug=wiki_schedule.conference()['acronym'].lower(),
                         id=local_id, 
                         name=voc.tools.normalise_string(session['wiki_name'].lower())
                     )),
@@ -239,8 +247,8 @@ def process_wiki_events(wiki):
                 ], start_time)
     
                 # Break if conference day date and event date do not match
-                conference_day_start = workshop_schedule.day(day).start
-                conference_day_end = workshop_schedule.day(day).end
+                conference_day_start = wiki_schedule.day(day).start
+                conference_day_end = wiki_schedule.day(day).end
                 if not conference_day_start <= event_n.start < conference_day_end:
                     raise Exception("Current conference day from {0} to {1} does not match current event {2} with date {3}."
                         .format(conference_day_start, conference_day_end, event_n["id"], event_n.start))
@@ -249,7 +257,7 @@ def process_wiki_events(wiki):
                 if start_time.day != 26 and not only_workshops:      
                     wiki_schedule.add_event(event_n)
                 
-                if is_workshop_room_session:
+                if workshop_schedule and is_workshop_room_session:
                     events_in_halls +=1
                     workshop_schedule.add_event(event_n)
                 
@@ -264,10 +272,13 @@ def process_wiki_events(wiki):
             if options.exit_when_exception_occours: 
                 exit()
             
-    
+    store_sos_ids()
+
     print("\nFrom %d total events (%d in halls) where %d successful, while %d (%d in halls) produced warnings" % (events_total, events_in_halls, events_successful, events_with_warnings, events_in_halls_with_warnings))
     if not options.show_assembly_warnings:
-        print(" (use --show-assembly-warnings cli option to show all warnings)")   
+        print(" (use --show-assembly-warnings cli option to show all warnings)") 
+        
+
 
 class Wiki:
     '''
@@ -381,7 +392,6 @@ load_sos_ids()
 
 if __name__ == '__main__':
     generate_wiki_schedules(wiki_url)
-    store_sos_ids()
 
     if not local or options.git:  
         os.system("/usr/bin/env git add *.json *.xml")

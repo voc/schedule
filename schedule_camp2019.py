@@ -11,8 +11,7 @@ import os
 import sys
 import traceback
 import optparse
-from voc.schedule import Schedule
-
+from voc.schedule import Schedule, ScheduleEncoder
 
 tz = pytz.timezone('Europe/Amsterdam')
 
@@ -67,6 +66,34 @@ if not os.path.exists(output_dir):
         exit(-1)
 os.chdir(output_dir)
 
+
+from wiki2schedule import Wiki, process_wiki_events, load_sos_ids, store_sos_ids
+
+def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):    
+    data = Wiki(wiki_url)
+
+    print("Wiki: Processing...")
+
+    wiki_schedule = Schedule.empty_copy_of(full_schedule, 'Wiki')
+    #wiki_schedule.add_rooms(rooms)    
+    
+    load_sos_ids()
+
+    # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
+    process_wiki_events(data, wiki_schedule)
+
+    store_sos_ids()
+    
+    # write imported data from wiki to one merged file   
+    #with open("sessions_complete.json", "w") as fp:
+    #    json.dump(sessions_complete, fp, indent=4)
+
+    wiki_schedule.export("wiki")
+    
+    print('Wiki: done')
+    return wiki_schedule
+
+
 def main():        
     #main_schedule = get_schedule('main_rooms', main_schedule_url)
     full_schedule = Schedule.from_url(main_schedule_url)
@@ -95,6 +122,10 @@ def main():
     sys.stdout.write('  ')
     sys.stdout.flush()
 
+    # wiki
+    wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
+
+
     # write all events to one big schedule.json/xml  
     #export_schedule("everything", full_schedule)
     full_schedule.export('everything')
@@ -103,7 +134,7 @@ def main():
     #full_schedule.foreach_event(lambda event: event.export('events/'))
     def export_event(event):
         with open("events/{}.json".format(event['guid']), "w") as fp:
-            json.dump(event, fp, indent=2)
+            json.dump(event, fp, indent=2, cls=ScheduleEncoder)
 
     full_schedule.foreach_event(export_event)
 

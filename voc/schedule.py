@@ -67,7 +67,7 @@ class Event:
         return json.dumps(self._event, indent=2)
 
     def export(self, prefix):
-        with open("{}{}.json".format(prefix, self._event.guid), "w") as fp:
+        with open("{}{}.json".format(prefix, self._event['guid']), "w") as fp:
             json.dump(self._event, fp, indent=2)
 
 
@@ -140,6 +140,17 @@ class Schedule:
             })
             day += 1
 
+        return Schedule(json=schedule)
+    
+    @classmethod
+    def empty_copy_of(cls, parent_schedule, name):        
+        schedule = {
+            "schedule": OrderedDict([
+                ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
+                ("conference", parent_schedule.conference().copy()) 
+            ])
+        }
+        schedule['schedule']['conference']['title'] += ' - ' + name
         return Schedule(json=schedule)
 
     def __getitem__(self, key):
