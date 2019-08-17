@@ -243,6 +243,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                 event_n = Event([
                     ('id', local_id),
                     ('guid', guid),
+                    ('url', "https:"+session['fullurl']),
                     ('logo', None),
                     ('date', start_time.isoformat()),
                     ('start', start_time.strftime('%H:%M')),
@@ -251,7 +252,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     ('room', room),
                     ('slug', '{slug}-{id}-{name}'.format(
                         slug=wiki_schedule.conference()['acronym'].lower(),
-                        id=local_id, 
+                        id=local_id,
                         name=voc.tools.normalise_string(session['wiki_name'].lower())
                     )),
                     ('title', session['Has title'][0]),
@@ -263,10 +264,10 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     ('description', ("\n".join(session['Has description'])).strip()),
                     ('persons', [ OrderedDict([
                         ('id', 0),
-                        ('url', p['fullurl']),
-                        ('public_name', Wiki.remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works 
+                        ('url', 'https:'+p['fullurl']),
+                        ('public_name', Wiki.remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works
                     ]) for p in session['Is organized by'] ]),
-                    ('links', session['Has website'] + [session['fullurl']])             
+                    ('links', session['Has website'])
                 ], start_time)
     
                 # Break if conference day date and event date do not match
