@@ -64,6 +64,9 @@ if __name__ == '__main__':
             exit(-1)
     os.chdir(output_dir)
 
+    if not os.path.exists("events"):
+        os.mkdir("events")
+
 
     # this list/map is required to sort the events in the schedule.xml in the correct way
     # other rooms/assemblies are added at the end on demand.

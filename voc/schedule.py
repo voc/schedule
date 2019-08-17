@@ -247,7 +247,7 @@ class Schedule:
         print ("  calculated conference start day offset: {}".format(offset))
 
         for day in other_schedule.days():
-            target_day = day["index"] + offset 
+            target_day = day["index"] - offset
 
             if target_day < 1:
                 print( "  ignoring day {} from {}, as primary schedule starts at {}".format(

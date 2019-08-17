@@ -66,6 +66,9 @@ if not os.path.exists(output_dir):
         exit(-1)
 os.chdir(output_dir)
 
+if not os.path.exists("events"):
+    os.mkdir("events")
+
 
 from wiki2schedule import Wiki, process_wiki_events, load_sos_ids, store_sos_ids
 
