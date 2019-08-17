@@ -218,7 +218,11 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None):
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 used_guids.append(guid)
 
-                local_id = voc.tools.get_id(guid)
+                try:
+                    local_id = voc.tools.get_id(guid)
+                except TypeError:
+                    local_id = voc.tools.get_id(guid['fulltext'])
+                    guid = guid['fulltext']
 
                 event_n = Event([
                     ('id', local_id),
