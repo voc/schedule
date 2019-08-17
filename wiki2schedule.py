@@ -118,8 +118,12 @@ warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
 
-def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None):
-    global sessions_complete, warnings
+def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp_offset = None):
+    global sessions_complete, warnings, time_stamp_offset
+
+    if not timestamp_offset == None:
+        time_stamp_offset = timestamp_offset
+
     sessions_complete = OrderedDict()
     events_total = 0
     events_successful = 0
