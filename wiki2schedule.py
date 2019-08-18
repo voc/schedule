@@ -150,8 +150,10 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
             if is_workshop_room_session or options.show_assembly_warnings:
                 print('')
                 print(event_wiki_name)
-                if start_time: print('  at ' + start_time.isoformat() )
-                if room: print('  in ' + room )
+                try: print('  at ' + start_time.isoformat() ) 
+                except NameError: pass
+                try: print('  in ' + room ) 
+                except NameError: pass
                 print('  ' + wiki_edit_url)
             
         #if not is_workshop_room_session:
