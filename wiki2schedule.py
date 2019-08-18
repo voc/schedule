@@ -214,19 +214,19 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
 
                 if len(event['GUID']) > 0:
                     guid = event['GUID'][0]
+                    if not isinstance(guid, str):
+                        raise Exception('GUID is not string, but ' + guid)
                 else:
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                     warn('   GUID was empty, generated one for now. Not shure if its stable...')
+                    #if debug:
+                    #    print_json(event['GUID'])
                 if guid in used_guids:
                     warn('   GUID {} was already used before, generated a random one for now. Please fix the session wiki page to ensure users can stay subscribed to event!'.format(guid))
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 used_guids.append(guid)
 
-                try:
-                    local_id = voc.tools.get_id(guid)
-                except TypeError:
-                    local_id = voc.tools.get_id(guid['fulltext'])
-                    guid = guid['fulltext']
+                local_id = voc.tools.get_id(guid)
 
                 event_n = Event([
                     ('id', local_id),
