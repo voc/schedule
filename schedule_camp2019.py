@@ -153,7 +153,7 @@ def main():
             print('nothing relevant changed, reverting to previous state')
             git('reset --hard')
         else:
-            git('add *.json *.xml')
+            git('add *.json *.xml events/*.json')
             git('commit -m "version {}"'.format(full_schedule.version()))
             git('push')
 
