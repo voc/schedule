@@ -5,6 +5,7 @@ import dateutil.parser
 from datetime import datetime
 import sys
 import os
+import copy
 from lxml import etree as ET
 #from xml.etree import cElementTree as ET
 
@@ -136,7 +137,7 @@ class Schedule:
                 "date": "{}-12-{}".format(year, day),
                 "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
                 "day_end": "{}-12-{}T04:00:00+01:00".format(year, day+1),
-                "rooms": {}
+                "rooms": OrderedDict()
             })
             day += 1
 
@@ -147,10 +148,12 @@ class Schedule:
         schedule = {
             "schedule": OrderedDict([
                 ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
-                ("conference", parent_schedule.conference().copy()) 
+                ("conference", copy.deepcopy(parent_schedule.conference())) 
             ])
         }
         schedule['schedule']['conference']['title'] += ' - ' + name
+        for day in schedule['schedule']['conference']['days']:
+            day['rooms'] = OrderedDict()
         return Schedule(json=schedule)
 
     def __getitem__(self, key):
