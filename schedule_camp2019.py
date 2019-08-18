@@ -117,6 +117,10 @@ def main():
         except:
             print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
 
+
+    # write all events from the three big stages to a own schedule.json/xml  
+    full_schedule.export('stages')
+
     print('Processing...')
     sys.stdout.write('  ')
     sys.stdout.flush()
@@ -126,7 +130,6 @@ def main():
 
 
     # write all events to one big schedule.json/xml  
-    #export_schedule("everything", full_schedule)
     full_schedule.export('everything')
 
     # write seperate file for each event, to get better git diffs
