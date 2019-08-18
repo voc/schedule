@@ -20,6 +20,7 @@ parser.add_option('--online', action="store_true", dest="online", default=False)
 parser.add_option('--show-assembly-warnings', action="store_true", dest="show_assembly_warnings", default=False)
 #parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
 parser.add_option('--git', action="store_true", dest="git", default=False)
+parser.add_option('--debug', action="store_true", dest="debug", default=False)
 
 
 options, args = parser.parse_args()
@@ -83,14 +84,9 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
     load_sos_ids()
 
     # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
-    process_wiki_events(data, wiki_schedule, timestamp_offset=-7200)
-
+    process_wiki_events(data, wiki_schedule, timestamp_offset=-7200, options=options)
     store_sos_ids()
     
-    # write imported data from wiki to one merged file   
-    #with open("sessions_complete.json", "w") as fp:
-    #    json.dump(sessions_complete, fp, indent=4)
-
     wiki_schedule.export("wiki")
     
     print('Wiki: done')

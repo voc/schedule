@@ -32,6 +32,7 @@ parser.add_option('--online', action="store_true", dest="online", default=False)
 parser.add_option('--show-assembly-warnings', action="store_true", dest="show_assembly_warnings", default=False)
 parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
 parser.add_option('--git', action="store_true", dest="git", default=False)
+parser.add_option('--debug', action="store_true", dest="debug", default=False)
 
 
 options, args = parser.parse_args()
@@ -79,6 +80,11 @@ if __name__ == '__main__':
         "Lecture room M3"
     ]
 
+def print_json(x):
+    try:
+        print(json.dumps(x, indent=2))
+    except:
+        print('Fallback: ', x)
 
 def generate_wiki_schedules(wiki_url):
     global wiki_schedule, workshop_schedule
@@ -118,7 +124,9 @@ warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
 
-def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp_offset = None):
+
+# this method is also exported to be used as a library method, thereby we started to reduce requiring of global variables
+def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp_offset = None, options = None):
     global sessions_complete, warnings, time_stamp_offset
 
     if not timestamp_offset == None:
@@ -129,6 +137,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
     events_successful = 0
     events_in_halls = 0 # aka workshops
     used_guids = []
+    debug = options and options.debug
 
     def warn(msg):
         global warnings, events_with_warnings, events_in_halls_with_warnings
@@ -284,6 +293,10 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                 exit()
             
     store_sos_ids()
+
+    if debug:
+        with open("sessions_complete.json", "w") as fp:
+            json.dump(sessions_complete, fp, indent=2)
 
     print("\nFrom %d total events (%d in halls) where %d successful, while %d (%d in halls) produced warnings" % (events_total, events_in_halls, events_successful, events_with_warnings, events_in_halls_with_warnings))
     if not options.show_assembly_warnings:
