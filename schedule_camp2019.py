@@ -11,7 +11,7 @@ import os
 import sys
 import traceback
 import optparse
-from voc.schedule import Schedule, ScheduleEncoder
+from voc.schedule import Schedule, ScheduleEncoder, set_validator_filter
 
 tz = pytz.timezone('Europe/Amsterdam')
 
@@ -31,6 +31,11 @@ only_workshops = False
 
 year = str(2019)
 xc3 = 'camp{year}'.format(year=year)
+
+set_validator_filter([
+    "VT87DH", "'140'", "f6b73c1d-465f-540c-9854-26b8c0dcf645"
+])
+
 
 wiki_url = 'https://events.ccc.de/camp/{year}/wiki'.format(year=year)
 main_schedule_url = 'https://fahrplan.events.ccc.de/camp/{year}/Fahrplan/schedule.json'.format(year=year)

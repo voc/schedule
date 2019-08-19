@@ -20,7 +20,12 @@ if sys.version_info[0] >= 3:
 
 #validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
 validator = 'xmllint --noout --schema {path}/validator/xsd/schedule-without-person.xml.xsd'.format(path=sys.path[0])
+validator_filter = ''
 
+def set_validator_filter(filter):
+    global validator_filter
+    validator_filter += " | awk '" + (' && '.join(['!/'+x+'/' for x in filter]) + "'")
+    
 
 class Day:
     _day = None
@@ -229,8 +234,9 @@ class Schedule:
             fp.write(self.xml())
 
         # validate xml
-        os.system('{validator} {prefix}.schedule.xml'.format(validator=validator, prefix=prefix))
-
+        os.system('{validator} {prefix}.schedule.xml 2>&1 {filter}'.format(validator=validator, prefix=prefix, filter=validator_filter))
+        if validator_filter:
+            print('  (some validation errors might be hidden by validator_filter)')
 
     def __str__(self):
         return json.dumps(self._schedule, indent=2, cls=ScheduleEncoder)
