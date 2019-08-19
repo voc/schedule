@@ -234,8 +234,8 @@ class Schedule:
             fp.write(self.xml())
 
         # validate xml
-        os.system('{validator} {prefix}.schedule.xml 2>&1 {filter}'.format(validator=validator, prefix=prefix, filter=validator_filter))
-        if validator_filter:
+        result = os.system('{validator} {prefix}.schedule.xml 2>&1 {filter}'.format(validator=validator, prefix=prefix, filter=validator_filter) + '; exit ${PIPESTATUS[0]}')
+        if result != 0 and validator_filter:
             print('  (some validation errors might be hidden by validator_filter)')
 
     def __str__(self):
