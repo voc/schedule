@@ -188,10 +188,11 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     room = Wiki.remove_prefix(room)
             
             elif len(event['Has session location']) == 0:
-                warn("  has no room yet")
+                warn("  has no room yet, skipping...")
+                continue
             else:
                 warn("  WARNING: has multiple rooms ???, just picking the first one…")
-                event['Has session location'] = event['Has session location'][0]
+                event['Has session location'] = event['Has session location'][0]['fulltext']
             
             # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
             # This will only work if there are unique keys in each json string.

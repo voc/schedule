@@ -196,7 +196,16 @@ class Schedule:
         self.days()[day-1]['rooms'][room] = list()
 
     def add_room_with_events(self, day, target_room, data):
-        self.days()[day-1]['rooms'][target_room] = data
+        if not data or len(data) == 0:
+            return
+        
+        #print('  adding room {} to day {} with {} events'.format(target_room, day, len(data)))
+        target_day_rooms = self.days()[day-1]['rooms']
+
+        if self.room_exists(day, target_room):
+            target_day_rooms[target_room] += data
+        else:
+            target_day_rooms[target_room] = data
 
     def add_event(self, event):
         day = self.get_day_from_time(event.start)
@@ -274,11 +283,13 @@ class Schedule:
                 target_room = room
                 if options and 'room-map' in options and room in options['room-map']:
                     target_room = options['room-map'][room]
-
-                if id_offset or target_room != room:
+                    
+                    for event in day["rooms"][room]:
+                        event['room'] = target_room
+                
+                if id_offset:
                     for event in day["rooms"][room]:
                         event['id'] = int(event['id']) + id_offset
-                        event['room'] = target_room
                     # TODO? offset for person IDs?
 
                 # copy whole day_room to target schedule

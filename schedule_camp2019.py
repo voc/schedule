@@ -33,7 +33,7 @@ year = str(2019)
 xc3 = 'camp{year}'.format(year=year)
 
 set_validator_filter([
-    "VT87DH", "140", "f6b73c1d-465f-540c-9854-26b8c0dcf645"
+    "VT87DH", "''140''", "f6b73c1d-465f-540c-9854-26b8c0dcf645"
 ])
 
 
