@@ -161,6 +161,11 @@ class Schedule:
             day['rooms'] = OrderedDict()
         return Schedule(json=schedule)
 
+    def copy(self, name):        
+        schedule = copy.deepcopy(self._schedule)
+        schedule['schedule']['conference']['title'] += ' - ' + name
+        return Schedule(json=schedule)
+
     def __getitem__(self, key):
         return self._schedule['schedule'][key]
 
@@ -170,8 +175,11 @@ class Schedule:
     def version(self):
         return self._schedule['schedule']['version']
 
-    def conference(self):
-        return self._schedule['schedule']['conference']
+    def conference(self, key = None):
+        if key:
+            return self._schedule['schedule']['conference'][key]
+        else: 
+            return self._schedule['schedule']['conference']
     
     def days(self):
         # TODO return _days object list instead of raw dict/json?
