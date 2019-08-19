@@ -40,7 +40,11 @@ set_validator_filter([
 wiki_url = 'https://events.ccc.de/camp/{year}/wiki'.format(year=year)
 main_schedule_url = 'https://fahrplan.events.ccc.de/camp/{year}/Fahrplan/schedule.json'.format(year=year)
 additional_schedule_urls = [
-    { 'name': 'thm',     'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json',    'id_offset': 100},
+    { 'name': 'thm',     'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json',    'id_offset': 100, 'options': { 
+        'room-map': {
+            #'Plank': 'Plank (THM)'
+            'Workshop': 'THM Workshop'
+    }}},
 #    { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2018/Lineup/schedule.json',             'id_offset': None},
 #    { 'name': 'komona',         'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json',                   'id_offset': 800},
 #    { 'name': 'lightning',      'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json',                            'id_offset': 3000}
@@ -50,6 +54,11 @@ additional_schedule_urls = [
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [ 
+    'Plank'
+    'Hackcenter',
+    'Johnson (Workshop 1)',
+    'Goldberg (Workshop 2)',
+    'THM Workshop'
 ]
 
 output_dir = "/srv/www/" + xc3
@@ -88,7 +97,7 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
     print("Wiki: Processing...")
 
     wiki_schedule = Schedule.empty_copy_of(full_schedule, 'Wiki')
-    #wiki_schedule.add_rooms(rooms)    
+    wiki_schedule.add_rooms(rooms)    
     
     load_sos_ids()
 
@@ -139,6 +148,7 @@ def main():
 
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
+    full_schedule.add_events_from(wiki_schedule)
 
 
     # write all events to one big schedule.json/xml 
