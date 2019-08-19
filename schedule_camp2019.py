@@ -33,7 +33,7 @@ year = str(2019)
 xc3 = 'camp{year}'.format(year=year)
 
 set_validator_filter([
-    "VT87DH", "'140'", "f6b73c1d-465f-540c-9854-26b8c0dcf645"
+    "VT87DH", "140", "f6b73c1d-465f-540c-9854-26b8c0dcf645"
 ])
 
 
@@ -54,7 +54,7 @@ additional_schedule_urls = [
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [ 
-    'Plank'
+    'Plank',
     'Hackcenter',
     'Johnson (Workshop 1)',
     'Goldberg (Workshop 2)',
@@ -63,8 +63,6 @@ rooms = [
 
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
-#validator = sys.path[0] + "/validator/xsd/validate_schedule_xml.sh"
-validator = "xmllint --noout --schema {path}/validator/xsd/schedule-without-person.xml.xsd".format(path=sys.path[0])
 
 if len(sys.argv) == 2:
     output_dir = sys.argv[1]
