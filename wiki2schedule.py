@@ -111,7 +111,7 @@ def generate_wiki_schedules(wiki_url):
     
     # write imported data from wiki to one merged file   
     with open("sessions_complete.json", "w") as fp:
-        json.dump(sessions_complete, fp, indent=4)
+        json.dump(sessions_complete, fp, indent=2)
 
     wiki_schedule.export("wiki")
     # write all sessions in workshop rooms to an additional schedule.json/xml
@@ -139,7 +139,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
     used_guids = []
     debug = options and options.debug
 
-    def warn(msg):
+    def warn(msg, force = False):
         global warnings, events_with_warnings, events_in_halls_with_warnings
         if not warnings:
             warnings = True
@@ -147,7 +147,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
             if is_workshop_room_session:
                 events_in_halls_with_warnings += 1
             
-            if is_workshop_room_session or options.show_assembly_warnings:
+            if is_workshop_room_session or options.show_assembly_warnings or force:
                 print('')
                 print(event_wiki_name)
                 try: print('  at ' + start_time.isoformat() ) 
@@ -158,7 +158,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
             
         #if not is_workshop_room_session:
         #    msg += ' – at assembly?'
-        if is_workshop_room_session or options.show_assembly_warnings:
+        if is_workshop_room_session or options.show_assembly_warnings or force:
             print(msg)
     
     #for event_wiki_name, event_r in wiki.events.iteritems(): #python2
@@ -233,7 +233,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     #if debug:
                     #    print_json(event['GUID'])
                 if guid in used_guids:
-                    warn('   GUID {} was already used before, generated a random one for now. Please fix the session wiki page to ensure users can stay subscribed to event!'.format(guid))
+                    warn('   GUID {} was already used before, generated a random one for now. Please fix the session wiki page to ensure users can stay subscribed to event!'.format(guid), force=True)
                     guid = voc.tools.gen_uuid(session['fullurl'] + str(event['Has start time'][0]))
                 used_guids.append(guid)
 

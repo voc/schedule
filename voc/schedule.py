@@ -253,7 +253,8 @@ class Schedule:
             print("  ERROR: no overlap between other schedule and primary schedule")
             return False
 
-        print ("  calculated conference start day offset: {}".format(offset))
+        if offset:
+            print ("  calculated conference start day offset: {}".format(offset))
 
         for day in other_schedule.days():
             target_day = day["index"] - offset

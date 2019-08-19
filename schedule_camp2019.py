@@ -78,6 +78,10 @@ if not os.path.exists("events"):
 
 from wiki2schedule import Wiki, process_wiki_events, load_sos_ids, store_sos_ids
 
+def write(x):
+    sys.stdout.write(x)
+    sys.stdout.flush()
+
 def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):    
     data = Wiki(wiki_url)
 
@@ -92,9 +96,10 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
     process_wiki_events(data, wiki_schedule, timestamp_offset=-7200, options=options)
     store_sos_ids()
     
-    wiki_schedule.export("wiki")
+    write('Exporting... ')
+    wiki_schedule.export('wiki')
     
-    print('Wiki: done')
+    print('Wiki: done \n')
     return wiki_schedule
 
 
@@ -123,18 +128,21 @@ def main():
             print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
 
 
-    # write all events from the three big stages to a own schedule.json/xml  
+    # write all events from the three big stages to a own schedule.json/xml 
+    write('Exporting three main stages... ') 
     full_schedule.export('stages')
 
-    print('Processing...')
-    sys.stdout.write('  ')
-    sys.stdout.flush()
+
+
+    print('Processing wiki...')
+    write('  ')
 
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
 
 
-    # write all events to one big schedule.json/xml  
+    # write all events to one big schedule.json/xml 
+    write('Exporting... ') 
     full_schedule.export('everything')
 
     # write seperate file for each event, to get better git diffs
