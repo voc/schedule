@@ -255,18 +255,11 @@ class Schedule:
         other_start = dateutil.parser.parse(other_schedule.conference()["start"])
         offset = (other_start - primary_start).days
 
-        try:
-            while other_schedule.day(1+offset)["date"] != self.day(1)["date"]:
-                offset += 1
-        except:
-            print("  ERROR: no overlap between other schedule and primary schedule")
-            return False
-
         if offset:
             print ("  calculated conference start day offset: {}".format(offset))
 
         for day in other_schedule.days():
-            target_day = day["index"] - offset
+            target_day = day["index"] + offset
 
             if target_day < 1:
                 print( "  ignoring day {} from {}, as primary schedule starts at {}".format(
