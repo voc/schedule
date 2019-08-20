@@ -5,7 +5,7 @@ Scripts to generate & validate [schedule files](https://c3voc.de/wiki/schedule) 
 
 ## Camp 2019
 
-TBD
+see [schedule_camp2019.py](schedule_camp2019.py) – this time in Python 3 and 100% more object oriented. 
 
 
 ## 34C3
