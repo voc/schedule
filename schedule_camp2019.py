@@ -136,12 +136,12 @@ def main():
 
 
     # write all events from the three big stages to a own schedule.json/xml 
-    write('Exporting three main stages... ') 
+    write('\nExporting three main stages... ') 
     full_schedule.export('stages')
 
 
 
-    print('Processing wiki...')
+    print('\nProcessing wiki...')
     write('  ')
 
     # wiki
@@ -150,7 +150,7 @@ def main():
 
 
     # write all events to one big schedule.json/xml 
-    write('Exporting... ') 
+    write('\nExporting... ') 
     full_schedule.export('everything')
 
     # write seperate file for each event, to get better git diffs
@@ -162,7 +162,7 @@ def main():
     full_schedule.foreach_event(export_event)
 
     
-    print('Done')
+    print('\nDone')
 
     if not local or options.git:      
         content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
