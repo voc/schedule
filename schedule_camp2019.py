@@ -47,7 +47,7 @@ additional_schedule_urls = [
     }}},
     { 'name': 'lounges', 'url': 'https://fahrplan.events.ccc.de/camp/2019/Abfahrplan/schedule.json', 'id_offset': None},
 #    { 'name': 'komona',         'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json',                   'id_offset': 800},
-#    { 'name': 'lightning',      'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json',                            'id_offset': 3000}
+    { 'name': 'lightning', 'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json', 'id_offset': 3000}
 ]
 
 
