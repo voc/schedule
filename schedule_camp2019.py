@@ -45,7 +45,7 @@ additional_schedule_urls = [
             #'Plank': 'Plank (THM)'
             'Workshop': 'THM Workshop'
     }}},
-#    { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2018/Lineup/schedule.json',             'id_offset': None},
+    { 'name': 'lounge',        'url': 'https://fahrplan.events.ccc.de/camp/{year}/Lineup/schedule.json'.format(year=year),             'id_offset': None},
 #    { 'name': 'komona',         'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json',                   'id_offset': 800},
 #    { 'name': 'lightning',      'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json',                            'id_offset': 3000}
 ]
@@ -53,7 +53,9 @@ additional_schedule_urls = [
 
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
-rooms = [ 
+rooms = [
+    'Kemistry Lounge',
+    'Rockmore Booth',
     'Plank',
     'Hackcenter',
     'Johnson (Workshop 1)',
