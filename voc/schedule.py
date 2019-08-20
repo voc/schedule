@@ -263,6 +263,8 @@ class Schedule:
         other_start = dateutil.parser.parse(other_schedule.conference()["start"])
         offset = (other_start - primary_start).days
 
+        self._schedule['schedule']['version'] += " " + other_schedule.version()
+
         if offset:
             print ("  calculated conference start day offset: {}".format(offset))
 

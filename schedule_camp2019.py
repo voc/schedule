@@ -113,6 +113,8 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
 def main():        
     #main_schedule = get_schedule('main_rooms', main_schedule_url)
     full_schedule = Schedule.from_url(main_schedule_url)
+    print('  version: ' + full_schedule.version())
+
 
     # add addional rooms from this local config now, so they are in the correct order
     full_schedule.add_rooms(rooms)
@@ -123,13 +125,15 @@ def main():
             #other_schedule = get_schedule(entry['name'], entry['url'])
             other_schedule = Schedule.from_url(entry['url'])
             
-            if full_schedule.add_events_from(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
-                print("  success")
-
             if 'version' in other_schedule.schedule():
-                full_schedule._schedule["schedule"]["version"] += " " + other_schedule.version()
+                full_schedule._schedule['schedule']['version'] += "; {}".format(entry['name'])
+                print('  version: ' + other_schedule.version())
             else:
                 print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
+            
+            if full_schedule.add_events_from(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
+                print('  success')
+    
 
         except:
             print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
@@ -146,6 +150,7 @@ def main():
 
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
+    full_schedule._schedule['schedule']['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
 
 
@@ -163,6 +168,7 @@ def main():
 
     
     print('\nDone')
+    print('  version: ' + full_schedule.version())
 
     if not local or options.git:      
         content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
