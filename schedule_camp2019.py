@@ -60,6 +60,9 @@ rooms = [
     'Goldberg (Workshop 2)',
     'THM Workshop'
 ]
+stages = [ 
+    'Plank',
+]
 
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
@@ -92,7 +95,7 @@ def write(x):
 def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):    
     data = Wiki(wiki_url)
 
-    print("Wiki: Processing...")
+    write('Wiki: Processing...')
 
     wiki_schedule = Schedule.empty_copy_of(full_schedule, 'Wiki')
     wiki_schedule.add_rooms(rooms)    
@@ -117,7 +120,7 @@ def main():
 
 
     # add addional rooms from this local config now, so they are in the correct order
-    full_schedule.add_rooms(rooms)
+    full_schedule.add_rooms(stages)
 
     # add events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
@@ -136,7 +139,7 @@ def main():
     
 
         except:
-            print("  UNEXPECTED ERROR:" + str(sys.exc_info()[1]))
+            print('  UNEXPECTED ERROR:' + str(sys.exc_info()[1]))
 
 
     # write all events from the three big stages to a own schedule.json/xml 
@@ -145,8 +148,7 @@ def main():
 
 
 
-    print('\nProcessing wiki...')
-    write('  ')
+    print('\Building wiki schedule...')
 
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
