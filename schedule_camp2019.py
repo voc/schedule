@@ -42,11 +42,11 @@ main_schedule_url = 'https://fahrplan.events.ccc.de/camp/{year}/Fahrplan/schedul
 additional_schedule_urls = [
     { 'name': 'thm', 'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json', 'id_offset': 100, 'options': { 
         'room-map': {
-            #'Plank': 'Plank (THM)'
-            'Workshop': 'THM Workshop'
+            'Plank (Stage)': 'Plank',
+            'Lagerfeuer (Workshop)': 'Lagerfeuer (Workshop THM)'
     }}},
     { 'name': 'lounges', 'url': 'https://fahrplan.events.ccc.de/camp/2019/Abfahrplan/schedule.json', 'id_offset': None},
-#    { 'name': 'komona',         'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json',                   'id_offset': 800},
+#    { 'name': 'komona', 'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json', 'id_offset': 800},
     { 'name': 'lightning', 'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json', 'id_offset': 3000}
 ]
 
