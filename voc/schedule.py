@@ -214,6 +214,10 @@ class Schedule:
             target_day_rooms[target_room] += data
         else:
             target_day_rooms[target_room] = data
+    
+    def remove_room(self, room_key):
+        for day in self._schedule['schedule']['conference']['days']:
+            del day['rooms'][room_key]
 
     def add_event(self, event):
         day = self.get_day_from_time(event.start)

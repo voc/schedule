@@ -40,25 +40,26 @@ set_validator_filter([
 wiki_url = 'https://events.ccc.de/camp/{year}/wiki'.format(year=year)
 main_schedule_url = 'https://fahrplan.events.ccc.de/camp/{year}/Fahrplan/schedule.json'.format(year=year)
 additional_schedule_urls = [
-    { 'name': 'thm', 'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json', 'id_offset': 100, 'options': { 
+    { 'name': 'lounges', 'url': 'https://fahrplan.events.ccc.de/camp/2019/Abfahrplan/schedule.json', 'id_offset': None},
+    { 'name': 'lightning', 'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json', 'id_offset': 3000},
+    { 'name': 'thms', 'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json', 'id_offset': 100, 'options': { 
         'room-map': {
             'Plank (Stage)': 'Plank',
-            'Lagerfeuer (Workshop)': 'Lagerfeuer (Workshop THM)'
+            'Fireplace (Workshop)': 'Fireplace (Workshop THM)'
     }}},
-    { 'name': 'lounges', 'url': 'https://fahrplan.events.ccc.de/camp/2019/Abfahrplan/schedule.json', 'id_offset': None},
-#    { 'name': 'komona', 'url': 'https://talks.komona.org/35c3/schedule/export/schedule.json', 'id_offset': 800},
-    { 'name': 'lightning', 'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json', 'id_offset': 3000}
 ]
 
 
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [ 
+    'Rockmore Booth',
+    'Kemistry Lounge',
     'Plank',
     'Hackcenter',
     'Johnson (Workshop 1)',
     'Goldberg (Workshop 2)',
-    'THM Workshop'
+    'Fireplace (Workshop THM)'
 ]
 stages = [ 
     'Plank',
@@ -120,7 +121,7 @@ def main():
 
 
     # add addional rooms from this local config now, so they are in the correct order
-    full_schedule.add_rooms(stages)
+    full_schedule.add_rooms(rooms)
 
     # add events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
@@ -146,12 +147,14 @@ def main():
     write('\nExporting three main stages... ') 
     full_schedule.export('stages')
 
-
-
     print('\Building wiki schedule...')
 
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
+
+    # remove rooms from wiki schedule we already got via schedule.xml – looking at you THMS!
+    wiki_schedule.remove_room('Village:Three Headed Monkey')
+
     full_schedule._schedule['schedule']['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
 
@@ -171,6 +174,10 @@ def main():
     
     print('\nDone')
     print('  version: ' + full_schedule.version())
+
+    print('\n  rooms of day 1: ') 
+    for room in full_schedule.day(1)['rooms']:
+        print('   - ' + room)
 
     if not local or options.git:      
         content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
