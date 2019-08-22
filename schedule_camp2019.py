@@ -171,6 +171,9 @@ def main():
 
     full_schedule.foreach_event(export_event)
 
+    lighthingtalks = full_schedule.find_event(id=10380)
+    del lighthingtalks
+
     
     print('\nDone')
     print('  version: ' + full_schedule.version())

@@ -233,7 +233,9 @@ class Schedule:
         for day in self._schedule['schedule']['conference']['days']:
             for room in day['rooms']:
                 for event in day['rooms'][room]:
-                    out.append(func(event))
+                    result = func(event)
+                    if result:
+                        out.append(result)
         
         return out
     
@@ -304,6 +306,25 @@ class Schedule:
         
         
         return True
+
+    def find_event(self, id = None, guid = None):    
+        if not id and not guid:
+            raise RuntimeError('Please provide either id or guid')                        
+
+        if id:
+            result = self.foreach_event(lambda event: event if event['id'] == id else None)
+        else:
+            result = self.foreach_event(lambda event: event if event['guid'] == guid else None)
+
+        if len(result) > 1:
+            print('Warning: Found multipe events with id ' + id)
+            return result
+
+        if len(result) == 0:
+            raise Warning('could not find event with id ' + id)
+            #return None
+
+        return result[0]
 
 
 
