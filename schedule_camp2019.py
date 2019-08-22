@@ -106,6 +106,9 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
     # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
     process_wiki_events(data, wiki_schedule, timestamp_offset=-7200, options=options)
     store_sos_ids()
+
+    # remove rooms from wiki schedule we already got via schedule.xml – looking at you THMS!
+    wiki_schedule.remove_room('Village:Three Headed Monkey')
     
     write('Exporting... ')
     wiki_schedule.export('wiki')
@@ -151,9 +154,6 @@ def main():
 
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
-
-    # remove rooms from wiki schedule we already got via schedule.xml – looking at you THMS!
-    wiki_schedule.remove_room('Village:Three Headed Monkey')
 
     full_schedule._schedule['schedule']['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
