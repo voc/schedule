@@ -159,7 +159,9 @@ def main():
 
     full_schedule._schedule['schedule']['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
-
+    # remove lighthing talk slot to fill with individual small events per lighthing talk
+    full_schedule.remove_event(id=10380)
+    
 
     # write all events to one big schedule.json/xml 
     write('\nExporting... ') 
@@ -172,10 +174,6 @@ def main():
             json.dump(event, fp, indent=2, cls=ScheduleEncoder)
 
     full_schedule.foreach_event(export_event)
-
-    lighthingtalks = full_schedule.find_event(id=10380)
-    del lighthingtalks
-
     
     print('\nDone')
     print('  version: ' + full_schedule.version())

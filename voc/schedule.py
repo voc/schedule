@@ -327,6 +327,18 @@ class Schedule:
         return result[0]
 
 
+    def remove_event(self, id = None, guid = None):    
+        if not id and not guid:
+            raise RuntimeError('Please provide either id or guid')                        
+
+        for day in self._schedule['schedule']['conference']['days']:
+            for room in day['rooms']:
+                for event in day['rooms'][room]:
+                    if event['id'] == id or event['id'] == str(id) or event['guid'] == guid:
+                        print('removing ', event)
+                        day['rooms'][room].remove(event) 
+
+
 
     # dict_to_etree from http://stackoverflow.com/a/10076823
 
