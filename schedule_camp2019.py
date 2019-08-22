@@ -53,13 +53,15 @@ additional_schedule_urls = [
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [ 
-    'Rockmore Booth',
-    'Kemistry Lounge',
-    'Plank',
-    'Hackcenter',
     'Johnson (Workshop 1)',
     'Goldberg (Workshop 2)',
+    'Plank',
+    'Rockmore Booth',
+    'Kemistry Lounge',
     'Fireplace (Workshop THM)'
+    'Hackcenter',
+    'Hackcenter 1',
+    'Hackcenter 3',
 ]
 stages = [ 
     'Plank',
