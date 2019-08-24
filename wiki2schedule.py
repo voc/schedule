@@ -339,31 +339,44 @@ class Wiki:
 
     def query(self, q, po):
         r = None
-        
-        print("Requesting wiki " + q)
-        
-        # Retry up to three times
-        for _ in range(3):
-            r = requests.get(
-                self.wiki_url + '/index.php?title=Special:Ask', 
-                params=(
-                    ('q', q),
-                    ('po', "\r\n".join(po)),
-                    ('p[format]', 'json'),
-                    ('p[limit]', 500),
-                )
-            )
-            if r.ok is True:
-                break
-            print(".")
+        results = OrderedDict()
+        offset = 0
+
+        while True:
+            print("Requesting wiki " + q)
             
-        
-        if r.ok is False:
-            raise Exception("   Requesting failed, HTTP {0}.".format(r.status_code))
-        
-        # this more complex way instead of sessions_r.json()['results'] is necessary 
-        # to maintain the same order as in the input file
-        results = voc.tools.parse_json(r.text)['results'] 
+            # Retry up to three times
+            for _ in range(3):
+                r = requests.get(
+                    self.wiki_url + '/index.php?title=Special:Ask', 
+                    params=(
+                        ('q', q),
+                        ('po', "\r\n".join(po)),
+                        ('p[format]', 'json'),
+                        ('p[limit]', 500),
+                        ('p[offset]', offset)
+                    )
+                )
+                
+                if r.ok is True:
+                    break
+                print(".")
+                
+            
+            if r.ok is False:
+                raise Exception("   Requesting failed, HTTP {0}.".format(r.status_code))
+            
+            # this more complex way instead of sessions_r.json()['results'] is necessary 
+            # to maintain the same order as in the input file
+            page = voc.tools.parse_json(r.text)['results'] 
+            results.update(page)
+
+            # if we get exactly 500 results we have to fetch the next page,
+            # otherwhise we are done
+            if len(page) == 500:
+                offset += 500
+            else:
+                break
         
         return results
 
