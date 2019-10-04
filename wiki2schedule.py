@@ -126,7 +126,7 @@ events_in_halls_with_warnings = 0
 
 
 # this method is also exported to be used as a library method, thereby we started to reduce requiring of global variables
-def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp_offset = None, options = None):
+def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp_offset = None, options = None, fetch_wikitext=True):
     global sessions_complete, warnings, time_stamp_offset
 
     if not timestamp_offset == None:
@@ -170,7 +170,8 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
         try:
             wiki_page_name = event_wiki_name.split('#')[0].replace(' ', '_') # or see fullurl property
             wiki_edit_url = wiki.wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
-            
+            wiki_parsetree_url = wiki.wiki_url + '/api.php?action=parse&format=json&page=' + wiki_page_name + '&prop=parsetree'
+
             session = wiki.parent_of_event(event_wiki_name)
             event = event_r['printouts']
             event_n = None
@@ -240,6 +241,29 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
 
                 local_id = voc.tools.get_id(guid)
 
+
+                wiki_text = ''
+                if fetch_wikitext:
+                    # Retry up to three times
+                    for _ in range(3):
+                        content_r = requests.get(wiki_parsetree_url, timeout=5)
+                        if content_r.ok is True:
+                            print("Page {0} requested successfully!".format(wiki_parsetree_url))
+                            break
+                        print(".")
+                    if content_r.ok is False:
+                        print("   Requesting {1} failed, HTTP {0}.".format(content_r.status_code, wiki_parsetree_url))
+                    else:
+                        try:
+                            wiki_text_tree = ET.fromstring(voc.tools.parse_json(content_r.text)['parse']['parsetree'].replace('\n',''))
+                        except AttributeError:
+                            wiki_text_tree = ET.fromstring(voc.tools.parse_json(content_r.text)['parse']['parsetree']['*'].replace('\n',''))
+                        except KeyError:
+                            print(wiki_parsetree_url)
+                        for element in wiki_text_tree.iterfind('template'):
+                            if element.tail != None:
+                                wiki_text += html.unescape(element.tail)
+
                 event_n = Event([
                     ('id', local_id),
                     ('guid', guid),
@@ -261,7 +285,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     ('type', " ".join(session['Has session type']).lower()),
                     ('language', lang ),
                     ('abstract', ''),
-                    ('description', ("\n".join(session['Has description'])).strip()),
+                    ('description', ("\n".join(session['Has description'])).strip() + '\n' + wiki_text),
                     ('persons', [ OrderedDict([
                         ('id', 0),
                         ('url', 'https:'+p['fullurl']),
