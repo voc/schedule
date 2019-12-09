@@ -18,7 +18,7 @@ tz = pytz.timezone('Europe/Amsterdam')
 parser = optparse.OptionParser()
 parser.add_option('--online', action="store_true", dest="online", default=False)
 parser.add_option('--show-assembly-warnings', action="store_true", dest="show_assembly_warnings", default=False)
-#parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
+parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
 parser.add_option('--git', action="store_true", dest="git", default=False)
 parser.add_option('--debug', action="store_true", dest="debug", default=False)
 
@@ -42,7 +42,7 @@ main_schedule_url = 'https://fahrplan.events.ccc.de/camp/{year}/Fahrplan/schedul
 additional_schedule_urls = [
     { 'name': 'lounges', 'url': 'https://fahrplan.events.ccc.de/camp/2019/Abfahrplan/schedule.json', 'id_offset': None},
     { 'name': 'lightning', 'url': 'https://c3lt.de/camp2019/schedule/export/schedule.json', 'id_offset': 3000},
-    { 'name': 'thms', 'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json', 'id_offset': 100, 'options': { 
+    { 'name': 'thms', 'url': 'https://talx.thm.cloud/thms/schedule/export/schedule.json', 'id_offset': 100, 'options': {
         'room-map': {
             'Plank (Stage)': 'Plank',
             'Fireplace (Workshop)': 'Fireplace (Workshop THM)'
@@ -52,7 +52,7 @@ additional_schedule_urls = [
 
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
-rooms = [ 
+rooms = [
     'Johnson (Workshop 1)',
     'Goldberg (Workshop 2)',
     'Plank',
@@ -63,7 +63,7 @@ rooms = [
     'Hackcenter 1',
     'Hackcenter 3',
 ]
-stages = [ 
+stages = [
     'Plank',
 ]
 
@@ -76,7 +76,7 @@ if len(sys.argv) == 2:
 if not os.path.exists(output_dir):
     try:
         if not os.path.exists(secondary_output_dir):
-            os.mkdir(output_dir) 
+            os.mkdir(output_dir)
         else:
             output_dir = secondary_output_dir
             local = True
@@ -89,37 +89,39 @@ if not os.path.exists("events"):
     os.mkdir("events")
 
 
-from wiki2schedule import Wiki, process_wiki_events, load_sos_ids, store_sos_ids
+from wiki2schedule import Wiki, process_wiki_events, load_sos_ids, store_sos_ids, load_last_edited, store_last_edited
 
 def write(x):
     sys.stdout.write(x)
     sys.stdout.flush()
 
-def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):    
+def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
     data = Wiki(wiki_url)
 
     write('Wiki: Processing...')
 
     wiki_schedule = Schedule.empty_copy_of(full_schedule, 'Wiki')
-    wiki_schedule.add_rooms(rooms)    
-    
+    wiki_schedule.add_rooms(rooms)
+
     load_sos_ids()
+    load_last_edited()
 
     # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
     process_wiki_events(data, wiki_schedule, timestamp_offset=-7200, options=options)
     store_sos_ids()
+    store_last_edited()
 
     # remove rooms from wiki schedule we already got via schedule.xml – looking at you THMS!
-    wiki_schedule.remove_room('Village:Three Headed Monkey')
-    
+    #wiki_schedule.remove_room('Village:Three Headed Monkey')
+
     write('Exporting... ')
     wiki_schedule.export('wiki')
-    
+
     print('Wiki: done \n')
     return wiki_schedule
 
 
-def main():        
+def main():
     #main_schedule = get_schedule('main_rooms', main_schedule_url)
     full_schedule = Schedule.from_url(main_schedule_url)
     print('  version: ' + full_schedule.version())
@@ -133,23 +135,23 @@ def main():
         try:
             #other_schedule = get_schedule(entry['name'], entry['url'])
             other_schedule = Schedule.from_url(entry['url'])
-            
+
             if 'version' in other_schedule.schedule():
                 full_schedule._schedule['schedule']['version'] += "; {}".format(entry['name'])
                 print('  version: ' + other_schedule.version())
             else:
                 print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
-            
+
             if full_schedule.add_events_from(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
                 print('  success')
-    
+
 
         except:
             print('  UNEXPECTED ERROR:' + str(sys.exc_info()[1]))
 
 
-    # write all events from the three big stages to a own schedule.json/xml 
-    write('\nExporting three main stages... ') 
+    # write all events from the three big stages to a own schedule.json/xml
+    write('\nExporting three main stages... ')
     full_schedule.export('stages')
 
     print('\Building wiki schedule...')
@@ -161,10 +163,10 @@ def main():
     full_schedule.add_events_from(wiki_schedule)
     # remove lighthing talk slot to fill with individual small events per lighthing talk
     full_schedule.remove_event(id=10380)
-    
 
-    # write all events to one big schedule.json/xml 
-    write('\nExporting... ') 
+
+    # write all events to one big schedule.json/xml
+    write('\nExporting... ')
     full_schedule.export('everything')
 
     # write seperate file for each event, to get better git diffs
@@ -174,15 +176,15 @@ def main():
             json.dump(event, fp, indent=2, cls=ScheduleEncoder)
 
     full_schedule.foreach_event(export_event)
-    
+
     print('\nDone')
     print('  version: ' + full_schedule.version())
 
-    print('\n  rooms of day 1: ') 
+    print('\n  rooms of day 1: ')
     for room in full_schedule.day(1)['rooms']:
         print('   - ' + room)
 
-    if not local or options.git:      
+    if not local or options.git:
         content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
 
         def git(args):
@@ -198,5 +200,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
-

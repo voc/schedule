@@ -25,7 +25,7 @@ validator_filter = ''
 def set_validator_filter(filter):
     global validator_filter
     validator_filter += " | awk '" + (' && '.join(['!/'+x+'/' for x in filter]) + "'")
-    
+
 
 class Day:
     _day = None
@@ -36,7 +36,7 @@ class Day:
             self._day = json
         elif i and year and day:
            self._day = {
-                "index": i+1, 
+                "index": i+1,
                 "date": "{}-12-{}".format(year, day),
                 "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
                 "day_end": "{}-12-{}T04:00:00+01:00".format(year, day+1),
@@ -44,10 +44,10 @@ class Day:
             }
         else:
             raise Exception('Either give JSON xor i, year, month, day')
-        
+
         self.start = dateutil.parser.parse(self._day["day_start"])
         self.end = dateutil.parser.parse(self._day["day_end"])
- 
+
     def __getitem__(self, key):
         return self._day[key]
 
@@ -65,7 +65,7 @@ class Event:
 
     def __len__(self):
         return len(self._event)
-    
+
     def items(self):
         return self._event.items()
 
@@ -78,8 +78,8 @@ class Event:
 
 
 class Schedule:
-    ''' 
-    Schedule class with import and export methods 
+    '''
+    Schedule class with import and export methods
     '''
     _schedule = None
     _days = []
@@ -97,15 +97,15 @@ class Schedule:
     def from_url(cls, url):
         print("Requesting " + url)
         schedule_r = requests.get(url) #, verify=False)
-        
+
         if schedule_r.ok is False:
             raise Exception("  Request failed, HTTP {0}.".format(schedule_r.status_code))
 
-        #self.schedule = tools.parse_json(schedule_r.text) 
+        #self.schedule = tools.parse_json(schedule_r.text)
 
-        # this more complex way is necessary 
+        # this more complex way is necessary
         # to maintain the same order as in the input file
-        schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text) 
+        schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
 
         return Schedule(json=schedule)
 
@@ -119,7 +119,7 @@ class Schedule:
     @classmethod
     def from_XC3_template(cls, name, congress_nr, start_day, days_count):
         year = str(1983 + congress_nr)
-        
+
         schedule = {
             "schedule": OrderedDict([
                 ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
@@ -128,17 +128,17 @@ class Schedule:
                     ("title", u"{}. Chaos Communication Congress - {}".format(congress_nr, name)),
                     ("start", "{}-12-{}".format(year, start_day)),
                     ("end", "{}-12-{}".format(year, start_day+days_count-1)),
-                    ("daysCount", days_count), 
-                    ("timeslot_duration", "00:15"), 
+                    ("daysCount", days_count),
+                    ("timeslot_duration", "00:15"),
                     ("days", [])
-                ])) 
+                ]))
             ])
         }
         days = schedule['schedule']['conference']['days']
-        day = start_day 
+        day = start_day
         for i in range(days_count):
             days.append({
-                "index": i+1, 
+                "index": i+1,
                 "date": "{}-12-{}".format(year, day),
                 "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
                 "day_end": "{}-12-{}T04:00:00+01:00".format(year, day+1),
@@ -147,13 +147,13 @@ class Schedule:
             day += 1
 
         return Schedule(json=schedule)
-    
+
     @classmethod
-    def empty_copy_of(cls, parent_schedule, name):        
+    def empty_copy_of(cls, parent_schedule, name):
         schedule = {
             "schedule": OrderedDict([
                 ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
-                ("conference", copy.deepcopy(parent_schedule.conference())) 
+                ("conference", copy.deepcopy(parent_schedule.conference()))
             ])
         }
         schedule['schedule']['conference']['title'] += ' - ' + name
@@ -161,7 +161,7 @@ class Schedule:
             day['rooms'] = OrderedDict()
         return Schedule(json=schedule)
 
-    def copy(self, name):        
+    def copy(self, name):
         schedule = copy.deepcopy(self._schedule)
         schedule['schedule']['conference']['title'] += ' - ' + name
         return Schedule(json=schedule)
@@ -171,16 +171,16 @@ class Schedule:
 
     def schedule(self):
         return self._schedule['schedule']
-    
+
     def version(self):
         return self._schedule['schedule']['version']
 
     def conference(self, key = None):
         if key:
             return self._schedule['schedule']['conference'][key]
-        else: 
+        else:
             return self._schedule['schedule']['conference']
-    
+
     def days(self):
         # TODO return _days object list instead of raw dict/json?
         return self._schedule['schedule']['conference']['days']
@@ -199,14 +199,14 @@ class Schedule:
 
     def room_exists(self, day, room):
         return room in self.days()[day-1]['rooms']
-    
+
     def add_room(self, day, room):
         self.days()[day-1]['rooms'][room] = list()
 
     def add_room_with_events(self, day, target_room, data):
         if not data or len(data) == 0:
             return
-        
+
         #print('  adding room {} to day {} with {} events'.format(target_room, day, len(data)))
         target_day_rooms = self.days()[day-1]['rooms']
 
@@ -214,7 +214,7 @@ class Schedule:
             target_day_rooms[target_room] += data
         else:
             target_day_rooms[target_room] = data
-    
+
     def remove_room(self, room_key):
         for day in self._schedule['schedule']['conference']['days']:
             del day['rooms'][room_key]
@@ -224,7 +224,7 @@ class Schedule:
 
         if not self.room_exists(day, event['room']):
             self.add_room(day, event['room'])
-        
+
         self.days()[day-1]['rooms'][event['room']].append(event)
 
 
@@ -236,9 +236,9 @@ class Schedule:
                     result = func(event)
                     if result:
                         out.append(result)
-        
+
         return out
-    
+
     def get_day_from_time(self, start_time):
         for i in range(self.conference()['daysCount']):
             day = self.day(i+1)
@@ -246,13 +246,13 @@ class Schedule:
                 # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'], start_time, day['end'])
                 # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'].strftime("%s"), start_time.strftime("%s"), day['end'].strftime("%s"))
                 return day['index']
-        
-        raise Warning("  illegal start time: " + start_time.isoformat())   
+
+        raise Warning("  illegal start time: " + start_time.isoformat())
 
     def export(self, prefix):
         with open("{}.schedule.json".format(prefix), "w") as fp:
             json.dump(self._schedule, fp, indent=2, cls=ScheduleEncoder)
-    
+
         with open('{}.schedule.xml'.format(prefix), 'w') as fp:
             fp.write(self.xml())
 
@@ -279,7 +279,7 @@ class Schedule:
 
             if target_day < 1:
                 print( "  ignoring day {} from {}, as primary schedule starts at {}".format(
-                    day["date"], other_schedule.conference()["acronym"], self.conference()["start"]) 
+                    day["date"], other_schedule.conference()["acronym"], self.conference()["start"])
                 )
                 continue
 
@@ -287,15 +287,15 @@ class Schedule:
                 #print(target_day)
                 print("  ERROR: the other schedule's days have to match primary schedule, in some extend!")
                 return False
-        
+
             for room in day["rooms"]:
                 target_room = room
                 if options and 'room-map' in options and room in options['room-map']:
                     target_room = options['room-map'][room]
-                    
+
                     for event in day["rooms"][room]:
                         event['room'] = target_room
-                
+
                 if id_offset:
                     for event in day["rooms"][room]:
                         event['id'] = int(event['id']) + id_offset
@@ -303,13 +303,13 @@ class Schedule:
 
                 # copy whole day_room to target schedule
                 self.add_room_with_events(target_day, target_room, day["rooms"][room])
-        
-        
+
+
         return True
 
-    def find_event(self, id = None, guid = None):    
+    def find_event(self, id = None, guid = None):
         if not id and not guid:
-            raise RuntimeError('Please provide either id or guid')                        
+            raise RuntimeError('Please provide either id or guid')
 
         if id:
             result = self.foreach_event(lambda event: event if event['id'] == id else None)
@@ -327,16 +327,16 @@ class Schedule:
         return result[0]
 
 
-    def remove_event(self, id = None, guid = None):    
+    def remove_event(self, id = None, guid = None):
         if not id and not guid:
-            raise RuntimeError('Please provide either id or guid')                        
+            raise RuntimeError('Please provide either id or guid')
 
         for day in self._schedule['schedule']['conference']['days']:
             for room in day['rooms']:
                 for event in day['rooms'][room]:
                     if event['id'] == id or event['id'] == str(id) or event['guid'] == guid:
                         print('removing ', event)
-                        day['rooms'][room].remove(event) 
+                        day['rooms'][room].remove(event)
 
 
 
@@ -349,7 +349,7 @@ class Schedule:
 
     def xml(self):
         root_node = None
-                
+
         def dict_to_attrib(d, root):
             assert isinstance(d, dict)
             for k, v in d.items():
@@ -375,7 +375,7 @@ class Schedule:
                     d['conference']['base_url'] = d['base_url']
                     del d['base_url']
 
-                # count variable is used to check how many items actually end as elements 
+                # count variable is used to check how many items actually end as elements
                 # (as they are mapped to an attribute)
                 count = len(d)
                 recording_license = ''
@@ -384,7 +384,7 @@ class Schedule:
                         if k[:4] == 'day_':
                             # remove day_ prefix from items
                             k = k[4:]
-                    
+
                     if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (basestring, int))):
                         _set_attrib(node, k, v)
                         count -= 1
@@ -401,34 +401,34 @@ class Schedule:
                             node_ = ET.SubElement(node, 'room')
                             node_.set('name', k)
                             k = 'event'
-                            
+
                         if k == 'days':
                             # in the xml schedule days are not a child of a conference, but directly in the document node
-                            node_ = root_node     
-                        
+                            node_ = root_node
+
                         # special handing for collections: days, rooms etc.
-                        if k[-1:] == 's':              
-                            # don't ask me why the pentabarf schedule xml schema is so inconsistent --Andi 
+                        if k[-1:] == 's':
+                            # don't ask me why the pentabarf schedule xml schema is so inconsistent --Andi
                             # create collection tag for specific tags, e.g. persons, links etc.
                             if parent == 'event':
                                 node_ = ET.SubElement(node, k)
-                            
+
                             # remove last char (which is an s)
-                            k = k[:-1] 
+                            k = k[:-1]
                         # different notation for conference length in days
                         elif parent == 'conference' and k == 'daysCount':
                             k = 'days'
                         # special handling for recoding_licence and do_not_record flag
                         elif k == 'recording_license':
-                            # store value for next loop iteration 
+                            # store value for next loop iteration
                             recording_license = v
                             # skip forward to next loop iteration
-                            continue       
+                            continue
                         elif k == 'do_not_record':
                             k = 'recording'
                             # not in schedule.json: license information for an event
                             v = OrderedDict([
-                                ('license', recording_license), 
+                                ('license', recording_license),
                                 ('optout', 'true' if v else 'false')
                             ])
 
@@ -446,7 +446,7 @@ class Schedule:
 
         root_node = ET.Element(tag)
         _to_etree(body, root_node, 'schedule')
-        
+
         if sys.version_info[0] >= 3:
             return ET.tounicode(root_node, pretty_print = True)
         else:
@@ -454,8 +454,8 @@ class Schedule:
 
 class ScheduleEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, Schedule): 
+        if isinstance(obj, Schedule):
             return obj._schedule
-        if isinstance(obj, Event): 
+        if isinstance(obj, Event):
             return obj._event
         return json.JSONEncoder.default(self, obj)
