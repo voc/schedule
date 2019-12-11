@@ -37,11 +37,11 @@ wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
 additional_schedule_urls = [
     { 'name': 'chaos-west',     'url': 'https://fahrplan.chaos-west.de/36c3/schedule/export/schedule.json',    'id_offset': 100},
-    { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/36c3/schedule/export/schedule.json',                   'id_offset': 700},
-#    { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/36c3/schedule/export/schedule.json',              'id_offset': 500},
+    { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',  'id_offset': 200},
+    { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/36c3/schedule/export/schedule.json',                   'id_offset': 700}, 
 #    { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2019/Lineup/schedule.json',             'id_offset': None},
+#    { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/36c3/schedule/export/schedule.json',              'id_offset': 500},
 #    { 'name': 'komona',         'url': 'https://talks.komona.org/36c3/schedule/export/schedule.json',                   'id_offset': 800},
-#    { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',  'id_offset': 200},
 #    { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000}
 ]
 
