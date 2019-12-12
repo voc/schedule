@@ -282,7 +282,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                 event_n = Event([
                     ('id', local_id),
                     ('guid', guid),
-                    ('url', "https:"+session['fullurl']),
+                    ('url', session['fullurl']), # TODO: add enshure_url() which adds "https:"+ prefix when neccessary
                     ('logo', None),
                     ('date', start_time.isoformat()),
                     ('start', start_time.strftime('%H:%M')),
@@ -303,7 +303,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     ('description', description),
                     ('persons', [ OrderedDict([
                         ('id', 0),
-                        ('url', 'https:'+p['fullurl']),
+                        ('url', p['fullurl']), # sometimes a https: is needed...
                         ('public_name', Wiki.remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works
                     ]) for p in session['Is organized by'] ]),
                     ('links', session['Has website'])
