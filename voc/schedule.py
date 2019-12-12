@@ -124,8 +124,8 @@ class Schedule:
             "schedule": OrderedDict([
                 ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
                 ("conference", OrderedDict([
-                    ("acronym", u"{}C3-{}".format(congress_nr, name.lower()) ),
-                    ("title", u"{}. Chaos Communication Congress - {}".format(congress_nr, name)),
+                    ("acronym", u"{}C3".format(congress_nr) + ('-' + name.lower() if name else '')),
+                    ("title", u"{}. Chaos Communication Congress".format(congress_nr) + (' - ' + name if name else '')),
                     ("start", "{}-12-{}".format(year, start_day)),
                     ("end", "{}-12-{}".format(year, start_day+days_count-1)),
                     ("daysCount", days_count),

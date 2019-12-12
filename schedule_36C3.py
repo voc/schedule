@@ -18,7 +18,7 @@ tz = pytz.timezone('Europe/Amsterdam')
 parser = optparse.OptionParser()
 parser.add_option('--online', action="store_true", dest="online", default=False)
 parser.add_option('--show-assembly-warnings', action="store_true", dest="show_assembly_warnings", default=False)
-#parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
+parser.add_option('--fail', action="store_true", dest="exit_when_exception_occours", default=False)
 parser.add_option('--git', action="store_true", dest="git", default=False)
 parser.add_option('--debug', action="store_true", dest="debug", default=False)
 
@@ -61,8 +61,7 @@ rooms = [
     "CCL Saal 3",
     u"Chaos West Bühne",
     "ChaosZone",
-    "OIO Vortrags-Arena",
-    "OIO Workshop-Domo",
+    "OIO Stage",
 ]
 
 output_dir = "/srv/www/" + xc3
@@ -119,7 +118,7 @@ def main():
     if main_schedule_url:
         full_schedule = Schedule.from_url(main_schedule_url)
     else:
-        full_schedule = Schedule.from_XC3_template(xc3, congress_nr, 27, 5)
+        full_schedule = Schedule.from_XC3_template(None, congress_nr, 26, 5)
     print('  version: ' + full_schedule.version())
 
 
@@ -150,7 +149,7 @@ def main():
     write('\nExporting main stages... ')
     full_schedule.export('stages')
 
-    print('\Building wiki schedule...')
+    print('\nBuilding wiki schedule...')
 
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)

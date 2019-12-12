@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 import requests
@@ -11,6 +11,9 @@ import os
 import sys
 import traceback
 import optparse
+from lxml import etree as ET
+import html
+
 
 # some functions used in multiple files of this collection
 import voc.tools
