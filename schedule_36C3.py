@@ -35,6 +35,8 @@ xc3 = "{x}C3".format(x=congress_nr)
 
 wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
+main_schedule_url = None 
+
 additional_schedule_urls = [
     { 'name': 'chaos-west',     'url': 'https://fahrplan.chaos-west.de/36c3/schedule/export/schedule.json',    'id_offset': 100},
     { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',  'id_offset': 200},
@@ -114,7 +116,10 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
 
 def main():
     #main_schedule = get_schedule('main_rooms', main_schedule_url)
-    full_schedule = Schedule.from_url(main_schedule_url)
+    if main_schedule_url:
+        full_schedule = Schedule.from_url(main_schedule_url)
+    else:
+        full_schedule = Schedule.from_XC3_template(xc3, congress_nr, 27, 5)
     print('  version: ' + full_schedule.version())
 
 
