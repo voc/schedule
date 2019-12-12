@@ -11,8 +11,6 @@ import os
 import sys
 import traceback
 import optparse
-import xml.etree.ElementTree as ET
-import html
 
 # some functions used in multiple files of this collection
 import voc.tools
@@ -23,7 +21,7 @@ if sys.version_info.major < 3:
     reload(sys)
     sys.setdefaultencoding('utf-8')
 
-#TODO for python3:
+#TODO for python3: 
 # * fix NameError: name 'basestring' is not defined in voc.tools.dict_to_schedule_xml()
 
 tz = pytz.timezone('Europe/Amsterdam')
@@ -58,7 +56,7 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
         try:
             if not os.path.exists(secondary_output_dir):
-                os.mkdir(output_dir)
+                os.mkdir(output_dir) 
             else:
                 output_dir = secondary_output_dir
                 local = True
@@ -90,7 +88,7 @@ def print_json(x):
 
 def generate_wiki_schedules(wiki_url):
     global wiki_schedule, workshop_schedule
-
+    
     data = Wiki(wiki_url)
 
     print("Processing...")
@@ -101,8 +99,8 @@ def generate_wiki_schedules(wiki_url):
     # workshops are all events from the wiki, which are in workshop rooms – starting from day 0 (the 26.)
     workshop_schedule = Schedule.from_XC3_template('Workshops', congress_nr, 26, 5)
     workshop_schedule.add_rooms(rooms)
-
-
+    
+    
     print("Combining data...")
 
     global sessions_complete
@@ -110,15 +108,15 @@ def generate_wiki_schedules(wiki_url):
 
     # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
     process_wiki_events(data, wiki_schedule, workshop_schedule)
-
-    # write imported data from wiki to one merged file
+    
+    # write imported data from wiki to one merged file   
     with open("sessions_complete.json", "w") as fp:
         json.dump(sessions_complete, fp, indent=2)
 
     wiki_schedule.export("wiki")
     # write all sessions in workshop rooms to an additional schedule.json/xml
     workshop_schedule.export("workshops")
-
+    
     print('done')
     return wiki_schedule
 
@@ -148,62 +146,62 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
             events_with_warnings += 1
             if is_workshop_room_session:
                 events_in_halls_with_warnings += 1
-
+            
             if is_workshop_room_session or options.show_assembly_warnings or force:
                 print('')
                 print(event_wiki_name)
-                try: print('  at ' + start_time.isoformat() )
+                try: print('  at ' + start_time.isoformat() ) 
                 except NameError: pass
-                try: print('  in ' + room )
+                try: print('  in ' + room ) 
                 except NameError: pass
                 print('  ' + wiki_edit_url)
-
+            
         #if not is_workshop_room_session:
         #    msg += ' – at assembly?'
         if is_workshop_room_session or options.show_assembly_warnings or force:
             print(msg)
-
+    
     #for event_wiki_name, event_r in wiki.events.iteritems(): #python2
     for event_wiki_name, event_r in wiki.events.items(): #python3
-
+        
         warnings = False
         sys.stdout.write('.')
-
+        
         try:
             wiki_page_name = event_wiki_name.split('#')[0].replace(' ', '_') # or see fullurl property
             wiki_edit_url = wiki.wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
             wiki_parsetree_url = wiki.wiki_url + '/api.php?action=parse&format=json&page=' + wiki_page_name + '&prop=parsetree'
-
+            
             session = wiki.parent_of_event(event_wiki_name)
             event = event_r['printouts']
             event_n = None
             events_total += 1
-
+                    
             # One Event take place in multiple rooms...
             # WORKAROND If that is the case just pick the first one
             room = ''
             is_workshop_room_session = False
             if len(event['Has session location']) == 1:
                 room = event['Has session location'][0]['fulltext']
-
+                
                 if room.split(':', 1)[0] == 'Room':
                     is_workshop_room_session = True
                     room = Wiki.remove_prefix(room)
-
+            
             elif len(event['Has session location']) == 0:
                 warn("  has no room yet, skipping...")
                 continue
             else:
                 warn("  WARNING: has multiple rooms ???, just picking the first one…")
                 event['Has session location'] = event['Has session location'][0]['fulltext']
-
+            
             # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
             # This will only work if there are unique keys in each json string.
             #combined = dict(session.items() + event.items()) #python2
             combined = session.copy() #python3 TOOD test if this really leads to the same result
             combined.update(event)
             sessions_complete[event_wiki_name] = combined
-
+            
             if len(event['Has start time']) < 1:
                 warn("  has no start time")
                 day = None
@@ -211,12 +209,14 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                 date_time = datetime.fromtimestamp(int(event['Has start time'][0]['timestamp']) + time_stamp_offset)
                 start_time = tz.localize(date_time)
                 day = wiki_schedule.get_day_from_time(start_time)
-
+    
             #if is_workshop_room_session and day is not None and event['Has duration']:
             if day is not None and event['Has duration']:
                 duration = 0
                 if event['Has duration']:
-                    duration = event['Has duration'][0]['value']
+                    duration = event['Has duration'][0] 
+                    if not isinstance(duration, int) and 'value' in duration:
+                        duration = duration['value']
 
                 if duration > 60*24:
                     warn('   event takes longer than 24h, skipping...')
@@ -308,22 +308,22 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     ]) for p in session['Is organized by'] ]),
                     ('links', session['Has website'])
                 ], start_time)
-
+    
                 # Break if conference day date and event date do not match
                 conference_day_start = wiki_schedule.day(day).start
                 conference_day_end = wiki_schedule.day(day).end
                 if not conference_day_start <= event_n.start < conference_day_end:
                     raise Exception("Current conference day from {0} to {1} does not match current event {2} with date {3}."
                         .format(conference_day_start, conference_day_end, event_n["id"], event_n.start))
-
+                
                 # Events from day 0 (26. December) do not go into the full schdedule
-                if start_time.day != 26 and not only_workshops:
+                if start_time.day != 26 and not only_workshops:      
                     wiki_schedule.add_event(event_n)
-
+                
                 if workshop_schedule and is_workshop_room_session:
                     events_in_halls +=1
                     workshop_schedule.add_event(event_n)
-
+                
                 events_successful += 1
         except Warning as w:
             warn(w)
@@ -332,9 +332,9 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
             if 'event' in locals(): print(json.dumps(event, indent=2))
             print("  unexpected error: " + str(sys.exc_info()[0]))
             traceback.print_exc()
-            if options.exit_when_exception_occours:
+            if options.exit_when_exception_occours: 
                 exit()
-
+            
     store_sos_ids()
     store_last_edited()
 
@@ -344,8 +344,8 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
 
     print("\nFrom %d total events (%d in halls) where %d successful, while %d (%d in halls) produced warnings" % (events_total, events_in_halls, events_successful, events_with_warnings, events_in_halls_with_warnings))
     if not options.show_assembly_warnings:
-        print(" (use --show-assembly-warnings cli option to show all warnings)")
-
+        print(" (use --show-assembly-warnings cli option to show all warnings)") 
+        
 
 
 class Wiki:
@@ -361,9 +361,9 @@ class Wiki:
         self.wiki_url = wiki_url
         self.sessions = self.query('[[Category:Session]]', [
             '?Has description',
-            '?Has session type',
-            '?Held in language',
-            '?Is organized by',
+            '?Has session type', 
+            '?Held in language', 
+            '?Is organized by', 
             '?Has website',
             '?Modification date'
         ])
@@ -371,7 +371,7 @@ class Wiki:
         self.events = self.query('[[Has object type::Event]]', [
             '?Has subtitle',
             '?Has start time', '?Has end time', '?Has duration',
-            '?Has session location',
+            '?Has session location', 
             '?Has event track',
             '?Has color',
             '?GUID',
@@ -384,11 +384,11 @@ class Wiki:
 
         while True:
             print("Requesting wiki " + q)
-
+            
             # Retry up to three times
             for _ in range(3):
                 r = requests.get(
-                    self.wiki_url + '/index.php?title=Special:Ask',
+                    self.wiki_url + '/index.php?title=Special:Ask', 
                     params=(
                         ('q', q),
                         ('po', "\r\n".join(po)),
@@ -397,18 +397,18 @@ class Wiki:
                         ('p[offset]', offset)
                     )
                 )
-
+                
                 if r.ok is True:
                     break
                 print(".")
-
-
+                
+            
             if r.ok is False:
                 raise Exception("   Requesting failed, HTTP {0}.".format(r.status_code))
-
-            # this more complex way instead of sessions_r.json()['results'] is necessary
+            
+            # this more complex way instead of sessions_r.json()['results'] is necessary 
             # to maintain the same order as in the input file
-            page = voc.tools.parse_json(r.text)['results']
+            page = voc.tools.parse_json(r.text)['results'] 
             results.update(page)
 
             # if we get exactly 500 results we have to fetch the next page,
@@ -417,17 +417,17 @@ class Wiki:
                 offset += 500
             else:
                 break
-
+        
         return results
 
-
+    
     def parent_of_event(self, event_wiki_name):
         session_wiki_name = event_wiki_name.split('# ', 2)[0]
 
         if session_wiki_name in self.sessions:
             wiki_session = self.sessions[session_wiki_name]
-        else:
-            #is_workshop_room_session = True # workaround/don't ask
+        else: 
+            #is_workshop_room_session = True # workaround/don't ask 
             # This happens for imported events like these at the bottom of [[Static:Schedule]]
             raise Warning('  event without session? -> ignore event')
 
@@ -442,7 +442,7 @@ class Wiki:
 
         return session
 
-
+    
     @classmethod
     def remove_prefix(cls, foo):
         if ':' in foo:
@@ -458,7 +458,7 @@ def load_sos_ids():
             # maintain order from file
             temp = fp.read()
             voc.tools.sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
-
+        
         if sys.version_info.major < 3:
             voc.tools.next_id = max(voc.tools.sos_ids.itervalues())+1
         else:
@@ -487,7 +487,7 @@ load_last_edited()
 if __name__ == '__main__':
     generate_wiki_schedules(wiki_url)
 
-    if not local or options.git:
+    if not local or options.git:  
         os.system("/usr/bin/env git add *.json *.xml")
         os.system("/usr/bin/env git commit -m 'updates from " + str(datetime.now()) +  "'")
         #os.system("/usr/bin/env git push")
