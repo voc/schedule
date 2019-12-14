@@ -35,16 +35,20 @@ xc3 = "{x}C3".format(x=congress_nr)
 
 wiki_url = 'https://events.ccc.de/congress/{year}/wiki'.format(year=year)
 main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/schedule.json'.format(year=year)
-main_schedule_url = None 
 
 additional_schedule_urls = [
+    { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2019/Lineup/schedule.json',             'id_offset': None},
     { 'name': 'chaos-west',     'url': 'https://fahrplan.chaos-west.de/36c3/schedule/export/schedule.json',    'id_offset': 100},
-    { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',  'id_offset': 200},
-    { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/36c3/schedule/export/schedule.json',                   'id_offset': 700}, 
-#    { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2019/Lineup/schedule.json',             'id_offset': None},
-#    { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/36c3/schedule/export/schedule.json',              'id_offset': 500},
-#    { 'name': 'komona',         'url': 'https://talks.komona.org/36c3/schedule/export/schedule.json',                   'id_offset': 800},
-#    { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000}
+    { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',  'id_offset': 200,
+    'options': {
+        'room-map': {
+            'Workshop': 'OIO Workshop'
+    }}},
+    { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/36c3/schedule/export/schedule.json',              'id_offset': 500},
+    { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/36c3/schedule/export/schedule.json',                   'id_offset': 700},
+    { 'name': 'komona',         'url': 'https://talks.komona.org/36c3/schedule/export/schedule.json',                   'id_offset': 800},
+    { 'name': 'sendezentrum',         'url': 'https://fahrplan.das-sendezentrum.de/36c3/schedule/export/schedule.json',                   'id_offset': 900},
+    { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000}
 ]
 
 
@@ -59,9 +63,10 @@ rooms = [
     "Lecture room M3",
     "Kidspace",
     "CCL Saal 3",
-    u"Chaos West Bühne",
+    u"Chaos-West Bühne",
     "ChaosZone",
     "OIO Stage",
+    "OIO Workshop"
 ]
 
 output_dir = "/srv/www/" + xc3
@@ -115,9 +120,9 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
 
 def main():
     #main_schedule = get_schedule('main_rooms', main_schedule_url)
-    if main_schedule_url:
+    try:
         full_schedule = Schedule.from_url(main_schedule_url)
-    else:
+    except:
         full_schedule = Schedule.from_XC3_template(None, congress_nr, 26, 5)
     print('  version: ' + full_schedule.version())
 

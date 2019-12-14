@@ -23,6 +23,7 @@
 /schedule.xcal
 /.project
 /.pydevproject
+.pytest_cache
 __pycache__
 /.venv
 /camp2019
