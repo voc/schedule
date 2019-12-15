@@ -19,6 +19,7 @@ if sys.version_info[0] >= 3:
 
 
 #validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
+#validator = 'xmllint --noout --schema {path}/validator/xsd/schedule.xml.xsd'.format(path=sys.path[0])
 validator = 'xmllint --noout --schema {path}/validator/xsd/schedule-without-person.xml.xsd'.format(path=sys.path[0])
 validator_filter = ''
 
@@ -370,6 +371,9 @@ class Schedule:
                 node.text = d
             elif isinstance(d, int):
                 node.text = str(d)
+            elif parent == 'person':
+                node.text = d['public_name']
+                _set_attrib(node, 'id', d['id'])
             elif isinstance(d, dict) or isinstance(d, OrderedDict) or isinstance(d, Event):
                 if parent == 'schedule' and 'base_url' in d:
                     d['conference']['base_url'] = d['base_url']

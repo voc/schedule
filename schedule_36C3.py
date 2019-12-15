@@ -123,7 +123,7 @@ def main():
     try:
         full_schedule = Schedule.from_url(main_schedule_url)
     except:
-        full_schedule = Schedule.from_XC3_template(None, congress_nr, 26, 5)
+        full_schedule = Schedule.from_XC3_template(None, congress_nr, 27, 4)
     print('  version: ' + full_schedule.version())
 
 
@@ -162,7 +162,7 @@ def main():
     full_schedule._schedule['schedule']['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
     # remove lighthing talk slot to fill with individual small events per lighthing talk
-    full_schedule.remove_event(id=10380)
+    #full_schedule.remove_event(id=10380)
 
 
     # write all events to one big schedule.json/xml
