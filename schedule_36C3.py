@@ -108,7 +108,7 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
     load_sos_ids()
 
     # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
-    process_wiki_events(data, wiki_schedule, timestamp_offset=-7200, options=options)
+    process_wiki_events(data, wiki_schedule, timestamp_offset=-3600, options=options)
     store_sos_ids()
 
     write('Exporting... ')
