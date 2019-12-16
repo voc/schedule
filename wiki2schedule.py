@@ -13,6 +13,7 @@ import traceback
 import optparse
 from lxml import etree as ET
 import html
+import urllib.parse
 
 
 # some functions used in multiple files of this collection
@@ -172,9 +173,9 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
         
         try:
             wiki_page_name = event_wiki_name.split('#')[0].replace(' ', '_') # or see fullurl property
-            wiki_edit_url = wiki.wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
-            wiki_parsetree_url = wiki.wiki_url + '/api.php?action=parse&format=json&page=' + wiki_page_name + '&prop=parsetree'
-            
+            wiki_edit_url = wiki.wiki_url + '/index.php?title=' + urllib.parse.quote_plus(wiki_page_name) + '&action=edit'
+            wiki_parsetree_url = wiki.wiki_url + '/api.php?action=parse&format=json&page=' + urllib.parse.quote_plus(wiki_page_name) + '&prop=parsetree'
+
             session = wiki.parent_of_event(event_wiki_name)
             event = event_r['printouts']
             event_n = None
