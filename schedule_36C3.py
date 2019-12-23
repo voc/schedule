@@ -39,11 +39,7 @@ main_schedule_url = 'http://fahrplan.events.ccc.de/congress/{year}/Fahrplan/sche
 additional_schedule_urls = [
     { 'name': 'lounges',        'url': 'https://fahrplan.events.ccc.de/congress/2019/Lineup/schedule.json',             'id_offset': None},
     { 'name': 'chaos-west',     'url': 'https://fahrplan.chaos-west.de/36c3/schedule/export/schedule.json',    'id_offset': 100},
-    { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',  'id_offset': 200,
-    'options': {
-        'room-map': {
-            'Workshop': 'OIO Workshop'
-    }}},
+    { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',  'id_offset': 200},
     { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/36c3/schedule/export/schedule.json',              'id_offset': 500},
     { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/36c3/schedule/export/schedule.json',                   'id_offset': 700},
     { 'name': 'komona',         'url': 'https://talks.komona.org/36c3/schedule/export/schedule.json',                   'id_offset': 800},
@@ -62,11 +58,9 @@ rooms = [
     "Lecture room M2",
     "Lecture room M3",
     "Kidspace",
-    "CCL Saal 3",
     u"Chaos-West Bühne",
-    "ChaosZone",
     "OIO Stage",
-    "OIO Workshop"
+    "DLF- und Podcast-Bühne",
 ]
 
 output_dir = "/srv/www/" + xc3
