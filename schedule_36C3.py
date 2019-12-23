@@ -43,15 +43,18 @@ additional_schedule_urls = [
     { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/36c3/schedule/export/schedule.json',              'id_offset': 500},
     { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/36c3/schedule/export/schedule.json',                   'id_offset': 700},
     { 'name': 'komona',         'url': 'https://talks.komona.org/36c3/schedule/export/schedule.json',                   'id_offset': 800},
-    { 'name': 'sendezentrum',         'url': 'https://fahrplan.das-sendezentrum.de/36c3/schedule/export/schedule.json', 'id_offset': 900},
-    { 'name': 'art-play',       'url': 'https://stage.artesmobiles.art/36c3/schedule/export/schedule.json',             'id_offset': 1100},
-    { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000}
+    { 'name': 'sendezentrum',   'url': 'https://fahrplan.das-sendezentrum.de/36c3/schedule/export/schedule.json', 'id_offset': 800},
+    # generated wiki event id's start from 1000 
+    { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000},
+    { 'name': 'art-play',       'url': 'https://stage.artesmobiles.art/36c3/schedule/export/schedule.json',             'id_offset': 4100},
+    # main schedule local ids's start at about 10.000
 ]
 
 
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [
+    # SOS rooms
     "Lecture room 11",
     "Seminar room 14-15",
     "Seminar room 13",
@@ -59,9 +62,11 @@ rooms = [
     "Lecture room M2",
     "Lecture room M3",
     "Kidspace",
-    u"Chaos-West Bühne",
+    # Stages with video recordings/livestream – same order as streaming website
+    "Chaos-West Bühne",
     "OIO Stage",
     "DLF- und Podcast-Bühne",
+    "WikiPaka WG: Esszimmer"
 ]
 
 output_dir = "/srv/www/" + xc3
