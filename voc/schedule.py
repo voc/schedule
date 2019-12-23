@@ -84,6 +84,7 @@ class Schedule:
     '''
     _schedule = None
     _days = []
+    stats = None
 
     def __init__(self, name = None, url = None, json = None):
         # TODO remove or revert class methods below to object methods
@@ -93,6 +94,7 @@ class Schedule:
             self._schedule = json
 
         self._days = [None] * self.conference()['daysCount']
+        self._generate_stats()
 
     @classmethod
     def from_url(cls, url):
@@ -239,6 +241,23 @@ class Schedule:
                         out.append(result)
 
         return out
+
+    def _generate_stats(self):
+        class ScheduleStats:
+            min_id = None
+            max_id = None
+            events_count = 0
+        self.stats = ScheduleStats()
+
+        def calc_stats(event):
+            self.stats.events_count += 1
+            if self.stats.min_id is None or event['id'] < self.stats.min_id:
+                self.stats.min_id = event['id']
+            if self.stats.max_id is None or event['id'] > self.stats.max_id:
+                self.stats.max_id = event['id']
+
+        self.foreach_event(calc_stats)
+        
 
     def get_day_from_time(self, start_time):
         for i in range(self.conference()['daysCount']):

@@ -120,10 +120,15 @@ def main():
     except:
         full_schedule = Schedule.from_XC3_template(None, congress_nr, 27, 4)
     print('  version: ' + full_schedule.version())
+    print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
+
 
 
     # add addional rooms from this local config now, so they are in the correct order
     full_schedule.add_rooms(rooms)
+
+
+    previous_max_id = 0
 
     # add events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
@@ -137,13 +142,25 @@ def main():
             else:
                 print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
 
-            if full_schedule.add_events_from(other_schedule, id_offset=entry.get('id_offset'), options=entry.get('options')):
+            print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**other_schedule.stats.__dict__))
+            id_offset = entry.get('id_offset')
+            min_id = other_schedule.stats.min_id + id_offset
+            max_id = other_schedule.stats.max_id + id_offset
+            print('    after adding the offset, ids reach from {} to {}'.format(min_id, max_id))
+            if previous_max_id >= min_id:
+                 print('  WARNING: schedule "{}" has ID overlap with previous schedule'.format(entry['name']))
+            previous_max_id = max_id
+
+            if full_schedule.add_events_from(other_schedule, id_offset=id_offset, options=entry.get('options')):
                 print('  success')
 
+        except KeyboardInterrupt:
+            exit()
 
-        except:
+        except Exception as e:
             print('  UNEXPECTED ERROR:' + str(sys.exc_info()[1]))
-
+            if options.exit_when_exception_occours:
+                raise e
 
     # write all events from the three big stages to a own schedule.json/xml
     write('\nExporting main stages... ')
