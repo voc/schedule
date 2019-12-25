@@ -56,6 +56,11 @@ additional_schedule_urls = [
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = [
+    # Stages with video recordings/livestream – same order as streaming website
+    "Chaos-West Bühne",
+    "OIO Stage",
+    "DLF- und Podcast-Bühne",
+    "WikiPaka WG: Esszimmer",
     # Music
     "Monipilami",
     "CCL Terrace",
@@ -66,12 +71,6 @@ rooms = [
     "Lecture room M1",
     "Lecture room M2",
     "Lecture room M3",
-    "Kidspace",
-    # Stages with video recordings/livestream – same order as streaming website
-    "Chaos-West Bühne",
-    "OIO Stage",
-    "DLF- und Podcast-Bühne",
-    "WikiPaka WG: Esszimmer"
 ]
 
 output_dir = "/srv/www/" + xc3
