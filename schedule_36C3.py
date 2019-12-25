@@ -42,8 +42,10 @@ additional_schedule_urls = [
     { 'name': 'open-infra',     'url': 'https://talks.oio.social/36c3-oio/schedule/export/schedule.json',               'id_offset': 200},
     { 'name': 'wikipaka',       'url': 'https://cfp.verschwoerhaus.de/36c3/schedule/export/schedule.json',              'id_offset': 500},
     { 'name': 'chaoszone',      'url': 'https://cfp.chaoszone.cz/36c3/schedule/export/schedule.json',                   'id_offset': 700},
-    { 'name': 'komona',         'url': 'https://talks.komona.org/36c3/schedule/export/schedule.json',                   'id_offset': 800},
-    { 'name': 'sendezentrum',   'url': 'https://fahrplan.das-sendezentrum.de/36c3/schedule/export/schedule.json', 'id_offset': 800},
+    { 'name': 'komona',         'url': 'https://talks.komona.org/36c3/schedule/export/schedule.json',                   'id_offset': 800, 
+      'options': { 'room-prefix': '1Komona '}
+    },
+    { 'name': 'sendezentrum',   'url': 'https://fahrplan.das-sendezentrum.de/36c3/schedule/export/schedule.json',       'id_offset': 800},
     # generated wiki event id's start from 1000 
     { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000},
     { 'name': 'art-play',       'url': 'https://stage.artesmobiles.art/36c3/schedule/export/schedule.json',             'id_offset': 4100},

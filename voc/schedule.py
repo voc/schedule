@@ -310,12 +310,15 @@ class Schedule:
                 return False
 
             for room in day["rooms"]:
-                target_room = room
                 if options and 'room-map' in options and room in options['room-map']:
                     target_room = options['room-map'][room]
 
                     for event in day["rooms"][room]:
                         event['room'] = target_room
+                elif options and 'room-prefix' in options:
+                    target_room = options['room-prefix'] + room
+                else:
+                    target_room = room
 
                 if id_offset:
                     for event in day["rooms"][room]:
