@@ -243,6 +243,16 @@ class Schedule:
 
         return out
 
+    def foreach_day_room(self, func):
+        out = []
+        for day in self._schedule['schedule']['conference']['days']:
+            for room in day['rooms']:
+                result = func(day['rooms'][room])
+                if result:
+                    out.append(result)
+
+        return out
+
     def _generate_stats(self):
         class ScheduleStats:
             min_id = None
@@ -359,7 +369,7 @@ class Schedule:
             for room in day['rooms']:
                 for event in day['rooms'][room]:
                     if event['id'] == id or event['id'] == str(id) or event['guid'] == guid:
-                        print('removing ', event)
+                        print('removing ', event['title'])
                         day['rooms'][room].remove(event)
 
 

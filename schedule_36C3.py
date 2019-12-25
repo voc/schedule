@@ -11,7 +11,7 @@ import os
 import sys
 import traceback
 import optparse
-from voc.schedule import Schedule, ScheduleEncoder, set_validator_filter
+from voc.schedule import Schedule, ScheduleEncoder, Event, set_validator_filter
 
 tz = pytz.timezone('Europe/Amsterdam')
 
@@ -189,6 +189,22 @@ def main():
     # remove lighthing talk slot to fill with individual small events per lighthing talk
     #full_schedule.remove_event(id=10380)
 
+    # remove breaks from lightning talk schedule import
+    full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
+    full_schedule.remove_event(guid='cda64c9e-b230-589a-ace0-6beca2693eff')
+    full_schedule.remove_event(guid='f33dd7b7-99d6-574b-9282-26986b5a0ea0')
+
+    # remove talks starting before 9 am
+    def remove_too_early_events(room):
+        for event in room:
+            start_time = Event(event).start
+            if start_time.hour > 4 and start_time.hour < 9:
+                print('removing {} from full schedule, as it takes place at {} which is too early in the morning'.format(event['title'], start_time.strftime('%H:%M')))
+                room.remove(event)
+            else:
+                break
+    full_schedule.foreach_day_room(remove_too_early_events)
+        
 
     # write all events to one big schedule.json/xml
     write('\nExporting... ')
