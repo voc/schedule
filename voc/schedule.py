@@ -220,7 +220,8 @@ class Schedule:
 
     def remove_room(self, room_key):
         for day in self._schedule['schedule']['conference']['days']:
-            del day['rooms'][room_key]
+            if room_key in day['rooms']:
+                del day['rooms'][room_key]
 
     def add_event(self, event):
         day = self.get_day_from_time(event.start)

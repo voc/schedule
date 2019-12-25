@@ -178,6 +178,10 @@ def main():
 
     full_schedule._schedule['schedule']['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
+    # remove rooms from wiki import, which we already have in more detail as pretalx rooms
+    full_schedule.remove_room('Assembly:Art-and-Play')
+    full_schedule.remove_room('Assembly:ChaosZone')
+
     # remove lighthing talk slot to fill with individual small events per lighthing talk
     #full_schedule.remove_event(id=10380)
 
