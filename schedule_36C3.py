@@ -49,6 +49,7 @@ additional_schedule_urls = [
     # generated wiki event id's start from 1000 
     { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000},
     { 'name': 'art-play',       'url': 'https://stage.artesmobiles.art/36c3/schedule/export/schedule.json',             'id_offset': 4100},
+    { 'name': 'cdc',            'url': 'https://frab.riat.at/en/36C3/public/schedule.json',                             'id_offset': 4200},
     # main schedule local ids's start at about 10.000
 ]
 
