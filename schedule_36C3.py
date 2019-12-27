@@ -67,6 +67,7 @@ rooms = {
     'rooms': [
         # SOS rooms
         "Lecture room 11",
+        "Lecture room 12",
         "Seminar room 14-15",
         "Seminar room 13",
         "Lecture room M1",
