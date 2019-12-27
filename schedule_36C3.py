@@ -107,7 +107,7 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
 
     write('Wiki: Processing...')
 
-    wiki_schedule = Schedule.empty_copy_of(full_schedule, 'Wiki')
+    wiki_schedule = Schedule.empty_copy_of(full_schedule, 'Wiki', start_hour = 9)
     wiki_schedule.add_rooms(rooms)
 
     load_sos_ids()

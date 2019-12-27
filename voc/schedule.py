@@ -152,7 +152,7 @@ class Schedule:
         return Schedule(json=schedule)
 
     @classmethod
-    def empty_copy_of(cls, parent_schedule, name):
+    def empty_copy_of(cls, parent_schedule, name, start_hour = None):
         schedule = {
             "schedule": OrderedDict([
                 ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
@@ -161,6 +161,10 @@ class Schedule:
         }
         schedule['schedule']['conference']['title'] += ' - ' + name
         for day in schedule['schedule']['conference']['days']:
+            if start_hour is not None:
+                start = datetime.dateutil.parser.parse(day['day_start'])
+                start.hour = start_hour
+                day['day_start'] = start.isoformat()
             day['rooms'] = OrderedDict()
         return Schedule(json=schedule)
 
@@ -369,7 +373,7 @@ class Schedule:
             for room in day['rooms']:
                 for event in day['rooms'][room]:
                     if event['id'] == id or event['id'] == str(id) or event['guid'] == guid:
-                        print('removing ', event['title'])
+                        print('removing', event['title'])
                         day['rooms'][room].remove(event)
 
 
