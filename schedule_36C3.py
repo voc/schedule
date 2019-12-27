@@ -154,6 +154,8 @@ def main():
 
             print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**other_schedule.stats.__dict__))
             id_offset = entry.get('id_offset')
+            if not id_offset:
+                id_offset = 0
             min_id = other_schedule.stats.min_id + id_offset
             max_id = other_schedule.stats.max_id + id_offset
             print('    after adding the offset, ids reach from {} to {}'.format(min_id, max_id))

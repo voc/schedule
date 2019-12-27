@@ -162,8 +162,8 @@ class Schedule:
         schedule['schedule']['conference']['title'] += ' - ' + name
         for day in schedule['schedule']['conference']['days']:
             if start_hour is not None:
-                start = datetime.dateutil.parser.parse(day['day_start'])
-                start.hour = start_hour
+                start = dateutil.parser.parse(day['day_start'])
+                start.replace(hour = start_hour)
                 day['day_start'] = start.isoformat()
             day['rooms'] = OrderedDict()
         return Schedule(json=schedule)
