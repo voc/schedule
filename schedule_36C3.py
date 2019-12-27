@@ -56,23 +56,30 @@ additional_schedule_urls = [
 
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
-rooms = [
-    # Stages with video recordings/livestream – same order as streaming website
-    "Chaos-West Bühne",
-    "OIO Stage",
-    "DLF- und Podcast-Bühne",
-    "WikiPaka WG: Esszimmer",
-    # Music
-    # …
-    # "Monipilami",
-    # SOS rooms
-    "Lecture room 11",
-    "Seminar room 14-15",
-    "Seminar room 13",
-    "Lecture room M1",
-    "Lecture room M2",
-    "Lecture room M3",
-]
+rooms = {
+    'stages': [
+        # Stages with video recordings/livestream – same order as streaming website
+        "Chaos-West Bühne",
+        "OIO Stage",
+        "DLF- und Podcast-Bühne",
+        "WikiPaka WG: Esszimmer",
+    ],
+    'rooms': [
+        # SOS rooms
+        "Lecture room 11",
+        "Seminar room 14-15",
+        "Seminar room 13",
+        "Lecture room M1",
+        "Lecture room M2",
+        "Lecture room M3",
+    ],
+    'music': [
+        "Discotheque Nouveauancien",
+        "Uptown",
+        "Furo no ba",
+        "Monipilami",
+    ]
+}
 
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
@@ -135,7 +142,8 @@ def main():
 
 
     # add addional rooms from this local config now, so they are in the correct order
-    full_schedule.add_rooms(rooms)
+    for key in rooms:
+        full_schedule.add_rooms(rooms[key])
 
 
     previous_max_id = 0
