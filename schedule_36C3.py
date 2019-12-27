@@ -188,6 +188,7 @@ def main():
     # remove rooms from wiki import, which we already have in more detail as pretalx rooms
     full_schedule.remove_room('Assembly:Art-and-Play')
     full_schedule.remove_room('Assembly:ChaosZone')
+    full_schedule.remove_room('Assembly:WikipakaWG')
 
     # remove lighthing talk slot to fill with individual small events per lighthing talk
     #full_schedule.remove_event(id=10380)
