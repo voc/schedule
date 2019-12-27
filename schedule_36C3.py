@@ -174,9 +174,24 @@ def main():
             if options.exit_when_exception_occours:
                 raise e
 
-    # write all events from the three big stages to a own schedule.json/xml
+    # write all events from the stages to a own schedule.json/xml
     write('\nExporting main stages... ')
-    full_schedule.export('stages')
+    stages = full_schedule.copy('Stages')
+    for day in stages._schedule['schedule']['conference']['days']:
+        i = 0
+        room_keys = list(day['rooms'].keys())
+        for room_key in room_keys:
+            if not( i < 5 or room_key in rooms['stages'] or 'Stage' in room_key or 'Bühne' in room_key):
+                del day['rooms'][room_key]
+            i += 1
+
+    print('\n  stages of day 1: ')
+    for room in stages.day(1)['rooms']:
+        print('   - ' + room)
+
+
+    stages.export('stages')
+    del stages
 
     print('\nBuilding wiki schedule...')
 
