@@ -183,6 +183,12 @@ def main():
             if options.exit_when_exception_occours:
                 raise e
 
+    # remove breaks from lightning talk schedule import
+    full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
+    full_schedule.remove_event(guid='cda64c9e-b230-589a-ace0-6beca2693eff')
+    full_schedule.remove_event(guid='f33dd7b7-99d6-574b-9282-26986b5a0ea0')
+
+
     # write all events from the stages to a own schedule.json/xml
     write('\nExporting main stages... ')
     stages = full_schedule.copy('Stages')
@@ -216,11 +222,6 @@ def main():
 
     # remove lighthing talk slot to fill with individual small events per lighthing talk
     #full_schedule.remove_event(id=10380)
-
-    # remove breaks from lightning talk schedule import
-    full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
-    full_schedule.remove_event(guid='cda64c9e-b230-589a-ace0-6beca2693eff')
-    full_schedule.remove_event(guid='f33dd7b7-99d6-574b-9282-26986b5a0ea0')
 
     # remove talks starting before 9 am
     def remove_too_early_events(room):
