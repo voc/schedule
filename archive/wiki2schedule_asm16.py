@@ -132,11 +132,11 @@ def main():
     table_body = table.find('tbody')
     rows = table_body.find_all('tr')
 
-    # skip header row    
+    # skip header row
     rows_iter = iter(rows)
     next(rows_iter)
 
-    for row in rows_iter:        
+    for row in rows_iter:
         event = {}
         for td in row.find_all('td'):
             #if type(td) != NoneType:
@@ -186,7 +186,7 @@ def main():
                 ('full_public_name', p.strip()),
                 #('#text', p),
             ]) for p in event['workshopleiter'].split(',') ]),
-            ('links', [])             
+            ('links', [])
         ])
         
         day_rooms = out['schedule']['conference']['days'][day]['rooms']
