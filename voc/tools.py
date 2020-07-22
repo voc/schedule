@@ -7,6 +7,7 @@ import re
 import sys
 
 sos_ids = {}
+last_edited = {}
 next_id = 1000
 generated_ids = 0
 uuid_namespace = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
@@ -22,7 +23,7 @@ def get_id(guid):
         sos_ids[guid] = next_id
         next_id += 1
         generated_ids += 1
-    
+
     return sos_ids[guid]
 
 def gen_random_uuid():
@@ -39,7 +40,7 @@ def foreach_event(schedule, func):
         for room in day['rooms']:
             for event in day['rooms'][room]:
                 out.append(func(event))
-    
+
     return out
 
 
@@ -50,9 +51,9 @@ def copy_base_structure(subtree, level):
             if isinstance(value, (basestring, int)):
                 ret[key] = value
             elif isinstance(value, list):
-                ret[key] = copy_base_structure_list(value, level-1) 
+                ret[key] = copy_base_structure_list(value, level-1)
             else:
-                ret[key] = copy_base_structure(value, level-1) 
+                ret[key] = copy_base_structure(value, level-1)
     return ret
 
 def copy_base_structure_list(subtree, level):
@@ -64,7 +65,7 @@ def copy_base_structure_list(subtree, level):
             elif isinstance(value, list):
                 ret.append(copy_base_structure_list(value, level-1))
             else:
-                ret.append(copy_base_structure(value, level-1)) 
+                ret.append(copy_base_structure(value, level-1))
     return ret
 
 
@@ -86,10 +87,10 @@ def normalise_time(timestr):
     ## workaround for failure in input file format
     if timestr.startswith('0:00'):
         timestr = timestr.replace('0:00', '12:00')
-        
+
     return timestr
 
 def parse_json(text):
-    # this more complex way is necessary 
+    # this more complex way is necessary
     # to maintain the same order as in the input file
     return json.JSONDecoder(object_pairs_hook=OrderedDict).decode(text)

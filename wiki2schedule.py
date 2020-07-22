@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 import requests
@@ -11,6 +11,10 @@ import os
 import sys
 import traceback
 import optparse
+from lxml import etree as ET
+import html
+import urllib.parse
+
 
 # some functions used in multiple files of this collection
 import voc.tools
@@ -126,7 +130,7 @@ events_in_halls_with_warnings = 0
 
 
 # this method is also exported to be used as a library method, thereby we started to reduce requiring of global variables
-def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp_offset = None, options = None):
+def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp_offset = None, options = None, fetch_wikitext=True):
     global sessions_complete, warnings, time_stamp_offset
 
     if not timestamp_offset == None:
@@ -169,8 +173,9 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
         
         try:
             wiki_page_name = event_wiki_name.split('#')[0].replace(' ', '_') # or see fullurl property
-            wiki_edit_url = wiki.wiki_url + '/index.php?title=' + wiki_page_name + '&action=edit'
-            
+            wiki_edit_url = wiki.wiki_url + '/index.php?title=' + urllib.parse.quote_plus(wiki_page_name) + '&action=edit'
+            wiki_parsetree_url = wiki.wiki_url + '/api.php?action=parse&format=json&page=' + urllib.parse.quote_plus(wiki_page_name) + '&prop=parsetree'
+
             session = wiki.parent_of_event(event_wiki_name)
             event = event_r['printouts']
             event_n = None
@@ -199,7 +204,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
             #combined = dict(session.items() + event.items()) #python2
             combined = session.copy() #python3 TOOD test if this really leads to the same result
             combined.update(event)
-            sessions_complete[event_wiki_name] = combined         
+            sessions_complete[event_wiki_name] = combined
             
             if len(event['Has start time']) < 1:
                 warn("  has no start time")
@@ -210,10 +215,12 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                 day = wiki_schedule.get_day_from_time(start_time)
     
             #if is_workshop_room_session and day is not None and event['Has duration']:
-            if day is not None and event['Has duration']:                
+            if day is not None and event['Has duration']:
                 duration = 0
                 if event['Has duration']:
-                    duration = event['Has duration'][0]['value']
+                    duration = event['Has duration'][0] 
+                    if not isinstance(duration, int) and 'value' in duration:
+                        duration = duration['value']
 
                 if duration > 60*24:
                     warn('   event takes longer than 24h, skipping...')
@@ -240,10 +247,46 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
 
                 local_id = voc.tools.get_id(guid)
 
+                description = ("\n".join(session['Has description'])).strip()
+                if fetch_wikitext:
+                    if int(session['Modification date'][0]['timestamp']) > voc.tools.last_edited.get(guid, 0):
+                        wiki_text = ''
+                        # Retry up to three times
+                        for _ in range(3):
+                            content_r = requests.get(wiki_parsetree_url, timeout=5)
+                            if content_r.ok is True:
+                                print("Page {0} requested successfully!".format(wiki_parsetree_url))
+                                break
+                            print(".")
+                        if content_r.ok is False:
+                            print("   Requesting {1} failed, HTTP {0}.".format(content_r.status_code, wiki_parsetree_url))
+                        else:
+                            try:
+                                wiki_text_tree = ET.fromstring(voc.tools.parse_json(content_r.text)['parse']['parsetree'].replace('\n',''))
+                            except AttributeError:
+                                wiki_text_tree = ET.fromstring(voc.tools.parse_json(content_r.text)['parse']['parsetree']['*'].replace('\n',''))
+                            except KeyError:
+                                print(wiki_parsetree_url)
+                            for element in wiki_text_tree.iterfind('template'):
+                                if element.tail != None:
+                                    wiki_text += html.unescape(element.tail)
+                        description = ("\n".join(session['Has description'])).strip() + '\n' + wiki_text
+                    else: # unmodified
+                        if os.path.isfile("events/{guid}.json".format(guid=guid)):
+                            with open("events/{guid}.json".format(guid=guid), "r") as fp:
+                                # maintain order from file
+                                temp = fp.read()
+                                old_event = json.JSONDecoder().decode(temp)
+                            description = old_event['description']
+
+
+                voc.tools.last_edited[guid] = int(session['Modification date'][0]['timestamp'])
+
+
                 event_n = Event([
                     ('id', local_id),
                     ('guid', guid),
-                    ('url', "https:"+session['fullurl']),
+                    ('url', session['fullurl']), # TODO: add enshure_url() which adds "https:"+ prefix when neccessary
                     ('logo', None),
                     ('date', start_time.isoformat()),
                     ('start', start_time.strftime('%H:%M')),
@@ -261,10 +304,10 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                     ('type', " ".join(session['Has session type']).lower()),
                     ('language', lang ),
                     ('abstract', ''),
-                    ('description', ("\n".join(session['Has description'])).strip()),
+                    ('description', description),
                     ('persons', [ OrderedDict([
                         ('id', 0),
-                        ('url', 'https:'+p['fullurl']),
+                        ('url', p['fullurl']), # sometimes a https: is needed...
                         ('public_name', Wiki.remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works
                     ]) for p in session['Is organized by'] ]),
                     ('links', session['Has website'])
@@ -297,6 +340,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                 exit()
             
     store_sos_ids()
+    store_last_edited()
 
     if debug:
         with open("sessions_complete.json", "w") as fp:
@@ -334,7 +378,7 @@ class Wiki:
             '?Has session location', 
             '?Has event track',
             '?Has color',
-            '?GUID'
+            '?GUID',
         ])
 
     def query(self, q, po):
@@ -429,7 +473,20 @@ def store_sos_ids():
     with open("_sos_ids.json", "w") as fp:
         json.dump(voc.tools.sos_ids, fp, indent=4)
 
+def load_last_edited():
+    if os.path.isfile("_last_edited.json"):
+        with open("_last_edited.json", "r") as fp:
+            # maintain order from file
+            temp = fp.read()
+            voc.tools.last_edited = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
+
+def store_last_edited():
+    #write last_edited to disk
+    with open("_last_edited.json", "w") as fp:
+        json.dump(voc.tools.last_edited, fp, indent=4)
+
 load_sos_ids()
+load_last_edited()
 
 if __name__ == '__main__':
     generate_wiki_schedules(wiki_url)
