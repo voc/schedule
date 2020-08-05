@@ -13,12 +13,12 @@ fi
 if [ -z "${1}" ]; then
   echo "Please provide schedule xml http(s) URL."
   echo "  ${0} http://example.com/schedule.xml"
-  exit 1
+  exit 2
 fi
 
 if [ ! -e "${xsd_file}" ]; then
   echo "schedule.xml.xsd missing!"
-  exit 1
+  exit 3
 fi
 
 case "$1" in
