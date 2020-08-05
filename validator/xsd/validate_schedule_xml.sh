@@ -9,9 +9,6 @@ if [ -z "${xmllint_cmd}" ]; then
   exit 1
 fi
 
-if [ -z "${curl_cmd}" ]; then
-  echo "Please install curl!"
-fi
 
 if [ -z "${1}" ]; then
   echo "Please provide schedule xml http(s) URL."
@@ -26,6 +23,10 @@ fi
 
 case "$1" in
   http://*|https://*)
+    if [ -z "${curl_cmd}" ]; then
+      echo "Please install curl!" >&2
+      exit 4
+    fi
     $curl_cmd $1 2>/dev/null | $xmllint_cmd --noout --schema ${xsd_file} -;;
   *)
     $xmllint_cmd --noout --schema ${xsd_file} $1;;
