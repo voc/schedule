@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-
+#
+# Imports sessions from a semantic mediawiki instance, and can also be used as library – compare schedule_36C3.py 
+#
 import requests
 import json
 from collections import OrderedDict
