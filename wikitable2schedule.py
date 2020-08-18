@@ -21,7 +21,7 @@ from bs4 import BeautifulSoup
 
 days = []
 de_tz = pytz.timezone('Europe/Amsterdam')
-#local = False
+local = False
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
 # some functions used in multiple files of this collection
@@ -114,8 +114,8 @@ def main():
     
     print("Requesting wiki events")
     
-    # soup = BeautifulSoup(requests.get(wiki_url).text, 'html5lib')
-    soup = BeautifulSoup(open("divoc-sessions.xhtml"), 'lxml')
+    soup = BeautifulSoup(requests.get(wiki_url).text, 'html5lib')
+    #soup = BeautifulSoup(open("divoc-sessions.xhtml"), 'lxml')
 
     #sections = soup.find_all('h3')
     elements = soup.select('h3, table.inline')
