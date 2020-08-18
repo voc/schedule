@@ -177,6 +177,7 @@ def main():
                         id=local_id,
                         name=voc.tools.normalise_string(title.lower())
                     )),
+                ('url', wiki_url.split('?')[0]),
                 ('title', title),
                 ('subtitle', ''),
                 ('track', 'Workshop'),
