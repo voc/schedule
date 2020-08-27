@@ -64,25 +64,12 @@ if not os.path.exists(output_dir):
         local = True
 os.chdir(output_dir)
 
-room_map = OrderedDict([
-    ('Hauptraum', 1),
-    ('Draussen', 20),
-])
-
-def get_room_id(room_name):
-
-    if room_name in room_map:
-        return room_map[room_name]
-    else:
-        return 0
-
 def get_track_id(track_name):
     return 10
-            
-            
 
-def main():
-    global wiki_url, template, days
+
+def fetch_schedule(wiki_url):
+    global template, days
     
 
     # TODO refactor schedule class, to allow more generic templates
@@ -201,9 +188,14 @@ def main():
             sys.stdout.write('.')
         
             
-    print(json.dumps(out, indent=2))
+    #print(json.dumps(out, indent=2))
     
     schedule = Schedule(json=out)
+    return schedule
+
+def main():
+
+    schedule = fetch_schedule(wiki_url)
     schedule.export('wiki')
     
     print('')
@@ -228,7 +220,7 @@ def first(x):
 if __name__ == '__main__':
     main()
 
-if not local:  
-    os.system("git add *.json *.xml")
-    os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
-    os.system("git push")
+    if not local:  
+        os.system("git add *.json *.xml")
+        os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
+        os.system("git push")

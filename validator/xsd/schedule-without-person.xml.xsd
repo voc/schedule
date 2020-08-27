@@ -3,6 +3,13 @@
   <xs:element name="schedule">
     <xs:complexType>
       <xs:sequence>
+        <xs:element minOccurs="0" name="generator">
+          <xs:complexType>
+            <xs:sequence />
+            <xs:attribute type="xs:string" name="name"/>
+            <xs:attribute type="xs:string" name="version"/>
+          </xs:complexType>
+        </xs:element>
         <xs:element type="xs:string" name="version"/>
         <xs:element name="conference">
           <xs:complexType>
@@ -76,7 +83,6 @@
       <xs:element type="recording" name="recording" minOccurs="0"/>
       <xs:element type="links" name="links" minOccurs="0"/>
       <xs:element type="attachments" name="attachments" minOccurs="0"/>
-      <xs:element type="httpURI" name="video_download_url" minOccurs="0"/>
       <xs:element type="httpURI" name="url" minOccurs="0"/>
       <xs:element type="answers" name="answers" minOccurs="0"/>
     </xs:all>
