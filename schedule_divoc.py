@@ -25,11 +25,9 @@ parser.add_option('--debug', action="store_true", dest="debug", default=False)
 
 options, args = parser.parse_args()
 local = False
-use_offline_frab_schedules = False
-only_workshops = False
 
 xc3 = 'divoc'
-wiki_url = 'https://di.c3voc.de/'
+wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
 main_schedule_url = 'https://talks.mrmcd.net/ptt/schedule/export/schedule.json'
 
 additional_schedule_urls = [
@@ -69,25 +67,15 @@ if not os.path.exists("events"):
     os.mkdir("events")
 
 
-from wiki2schedule import Wiki, process_wiki_events, load_sos_ids, store_sos_ids
+from wikitable2schedule import fetch_schedule
 
 def write(x):
     sys.stdout.write(x)
     sys.stdout.flush()
 
 def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
-    data = Wiki(wiki_url)
 
-    write('Wiki: Processing...')
-
-    wiki_schedule = Schedule.empty_copy_of(full_schedule, 'Wiki', start_hour = 9)
-    wiki_schedule.add_rooms(rooms)
-
-    load_sos_ids()
-
-    # process_wiki_events() fills global variables: out, wiki_schedule, workshop_schedule
-    process_wiki_events(data, wiki_schedule, timestamp_offset=-3600, options=options)
-    store_sos_ids()
+    wiki_schedule = fetch_schedule(wiki_url)
 
     write('Exporting... ')
     wiki_schedule.export('wiki')
@@ -97,11 +85,9 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
 
 
 def main():
-    #main_schedule = get_schedule('main_rooms', main_schedule_url)
-    try:
-        full_schedule = Schedule.from_url(main_schedule_url)
-    except:
-        full_schedule = Schedule.from_XC3_template(None, congress_nr, 27, 4)
+    global local, options
+
+    full_schedule = Schedule.from_url(main_schedule_url)
     print('  version: ' + full_schedule.version())
     print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
 
@@ -148,31 +134,6 @@ def main():
             if options.exit_when_exception_occours:
                 raise e
 
-    # remove breaks from lightning talk schedule import
-    full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
-    full_schedule.remove_event(guid='cda64c9e-b230-589a-ace0-6beca2693eff')
-    full_schedule.remove_event(guid='f33dd7b7-99d6-574b-9282-26986b5a0ea0')
-
-
-    # write all events from the stages to a own schedule.json/xml
-    write('\nExporting main stages... ')
-    stages = full_schedule.copy('Stages')
-    for day in stages._schedule['schedule']['conference']['days']:
-        i = 0
-        room_keys = list(day['rooms'].keys())
-        for room_key in room_keys:
-            if not( i < 5 or room_key in rooms['stages'] or 'Stage' in room_key or 'Bühne' in room_key):
-                del day['rooms'][room_key]
-            i += 1
-
-    print('\n  stages of day 1: ')
-    for room in stages.day(1)['rooms']:
-        print('   - ' + room)
-
-
-    stages.export('stages')
-    del stages
-
     print('\nBuilding wiki schedule...')
 
     # wiki
@@ -180,25 +141,6 @@ def main():
 
     full_schedule._schedule['schedule']['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
-    # remove rooms from wiki import, which we already have in more detail as pretalx rooms
-    full_schedule.remove_room('Assembly:Art-and-Play')
-    full_schedule.remove_room('Assembly:ChaosZone')
-    full_schedule.remove_room('Assembly:WikipakaWG')
-
-    # remove lighthing talk slot to fill with individual small events per lighthing talk
-    #full_schedule.remove_event(id=10380)
-
-    # remove talks starting before 9 am
-    def remove_too_early_events(room):
-        for event in room:
-            start_time = Event(event).start
-            if start_time.hour > 4 and start_time.hour < 9:
-                print('removing {} from full schedule, as it takes place at {} which is too early in the morning'.format(event['title'], start_time.strftime('%H:%M')))
-                room.remove(event)
-            else:
-                break
-    full_schedule.foreach_day_room(remove_too_early_events)
-        
 
     # write all events to one big schedule.json/xml
     write('\nExporting... ')
@@ -206,11 +148,11 @@ def main():
 
     # write seperate file for each event, to get better git diffs
     #full_schedule.foreach_event(lambda event: event.export('events/'))
-    def export_event(event):
-        with open("events/{}.json".format(event['guid']), "w") as fp:
-            json.dump(event, fp, indent=2, cls=ScheduleEncoder)
-
-    full_schedule.foreach_event(export_event)
+    #def export_event(event):
+    #    with open("events/{}.json".format(event['guid']), "w") as fp:
+    #        json.dump(event, fp, indent=2, cls=ScheduleEncoder)
+    #
+    #full_schedule.foreach_event(export_event)
 
     print('\nDone')
     print('  version: ' + full_schedule.version())
