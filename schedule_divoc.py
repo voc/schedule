@@ -63,8 +63,8 @@ if not os.path.exists(output_dir):
         exit(-1)
 os.chdir(output_dir)
 
-if not os.path.exists("events"):
-    os.mkdir("events")
+#if not os.path.exists("events"):
+#    os.mkdir("events")
 
 
 from wikitable2schedule import fetch_schedule
@@ -171,9 +171,9 @@ def main():
             print('nothing relevant changed, reverting to previous state')
             git('reset --hard')
         else:
-            git('add *.json *.xml events/*.json')
+            git('add *.json *.xml')
             git('commit -m "version {}"'.format(full_schedule.version()))
-            git('push')
+            #git('push')
 
 if __name__ == '__main__':
     main()

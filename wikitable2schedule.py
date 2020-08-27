@@ -53,17 +53,6 @@ template = { "schedule": {
 
 
 
-if len(sys.argv) == 2:
-    output_dir = sys.argv[1]
-
-if not os.path.exists(output_dir):
-    if not os.path.exists(secondary_output_dir):
-        os.mkdir(output_dir) 
-    else:
-        output_dir = secondary_output_dir
-        local = True
-os.chdir(output_dir)
-
 def get_track_id(track_name):
     return 10
 
@@ -218,6 +207,18 @@ def first(x):
         return x[0]
 
 if __name__ == '__main__':
+
+    if len(sys.argv) == 2:
+        output_dir = sys.argv[1]
+
+    if not os.path.exists(output_dir):
+        if not os.path.exists(secondary_output_dir):
+            os.mkdir(output_dir) 
+        else:
+            output_dir = secondary_output_dir
+            local = True
+    os.chdir(output_dir)
+    
     main()
 
     if not local:  
