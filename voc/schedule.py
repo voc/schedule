@@ -5,6 +5,7 @@ import dateutil.parser
 from datetime import datetime
 import sys
 import os
+import re
 import copy
 from lxml import etree as ET
 #from xml.etree import cElementTree as ET
@@ -69,6 +70,23 @@ class Event:
 
     def items(self):
         return self._event.items()
+    
+    def graphql(self):
+        r = dict((re.sub(r'_([a-z])', lambda m: (m.group(1).upper()), k), v) for k, v in self._event.items())
+        r["localId"] = self._event['id']
+        del r["id"]
+        r["eventType"] = self._event['type']
+        del r['type']
+        del r['room']
+        del r['start']
+        r['startDate'] =  self._event['date']
+        del r['date']
+        duration = self._event['duration'].split(':')
+        r["duration"] = {"hours": int(duration[0]), "minutes": int(duration[1])} 
+        del r['persons']
+        if 'answers' in r:
+            del r['answers']
+        return r
 
     def __str__(self):
         return json.dumps(self._event, indent=2)
@@ -196,6 +214,14 @@ class Schedule:
             self._days[day-1] = Day(json=self.days()[day-1])
 
         return self._days[day-1]
+
+    def rooms(self):
+        rooms = set()
+        for day in self._schedule['schedule']['conference']['days']:
+            rooms.update(day['rooms'].keys())
+
+        return list(rooms)
+
 
     def add_rooms(self, rooms):
         for day in self._schedule['schedule']['conference']['days']:
