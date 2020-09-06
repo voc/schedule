@@ -138,7 +138,7 @@ def fetch_schedule(wiki_url):
                 local_id = voc.tools.get_id(guid)
                 duration = (end - start).total_seconds()/60
                 
-                room = 'Self-organized'
+                room = 'Kidspace' if 'Kidspace' in persons else 'Self-organized'
                 
                 event_n = OrderedDict([
                     ('id', local_id),
