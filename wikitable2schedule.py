@@ -127,57 +127,64 @@ def fetch_schedule(wiki_url):
                 #if type(td) != NoneType:
                 key = td.attrs['class'][0]
                 data[key] = re.compile(r'\s*\n\s*').split(td.get_text().strip())
+            try:
+                [start, end] = [ datetime.strptime(day + x + out['schedule']['conference']['timezone'], '%d.%m.%Y%H:%M%z') for x in re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0]) ]
+                title = data['col1'][0]
+                abstract = "\n".join(data['col1'][1:])
+                persons = data['col2'][0]
+                links = data['col2'][1:]
 
-            [start, end] = [ datetime.strptime(day + x + out['schedule']['conference']['timezone'], '%d.%m.%Y%H:%M%z') for x in re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0]) ]
-            title = data['col1'][0]
-            abstract = data['col1'][1:]
-            persons = data['col2'][0]
-            links = data['col2'][1:]
-
-            guid = voc.tools.gen_uuid('{}-{}'.format(start, links[0]))   
-            local_id = voc.tools.get_id(guid)
-            duration = (end - start).total_seconds()/60
+                guid = voc.tools.gen_uuid('{}-{}'.format(start, links[0]))   
+                local_id = voc.tools.get_id(guid)
+                duration = (end - start).total_seconds()/60
+                
+                room = 'Self-organized'
+                
+                event_n = OrderedDict([
+                    ('id', local_id),
+                    ('guid', guid),
+                    # ('logo', None),
+                    ('date', start.isoformat()),
+                    ('start', start.strftime('%H:%M')),
+                    ('duration', '%d:%02d' % divmod(duration, 60)),
+                    ('room', room),
+                    ('slug', '{slug}-{id}-{name}'.format(
+                            slug=out['schedule']['conference']['acronym'].lower(),
+                            id=local_id,
+                            name=voc.tools.normalise_string(title.lower())
+                        )),
+                    ('url', wiki_url.split('?')[0]),
+                    ('title', title),
+                    ('subtitle', ''),
+                    ('track', 'Workshop'),
+                    ('type', 'Workshop'),
+                    ('language', 'de' ),
+                    ('abstract', abstract or ''),
+                    ('description', '' ),
+                    ('persons', [ OrderedDict([
+                        ('id', 0),
+                        ('public_name', p.strip()),
+                        #('#text', p),
+                    ]) for p in persons.split(',') ]),
+                    ('links', links)
+                ])
+                
+                day_rooms = out['schedule']['conference']['days'][get_day(start)]['rooms']
+                if room not in day_rooms:
+                    day_rooms[room] = []
+                day_rooms[room].append(event_n)
             
-            room = 'Self-organized'
-            
-            event_n = OrderedDict([
-                ('id', local_id),
-                ('guid', guid),
-                # ('logo', None),
-                ('date', start.isoformat()),
-                ('start', start.strftime('%H:%M')),
-                ('duration', '%d:%02d' % divmod(duration, 60)),
-                ('room', room),
-                ('slug', '{slug}-{id}-{name}'.format(
-                        slug=out['schedule']['conference']['acronym'].lower(),
-                        id=local_id,
-                        name=voc.tools.normalise_string(title.lower())
-                    )),
-                ('url', wiki_url.split('?')[0]),
-                ('title', title),
-                ('subtitle', ''),
-                ('track', 'Workshop'),
-                ('type', 'Workshop'),
-                ('language', 'de' ),
-                ('abstract', abstract or ''),
-                ('description', '' ),
-                ('persons', [ OrderedDict([
-                    ('id', 0),
-                    ('public_name', p.strip()),
-                    #('#text', p),
-                ]) for p in persons.split(',') ]),
-                ('links', links)
-            ])
-            
-            day_rooms = out['schedule']['conference']['days'][get_day(start)]['rooms']
-            if room not in day_rooms:
-                day_rooms[room] = []
-            day_rooms[room].append(event_n)
-        
-            sys.stdout.write('.')
+                sys.stdout.write('.')
+            except Exception as e:
+                print(e)
+                print(data)
+                print(json.dumps(event_n, indent=2))
+                print()
         
             
     #print(json.dumps(out, indent=2))
+    print()
+    print()
     
     schedule = Schedule(json=out)
     return schedule
