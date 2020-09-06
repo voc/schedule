@@ -69,8 +69,8 @@ def fetch_schedule(wiki_url):
     
     for i in range(out['schedule']['conference']['daysCount']):
         date = conference_start_date + timedelta(days=i)
-        start = date + timedelta(hours=11)     # conference day starts at 11:00
-        end = start + timedelta(hours=17) # conference day lasts 17 hours
+        start = date + timedelta(hours=9)     # conference day starts at 10:00
+        end = start + timedelta(hours=20) # conference day lasts 17 hours
         
         days.append( OrderedDict([
             ('index', i),
