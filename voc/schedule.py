@@ -10,8 +10,10 @@ import copy
 from lxml import etree as ET
 #from xml.etree import cElementTree as ET
 
-
-import voc.tools as tools
+try:
+    import voc.tools as tools
+except:
+    import tools
 
 
 #workaround to be python 3 compatible
@@ -86,6 +88,9 @@ class Event:
         del r['persons']
         if 'answers' in r:
             del r['answers']
+        # fix wrong formatted links
+        if len(r['links']) > 0 and isinstance(r['links'][0], str):
+            r['links'] = [ {'url': url, 'title': url} for url in r['links'] ]
         return r
 
     def __str__(self):
@@ -132,7 +137,7 @@ class Schedule:
 
     @classmethod
     def from_file(cls, name):
-        with open("schedule_{}.json".format(name), "r") as fp:
+        with open("{}".format(name), "r") as fp:
             schedule = tools.parse_json(fp.read())
 
         return Schedule(json=schedule)
