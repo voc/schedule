@@ -312,7 +312,10 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
                         ('url', p['fullurl']), # sometimes a https: is needed...
                         ('public_name', Wiki.remove_prefix(p['fulltext'])), # must be last element so that transformation to xml works
                     ]) for p in session['Is organized by'] ]),
-                    ('links', session['Has website'])
+                    ('links', [ OrderedDict([
+                        ('url', url), # TODO sometimes a https:// is needed...
+                        ('title', url),
+                    ]) for url in session['Has website'] ])
                 ], start_time)
     
                 # Break if conference day date and event date do not match
