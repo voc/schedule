@@ -50,8 +50,6 @@ template = { "schedule": {
     }
 }
 
-
-
 def get_track_id(track_name):
     return 10
 
@@ -104,7 +102,7 @@ def fetch_schedule(wiki_url):
 
         # ignore some sections
         if element.name == 'table':
-            if section_title.attrs['id'] == 'durchgehende_treffpunkte_und_assemblies':
+            if section_title.attrs['id'] in ['durchgehende_treffpunkte_und_assemblies', 'wochentag_datum']:
                 continue
 
         day = section_title.text.split(',')[1].strip() + "{}".format(year)
@@ -165,7 +163,9 @@ def fetch_schedule(wiki_url):
                         ('public_name', p.strip()),
                         #('#text', p),
                     ]) for p in persons.split(',') ]),
-                    ('links', links)
+                    ('links', [ 
+                        {'url': url, 'title': url} for url in links 
+                    ])
                 ])
                 
                 day_rooms = out['schedule']['conference']['days'][get_day(start)]['rooms']
