@@ -156,6 +156,7 @@ class Schedule:
                     ("end", "{}-12-{}".format(year, start_day+days_count-1)),
                     ("daysCount", days_count),
                     ("timeslot_duration", "00:15"),
+                    ("time_zone_name", "Europe/Amsterdam"),
                     ("days", [])
                 ]))
             ])

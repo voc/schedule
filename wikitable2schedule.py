@@ -20,7 +20,6 @@ from bs4 import BeautifulSoup
 
 
 days = []
-de_tz = pytz.timezone('Europe/Amsterdam')
 local = False
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
@@ -43,8 +42,8 @@ template = { "schedule": {
             "daysCount": 3,
             "start": "2020-09-04",
             "end":   "2020-09-06",
-            "timezone": "+02:00",
             "timeslot_duration": "00:15",
+            "time_zone_name": "Europe/Amsterdam",
             "days" : [],
             "base_url": "https://di.c3voc.de/",
         },
@@ -64,8 +63,8 @@ def fetch_schedule(wiki_url):
     # TODO refactor schedule class, to allow more generic templates
 
     out = template
-    
-    conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start']+ "T00:00:00" + out['schedule']['conference']['timezone'])
+    tz = pytz.timezone(out['schedule']['conference']['time_zone_name'])
+    conference_start_date = tz.localize(dateutil.parser.parse(out['schedule']['conference']['start'] + "T00:00:00"))
     
     for i in range(out['schedule']['conference']['daysCount']):
         date = conference_start_date + timedelta(days=i)
@@ -109,7 +108,7 @@ def fetch_schedule(wiki_url):
                 continue
 
         day = section_title.text.split(',')[1].strip() + "{}".format(year)
-        day_dt = datetime.strptime(day + out['schedule']['conference']['timezone'], '%d.%m.%Y%z') 
+        day_dt = tz.localize(datetime.strptime(day, '%d.%m.%Y'))
 
         # ignore sections which are not in target time span
         if day_dt < conference_start_date:
@@ -128,7 +127,7 @@ def fetch_schedule(wiki_url):
                 key = td.attrs['class'][0]
                 data[key] = re.compile(r'\s*\n\s*').split(td.get_text().strip())
             try:
-                [start, end] = [ datetime.strptime(day + x + out['schedule']['conference']['timezone'], '%d.%m.%Y%H:%M%z') for x in re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0]) ]
+                [start, end] = [ tz.localize(datetime.strptime(day + x, '%d.%m.%Y%H:%M')) for x in re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0]) ]
                 title = data['col1'][0]
                 abstract = "\n".join(data['col1'][1:])
                 persons = data['col2'][0]
