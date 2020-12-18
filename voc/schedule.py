@@ -365,15 +365,24 @@ class Schedule:
                 else:
                     target_room = room
 
-                if id_offset:
-                    for event in day["rooms"][room]:
-                        event['id'] = int(event['id']) + id_offset
-                    # TODO? offset for person IDs?
+                for event in day["rooms"][room]:
+                    if options and 'rewrite_id_from_question' in options:
+                        q = next((x for x in event['answers'] if x.question == options['rewrite_id_from_question']), None)                            
+                        if q is not None:
+                            event['id'] = q['answer']
+                    elif id_offset:
+                            event['id'] = int(event['id']) + id_offset
+                        # TODO? offset for person IDs?
 
+                    # overwrite slug for pretalx schedule.json input
+                    if 'answers' in event:
+                        event['slug'] = '{slug}-{id}-{name}'.format(
+                            slug=self.conference('acronym').lower(),
+                            id=event['id'],
+                            name=tools.normalise_string(event['title'])
+                        )
                 # copy whole day_room to target schedule
                 self.add_room_with_events(target_day, target_room, day["rooms"][room])
-
-
         return True
 
     def find_event(self, id = None, guid = None):
