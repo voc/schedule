@@ -222,11 +222,11 @@ class Schedule:
         return self._days[day-1]
 
     def rooms(self):
-        rooms = set()
+        rooms = OrderedDict()
         for day in self._schedule['schedule']['conference']['days']:
-            rooms.update(day['rooms'].keys())
+            rooms.update([(k, None) for k in day['rooms'].keys()])
 
-        return list(rooms)
+        return rooms.keys()
 
 
     def add_rooms(self, rooms):
