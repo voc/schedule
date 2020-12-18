@@ -84,7 +84,7 @@ class Event:
         r['startDate'] =  self._event['date']
         del r['date']
         duration = self._event['duration'].split(':')
-        r["duration"] = {"hours": int(duration[0]), "minutes": int(duration[1])} 
+        r['duration'] = {'hours': int(duration[0]), 'minutes': int(duration[1])} 
         del r['persons']
         if 'answers' in r:
             del r['answers']

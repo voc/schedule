@@ -133,11 +133,12 @@ def add_event(conference_id, room_id, event):
 
 def test():
   #schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
-  schedule = Schedule.from_file('divoc/everything.schedule.json')
+  #schedule = Schedule.from_file('divoc/everything.schedule.json')
+  schedule = Schedule.from_file('36c3/everything.schedule.json')
 
-  result = create_conference(schedule)
-  conference_id = result['conference']['id']
-  room_ids = { x['name']: x['guid'] for x in result['conference']['rooms']['nodes'] }
+  #result = create_conference(schedule)
+  conference_id = 1 # result['conference']['id']
+  room_ids = {} #{ x['name']: x['guid'] for x in result['conference']['rooms']['nodes'] }
   #print(room_ids)
 
   def process(event):

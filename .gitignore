@@ -28,3 +28,5 @@ __pycache__
 /.venv
 /camp2019
 /36C3
+archive/*
+.vscode
