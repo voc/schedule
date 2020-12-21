@@ -29,7 +29,7 @@ xc3 = "rC3"
 main_schedule_url = 'https://fahrplan.events.ccc.de/events/rc3/Fahrplan/schedule.json'
 
 channels = requests \
-    .get('https://c3voc.de/wiki/lib/exe/graphql2.php?query={channels{nodes{name:slug,url:schedule_url}}}') \
+    .get('https://c3voc.de/wiki/lib/exe/graphql2.php?query={channels{nodes{name:slug,url:schedule_url,schedule_room,room_guid}}}') \
     .json()['data']['channels']['nodes']
 
 additional_schedule_urls = [
@@ -115,6 +115,8 @@ def main():
         try:
             print('\n== Channel ' + entry['name'])
             url = entry['url'].replace('schedule.xml', 'schedule.json')
+            if 'room_guid' in entry:
+                full_schedule._room_ids[entry['schedule_room'] or entry['name']] = entry['room_guid']
             if not url:
                 print('  has no schedule_url yet – ignoring')
                 continue
@@ -195,7 +197,10 @@ def main():
     # write seperate file for each event, to get better git diffs
     def export_event(event):
         with open("events/{}.json".format(event['guid']), "w") as fp:
-            json.dump(event, fp, indent=2, cls=ScheduleEncoder)
+            json.dump({
+                **event,
+                'room_guid': full_schedule._room_ids.get(event['room'], None)
+            }, fp, indent=2, cls=ScheduleEncoder)
 
     full_schedule.foreach_event(export_event)
 

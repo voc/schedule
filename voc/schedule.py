@@ -107,6 +107,7 @@ class Schedule:
     '''
     _schedule = None
     _days = []
+    _room_ids = {}
     stats = None
 
     def __init__(self, name = None, url = None, json = None):
@@ -481,6 +482,9 @@ class Schedule:
                             # create room tag for each instance of a room name
                             node_ = ET.SubElement(node, 'room')
                             node_.set('name', k)
+                            if k in self._room_ids:
+                                node_.set('guid', self._room_ids[k])
+
                             k = 'event'
 
                         if k == 'days':
