@@ -81,7 +81,7 @@ class Event:
         del r['type']
         del r['room']
         del r['start']
-        r['startDate'] =  self._event['date']
+        r['startDate'] = self._event['date']
         del r['date']
         duration = self._event['duration'].split(':')
         r['duration'] = {'hours': int(duration[0]), 'minutes': int(duration[1])} 
@@ -380,7 +380,7 @@ class Schedule:
                         event['slug'] = '{slug}-{id}-{name}'.format(
                             slug=self.conference('acronym').lower(),
                             id=event['id'],
-                            name=tools.normalise_string(event['title'])
+                            name=tools.normalise_string(event['title'].split(':')[0])
                         )
                 # copy whole day_room to target schedule
                 self.add_room_with_events(target_day, target_room, day["rooms"][room])

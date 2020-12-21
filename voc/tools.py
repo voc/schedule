@@ -78,6 +78,7 @@ def normalise_string(string):
     string = re.sub('\W+', '\_', string.strip()) # replace whitespace with _
     # string = filter(unicode.isalnum, string)
     string = re.sub('[^a-z0-9_]+', '', string) # TODO: is this not already done with \W+  line above?
+    string = string.strip('_') # remove trailing _
 
     return string
 
