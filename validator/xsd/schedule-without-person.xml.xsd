@@ -44,6 +44,11 @@
       <xs:selector xpath="day/room/event/slug" />
       <xs:field xpath="." />
     </xs:unique>
+
+    <xs:unique name="day_index_unique">
+      <xs:selector xpath="day" />
+      <xs:field xpath="@index" />
+    </xs:unique>
   </xs:element>
 
   <xs:complexType name="day">
