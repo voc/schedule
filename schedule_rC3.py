@@ -26,7 +26,7 @@ only_workshops = False
 
 xc3 = "rC3"
 
-main_schedule_url = 'https://fahrplan.events.ccc.de/events/rc3/Fahrplan/schedule.json'
+main_schedule_url = 'https://fahrplan.events.ccc.de/rc3/2020/Fahrplan/schedule.json'
 
 channels = requests \
     .get('https://c3voc.de/wiki/lib/exe/graphql2.php?query={channels{nodes{name:slug,url:schedule_url,schedule_room,room_guid}}}') \
