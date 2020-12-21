@@ -65,7 +65,8 @@
     <xs:sequence>
       <xs:element type="event" name="event" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="name" use="required"/>
+    <xs:attribute name="guid" type="uuid"/>
   </xs:complexType>
 
   <xs:complexType name="event">
@@ -129,6 +130,8 @@
     <xs:all>
       <xs:element type="xs:string"  name="license"/>
       <xs:element type="xs:boolean" name="optout"/>
+      <xs:element type="httpURI" name="url" minOccurs="0"/>
+      <xs:element type="httpURI" name="link" minOccurs="0"/>
     </xs:all>
   </xs:complexType>
 
