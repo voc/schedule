@@ -115,7 +115,7 @@ def main():
         try:
             print('\n== Channel ' + entry['name'])
             url = entry['url'].replace('schedule.xml', 'schedule.json')
-            if 'room_guid' in entry:
+            if entry.get('room_guid'):
                 full_schedule._room_ids[entry['schedule_room'] or entry['name']] = entry['room_guid']
             if not url:
                 print('  has no schedule_url yet – ignoring')
@@ -170,8 +170,8 @@ def main():
                 del day['rooms'][room_key]
             i += 1
 
-    print('\n  channels of day 1: ')
-    for room in channels.day(1)['rooms']:
+    print('\n  channels: ')
+    for room in channels.rooms():
         print('   - ' + room)
 
 
@@ -207,8 +207,8 @@ def main():
     print('\nDone')
     print('  version: ' + full_schedule.version())
 
-    print('\n  rooms of day 1: ')
-    for room in full_schedule.day(1)['rooms']:
+    print('\n  rooms: ')
+    for room in full_schedule.rooms():
         print('   - ' + room)
 
     if not local or options.git:
