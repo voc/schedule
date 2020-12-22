@@ -133,6 +133,8 @@ class Schedule:
         # this more complex way is necessary
         # to maintain the same order as in the input file
         schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
+        if 'version' not in schedule['schedule']:
+            schedule['schedule']['version'] = ''
 
         return Schedule(json=schedule)
 
