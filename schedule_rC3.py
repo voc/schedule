@@ -159,14 +159,14 @@ def main():
     # full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
 
     # write all events from the channels to a own schedule.json/xml
-    '''
     write('\nExporting channels... ')
     channels = full_schedule.copy('Channels')
     for day in channels._schedule['schedule']['conference']['days']:
         i = 0
         room_keys = list(day['rooms'].keys())
         for room_key in room_keys:
-            if not( i < 2 or room_key in rooms['channels'] or 'Stage' in room_key or 'Bühne' in room_key):
+            if ('Workshop' in room_key or 'Meetup' in room_key) and \
+              not(i < 4 or room_key in rooms['channels']):
                 del day['rooms'][room_key]
             i += 1
 
@@ -174,10 +174,8 @@ def main():
     for room in channels.rooms():
         print('   - ' + room)
 
-
     channels.export('channels')
     del channels
-    '''
 
     # remove talks starting before 9 am
     def remove_too_early_events(room):
