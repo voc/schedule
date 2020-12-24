@@ -132,8 +132,9 @@ def main():
             else:
                 print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
 
+            id_offset = entry.get('id_offset') or id_offsets.get(entry['name']) or 0
+            '''
             print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**other_schedule.stats.__dict__))
-            id_offset = entry.get('id_offset') or id_offsets.get(entry['name']) or 0 
             min_id = other_schedule.stats.min_id + id_offset
             max_id = other_schedule.stats.max_id + id_offset
             print('    after adding the offset, ids reach from {} to {}'.format(min_id, max_id))
@@ -143,6 +144,7 @@ def main():
                 print('  WARNING: schedule "{}" might have ID overlap with other schedules'.format(entry['name']))
             
             previous_max_id = max_id
+            '''
 
             if full_schedule.add_events_from(other_schedule, id_offset=id_offset, options=entry.get('options')):
                 print('  success')
