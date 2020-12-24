@@ -2,6 +2,13 @@
 
 Scripts to generate & validate [schedule files](https://c3voc.de/wiki/schedule) for events which use the [frab conference system][frab-website], [pretalx](https://github.com/pretalx/pretalx), or every other system able to generate schedule.json or CSV files in the correct format.
 
+## rC3
+
+see:
+* https://c3voc.de/wiki/events:rc3:schedule
+* https://github.com/voc/rC3_schedule
+* https://git.cccv.de/rc3/schedule
+
 
 ## 36C3
 
