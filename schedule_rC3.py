@@ -191,6 +191,63 @@ def main():
                 break
     full_schedule.foreach_day_room(remove_too_early_events)
 
+    # harmonize event types 
+    def harmonize_event_type(event):
+        type_mapping = {
+
+            # TALKS
+            "Talk": "Talk",
+            "Talk 20 Minuten + 5 Minuten Fragen": "Talk",
+            "Talk 30 min + 10min Q&A": "Talk",
+            "Talk 45 Minuten + 10 Minuten für Fragen": "Talk",
+            "Talk 45+10 Min": "Talk",
+            "Talk 20+5 Min": "Talk",
+            "Talk 60min + 20min Q&A": "Talk",
+            "Vortrag": "Talk",
+            "lecture": "Talk",
+            "Beitrag": "Talk",
+
+            # LIGHTNING TALK
+            "lightning_talk": "Lightning Talk",
+            "LightningTalk 15min 10min Q&A": "Lightning Talk",
+
+            # MEETUP
+            "Meetup": "Meetup",
+
+            # OTHER
+            "other": "Other",
+            "Other": "Other",
+            "": "Other",
+
+            # PODIUM
+            "podium": "Podium",
+
+            # PERFORMANCE
+            "Theater, Performance, oder irgendwas ganz anderes formatsprengendes": "Performance",
+            "performance": "Performance",
+            "Performance": "Performance",
+            "Performance 60min": "Performance",
+
+            # CONCERT
+            "Konzert": "Concert",
+            "concert": "Concert",            
+
+            # DJ Set
+            "DJ Set": "DJ Set",
+
+            # WORKSHOP
+            "Workshop": "Workshop",
+            "Workshop 110min": "Workshop",
+            "Workshop 60 Min": "Workshop",
+
+            # LIVE-PODCAST
+            "Live-Podcast": "Live-Podcast",
+        }
+        if event['type'] in type_mapping:
+            event['type'] = type_mapping[event['type']]
+
+    full_schedule.foreach_event(harmonize_event_type)
+
     # write all events to one big schedule.json/xml
     write('\nExporting... ')
     full_schedule.export('everything')
