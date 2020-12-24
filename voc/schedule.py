@@ -379,7 +379,7 @@ class Schedule:
                     
                     # workaround for rC3 – TODO make configurable
                     if int(event['id']) < 10000:
-                        event['id'] = event['guid'][0:5]
+                        event['id'] = re.sub('[^0-9]+', '', event['guid'])[0:6]
 
                     # overwrite slug for pretalx schedule.json input
                     if 'answers' in event:

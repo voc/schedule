@@ -53,6 +53,7 @@ id_offsets = {
 # other rooms/assemblies are added at the end on demand.
 rooms = {
     'channels': [
+        'restrealitaet',
         # channels with video recordings/livestream – same order as streaming website
     ],
     'rooms': [
@@ -91,7 +92,7 @@ def main():
     try:
         full_schedule = Schedule.from_url(main_schedule_url)
         print('  version: ' + full_schedule.version())
-        print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
+        #print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
     except:
         full_schedule = Schedule.from_XC3_template(None, 37, 27, 4)
         conference = full_schedule.conference()
