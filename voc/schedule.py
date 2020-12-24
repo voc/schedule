@@ -118,7 +118,7 @@ class Schedule:
             self._schedule = json
 
         self._days = [None] * self.conference()['daysCount']
-        #self._generate_stats()
+        self._generate_stats()
 
     @classmethod
     def from_url(cls, url):
@@ -376,10 +376,10 @@ class Schedule:
                     elif id_offset:
                             event['id'] = int(event['id']) + id_offset
                         # TODO? offset for person IDs?
-                    
+
                     # workaround for rC3 – TODO make configurable
                     if int(event['id']) < 10000:
-                        event['id'] = re.sub('[^0-9]+', '', event['guid'])[0:6]
+                        event['id'] = int(re.sub('[^0-9]+', '', event['guid'])[0:6])
 
                     # overwrite slug for pretalx schedule.json input
                     if 'answers' in event:
