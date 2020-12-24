@@ -388,6 +388,12 @@ class Schedule:
                             id=event['id'],
                             name=tools.normalise_string(event['title'].split(':')[0])
                         )
+
+                    # remove empty optional fields
+                    for field in ['url', 'video_download_url', 'answers']:
+                        if field in event and not(event[field]):
+                            del event[field]
+
                 # copy whole day_room to target schedule
                 self.add_room_with_events(target_day, target_room, day["rooms"][room])
         return True
@@ -479,7 +485,9 @@ class Schedule:
                     elif k == 'url' and parent != 'event':
                         _set_attrib(node, 'href', v)
                         count -= 1
-                    elif count == 1 and isinstance(v, basestring):
+                    elif k == 'title' and parent in ['link', 'attachment']:
+                        node.text = v
+                    elif count == 1 and isinstance(v, str):
                         node.text = v
                     else:
                         node_ = node
