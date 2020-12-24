@@ -160,6 +160,8 @@ def main():
 
     # remove breaks from lightning talk schedule import
     # full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
+    full_schedule.foreach_event(harmonize_event_type)
+
 
     # write all events from the channels to a own schedule.json/xml
     write('\nExporting channels... ')
@@ -180,15 +182,6 @@ def main():
     channels.export('channels')
     del channels
 
-    # remove talks starting before 9 am
-    def remove_too_early_events(room):
-        for event in room:
-            start_time = Event(event).start
-            if start_time.hour > 4 and start_time.hour < 9:
-                print('removing {} from full schedule, as it takes place at {} which is too early in the morning'.format(event['title'], start_time.strftime('%H:%M')))
-                room.remove(event)
-            else:
-                break
     full_schedule.foreach_day_room(remove_too_early_events)
 
     # write all events to one big schedule.json/xml
@@ -226,6 +219,70 @@ def main():
             git('commit -m "version {}"'.format(full_schedule.version()))
             git('push')
 
+# remove talks starting before 9 am
+def remove_too_early_events(room):
+    for event in room:
+        start_time = Event(event).start
+        if start_time.hour > 4 and start_time.hour < 9:
+            print('removing {} from full schedule, as it takes place at {} which is too early in the morning'.format(event['title'], start_time.strftime('%H:%M')))
+            room.remove(event)
+        else:
+            break
+
+# harmonize event types 
+def harmonize_event_type(event):
+    type_mapping = {
+
+        # TALKS
+        "Talk": "Talk",
+        "Talk 20 Minuten + 5 Minuten Fragen": "Talk",
+        "Talk 30 min + 10min Q&A": "Talk",
+        "Talk 45 Minuten + 10 Minuten für Fragen": "Talk",
+        "Talk 45+10 Min": "Talk",
+        "Talk 20+5 Min": "Talk",
+        "Talk 60min + 20min Q&A": "Talk",
+        "Vortrag": "Talk",
+        "lecture": "Talk",
+        "Beitrag": "Talk",
+
+        # LIGHTNING TALK
+        "lightning_talk": "Lightning Talk",
+        "LightningTalk 15min 10min Q&A": "Lightning Talk",
+
+        # MEETUP
+        "Meetup": "Meetup",
+
+        # OTHER
+        "other": "Other",
+        "Other": "Other",
+        "": "Other",
+
+        # PODIUM
+        "podium": "Podium",
+
+        # PERFORMANCE
+        "Theater, Performance, oder irgendwas ganz anderes formatsprengendes": "Performance",
+        "performance": "Performance",
+        "Performance": "Performance",
+        "Performance 60min": "Performance",
+
+        # CONCERT
+        "Konzert": "Concert",
+        "concert": "Concert",            
+
+        # DJ Set
+        "DJ Set": "DJ Set",
+
+        # WORKSHOP
+        "Workshop": "Workshop",
+        "Workshop 110min": "Workshop",
+        "Workshop 60 Min": "Workshop",
+
+        # LIVE-PODCAST
+        "Live-Podcast": "Live-Podcast",
+    }
+    if event['type'] in type_mapping:
+        event['type'] = type_mapping[event['type']]
 
 if __name__ == '__main__':
     main()
