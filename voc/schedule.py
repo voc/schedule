@@ -3,6 +3,7 @@ import json
 from collections import OrderedDict
 import dateutil.parser
 from datetime import datetime
+from urllib.parse import urlparse
 import sys
 import os
 import re
@@ -14,12 +15,6 @@ try:
     import voc.tools as tools
 except:
     import tools
-
-
-#workaround to be python 3 compatible
-if sys.version_info[0] >= 3:
-    basestring = str
-
 
 #validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
 #validator = 'xmllint --noout --schema {path}/validator/xsd/schedule.xml.xsd'.format(path=sys.path[0])
@@ -376,7 +371,7 @@ class Schedule:
                     elif id_offset:
                             event['id'] = int(event['id']) + id_offset
                         # TODO? offset for person IDs?
-
+                    
                     # workaround for rC3 – TODO make configurable
                     if int(event['id']) < 10000:
                         event['id'] = int(re.sub('[^0-9]+', '', event['guid'])[0:6])
@@ -447,7 +442,7 @@ class Schedule:
                 assert _set_attrib(root, k, v)
 
         def _set_attrib(tag, k, v):
-            if isinstance(v, basestring):
+            if isinstance(v, str):
                 tag.set(k, v)
             elif isinstance(v, int):
                 tag.set(k, str(v))
@@ -457,7 +452,7 @@ class Schedule:
         def _to_etree(d, node, parent = ''):
             if not d:
                 pass
-            elif isinstance(d, basestring):
+            elif isinstance(d, str):
                 node.text = d
             elif isinstance(d, int):
                 node.text = str(d)
@@ -479,7 +474,7 @@ class Schedule:
                             # remove day_ prefix from items
                             k = k[4:]
 
-                    if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (basestring, int))):
+                    if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (str, int))):
                         _set_attrib(node, k, v)
                         count -= 1
                     elif k == 'url' and parent != 'event':
@@ -539,7 +534,8 @@ class Schedule:
                             _to_etree(v, node_, k)
                         else:
                             _to_etree(v, ET.SubElement(node_, k), k)
-            else: assert d == 'invalid type'
+            else: 
+                assert d == 'invalid type'
         assert isinstance(self._schedule, dict) and len(self._schedule) == 1
         tag, body = next(iter(self._schedule.items()))
 
