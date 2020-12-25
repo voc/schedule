@@ -122,7 +122,6 @@ def main():
         if entry.get('room_guid'):
             full_schedule._room_ids[entry['schedule_room'] or entry['name']] = entry['room_guid']
 
-    previous_max_id = 0
 
     # add events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
@@ -146,14 +145,7 @@ def main():
 
             print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**other_schedule.stats.__dict__))
             id_offset = entry.get('id_offset') or id_offsets.get(entry['name']) or 0 
-            min_id = other_schedule.stats.min_id + id_offset
-            max_id = other_schedule.stats.max_id + id_offset
-            print('    after adding the offset, ids reach from {} to {}'.format(min_id, max_id))
-            
-            # TODO improve error message and check actual intervals
-            # if previous_max_id >= min_id:
-            #    print('  WARNING: schedule "{}" might have ID overlap with other schedules'.format(entry['name']))
-            
+
             if full_schedule.add_events_from(other_schedule, id_offset=id_offset, options=entry.get('options')):
                 print('  success')
 
@@ -167,28 +159,15 @@ def main():
 
     # remove breaks from lightning talk schedule import
     # full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
+  
+  
     full_schedule.foreach_event(harmonize_event_type)
 
 
     # write all events from the channels to a own schedule.json/xml
-    write('\nExporting channels... ')
-    channels = full_schedule.copy('Channels')
-    for day in channels._schedule['schedule']['conference']['days']:
-        i = 0
-        room_keys = list(day['rooms'].keys())
-        for room_key in room_keys:
-            if ('Workshop' in room_key or 'Meetup' in room_key) and \
-              not(i < 4 or room_key in rooms['channels']):
-                del day['rooms'][room_key]
-            i += 1
+    export_filtered_schedule(full_schedule)
 
-    print('\n  channels: ')
-    for room in channels.rooms():
-        print('   - ' + room)
-
-    channels.export('channels')
-    del channels
-
+    # remove talks starting before 9 am
     full_schedule.foreach_day_room(remove_too_early_events)
 
     # write all events to one big schedule.json/xml
@@ -209,6 +188,20 @@ def main():
             }, fp, indent=2, cls=ScheduleEncoder)
 
     full_schedule.foreach_event(export_event)
+
+    # expose metadata to own file
+    with open("meta.json", "w") as fp:
+        json.dump({
+            'data': {
+                'version': full_schedule.version(),
+                'source_urls': list(loaded_schedules.keys()),
+                'rooms': [{
+                    'guid': full_schedule._room_ids.get(room, None),
+                    'schedule_name': room
+                } for room in full_schedule.rooms()],
+                'channels': channels
+            },
+        }, fp, indent=2, cls=ScheduleEncoder)
 
     print('\nDone')
     print('  version: ' + full_schedule.version())
@@ -231,6 +224,26 @@ def main():
             git('commit -m "version {}"'.format(full_schedule.version()))
             git('push')
 
+
+def export_filtered_schedule(full_schedule):
+    write('\nExporting channels... ')
+    schedule = full_schedule.copy('Channels')
+    for day in schedule.days():
+        i = 0
+        room_keys = list(day['rooms'].keys())
+        for room_key in room_keys:
+            if ('Workshop' in room_key or 'Meetup' in room_key) and \
+              not(i < 4 or room_key in rooms['channels']):
+                del day['rooms'][room_key]
+            i += 1
+
+    print('\n  channels: ')
+    for room in schedule.rooms():
+        print('   - {} {}'.format(full_schedule._room_ids.get(room), room))
+
+    schedule.export('channels')
+
+
 # remove talks starting before 9 am
 def remove_too_early_events(room):
     for event in room:
@@ -241,7 +254,8 @@ def remove_too_early_events(room):
         else:
             break
 
-# harmonize event types 
+
+# harmonize event types
 def harmonize_event_type(event):
     type_mapping = {
 
