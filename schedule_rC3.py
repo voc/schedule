@@ -185,11 +185,16 @@ def main():
     full_schedule.export('everything')
 
     # write seperate file for each event, to get better git diffs
-    def export_event(event):
+    def export_event(event: Event):
+        origin_system = None
+        if isinstance(event, Event):
+            origin_system = event.origin.origin_system
+
         with open("events/{}.json".format(event['guid']), "w") as fp:
             json.dump({
                 **event,
-                'room_guid': full_schedule._room_ids.get(event['room'], None)
+                'room_guid': full_schedule._room_ids.get(event['room'], None),
+                'origin': origin_system or None,
             }, fp, indent=2, cls=ScheduleEncoder)
 
     full_schedule.foreach_event(export_event)

@@ -1,5 +1,6 @@
 import requests
 import json
+import collections
 from collections import OrderedDict
 import dateutil.parser
 from datetime import datetime
@@ -24,6 +25,10 @@ validator_filter = ''
 def set_validator_filter(filter):
     global validator_filter
     validator_filter += " | awk '" + (' && '.join(['!/'+x+'/' for x in filter]) + "'")
+
+
+class Schedule:
+    pass
 
 
 class Day:
@@ -51,16 +56,24 @@ class Day:
         return self._day[key]
 
 
-class Event:
+class Event(collections.abc.Mapping):
     _event = None
+    origin: Schedule = None
     start = None
 
-    def __init__(self, attributes, start_time = None):
+    def __init__(self, attributes, start_time=None, origin=None):
         self._event = OrderedDict(attributes)
+        self.origin = origin
         self.start = start_time or dateutil.parser.parse(self._event['date'])
 
     def __getitem__(self, key):
         return self._event[key]
+
+    def __setitem__(self, key, value):
+        self._event[key] = value
+
+    def __iter__(self):
+        return self._event.__iter__()
 
     def __len__(self):
         return len(self._event)
@@ -88,6 +101,27 @@ class Event:
             r['links'] = [ {'url': url, 'title': url} for url in r['links'] ]
         return r
 
+    # export all attributes which are not part of rC3 core event model
+    def meta(self):
+        r = OrderedDict(self._event.items())
+        #r['local_id'] = self._event['id']
+        #del r["id"]
+        del r['guid']
+        del r['slug']
+        del r['room']
+        del r['start']
+        del r['date']
+        del r['duration']
+        del r['track_id']
+        del r['track']
+        #del r['persons']
+        #if 'answers' in r:
+        #    del r['answers']
+        # fix wrong formatted links
+        if len(r['links']) > 0 and isinstance(r['links'][0], str):
+            r['links'] = [ {'url': url, 'title': url} for url in r['links'] ]
+        return r
+
     def __str__(self):
         return json.dumps(self._event, indent=2)
 
@@ -103,6 +137,8 @@ class Schedule:
     _schedule = None
     _days = []
     _room_ids = {}
+    origin_url = None
+    origin_system = None
     stats = None
 
     def __init__(self, name = None, url = None, json = None):
@@ -127,11 +163,14 @@ class Schedule:
 
         # this more complex way is necessary
         # to maintain the same order as in the input file
-        schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
-        if 'version' not in schedule['schedule']:
-            schedule['schedule']['version'] = ''
+        data = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_r.text)
+        if 'version' not in data['schedule']:
+            data['schedule']['version'] = ''
 
-        return Schedule(json=schedule)
+        schedule = Schedule(json=data)
+        schedule.origin_url = url
+        schedule.origin_system = urlparse(url).netloc
+        return schedule
 
     @classmethod
     def from_file(cls, name):
@@ -155,6 +194,7 @@ class Schedule:
                     ("daysCount", days_count),
                     ("timeslot_duration", "00:15"),
                     ("time_zone_name", "Europe/Amsterdam"),
+                    ("rooms", []),
                     ("days", [])
                 ]))
             ])
@@ -239,7 +279,7 @@ class Schedule:
     def add_room(self, day, room):
         self.days()[day-1]['rooms'][room] = list()
 
-    def add_room_with_events(self, day, target_room, data):
+    def add_room_with_events(self, day, target_room, data, origin=None):
         if not data or len(data) == 0:
             return
 
@@ -363,6 +403,7 @@ class Schedule:
                 else:
                     target_room = room
 
+                events = []
                 for event in day["rooms"][room]:
                     if options and 'rewrite_id_from_question' in options:
                         q = next((x for x in event['answers'] if x.question == options['rewrite_id_from_question']), None)                            
@@ -388,9 +429,11 @@ class Schedule:
                     for field in ['url', 'video_download_url', 'answers']:
                         if field in event and not(event[field]):
                             del event[field]
+                    
+                    events.append(Event(event, origin=other_schedule))
 
                 # copy whole day_room to target schedule
-                self.add_room_with_events(target_day, target_room, day["rooms"][room])
+                self.add_room_with_events(target_day, target_room, events)
         return True
 
     def find_event(self, id = None, guid = None):
