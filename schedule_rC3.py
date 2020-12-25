@@ -33,22 +33,25 @@ channels = requests \
     .json()['data']['channels']['nodes']
 
 additional_schedule_urls = [
-    { 
-        'name': 'rc3-channels',       
+    {
+        'name': 'rc3-channels',
         'url': 'https://pretalx.rc3.studio/rc3-channels-2020/schedule/export/schedule.json',
         'options': {
-            'rewrite_id_from_question': 15
+            'rewrite_id_from_question': 15,
+            'room-map': {
+                'ChaosTrawler Stubnitz/Gängeviertel Hamburg': 'ChaosTrawler'
+            },
         }
     }
 ] + channels
 
 # Workaround: the wiki API does not expose data from internal pages, e.g. https://c3voc.de/wiki/intern:rc3:mcr
 channels += [{
-    "guid": "973ec154-a5b5-40ac-b4e8-b74137f647e8",
-    "schedule_room": "rc1"
+    "schedule_room": "rc1",
+    "room_guid": "973ec154-a5b5-40ac-b4e8-b74137f647e8",
 }, {
-    "guid": "32b5ad05-ab7d-44eb-a6e6-7ca616eed34a",
-    "schedule_room": "rc2"
+    "schedule_room": "rc2",
+    "room_guid": "32b5ad05-ab7d-44eb-a6e6-7ca616eed34a",
 }]
 
 id_offsets = {
