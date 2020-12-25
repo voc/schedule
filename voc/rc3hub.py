@@ -1,4 +1,4 @@
-from schedule import Schedule, Event
+from schedule import Schedule
 from os import getenv
 import json
 import requests
@@ -11,30 +11,41 @@ headers = {
     'Authorization': 'Token ' + getenv('HUB_TOKEN', 'XXXX'),
     'Accept': 'application/json'
 }
-
-#token = requests.post('https://api-test.rc3.cccv.de/api/auth/get-token', json={
-#    })
-
 #url = 'http://127.0.0.1:8000/api/c/rc3/'
 #conference_id = "840c554b-16d0-48ff-b6ff-0f6b0a2d416b"  # rc3 local
+
+
+def post_event(event):
+    r = requests.post(
+        '{}event/{}/schedule'.format(url, event['guid']), 
+        json={'event': event}, 
+        headers=headers
+    )
+    print(r.status_code)
+
+    if r.status_code != 201:
+        print(json.dumps(event, indent=2))
+        lines = r.text.split('\n', 3)
+        print(lines[0:2])
+        raise Exception(r.status_code)
+    return r
 
 
 def create(path, body):
     print('POST ' + url + path) 
     r = requests.post(url + path, json=body, headers=headers)
-    print(json.dumps(body))
     print(r.status_code)
 
     if r.status_code != 201:
+        print(json.dumps(body))
         lines = r.text.split('\n', 3)
-        print(lines[0])
-        print(lines[1])
+        print(lines[0:2])
         raise Exception(r.status_code)
     # print(r.text)
     return r
 
 
-def upsert(path, body):
+def update(path, body):
     print('PUT ' + url + path)
     r = requests.put(url + path, json=body, headers=headers, allow_redirects=False)
     print(r.status_code)
@@ -46,14 +57,6 @@ def get(path):
     r = requests.get(url + path, headers=headers)
     print(r.status_code)
     return r.json()
-
-
-def create_conference(schedule: Schedule):
-    conference = schedule.conference()
-
-    for room in schedule.rooms():
-        add_room(room)
-    #print(json.dumps(input, indent=2))
 
 
 def add_track(name):
@@ -81,80 +84,14 @@ def add_room(room_name):
     room = res.json()
     return room['id']
 
-
-def add_event(conference_id, room_id, event: Event):
-
-    data = {
-        "id": event['guid'],
-        # "conference": conference_id,
-        "slug": event['slug'][:50],
-        "kind": 'assembly',  #'official', # 'sos'
-        #"assembly": 'incomming',  
-        "assembly": '1c395556-eeef-489f-bf5e-c8b32711f9b4',
-        "room": room_id,
-        "name": event['title'],
-        "language": event['language'],
-        "description": str(event['abstract']) + "\n\n" + str(event['description']),
-        "is_public": True,
-        "schedule_start": event['date'],
-        "schedule_duration":  event['duration'] + ':00',
-        # "fsk": "all",
-        "track": event['track_id'],
-        "additional_data": event.meta()
-    }
-    # '''
-    # try update first, if that fails create
-    r2 = upsert('event/'+event['guid']+'/', data)
-    if r2.status_code != 200 and r2.status_code != 301:
-        lines = r2.text.split('\n', 3)
-        print(lines[0])
-        print(lines[1])
-
-        r = create('events', data)
-        if r.status_code != 201:
-            print(json.dumps(data))
-            lines = r.text.split('\n', 3)
-            print(lines[0])
-            print(lines[1])
-
-            raise Exception(r.status_code)
-
-    '''
-  r = create('events', data)
-  if r.status_code != 201:
-    # try update
-    r2 = upsert('event/'+event['guid']+'/', data)
-    if r2.status_code != 200 and r2.status_code != 404:
-      raise Exception(r2.text)
-  #' ' '  
-      "eventPeopleUsingGuid": { 
-        "create": [
-          {"personId": p['id'], "publicName": p['public_name']} for p in event['persons']
-      ]}
-    }
-  }
-
-  #print(str(query))
-  try:
-    client.execute(query, {'input': input})
-  except Exception as e:
-    print(json.dumps(input, indent=2))
-    print()
-    print(e)
-    print() '''
-
-
 skip = False
 
 
-def test():
-    #schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
-    schedule = Schedule.from_file('rC3/everything.schedule.json')
+def full_sync():
+    schedule = Schedule.from_url('https://data.c3voc.de/rC3/everything.schedule.json')
+    #schedule = Schedule.from_file('rC3/everything.schedule.json')
 
     tracks = []
-
-    #result = create_conference(schedule)
-    #conference_id = result['conference']['id']
     room_ids = {x['name']: x['id'] for x in get('rooms')}
     tracks = {x['name']: x['id'] for x in get('tracks')}
 
@@ -168,26 +105,21 @@ def test():
                 skip = False
             return
 
-        if event['room'] in room_ids:
-            room_id = room_ids[event['room']]
-        else:
-            print('WARNING: Room {} does not exist, creating.'.format(
+        if not(event['room'] in room_ids):
+            print('WARNING: Room {} does not exist, try creation.'.format(
                 event['room']))
             room_id = add_room(event['room'])
             room_ids[event['room']] = room_id
 
         track_id = None
         if event['track']:
-            if event['track'] in tracks:
-                track_id = tracks[event['track']]
-            else:
-                print('WARNING: Track {} does not exist, creating.'.format(
+            if not(event['track'] in tracks):
+                print('WARNING: Track {} does not exist, try creation.'.format(
                     event['track']))
                 track_id = add_track(event['track'])
                 tracks[event['track']] = track_id
-        event['track_id'] = track_id
 
-        add_event(conference_id, room_id, Event(event))
+        post_event(event)
 
     schedule.foreach_event(process)
 
@@ -201,5 +133,5 @@ if __name__ == '__main__':
     options, args = parser.parse_args()
     skip = options.skip
 
-    test()
-    print('test done')
+    full_sync()
+    print('done')
