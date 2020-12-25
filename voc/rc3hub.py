@@ -4,39 +4,40 @@ import json
 import requests
 from slugify import slugify
 
-url = getenv('HUB_URL', 'https://api-test.rc3.cccv.de/api/c/36c3/')
+url = getenv('HUB_URL', 'https://api-test.rc3.cccv.de/api/c/rc3/')
+conference_id = "17391cf3-fc95-4294-bc34-b8371c6d89b3"   # rc3 test
+
 headers = {
-    'Authorization': getenv('HUB_TOKEN', 'Token|Basic|Bearer XXXX'),
+    'Authorization': 'Token ' + getenv('HUB_TOKEN', 'XXXX'),
     'Accept': 'application/json'
 }
-#auth=(getenv('HUB_USER', 'andi'), getenv('HUB_PASSWORD', 'vocmucvocmuc'))
-#conference_id = "4e21ff5f-b6f8-4711-9bd7-f7e4634b9cae"
 
-url = 'http://127.0.0.1:8000/api/36c3/'
-auth = ('andi', 'test1234')
-conference_id = "159ace9f-1e37-448f-9c6a-afe96eaa5091"
+#token = requests.post('https://api-test.rc3.cccv.de/api/auth/get-token', json={
+#    })
+
+#url = 'http://127.0.0.1:8000/api/c/rc3/'
+#conference_id = "840c554b-16d0-48ff-b6ff-0f6b0a2d416b"  # rc3 local
 
 
-def create(path, json):
-    print('POST ' + url + path) # + ' (' + json['id'] + ')')
-    r = requests.post(url + path, json=json, headers=headers)
+def create(path, body):
+    print('POST ' + url + path) 
+    r = requests.post(url + path, json=body, headers=headers)
+    print(json.dumps(body))
     print(r.status_code)
 
     if r.status_code != 201:
         lines = r.text.split('\n', 3)
         print(lines[0])
         print(lines[1])
-
         raise Exception(r.status_code)
     # print(r.text)
     return r
 
 
-def upsert(path, json):
+def upsert(path, body):
     print('PUT ' + url + path)
-    r = requests.put(url + path, json=json, headers=headers, allow_redirects=False)
+    r = requests.put(url + path, json=body, headers=headers, allow_redirects=False)
     print(r.status_code)
-    # print(r.text)
     return r
 
 
@@ -44,7 +45,6 @@ def get(path):
     print('GET ' + url + path)
     r = requests.get(url + path, headers=headers)
     print(r.status_code)
-    #print(r.text)
     return r.json()
 
 
@@ -68,11 +68,12 @@ def add_track(name):
 
 
 def add_room(room_name):
-    res = create('assembly/main/rooms', {
+    # add new rooms to Assembly 'incomming', can be sorted later...
+    res = create('assembly/incoming/rooms', {
         # "assembly_id": "098f9a12-5d30-45ba-ab52-f8d71a7a829f",
         "conference": conference_id,
         "name": room_name,
-        "room_type": "lecturehall",
+        "room_type": "stage",
         "capacity": None,
         "links": []
     })
@@ -85,13 +86,15 @@ def add_event(conference_id, room_id, event: Event):
 
     data = {
         "id": event['guid'],
+        # "conference": conference_id,
+        "slug": event['slug'][:50],
         "kind": 'assembly',  #'official', # 'sos'
-        #"assembly": 'MIGRATION',  
+        #"assembly": 'incomming',  
         "assembly": '1c395556-eeef-489f-bf5e-c8b32711f9b4',
         "room": room_id,
         "name": event['title'],
         "language": event['language'],
-        "description": str(event['abstract']) + str(event['description']),
+        "description": str(event['abstract']) + "\n\n" + str(event['description']),
         "is_public": True,
         "schedule_start": event['date'],
         "schedule_duration":  event['duration'] + ':00',
@@ -146,7 +149,7 @@ skip = False
 
 def test():
     #schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
-    schedule = Schedule.from_file('36c3/everything.schedule.json')
+    schedule = Schedule.from_file('rC3/everything.schedule.json')
 
     tracks = []
 
