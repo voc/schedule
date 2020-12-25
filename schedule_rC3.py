@@ -42,6 +42,15 @@ additional_schedule_urls = [
     }
 ] + channels
 
+# Workaround: the wiki API does not expose data from internal pages, e.g. https://c3voc.de/wiki/intern:rc3:mcr
+channels += [{
+    "guid": "973ec154-a5b5-40ac-b4e8-b74137f647e8",
+    "schedule_room": "rc1"
+}, {
+    "guid": "32b5ad05-ab7d-44eb-a6e6-7ca616eed34a",
+    "schedule_room": "rc2"
+}]
+
 id_offsets = {
     'wikipaka': 1000,
     'chaoszone': 1500
@@ -108,6 +117,10 @@ def main():
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
 
+    # add guid's from wiki to schedule class
+    for entry in channels:
+        if entry.get('room_guid'):
+            full_schedule._room_ids[entry['schedule_room'] or entry['name']] = entry['room_guid']
 
     previous_max_id = 0
 
@@ -116,8 +129,6 @@ def main():
         try:
             print('\n== Channel ' + entry['name'])
             url = entry['url'].replace('schedule.xml', 'schedule.json')
-            if entry.get('room_guid'):
-                full_schedule._room_ids[entry['schedule_room'] or entry['name']] = entry['room_guid']
             if not url:
                 print('  has no schedule_url yet – ignoring')
                 continue
