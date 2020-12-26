@@ -47,10 +47,10 @@ additional_schedule_urls = [
 
 # Workaround: the wiki API does not expose data from internal pages, e.g. https://c3voc.de/wiki/intern:rc3:mcr
 channels += [{
-    "schedule_room": "rc1",
+    "schedule_room": "rC1",
     "room_guid": "973ec154-a5b5-40ac-b4e8-b74137f647e8",
 }, {
-    "schedule_room": "rc2",
+    "schedule_room": "rC2",
     "room_guid": "32b5ad05-ab7d-44eb-a6e6-7ca616eed34a",
 }]
 
