@@ -415,7 +415,7 @@ class Schedule:
 
                 events = []
                 for event in day["rooms"][room]:
-                    if options and 'rewrite_id_from_question' in options:
+                    if options.get('rewrite_id_from_question'):
                         q = next((x for x in event['answers'] if x.question == options['rewrite_id_from_question']), None)                            
                         if q is not None:
                             event['id'] = q['answer']
@@ -439,6 +439,11 @@ class Schedule:
                     for field in ['url', 'video_download_url', 'answers']:
                         if field in event and not(event[field]):
                             del event[field]
+                    
+                    if options.get('prefix_person_ids'):
+                        prefix = options.get('prefix_person_ids')
+                        for person in event['persons']:
+                            person['id'] = "{}-{}".format(prefix, person['id'])
                     
                     events.append(Event(event, origin=other_schedule))
 
