@@ -111,6 +111,8 @@ def main():
         conference['acronym'] = 'rC3'
         conference['title'] = 'Remote Chaos Experience'
 
+    frab_rooms = full_schedule.rooms()
+
     loaded_schedules = {
         main_schedule_url: True,
         'https://frab.cccv.de/': True
@@ -176,7 +178,12 @@ def main():
 
 
     # write all events from the channels to a own schedule.json/xml
-    export_filtered_schedule(full_schedule)
+    channel_schedule = export_stages_schedule(full_schedule)
+
+    # write all events from non-frab to a own schedule.json/xml
+    def non_frab_filter(key):
+        return not(key in frab_rooms)
+    export_filtered_schedule('non-frab', channel_schedule, non_frab_filter)
 
     # remove talks starting before 9 am
     full_schedule.foreach_day_room(remove_too_early_events)
@@ -236,7 +243,7 @@ def main():
             git('push')
 
 
-def export_filtered_schedule(full_schedule):
+def export_stages_schedule(full_schedule):
     write('\nExporting channels... ')
     schedule = full_schedule.copy('Channels')
     for day in schedule.days():
@@ -253,6 +260,24 @@ def export_filtered_schedule(full_schedule):
         print('   - {} {}'.format(full_schedule._room_ids.get(room), room))
 
     schedule.export('channels')
+    return schedule
+
+def export_filtered_schedule(output_name, parent_schedule, filter):
+    write('\nExporting {} schedule... '.format(output_name))
+    schedule = parent_schedule.copy(output_name)
+    for day in schedule.days():
+        room_keys = list(day['rooms'].keys())
+        for room_key in room_keys:
+            if not(filter(room_key)):
+                del day['rooms'][room_key]
+
+    print('\n  {}: '.format(output_name))
+    for room in schedule.rooms():
+        print('   - {}'.format(room))
+
+    schedule.export(output_name)
+    return schedule
+
 
 
 # remove talks starting before 9 am
