@@ -194,7 +194,7 @@ def main():
         with open("events/{}.json".format(event['guid']), "w") as fp:
             json.dump({
                 **event,
-                'room_guid': full_schedule._room_ids.get(event['room'], None),
+                'room_id': full_schedule._room_ids.get(event['room'], None),
                 'origin': origin_system or None,
             }, fp, indent=2, cls=ScheduleEncoder)
 
@@ -305,7 +305,7 @@ def harmonize_event_type(event):
 
         # CONCERT
         "Konzert": "Concert",
-        "concert": "Concert",            
+        "concert": "Concert",
 
         # DJ Set
         "DJ Set": "DJ Set",
@@ -320,6 +320,7 @@ def harmonize_event_type(event):
     }
     if event['type'] in type_mapping:
         event['type'] = type_mapping[event['type']]
+
 
 if __name__ == '__main__':
     main()
