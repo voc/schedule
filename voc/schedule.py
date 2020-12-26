@@ -330,18 +330,28 @@ class Schedule:
         class ScheduleStats:
             min_id = None
             max_id = None
+            person_min_id = None
+            person_max_id = None
             events_count = 0
         self.stats = ScheduleStats()
 
         def calc_stats(event):
             self.stats.events_count += 1
+
             if self.stats.min_id is None or event['id'] < self.stats.min_id:
                 self.stats.min_id = event['id']
             if self.stats.max_id is None or event['id'] > self.stats.max_id:
                 self.stats.max_id = event['id']
 
+            for person in event['persons']:
+                if isinstance(person['id'], int) or  person['id'].isnumeric():
+                    if self.stats.person_min_id is None or int(person['id']) < self.stats.person_min_id:
+                        self.stats.person_min_id = int(person['id'])
+                    if self.stats.person_max_id is None or int(person['id']) > self.stats.person_max_id:
+                        self.stats.person_max_id = int(person['id'])
+
         self.foreach_event(calc_stats)
-        
+      
 
     def get_day_from_time(self, start_time):
         for i in range(self.conference()['daysCount']):

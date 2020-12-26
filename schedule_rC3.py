@@ -29,7 +29,7 @@ xc3 = "rC3"
 main_schedule_url = 'https://fahrplan.events.ccc.de/rc3/2020/Fahrplan/schedule.json'
 
 channels = requests \
-    .get('https://c3voc.de/wiki/lib/exe/graphql2.php?query={channels{nodes{name:slug,url:schedule_url,schedule_room,room_guid}}}') \
+    .get('https://c3voc.de/wiki/lib/exe/graphql2.php?query={channels{nodes{name:slug,url:schedule_url,schedule_room,room_guid,prefix}}}') \
     .json()['data']['channels']['nodes']
 
 additional_schedule_urls = [
@@ -146,10 +146,18 @@ def main():
             else:
                 print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
 
-            print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**other_schedule.stats.__dict__))
+            try:
+                print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**other_schedule.stats.__dict__))
+                print('    local person ids from {person_min_id} to {person_max_id}'.format(**other_schedule.stats.__dict__))
+            except:
+                pass
+
             id_offset = entry.get('id_offset') or id_offsets.get(entry['name']) or 0 
 
-            if full_schedule.add_events_from(other_schedule, id_offset=id_offset, options=entry.get('options')):
+            if full_schedule.add_events_from(other_schedule, id_offset=id_offset, options={
+                **(entry.get('options') or {}),
+                'prefix_person_ids': entry.get('prefix')
+            }):
                 print('  success')
 
         except KeyboardInterrupt:
