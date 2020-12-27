@@ -260,7 +260,8 @@ def main():
             else:
                 try:
                     event = load_json(i.a_path)
-                    rc3hub.upsert_event(event)
+                    if event.get('origin') != 'rc3.world':
+                        rc3hub.upsert_event(event)
                 except Exception as e:
                     print(e)
                     if options.exit_when_exception_occours:
