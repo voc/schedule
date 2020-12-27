@@ -4,4 +4,4 @@ requests
 six
 lxml
 gql >= 3.0.0
-slugify
+gitpython

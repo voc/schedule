@@ -12,9 +12,16 @@ next_id = 1000
 generated_ids = 0
 uuid_namespace = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
 
+
+def write(x):
+    sys.stdout.write(x)
+    sys.stdout.flush()
+
+
 def set_base_id(value):
     global next_id
     next_id = value
+
 
 def get_id(guid):
     global sos_ids, next_id, generated_ids
@@ -95,3 +102,13 @@ def parse_json(text):
     # this more complex way is necessary
     # to maintain the same order as in the input file
     return json.JSONDecoder(object_pairs_hook=OrderedDict).decode(text)
+
+
+def load_json(filename):
+    with open(filename, "r") as fp:
+        #data = json.load(fp) 
+        # maintain order from file
+        data = parse_json(fp.read())
+        
+    return data
+    

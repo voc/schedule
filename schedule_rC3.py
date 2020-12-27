@@ -7,7 +7,12 @@ import pytz
 import os
 import sys
 import optparse
+import git as gitlib
+
 from voc.schedule import Schedule, ScheduleEncoder, Event
+from voc.tools import load_json, write
+from voc import rc3hub
+
 
 tz = pytz.timezone('Europe/Amsterdam')
 
@@ -94,11 +99,6 @@ os.chdir(output_dir)
 
 if not os.path.exists("events"):
     os.mkdir("events")
-
-def write(x):
-    sys.stdout.write(x)
-    sys.stdout.flush()
-
 
 def main():
     try:
@@ -192,6 +192,10 @@ def main():
     write('\nExporting... ')
     full_schedule.export('everything')
 
+    # to get proper a state, we first have to remove all event files from the previous run
+    if not local or options.git:
+        git('git remove events/*')
+
     # write seperate file for each event, to get better git diffs
     def export_event(event: Event):
         origin_system = None
@@ -227,20 +231,51 @@ def main():
     print('\n  rooms: ')
     for room in full_schedule.rooms():
         print('   - ' + room)
+    print()
 
     if not local or options.git:
-        content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
-
-        def git(args):
-            os.system('/usr/bin/env git {}'.format(args))
+        content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -i -e "^[+-]  " | grep -v version > /dev/null')
 
         if content_did_not_change:
             print('nothing relevant changed, reverting to previous state')
             git('reset --hard')
-        else:
-            git('add *.json *.xml events/*.json')
-            git('commit -m "version {}"'.format(full_schedule.version()))
-            git('push')
+            exit(0)
+
+        git('add *.json *.xml events/*.json')
+        git('commit -m "version {}"'.format(full_schedule.version()))
+        git('push')
+
+        # update hub
+        print("\n== Updating rc3.world via API…")
+
+        rc3hub.init(channels)
+        repo = gitlib.Repo('.')
+        changed_items = repo.index.diff('HEAD~1', 'events')
+        for i in changed_items:
+            write(i.change_type + ': ')
+            if i.change_type == 'D':
+                #TODO delete event in API
+                event_guid = os.path.splitext(os.path.basename(i.a_path))[0]
+                print('WARNING: Event {} has to be deleted manually'.format(event_guid))
+            else:
+                try:
+                    event = load_json(i.a_path)
+                    rc3hub.upsert_event(event)
+                except Exception as e:
+                    print(e)
+                    if options.exit_when_exception_occours:
+                        raise e
+        print("\n\n")
+        exit(2)
+
+
+
+        
+
+
+
+def git(args):
+    os.system('/usr/bin/env git {}'.format(args))
 
 
 def export_stages_schedule(full_schedule):
