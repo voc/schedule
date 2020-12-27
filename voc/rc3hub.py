@@ -11,14 +11,12 @@ headers = {
     'Authorization': 'Token ' + getenv('HUB_TOKEN', 'XXXX'),
     'Accept': 'application/json'
 }
-#url = 'http://127.0.0.1:8000/api/c/rc3/'
-#conference_id = "840c554b-16d0-48ff-b6ff-0f6b0a2d416b"  # rc3 local
-
 
 def post_event(event):
+    print('POST {}event/{}/schedule'.format(url, event['guid']))
     r = requests.post(
-        '{}event/{}/schedule'.format(url, event['guid']), 
-        json={'event': event}, 
+        '{}event/{}/schedule'.format(url, event['guid']),
+        json=event, 
         headers=headers
     )
     print(r.status_code)
@@ -86,16 +84,25 @@ def add_room(room_name):
 
 skip = False
 
+channels = requests \
+    .get('https://c3voc.de/wiki/lib/exe/graphql2.php?query={channels{nodes{name:schedule_room,id:room_guid}}}') \
+    .json()['data']['channels']['nodes']
+
 
 def full_sync():
     schedule = Schedule.from_url('https://data.c3voc.de/rC3/everything.schedule.json')
-    #schedule = Schedule.from_file('rC3/everything.schedule.json')
+
+    #schedule = Schedule.from_url('https://data.c3voc.de/rC3/channels.schedule.json')
+    #schedule = Schedule.from_file('rC3/channels.schedule.json')
 
     tracks = []
-    room_ids = {x['name']: x['id'] for x in get('rooms')}
+    channel_room_ids = {x['name']: x['id'] for x in channels}
+    rooms = get('rooms')
+    room_ids = {x['name']: x['id'] for x in rooms}
+    hub_room_names = {x['id']: x['name'] for x in rooms}
+
     tracks = {x['name']: x['id'] for x in get('tracks')}
 
-    print(room_ids)
     print(tracks)
 
     def process(event):
@@ -105,21 +112,31 @@ def full_sync():
                 skip = False
             return
 
-        if not(event['room'] in room_ids):
-            print('WARNING: Room {} does not exist, try creation.'.format(
-                event['room']))
-            room_id = add_room(event['room'])
-            room_ids[event['room']] = room_id
+        try: 
+            if event['room'] in channel_room_ids:
+                event['room_id'] = channel_room_ids.get(event['room'])
+                del event['room']
+            elif not(event['room'] in room_ids):
+                if event['room'] in channel_room_ids:
+                    try:
+                        event['room'] = hub_room_names[channel_room_ids[event['room']]]
+                    except Exception as e:
+                        print(json.dumps(event, indent=2))
+                        print(e.message)
+                else:
+                    print('WARNING: Room {} does not exist'.format(event['room']))
+                    return
 
-        track_id = None
-        if event['track']:
-            if not(event['track'] in tracks):
-                print('WARNING: Track {} does not exist, try creation.'.format(
-                    event['track']))
-                track_id = add_track(event['track'])
-                tracks[event['track']] = track_id
+            if event['track']:
+                if not(event['track'] in tracks):
+                    print('WARNING: Track {} does not exist'.format(event['track']))
+                    event['track'] = None
 
-        post_event(event)
+            post_event(event)
+        except Exception as e:
+            print(json.dumps(event, indent=2))
+            print(event['guid'])
+            print(e)
 
     schedule.foreach_event(process)
 
