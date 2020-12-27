@@ -371,7 +371,7 @@ class Schedule:
             fp.write(self.xml())
 
         # validate xml
-        result = os.system('{validator} {prefix}.schedule.xml 2>&1 {filter}'.format(validator=validator, prefix=prefix, filter=validator_filter) + '; exit ${PIPESTATUS[0]}')
+        result = os.system('/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {filter}'.format(validator=validator, prefix=prefix, filter=validator_filter) + '; exit ${PIPESTATUS[0]}"')
         if result != 0 and validator_filter:
             print('  (some validation errors might be hidden by validator_filter)')
 

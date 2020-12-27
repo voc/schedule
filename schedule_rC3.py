@@ -234,7 +234,7 @@ def main():
     print()
 
     if not local or options.git:
-        content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -i -e "^[+-]  " | grep -v version > /dev/null')
+        content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
 
         if content_did_not_change:
             print('nothing relevant changed, reverting to previous state')
