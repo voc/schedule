@@ -36,6 +36,7 @@ def post_event(event):
         raise Exception(r.json()['error'])
     return r
 
+
 def upsert_event(event):
     if event['track']:
         if not(event['track'] in tracks):
@@ -47,6 +48,13 @@ def upsert_event(event):
         del event['room_id']
 
     post_event(event)
+
+
+def depublish_event(event_guid):
+    post_event({
+        'guid': event_guid.event,
+        'public': False
+    })
 
 skip = False
 tracks = []

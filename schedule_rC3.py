@@ -253,19 +253,18 @@ def main():
         changed_items = repo.index.diff('HEAD~1', 'events')
         for i in changed_items:
             write(i.change_type + ': ')
-            if i.change_type == 'D':
-                #TODO delete event in API
-                event_guid = os.path.splitext(os.path.basename(i.a_path))[0]
-                print('WARNING: Event {} has to be deleted manually'.format(event_guid))
-            else:
-                try:
+            try:
+                if i.change_type == 'D':
+                    event_guid = os.path.splitext(os.path.basename(i.a_path))[0]
+                    rc3hub.depublish_event(event_guid)
+                else:
                     event = load_json(i.a_path)
                     if event.get('origin') != 'rc3.world':
                         rc3hub.upsert_event(event)
-                except Exception as e:
-                    print(e)
-                    if options.exit_when_exception_occours:
-                        raise e
+            except Exception as e:
+                print(e)
+                if options.exit_when_exception_occours:
+                    raise e
         print("\n\n")
         exit(2)
 
