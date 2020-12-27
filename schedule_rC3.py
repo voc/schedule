@@ -304,6 +304,7 @@ def harmonize_event_type(event):
         "Talk 20+5 Min": "Talk",
         "Talk 60min + 20min Q&A": "Talk",
         "Vortrag": "Talk",
+        "Vortrag Maintrack": "Track",
         "lecture": "Talk",
         "Beitrag": "Talk",
 
@@ -317,6 +318,7 @@ def harmonize_event_type(event):
         # OTHER
         "other": "Other",
         "Other": "Other",
+        "Pausenfüllmaterial": "Other",
         "": "Other",
 
         # PODIUM
