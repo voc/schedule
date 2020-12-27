@@ -249,6 +249,9 @@ class Schedule:
         else:
             return self._schedule['schedule']['conference']
 
+    def conference_start(self):
+        return dateutil.parser.parse(self.conference('start').split('T')[0])
+
     def days(self):
         # TODO return _days object list instead of raw dict/json?
         return self._schedule['schedule']['conference']['days']
@@ -343,7 +346,7 @@ class Schedule:
             if self.stats.max_id is None or event['id'] > self.stats.max_id:
                 self.stats.max_id = event['id']
 
-            for person in event['persons']:
+            for person in event.get('persons', []):
                 if isinstance(person['id'], int) or  person['id'].isnumeric():
                     if self.stats.person_min_id is None or int(person['id']) < self.stats.person_min_id:
                         self.stats.person_min_id = int(person['id'])
@@ -379,9 +382,7 @@ class Schedule:
         return json.dumps(self._schedule, indent=2, cls=ScheduleEncoder)
 
     def add_events_from(self, other_schedule, id_offset = None, options = None):
-        primary_start = dateutil.parser.parse(self.conference()["start"])
-        other_start = dateutil.parser.parse(other_schedule.conference()["start"])
-        offset = (other_start - primary_start).days
+        offset = (other_schedule.conference_start() - other_schedule.conference_start()).days
 
         self._schedule['schedule']['version'] += " " + other_schedule.version()
 

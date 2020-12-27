@@ -380,8 +380,12 @@ def harmonize_event_type(event):
         # LIVE-PODCAST
         "Live-Podcast": "Live-Podcast",
     }
-    if event['type'] in type_mapping:
+    if event.get('type') in type_mapping:
         event['type'] = type_mapping[event['type']]
+
+    if not(event.get('type')):
+        event['type'] = "Other"
+
 
 
 if __name__ == '__main__':
