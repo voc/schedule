@@ -342,6 +342,7 @@ def harmonize_event_type(event):
         "Vortrag Maintrack": "Track",
         "lecture": "Talk",
         "Beitrag": "Talk",
+        "Track": "Talk",
 
         # LIGHTNING TALK
         "lightning_talk": "Lightning Talk",
