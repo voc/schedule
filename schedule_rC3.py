@@ -386,6 +386,9 @@ def harmonize_event_type(event):
     if not(event.get('type')):
         event['type'] = "Other"
 
+    if event.get('language') is not None:
+        event['language'] = event['language'].lower()
+
 
 
 if __name__ == '__main__':
