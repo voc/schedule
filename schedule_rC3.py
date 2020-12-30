@@ -185,12 +185,6 @@ def main():
         return not(key in frab_rooms)
     export_filtered_schedule('non-frab', channel_schedule, non_frab_filter)
 
-    # remove talks starting before 9 am
-    full_schedule.foreach_day_room(remove_too_early_events)
-
-    # write all events to one big schedule.json/xml
-    write('\nExporting... ')
-    full_schedule.export('everything')
 
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
@@ -210,6 +204,11 @@ def main():
             }, fp, indent=2, cls=ScheduleEncoder)
 
     full_schedule.foreach_event(export_event)
+
+
+    # write all events to one big schedule.json/xml
+    write('\nExporting... ')
+    full_schedule.export('everything')
 
     # expose metadata to own file
     with open("meta.json", "w") as fp:
