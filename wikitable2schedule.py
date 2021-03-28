@@ -28,7 +28,7 @@ import voc.tools
 
 voc.tools.set_base_id(1000)
 
-year = 2020
+year = 2021
 wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
 output_dir = "/srv/www/schedule/divoc"
 secondary_output_dir = "./divoc"
@@ -37,11 +37,11 @@ secondary_output_dir = "./divoc"
 template = { "schedule": {
         "version": "1.0",
         "conference": {
-            "title": "divoc - ptt",
-            "acronym": "divoc3",
+            "title": "divoc - r2r",
+            "acronym": "divoc-r2r",
             "daysCount": 3,
-            "start": "2020-09-04",
-            "end":   "2020-09-06",
+            "start": "2021-04-02",
+            "end":   "2021-04-05",
             "timeslot_duration": "00:15",
             "time_zone_name": "Europe/Amsterdam",
             "days" : [],
@@ -66,8 +66,8 @@ def fetch_schedule(wiki_url):
     
     for i in range(out['schedule']['conference']['daysCount']):
         date = conference_start_date + timedelta(days=i)
-        start = date + timedelta(hours=9)     # conference day starts at 10:00
-        end = start + timedelta(hours=20) # conference day lasts 17 hours
+        start = date + timedelta(hours=9) # conference day starts at 9:00
+        end = start + timedelta(hours=20) # conference day lasts 20 hours
         
         days.append( OrderedDict([
             ('index', i),
@@ -110,9 +110,11 @@ def fetch_schedule(wiki_url):
 
         # ignore sections which are not in target time span
         if day_dt < conference_start_date:
+            print(' ignoring ' + section_title)
             continue
 
         rows = element.find_all('tr')
+        event_n = None
 
         # skip header row
         rows_iter = iter(rows)

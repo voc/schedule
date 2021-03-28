@@ -28,7 +28,7 @@ local = False
 
 xc3 = 'divoc'
 wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
-main_schedule_url = 'https://talks.mrmcd.net/ptt/schedule/export/schedule.json'
+main_schedule_url = 'https://pretalx.c3voc.de/divoc-reboot-to-respawn-2021/schedule/export/schedule.json'
 
 additional_schedule_urls = [
 ]

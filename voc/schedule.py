@@ -381,7 +381,7 @@ class Schedule:
     def __str__(self):
         return json.dumps(self._schedule, indent=2, cls=ScheduleEncoder)
 
-    def add_events_from(self, other_schedule, id_offset = None, options = None):
+    def add_events_from(self, other_schedule, id_offset = None, options = {}):
         offset = (other_schedule.conference_start() - other_schedule.conference_start()).days
 
         self._schedule['schedule']['version'] += " " + other_schedule.version()
