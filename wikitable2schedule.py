@@ -91,18 +91,18 @@ def fetch_schedule(wiki_url):
     #soup = BeautifulSoup(open("divoc-sessions.xhtml"), 'lxml')
 
     #sections = soup.find_all('h3')
-    elements = soup.select('h3, table.inline')
+    elements = soup.select('h3, h2, table.inline')
 
     print('Processing sections')
     section_title = None
     for element in elements:
-        if element.name == 'h3':
+        if element.name == 'h3' or element.name == 'h2':
             section_title = element
             continue
 
         # ignore some sections
         if element.name == 'table':
-            if section_title.attrs['id'] in ['durchgehende_treffpunkte_und_assemblies', 'wochentag_datum']:
+            if section_title.attrs['id'] in ['durchgehende_treffpunkte_und_assemblies', 'wochentag_datum', 'regelmaessige_treffen']:
                 continue
 
         day = section_title.text.split(',')[1].strip() + "{}".format(year)
