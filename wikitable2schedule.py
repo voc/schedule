@@ -1,4 +1,5 @@
  # -*- coding: UTF-8 -*-
+from typing import Dict
 
 import requests
 import json
@@ -16,7 +17,7 @@ import re
 from voc.schedule import Schedule, ScheduleEncoder, Event, set_validator_filter
 
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 
 days = []
@@ -52,6 +53,24 @@ template = { "schedule": {
 
 def get_track_id(track_name):
     return 10
+
+
+def parse_html_formatted_links(td: Tag) -> Dict[str, str]:
+    """
+    Returns a dictionary containing all HTML formatted links found in the given table row.
+
+    - Key: The URL of the link.
+    - Value: The title of the link. Might be the same as the URL.
+
+    :param td: A table row HTML tag.
+    """
+    links = {}
+    for link in td.find_all("a"):
+        href = link.attrs["href"]
+        title = link.attrs["title"].strip()
+        text = link.get_text().strip()
+        links[href] = title if text is None else text
+    return links
 
 
 def fetch_schedule(wiki_url):
@@ -122,10 +141,12 @@ def fetch_schedule(wiki_url):
 
         for row in rows_iter:
             data = {}
+            external_links = {}
             for td in row.find_all('td'):
                 #if type(td) != NoneType:
                 key = td.attrs['class'][0]
                 data[key] = re.compile(r'\s*\n\s*').split(td.get_text().strip())
+                external_links = parse_html_formatted_links(td)
             try:
                 [start, end] = [ tz.localize(datetime.strptime(day + x, '%d.%m.%Y%H:%M')) for x in re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0]) ]
                 title = data['col1'][0]
@@ -167,7 +188,7 @@ def fetch_schedule(wiki_url):
                         #('#text', p),
                     ]) for p in persons.split(',') ]),
                     ('links', [ 
-                        {'url': url, 'title': url} for url in links 
+                        {'url': link_url, 'title': link_title} for link_url, link_title in external_links.items()
                     ])
                 ])
                 
