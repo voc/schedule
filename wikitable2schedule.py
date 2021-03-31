@@ -112,6 +112,11 @@ def fetch_schedule(wiki_url):
 
     print('Processing sections')
     section_title = None
+    sections_to_ignore = [
+        'durchgehende_treffpunkte_und_assemblies',
+        'wochentag_datum',
+        'regelmaessige_treffen'
+    ]
     for element in elements:
         if element.name == 'h3' or element.name == 'h2':
             section_title = element
@@ -119,7 +124,7 @@ def fetch_schedule(wiki_url):
 
         # ignore some sections
         if element.name == 'table':
-            if section_title.attrs['id'] in ['durchgehende_treffpunkte_und_assemblies', 'wochentag_datum', 'regelmaessige_treffen']:
+            if section_title.attrs['id'] in sections_to_ignore:
                 continue
 
         day = section_title.text.split(',')[1].strip() + "{}".format(year)
