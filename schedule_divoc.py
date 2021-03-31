@@ -94,6 +94,10 @@ def main():
     print('  version: ' + full_schedule.version())
     print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
 
+    repo = gitlib.Repo(search_parent_directories=True)
+    git_hash = repo.head.object.hexsha
+    full_schedule._schedule['schedule']['generator'] = { "name": "voc/schedule/divoc", "version": git_hash }
+
     # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
