@@ -15,6 +15,7 @@ headers = {
     'Accept': 'application/json'
 }
 
+
 def get(path):
     print('GET ' + url + path)
     r = requests.get(url + path, headers=headers)
@@ -56,6 +57,7 @@ def depublish_event(event_guid):
         'public': False
     })
 
+
 skip = False
 tracks = []
 
@@ -65,11 +67,12 @@ def init(channels):
 
     tracks = {x['name']: x['id'] for x in get('tracks')}
 
+
 def full_sync():
     schedule = Schedule.from_url('https://data.c3voc.de/rC3/everything.schedule.json')
 
-    #schedule = Schedule.from_url('https://data.c3voc.de/rC3/channels.schedule.json')
-    #schedule = Schedule.from_file('rC3/channels.schedule.json')
+    # schedule = Schedule.from_url('https://data.c3voc.de/rC3/channels.schedule.json')
+    # schedule = Schedule.from_file('rC3/channels.schedule.json')
     
     channel_room_ids = {x['schedule_room']: x['room_guid'] for x in channels}
     rooms = get('rooms')

@@ -12,6 +12,7 @@ import sys
 import traceback
 import optparse
 from voc.schedule import Schedule, ScheduleEncoder, Event, set_validator_filter
+from wikitable2schedule import fetch_schedule
 
 tz = pytz.timezone('Europe/Amsterdam')
 
@@ -63,15 +64,14 @@ if not os.path.exists(output_dir):
         exit(-1)
 os.chdir(output_dir)
 
-#if not os.path.exists("events"):
+# if not os.path.exists("events"):
 #    os.mkdir("events")
 
-
-from wikitable2schedule import fetch_schedule
 
 def write(x):
     sys.stdout.write(x)
     sys.stdout.flush()
+
 
 def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
 
@@ -91,19 +91,16 @@ def main():
     print('  version: ' + full_schedule.version())
     print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
 
-
-
-    # add addional rooms from this local config now, so they are in the correct order
+    # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
-
 
     previous_max_id = 0
 
     # add events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
         try:
-            #other_schedule = get_schedule(entry['name'], entry['url'])
+            # other_schedule = get_schedule(entry['name'], entry['url'])
             other_schedule = Schedule.from_url(entry['url'])
 
             if 'version' in other_schedule.schedule():
@@ -120,7 +117,7 @@ def main():
             max_id = other_schedule.stats.max_id + id_offset
             print('    after adding the offset, ids reach from {} to {}'.format(min_id, max_id))
             if previous_max_id >= min_id:
-                 print('  WARNING: schedule "{}" has ID overlap with previous schedule'.format(entry['name']))
+                print('  WARNING: schedule "{}" has ID overlap with previous schedule'.format(entry['name']))
             previous_max_id = max_id
 
             if full_schedule.add_events_from(other_schedule, id_offset=id_offset, options=entry.get('options')):
@@ -146,13 +143,13 @@ def main():
     write('\nExporting... ')
     full_schedule.export('everything')
 
-    # write seperate file for each event, to get better git diffs
-    #full_schedule.foreach_event(lambda event: event.export('events/'))
-    #def export_event(event):
+    # write separate file for each event, to get better git diffs
+    # full_schedule.foreach_event(lambda event: event.export('events/'))
+    # def export_event(event):
     #    with open("events/{}.json".format(event['guid']), "w") as fp:
     #        json.dump(event, fp, indent=2, cls=ScheduleEncoder)
     #
-    #full_schedule.foreach_event(export_event)
+    # full_schedule.foreach_event(export_event)
 
     print('\nDone')
     print('  version: ' + full_schedule.version())
@@ -173,7 +170,8 @@ def main():
         else:
             git('add *.json *.xml')
             git('commit -m "version {}"'.format(full_schedule.version()))
-            #git('push')
+            # git('push')
+
 
 if __name__ == '__main__':
     main()

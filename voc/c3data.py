@@ -9,7 +9,7 @@ transport = AIOHTTPTransport(
   url=getenv('C3D_URL', 'https://data.c3voc.de/graphql'), 
   headers={'Authorization': getenv('C3D_TOKEN', 'Basic|Bearer XXXX')}
 )
-#transport = AIOHTTPTransport(url="http://localhost:5001/graphql")
+# transport = AIOHTTPTransport(url="http://localhost:5001/graphql")
 
 # Create a GraphQL client using the defined transport
 client = Client(transport=transport, fetch_schema_from_transport=True)
@@ -81,7 +81,6 @@ def create_conference(schedule: Schedule):
     return result
 
 
-
 def add_room(confernce_id, room_name):
   result = client.execute(gql('''
     mutation addRoom($input: UpsertRoomInput!) {
@@ -100,6 +99,7 @@ def add_room(confernce_id, room_name):
 
   print(result)
   return result['upsertRoom']['room']['guid']
+
 
 def add_event(conference_id, room_id, event):
   input = {
@@ -131,15 +131,16 @@ def add_event(conference_id, room_id, event):
     print(e)
     print()
 
+
 def test():
-  #schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
-  #schedule = Schedule.from_file('divoc/everything.schedule.json')
+  # schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
+  # schedule = Schedule.from_file('divoc/everything.schedule.json')
   schedule = Schedule.from_file('36c3/everything.schedule.json')
 
-  #result = create_conference(schedule)
-  conference_id = 1 # result['conference']['id']
-  room_ids = {} #{ x['name']: x['guid'] for x in result['conference']['rooms']['nodes'] }
-  #print(room_ids)
+  # result = create_conference(schedule)
+  conference_id = 1  # result['conference']['id']
+  room_ids = {}  # { x['name']: x['guid'] for x in result['conference']['rooms']['nodes'] }
+  # print(room_ids)
 
   def process(event):
     if event['room'] in room_ids:

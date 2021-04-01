@@ -10,17 +10,18 @@ import os
 import re
 import copy
 from lxml import etree as ET
-#from xml.etree import cElementTree as ET
+# from xml.etree import cElementTree as ET
 
 try:
     import voc.tools as tools
 except:
     import tools
 
-#validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
-#validator = 'xmllint --noout --schema {path}/validator/xsd/schedule.xml.xsd'.format(path=sys.path[0])
+# validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
+# validator = 'xmllint --noout --schema {path}/validator/xsd/schedule.xml.xsd'.format(path=sys.path[0])
 validator = 'xmllint --noout --schema {path}/validator/xsd/schedule-without-person.xml.xsd'.format(path=sys.path[0])
 validator_filter = ''
+
 
 def set_validator_filter(filter):
     global validator_filter
@@ -35,11 +36,12 @@ class Day:
     _day = None
     start = None
     end = None
+
     def __init__(self, i = None, year = None, month = 12, day = None, json = None):
         if json:
             self._day = json
         elif i and year and day:
-           self._day = {
+            self._day = {
                 "index": i+1,
                 "date": "{}-12-{}".format(year, day),
                 "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
@@ -104,8 +106,8 @@ class Event(collections.abc.Mapping):
     # export all attributes which are not part of rC3 core event model
     def meta(self):
         r = OrderedDict(self._event.items())
-        #r['local_id'] = self._event['id']
-        #del r["id"]
+        # r['local_id'] = self._event['id']
+        # del r["id"]
         del r['guid']
         del r['slug']
         del r['room']
@@ -114,8 +116,8 @@ class Event(collections.abc.Mapping):
         del r['duration']
         del r['track_id']
         del r['track']
-        #del r['persons']
-        #if 'answers' in r:
+        # del r['persons']
+        # if 'answers' in r:
         #    del r['answers']
         # fix wrong formatted links
         if len(r['links']) > 0 and isinstance(r['links'][0], str):
@@ -131,9 +133,7 @@ class Event(collections.abc.Mapping):
 
 
 class Schedule:
-    '''
-    Schedule class with import and export methods
-    '''
+    """ Schedule class with import and export methods """
     _schedule = None
     _days = []
     _room_ids = {}
@@ -143,7 +143,7 @@ class Schedule:
 
     def __init__(self, name = None, url = None, json = None):
         # TODO remove or revert class methods below to object methods
-        #if url:
+        # if url:
         #    self.from_url(url)
         if json:
             self._schedule = json
@@ -154,12 +154,12 @@ class Schedule:
     @classmethod
     def from_url(cls, url):
         print("Requesting " + url)
-        schedule_r = requests.get(url) #, verify=False)
+        schedule_r = requests.get(url)  # , verify=False)
 
         if schedule_r.ok is False:
             raise Exception("  Request failed, HTTP {0}.".format(schedule_r.status_code))
 
-        #self.schedule = tools.parse_json(schedule_r.text)
+        # self.schedule = tools.parse_json(schedule_r.text)
 
         # this more complex way is necessary
         # to maintain the same order as in the input file
@@ -269,7 +269,6 @@ class Schedule:
 
         return rooms.keys()
 
-
     def add_rooms(self, rooms):
         for day in self._schedule['schedule']['conference']['days']:
             for key in rooms:
@@ -286,7 +285,7 @@ class Schedule:
         if not data or len(data) == 0:
             return
 
-        #print('  adding room {} to day {} with {} events'.format(target_room, day, len(data)))
+        # print('  adding room {} to day {} with {} events'.format(target_room, day, len(data)))
         target_day_rooms = self.days()[day-1]['rooms']
 
         if self.room_exists(day, target_room):
@@ -306,7 +305,6 @@ class Schedule:
             self.add_room(day, event['room'])
 
         self.days()[day-1]['rooms'][event['room']].append(event)
-
 
     def foreach_event(self, func):
         out = []
@@ -354,7 +352,6 @@ class Schedule:
                         self.stats.person_max_id = int(person['id'])
 
         self.foreach_event(calc_stats)
-      
 
     def get_day_from_time(self, start_time):
         for i in range(self.conference()['daysCount']):
@@ -471,7 +468,6 @@ class Schedule:
 
         return result[0]
 
-
     def remove_event(self, id = None, guid = None):
         if not id and not guid:
             raise RuntimeError('Please provide either id or guid')
@@ -556,7 +552,8 @@ class Schedule:
                             k = 'event'
 
                         if k == 'days':
-                            # in the xml schedule days are not a child of a conference, but directly in the document node
+                            # in the xml schedule days are not a child of a conference,
+                            # but directly in the document node
                             node_ = root_node
 
                         # special handing for collections: days, rooms etc.
@@ -605,6 +602,7 @@ class Schedule:
             return ET.tounicode(root_node, pretty_print = True)
         else:
             return ET.tostring(root_node, pretty_print = True, encoding='UTF-8')
+
 
 class ScheduleEncoder(json.JSONEncoder):
     def default(self, obj):
