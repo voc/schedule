@@ -160,14 +160,13 @@ def fetch_schedule(wiki_url):
                 guid = voc.tools.gen_uuid('{}-{}'.format(start, links[0]))   
                 local_id = voc.tools.get_id(guid)
                 duration = (end - start).total_seconds()/60
-                
 
-                if 'Workshop1' in title or 'Workshop1' in abstract:
-                    room = 'Workshops1'
+                if 'Workshop3' in title or 'Workshop3' in abstract:
+                    room = 'Workshop 3'
                 elif 'Workshop2' in title or 'Workshop2' in abstract:
-                    room = 'Workshops2'
-                elif 'Workshop3' in title or 'Workshop3' in abstract:
-                    room = 'Workshops3'
+                    room = 'Workshop 2'
+                elif 'Workshop' in title or 'Workshop' in abstract:
+                    room = 'Workshop 1'
                 else:
                     room = 'Self-organized'
                 
