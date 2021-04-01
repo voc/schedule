@@ -161,8 +161,15 @@ def fetch_schedule(wiki_url):
                 local_id = voc.tools.get_id(guid)
                 duration = (end - start).total_seconds()/60
                 
-                # room = 'Kidspace' if 'Kidspace' in persons else 'Self-organized'
-                room = 'Workshops' if 'Workshop' in title or 'Workshop' in abstract else 'Self-organized'
+
+                if 'Workshop1' in title or 'Workshop1' in abstract:
+                    room = 'Workshops1'
+                elif 'Workshop2' in title or 'Workshop2' in abstract:
+                    room = 'Workshops2'
+                elif 'Workshop3' in title or 'Workshop3' in abstract:
+                    room = 'Workshops3'
+                else:
+                    room = 'Self-organized'
                 
                 event_n = OrderedDict([
                     ('id', local_id),
