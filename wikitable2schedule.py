@@ -1,4 +1,4 @@
- # -*- coding: UTF-8 -*-
+# -*- coding: UTF-8 -*-
 from typing import Dict
 
 import requests
@@ -19,13 +19,12 @@ from voc.schedule import Schedule, ScheduleEncoder, Event, set_validator_filter
 
 from bs4 import BeautifulSoup, Tag
 
+# some functions used in multiple files of this collection
+import voc.tools
 
 days = []
 local = False
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
-
-# some functions used in multiple files of this collection
-import voc.tools
 
 voc.tools.set_base_id(1000)
 
@@ -35,7 +34,7 @@ output_dir = "/srv/www/schedule/divoc"
 secondary_output_dir = "./divoc"
 
 
-template = { "schedule": {
+template = {"schedule": {
         "version": "1.0",
         "conference": {
             "title": "divoc - r2r",
@@ -45,11 +44,12 @@ template = { "schedule": {
             "end":   "2021-04-05",
             "timeslot_duration": "00:15",
             "time_zone_name": "Europe/Amsterdam",
-            "days" : [],
+            "days": [],
             "base_url": "https://di.c3voc.de/",
         },
     }
 }
+
 
 def get_track_id(track_name):
     return 10
@@ -75,7 +75,6 @@ def parse_html_formatted_links(td: Tag) -> Dict[str, str]:
 
 def fetch_schedule(wiki_url):
     global template, days
-    
 
     # TODO refactor schedule class, to allow more generic templates
 
@@ -85,20 +84,19 @@ def fetch_schedule(wiki_url):
     
     for i in range(out['schedule']['conference']['daysCount']):
         date = conference_start_date + timedelta(days=i)
-        start = date + timedelta(hours=9) # conference day starts at 9:00
-        end = start + timedelta(hours=20) # conference day lasts 20 hours
+        start = date + timedelta(hours=9)  # conference day starts at 9:00
+        end = start + timedelta(hours=20)  # conference day lasts 20 hours
         
-        days.append( OrderedDict([
+        days.append(OrderedDict([
             ('index', i),
-            ('date' , date),
+            ('date', date),
             ('start', start),
             ('end', end),
         ]))
-        
-        
+
         out['schedule']['conference']['days'].append(OrderedDict([
             ('index', i+1),
-            ('date' , date.strftime('%Y-%m-%d')),
+            ('date', date.strftime('%Y-%m-%d')),
             ('day_start', start.isoformat()),
             ('day_end', end.isoformat()),
             ('rooms', OrderedDict())
@@ -107,13 +105,18 @@ def fetch_schedule(wiki_url):
     print("Requesting wiki events")
     
     soup = BeautifulSoup(requests.get(wiki_url).text, 'html5lib')
-    #soup = BeautifulSoup(open("divoc-sessions.xhtml"), 'lxml')
+    # soup = BeautifulSoup(open("divoc-sessions.xhtml"), 'lxml')
 
-    #sections = soup.find_all('h3')
+    # sections = soup.find_all('h3')
     elements = soup.select('h3, h2, table.inline')
 
     print('Processing sections')
     section_title = None
+    sections_to_ignore = [
+        'durchgehende_treffpunkte_und_assemblies',
+        'wochentag_datum',
+        'regelmaessige_treffen'
+    ]
     for element in elements:
         if element.name == 'h3' or element.name == 'h2':
             section_title = element
@@ -121,7 +124,7 @@ def fetch_schedule(wiki_url):
 
         # ignore some sections
         if element.name == 'table':
-            if section_title.attrs['id'] in ['durchgehende_treffpunkte_und_assemblies', 'wochentag_datum', 'regelmaessige_treffen']:
+            if section_title.attrs['id'] in sections_to_ignore:
                 continue
 
         day = section_title.text.split(',')[1].strip() + "{}".format(year)
@@ -143,7 +146,7 @@ def fetch_schedule(wiki_url):
             data = {}
             external_links = {}
             for td in row.find_all('td'):
-                #if type(td) != NoneType:
+                # if type(td) != NoneType:
                 key = td.attrs['class'][0]
                 data[key] = re.compile(r'\s*\n\s*').split(td.get_text().strip())
                 external_links = parse_html_formatted_links(td)
@@ -158,7 +161,7 @@ def fetch_schedule(wiki_url):
                 local_id = voc.tools.get_id(guid)
                 duration = (end - start).total_seconds()/60
                 
-                #room = 'Kidspace' if 'Kidspace' in persons else 'Self-organized'
+
                 if 'Workshop1' in title or 'Workshop1' in abstract:
                     room = 'Workshops1'
                 elif 'Workshop2' in title or 'Workshop2' in abstract:
@@ -186,14 +189,14 @@ def fetch_schedule(wiki_url):
                     ('subtitle', ''),
                     ('track', 'Workshop'),
                     ('type', 'Workshop'),
-                    ('language', 'de' ),
+                    ('language', 'de'),
                     ('abstract', abstract or ''),
-                    ('description', '' ),
-                    ('persons', [ OrderedDict([
+                    ('description', ''),
+                    ('persons', [OrderedDict([
                         ('id', 0),
                         ('public_name', p.strip()),
-                        #('#text', p),
-                    ]) for p in persons.split(',') ]),
+                        # ('#text', p),
+                    ]) for p in persons.split(',')]),
                     ('links', [ 
                         {'url': link_url, 'title': link_title} for link_url, link_title in external_links.items()
                     ])
@@ -210,14 +213,14 @@ def fetch_schedule(wiki_url):
                 print(data)
                 print(json.dumps(event_n, indent=2))
                 print()
-        
-            
-    #print(json.dumps(out, indent=2))
+
+    # print(json.dumps(out, indent=2))
     print()
     print()
     
     schedule = Schedule(json=out)
     return schedule
+
 
 def main():
 
@@ -226,6 +229,7 @@ def main():
     
     print('')
     print('end')
+
 
 def get_day(start_time):
     for day in days:
@@ -237,11 +241,13 @@ def get_day(start_time):
     print("  illegal start time: " + start_time.isoformat())   
     return None
 
+
 def first(x):
     if len(x) == 0:
         return None
     else:
         return x[0]
+
 
 if __name__ == '__main__':
 
@@ -260,5 +266,5 @@ if __name__ == '__main__':
 
     if not local:  
         os.system("git add *.json *.xml")
-        os.system("git commit -m 'updates from " + str(datetime.now()) +  "'")
+        os.system("git commit -m 'updates from " + str(datetime.now()) + "'")
         os.system("git push")
