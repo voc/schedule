@@ -1,26 +1,21 @@
 # -*- coding: UTF-8 -*-
 from typing import Dict
 
-import requests
-import json
-from collections import OrderedDict
-import dateutil.parser
-from datetime import datetime, time
-from datetime import timedelta
-import locale
-import pytz
 import os
 import sys
-import hashlib
+import json
+from collections import OrderedDict
+from datetime import datetime, timedelta
+import locale
 import re
-
-from voc.schedule import Schedule, ScheduleEncoder, Event, set_validator_filter
-
-
+import traceback
+import requests
+import pytz
+import dateutil.parser
 from bs4 import BeautifulSoup, Tag
 
-# some functions used in multiple files of this collection
 import voc.tools
+from voc.schedule import Schedule
 
 days = []
 local = False
@@ -35,20 +30,19 @@ secondary_output_dir = "./divoc"
 
 
 template = {"schedule": {
-        "version": "1.0",
-        "conference": {
-            "title": "divoc - r2r",
-            "acronym": "divoc-r2r",
-            "daysCount": 3,
-            "start": "2021-04-02",
-            "end":   "2021-04-05",
-            "timeslot_duration": "00:15",
-            "time_zone_name": "Europe/Amsterdam",
-            "days": [],
-            "base_url": "https://di.c3voc.de/",
-        },
-    }
-}
+    "version": "1.0",
+    "conference": {
+        "title": "divoc - r2r",
+        "acronym": "divoc-r2r",
+        "daysCount": 4,
+        "start": "2021-04-02",
+        "end":   "2021-04-05",
+        "timeslot_duration": "00:15",
+        "time_zone_name": "Europe/Amsterdam",
+        "days": [],
+        "base_url": "https://di.c3voc.de/",
+    },
+}}
 
 
 def get_track_id(track_name):
@@ -81,12 +75,12 @@ def fetch_schedule(wiki_url):
     out = template
     tz = pytz.timezone(out['schedule']['conference']['time_zone_name'])
     conference_start_date = tz.localize(dateutil.parser.parse(out['schedule']['conference']['start'] + "T00:00:00"))
-    
+
     for i in range(out['schedule']['conference']['daysCount']):
         date = conference_start_date + timedelta(days=i)
         start = date + timedelta(hours=9)  # conference day starts at 9:00
-        end = start + timedelta(hours=20)  # conference day lasts 20 hours
-        
+        end = start + timedelta(hours=23)  # conference day lasts 20 hours
+
         days.append(OrderedDict([
             ('index', i),
             ('date', date),
@@ -95,7 +89,7 @@ def fetch_schedule(wiki_url):
         ]))
 
         out['schedule']['conference']['days'].append(OrderedDict([
-            ('index', i+1),
+            ('index', i + 1),
             ('date', date.strftime('%Y-%m-%d')),
             ('day_start', start.isoformat()),
             ('day_end', end.isoformat()),
@@ -151,15 +145,25 @@ def fetch_schedule(wiki_url):
                 data[key] = re.compile(r'\s*\n\s*').split(td.get_text().strip())
                 external_links = parse_html_formatted_links(td)
             try:
-                [start, end] = [ tz.localize(datetime.strptime(day + x, '%d.%m.%Y%H:%M')) for x in re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0]) ]
+                time = re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0])
                 title = data['col1'][0]
                 abstract = "\n".join(data['col1'][1:])
                 persons = data['col2'][0]
                 links = data['col2'][1:]
 
-                guid = voc.tools.gen_uuid('{}-{}'.format(start, links[0]))   
+                if time == ['00:00', '24:00']:
+                    print('\n ignore 24h event: {}'.format(title))
+                    continue
+                start = tz.localize(datetime.strptime(day + ' ' + time[0], '%d.%m.%Y %H:%M'))
+                try:
+                    end = tz.localize(datetime.strptime(day + ' ' + time[1], '%d.%m.%Y %H:%M'))
+                except ValueError:
+                    print('\n end time {} is invalid, assuming duration of 2h for event: {}'.format(time[1], title))
+                    end = start + timedelta(hours=2)
+
+                guid = voc.tools.gen_uuid('{}-{}'.format(start, next(iter(links), title)))
                 local_id = voc.tools.get_id(guid)
-                duration = (end - start).total_seconds()/60
+                duration = (end - start).total_seconds() / 60
 
                 if 'Workshop3' in title or 'Workshop3' in abstract:
                     room = 'Workshop 3'
@@ -169,7 +173,7 @@ def fetch_schedule(wiki_url):
                     room = 'Workshop 1'
                 else:
                     room = 'Self-organized'
-                
+
                 event_n = OrderedDict([
                     ('id', local_id),
                     ('guid', guid),
@@ -179,10 +183,10 @@ def fetch_schedule(wiki_url):
                     ('duration', '%d:%02d' % divmod(duration, 60)),
                     ('room', room),
                     ('slug', '{slug}-{id}-{name}'.format(
-                            slug=out['schedule']['conference']['acronym'].lower(),
-                            id=local_id,
-                            name=voc.tools.normalise_string(title.lower())
-                        )),
+                        slug=out['schedule']['conference']['acronym'].lower(),
+                        id=local_id,
+                        name=voc.tools.normalise_string(title.lower())
+                    )),
                     ('url', wiki_url.split('?')[0]),
                     ('title', title),
                     ('subtitle', ''),
@@ -209,6 +213,7 @@ def fetch_schedule(wiki_url):
                 sys.stdout.write('.')
             except Exception as e:
                 print(e)
+                traceback.print_exc()
                 print(data)
                 print(json.dumps(event_n, indent=2))
                 print()
@@ -219,16 +224,6 @@ def fetch_schedule(wiki_url):
     
     schedule = Schedule(json=out)
     return schedule
-
-
-def main():
-
-    schedule = fetch_schedule(wiki_url)
-    schedule.export('wiki')
-    
-    print('')
-    print('end')
-
 
 def get_day(start_time):
     for day in days:
@@ -246,6 +241,14 @@ def first(x):
         return None
     else:
         return x[0]
+
+def main():
+
+    schedule = fetch_schedule(wiki_url)
+    schedule.export('wiki')
+    
+    print('')
+    print('end')
 
 
 if __name__ == '__main__':

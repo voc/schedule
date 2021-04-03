@@ -5,3 +5,5 @@ six
 lxml
 gql >= 3.0.0
 gitpython
+bs4
+html5lib

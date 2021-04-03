@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-
-import requests
-import json
-from collections import OrderedDict
-import dateutil.parser
-from datetime import datetime
-import pytz
 import os
 import sys
-import traceback
+import json
+import pytz
 import optparse
-from voc.schedule import Schedule, ScheduleEncoder, Event, set_validator_filter
+
+from voc.schedule import Schedule, ScheduleEncoder, Event
 from wikitable2schedule import fetch_schedule
 
 tz = pytz.timezone('Europe/Amsterdam')
@@ -154,8 +149,8 @@ def main():
     print('\nDone')
     print('  version: ' + full_schedule.version())
 
-    print('\n  rooms of day 1: ')
-    for room in full_schedule.day(1)['rooms']:
+    print('\n  rooms: ')
+    for room in full_schedule.rooms():
         print('   - ' + room)
 
     if not local or options.git:
