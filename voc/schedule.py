@@ -1,14 +1,15 @@
-import requests
+import sys
+import os
+import re
 import json
+import copy
+import requests
 import collections
 from collections import OrderedDict
 import dateutil.parser
 from datetime import datetime
 from urllib.parse import urlparse
-import sys
-import os
-import re
-import copy
+
 from lxml import etree as ET
 # from xml.etree import cElementTree as ET
 
@@ -37,15 +38,15 @@ class Day:
     start = None
     end = None
 
-    def __init__(self, i = None, year = None, month = 12, day = None, json = None):
+    def __init__(self, i=None, year=None, month=12, day=None, json=None):
         if json:
             self._day = json
         elif i and year and day:
             self._day = {
-                "index": i+1,
+                "index": i + 1,
                 "date": "{}-12-{}".format(year, day),
                 "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
-                "day_end": "{}-12-{}T04:00:00+01:00".format(year, day+1),
+                "day_end": "{}-12-{}T04:00:00+01:00".format(year, day + 1),
                 "rooms": {}
             }
         else:

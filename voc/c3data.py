@@ -1,10 +1,11 @@
+from os import getenv
+import json
+
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 from gql.transport.exceptions import TransportQueryError
 
 from schedule import Schedule, Event
-from os import getenv
-import json
 
 transport = AIOHTTPTransport(
     url=getenv('C3D_URL', 'https://data.c3voc.de/graphql'),
