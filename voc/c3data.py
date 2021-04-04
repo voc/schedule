@@ -5,7 +5,10 @@ from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 from gql.transport.exceptions import TransportQueryError
 
-from schedule import Schedule, Event
+try:
+    from .schedule import Schedule, Event
+except ImportError:
+    from schedule import Schedule, Event
 
 transport = AIOHTTPTransport(
     url=getenv('C3D_URL', 'https://data.c3voc.de/graphql'),
@@ -19,7 +22,7 @@ client = Client(transport=transport, fetch_schema_from_transport=True)
 
 def create_conference(schedule: Schedule):
     conference = schedule.conference()
-    input = {
+    data = {
         'conference': {
             'acronym': conference['acronym'],
             'title': conference['title'],
@@ -39,7 +42,7 @@ def create_conference(schedule: Schedule):
             }
         }
     }
-    #print(json.dumps(input, indent=2))
+    # print(json.dumps(data, indent=2))
 
     try:
         result = client.execute(gql('''
@@ -56,7 +59,7 @@ mutation createConferenceAndDaysAndRooms($input: CreateConferenceInput!) {
     }
   }
 }
-    '''), variable_values={'input': input})
+    '''), variable_values={'input': data})
         return result['createConference']
 
     except TransportQueryError as e:
@@ -65,44 +68,43 @@ mutation createConferenceAndDaysAndRooms($input: CreateConferenceInput!) {
             raise e
 
         # conference already exists, so try to get required infos
-        result = client.execute(gql('''
-query getConferenceAndRooms($acronym: String!) {
-  conference: conferenceByAcronym(acronym: $acronym) {
-    id
-    rooms {
-      nodes {
-        guid
-        name
-      }
-    }
-  }
-}'''), variable_values={
-            'acronym': conference['acronym']
-        })
+        result = get_conference(conference['acronym'])
         return result
+
+
+def get_conference(acronym):
+    return client.execute(gql('''
+      query getConferenceAndRooms($acronym: String!) {
+        conference: conferenceByAcronym(acronym: $acronym) {
+          id
+          rooms {
+            nodes {
+                guid
+                name
+            }
+          }
+        }
+      }'''), variable_values={'acronym': acronym})
 
 
 def add_room(confernce_id, room_name):
     result = client.execute(gql('''
-mutation addRoom($input: UpsertRoomInput!) {
-  upsertRoom(input: $input) {
-    room {
-      guid
-    }
-  }
-}'''), {'input': {
-        'room': {
-            'name': room_name,
-            'conferenceId': confernce_id
-        }}
-    })
+      mutation addRoom($input: UpsertRoomInput!) {
+        upsertRoom(input: $input) {
+          room { guid }
+        }
+      }'''), {'input': {'room': {
+          'name': room_name,
+          'conferenceId': confernce_id
+        }
+    }})
 
     print(result)
     return result['upsertRoom']['room']['guid']
 
 
 def add_event(conference_id, room_id, event):
-    input = {
+    data = {
         "event": {
             **(event.graphql()),
             "conferenceId": conference_id,
@@ -115,21 +117,61 @@ def add_event(conference_id, room_id, event):
     }
 
     query = gql('''
-    mutation upsertEvent($input: UpsertEventInput!) {
-      upsertEvent(input: $input) {
-        clientMutationId
+      mutation upsertEvent($input: UpsertEventInput!) {
+        upsertEvent(input: $input) {
+          clientMutationId
+        }
       }
-    }
-  ''')
+    ''')
 
-    # print(str(query))
     try:
-        client.execute(query, {'input': input})
+        client.execute(query, {'input': data})
     except Exception as e:
-        print(json.dumps(input, indent=2))
+        print(json.dumps(data, indent=2))
         print()
         print(e)
         print()
+
+
+def remove_event(event_guid):
+    try:
+        client.execute(gql('''
+          mutation deleteEvent($guid: UUID!) {
+            deleteEvent(input: {guid: $guid}) { deletedEventNodeId }
+          }
+        '''), {'input': {'guid': event_guid}})
+    except Exception as e:
+        print(json.dumps(data, indent=2))
+        print()
+        print(e)
+        print()
+
+
+class C3data:
+    conference_id = None
+    room_ids = {}
+
+    def __init__(self, schedule: Schedule, create=False):
+        result = create_conference(schedule) if create else get_conference(schedule.conference('acronym'))
+        self.conference_id = result['conference']['id']
+        self.room_ids = {x['name']: x['guid'] for x in result['conference']['rooms']['nodes']}
+
+    def upsert_event(self, event):
+        if event['room'] in self.room_ids:
+            room_id = self.room_ids[event['room']]
+        else:
+            print('WARNING: Room {} does not exist, creating.'.format(event['room']))
+            room_id = add_room(self.conference_id, event['room'])
+            self.room_ids[event['room']] = room_id
+        add_event(self.conference_id, room_id, Event(event))
+
+    def depublish_event(self, event_guid):
+        remove_event(event_guid)
+
+
+def push_schedule(schedule: Schedule, create=False):
+    c3data = C3data(schedule, create)
+    schedule.foreach_event(c3data.upsert_event)
 
 
 def test():
@@ -137,21 +179,7 @@ def test():
     schedule = Schedule.from_file('divoc/everything.schedule.json')
     # schedule = Schedule.from_file('rc3/everything.schedule.json')
 
-    result = create_conference(schedule)
-    conference_id = result['conference']['id']
-    room_ids = {x['name']: x['guid'] for x in result['conference']['rooms']['nodes']}
-    # print(room_ids)
-
-    def process(event):
-        if event['room'] in room_ids:
-            room_id = room_ids[event['room']]
-        else:
-            print('WARNING: Room {} does not exist, creating.'.format(event['room']))
-            room_id = add_room(conference_id, event['room'])
-            room_ids[event['room']] = room_id
-        add_event(conference_id, room_id, Event(event))
-
-    schedule.foreach_event(process)
+    push_schedule(schedule)
 
 
 if __name__ == '__main__':

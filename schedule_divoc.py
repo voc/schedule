@@ -5,8 +5,13 @@ import sys
 import json
 import pytz
 import optparse
+import git as gitlib
+
 
 from voc.schedule import Schedule, ScheduleEncoder, Event
+from voc.c3data import C3data
+from voc.tools import load_json
+
 from wikitable2schedule import fetch_schedule
 
 tz = pytz.timezone('Europe/Amsterdam')
@@ -23,6 +28,7 @@ options, args = parser.parse_args()
 local = False
 
 xc3 = 'divoc'
+acronym = 'divoc_r2r'
 wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
 main_schedule_url = 'https://pretalx.c3voc.de/divoc-reboot-to-respawn-2021/schedule/export/schedule.json'
 
@@ -83,6 +89,8 @@ def main():
     global local, options
 
     full_schedule = Schedule.from_url(main_schedule_url)
+    full_schedule.conference()['acronym'] = acronym
+
     print('  version: ' + full_schedule.version())
     print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
 
@@ -140,11 +148,23 @@ def main():
 
     # write separate file for each event, to get better git diffs
     # full_schedule.foreach_event(lambda event: event.export('events/'))
-    # def export_event(event):
-    #    with open("events/{}.json".format(event['guid']), "w") as fp:
-    #        json.dump(event, fp, indent=2, cls=ScheduleEncoder)
-    #
-    # full_schedule.foreach_event(export_event)
+
+    # to get proper a state, we first have to remove all event files from the previous run
+    if not local or options.git:
+        git('rm events/* 2>/dev/null')
+
+        def export_event(event: Event):
+            origin_system = None
+            if isinstance(event, Event):
+                origin_system = event.origin.origin_system
+
+            with open("events/{}.json".format(event['guid']), "w") as fp:
+                json.dump({
+                    **event,
+                    'origin': origin_system or None,
+                }, fp, indent=2, cls=ScheduleEncoder)
+
+        full_schedule.foreach_event(export_event)
 
     print('\nDone')
     print('  version: ' + full_schedule.version())
@@ -156,9 +176,6 @@ def main():
     if not local or options.git:
         content_did_not_change = os.system('/usr/bin/env git diff -U0 --no-prefix | grep -e "^[+-]  " | grep -v version > /dev/null')
 
-        def git(args):
-            os.system('/usr/bin/env git {}'.format(args))
-
         if content_did_not_change:
             print('nothing relevant changed, reverting to previous state')
             git('reset --hard')
@@ -167,6 +184,34 @@ def main():
             git('commit -m "version {}"'.format(full_schedule.version()))
             # git('push')
 
+            push_c3data(full_schedule)
+
+
+def push_c3data(schedule):
+    print("\n== Updating c3data via API…")
+
+    c3data = C3data(schedule)
+    repo = gitlib.Repo('.')
+    changed_items = repo.index.diff('HEAD~1', 'events')
+    for i in changed_items:
+        write(i.change_type + ': ')
+        try:
+            if i.change_type == 'D':
+                event_guid = os.path.splitext(os.path.basename(i.a_path))[0]
+                c3data.depublish_event(event_guid)
+            else:
+                event = load_json(i.a_path)
+                c3data.upsert_event(event)
+        except Exception as e:
+            print(e)
+            if options.exit_when_exception_occours:
+                raise e
+    print("\n\n")
+    exit(2)
+
+
+def git(args):
+    os.system('/usr/bin/env git {}'.format(args))
 
 if __name__ == '__main__':
     main()
