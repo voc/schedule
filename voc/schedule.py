@@ -44,9 +44,9 @@ class Day:
         elif i and year and day:
             self._day = {
                 "index": i + 1,
-                "date": "{}-12-{}".format(year, day),
-                "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
-                "day_end": "{}-12-{}T04:00:00+01:00".format(year, day + 1),
+                "date": "{}-{}-{}".format(year, month, day),
+                "day_start": "{}-{}-{}T06:00:00+01:00".format(year, month, day),
+                "day_end": "{}-{}-{}T04:00:00+01:00".format(year, month, day + 1),
                 "rooms": {}
             }
         else:
@@ -97,6 +97,8 @@ class Event(collections.abc.Mapping):
         duration = self._event['duration'].split(':')
         r['duration'] = {'hours': int(duration[0]), 'minutes': int(duration[1])} 
         del r['persons']
+        if 'videoDownloadUrl' in r:
+            del r['videoDownloadUrl']
         if 'answers' in r:
             del r['answers']
         # fix wrong formatted links

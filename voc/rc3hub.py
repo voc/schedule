@@ -68,12 +68,7 @@ def init(channels):
     tracks = {x['name']: x['id'] for x in get('tracks')}
 
 
-def full_sync():
-    schedule = Schedule.from_url('https://data.c3voc.de/rC3/everything.schedule.json')
-
-    # schedule = Schedule.from_url('https://data.c3voc.de/rC3/channels.schedule.json')
-    # schedule = Schedule.from_file('rC3/channels.schedule.json')
-    
+def push_schedule(schedule):
     channel_room_ids = {x['schedule_room']: x['room_guid'] for x in channels}
     rooms = get('rooms')
     room_ids = {x['name']: x['id'] for x in rooms}
@@ -127,5 +122,9 @@ if __name__ == '__main__':
 
     init(channels)
 
-    full_sync()
+    schedule = Schedule.from_url('https://data.c3voc.de/rC3/everything.schedule.json')
+    # schedule = Schedule.from_url('https://data.c3voc.de/rC3/channels.schedule.json')
+    # schedule = Schedule.from_file('rC3/channels.schedule.json')
+    
+    push_schedule(schedule)
     print('done')
