@@ -28,13 +28,15 @@ see https://github.com/voc/schedule/blob/34C3/docs/data_flow_34C3_v0.7.pdf to ge
 ### Debian and similar
 ``` bash
 sudo apt-get install python python-pip python-lxml libxslt1-dev libxml2-utils
-pip install -r requirements.txt
+pip3 install -r requirements.txt
+pip3 install --pre gql[aiohttp]
 ```
 
 ### macOS
 ``` bash
 brew install python3
 STATIC_DEPS=true pip3 install -r requirements.txt
+pip3 install --pre gql[aiohttp]
 ```
 or see https://stackoverflow.com/a/26544099/521791 on how to install lxml
 
