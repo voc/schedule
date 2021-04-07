@@ -150,6 +150,9 @@ class Schedule:
         #    self.from_url(url)
         if json:
             self._schedule = json
+        else:
+            self.reset_generator()
+
 
         self._days = [None] * self.conference()['daysCount']
         self._generate_stats()
@@ -231,6 +234,9 @@ class Schedule:
                 day['day_start'] = start.isoformat()
             day['rooms'] = OrderedDict()
         return Schedule(json=schedule)
+
+    def reset_generator(self):
+        self._schedule['schedule']['generator'] = tools.generator_info()
 
     def copy(self, name):
         schedule = copy.deepcopy(self._schedule)
@@ -532,7 +538,9 @@ class Schedule:
                             # remove day_ prefix from items
                             k = k[4:]
 
-                    if k == 'id' or k == 'guid' or (parent == 'day' and isinstance(v, (str, int))):
+                    if k == 'id' or k == 'guid' \
+                        or (parent == 'day' and isinstance(v, (str, int))) \
+                            or parent == 'generator':
                         _set_attrib(node, k, v)
                         count -= 1
                     elif k == 'url' and parent != 'event':

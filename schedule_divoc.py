@@ -10,7 +10,7 @@ import git as gitlib
 
 from voc.schedule import Schedule, ScheduleEncoder, Event
 from voc.c3data import C3data
-from voc.tools import load_json
+from voc.tools import load_json, get_version
 
 from wikitable2schedule import fetch_schedule
 
@@ -90,13 +90,10 @@ def main():
 
     full_schedule = Schedule.from_url(main_schedule_url)
     full_schedule.conference()['acronym'] = acronym
+    full_schedule.reset_generator()
 
     print('  version: ' + full_schedule.version())
     print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
-
-    repo = gitlib.Repo(search_parent_directories=True)
-    git_hash = repo.head.object.hexsha
-    full_schedule._schedule['schedule']['generator'] = { "name": "voc/schedule/divoc", "version": git_hash }
 
     # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:

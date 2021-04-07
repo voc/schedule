@@ -1,16 +1,21 @@
 # -*- coding: UTF-8 -*-
 
+from os import path
 from collections import OrderedDict
 import uuid
 import json
 import re
 import sys
+import git
+
+import __main__
 
 sos_ids = {}
 last_edited = {}
 next_id = 1000
 generated_ids = 0
 uuid_namespace = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
+VERSION = None
 
 
 def write(x):
@@ -117,3 +122,21 @@ def load_json(filename):
         data = parse_json(fp.read())
         
     return data
+
+
+def get_version():
+    global VERSION
+    if VERSION is None:
+        repo = git.Repo(path=__file__, search_parent_directories=True)
+        sha = repo.head.object.hexsha
+        VERSION = repo.git.rev_parse(sha, short=5)
+    return VERSION
+
+
+def generator_info():
+    module = path.splitext(path.basename(__main__.__file__))[0] \
+        .replace('schedule_', '')
+    return ({
+        "name": "voc/schedule/" + module,
+        "version": get_version()
+    })
