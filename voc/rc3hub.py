@@ -2,7 +2,7 @@ from os import getenv
 import json
 import requests
 
-try: 
+try:
     from .schedule import Schedule
 except:
     from schedule import Schedule

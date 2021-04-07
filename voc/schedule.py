@@ -212,7 +212,7 @@ class Schedule:
                 "index": i+1,
                 "date": "{}-12-{}".format(year, day),
                 "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
-                "day_end": "{}-12-{}T04:00:00+01:00".format(year, day+1),
+                "day_end": "{}-12-{}T04:00:00+01:00".format(year, day + 1),
                 "rooms": OrderedDict()
             })
             day += 1
@@ -220,7 +220,7 @@ class Schedule:
         return Schedule(json=schedule)
 
     @classmethod
-    def empty_copy_of(cls, parent_schedule, name, start_hour = None):
+    def empty_copy_of(cls, parent_schedule, name, start_hour=None):
         schedule = {
             "schedule": OrderedDict([
                 ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
@@ -230,7 +230,7 @@ class Schedule:
         schedule['schedule']['conference']['title'] += ' - ' + name
         for day in schedule['schedule']['conference']['days']:
             if start_hour is not None:
-                start = dateutil.parser.parse(day['day_start']).replace(hour = start_hour)
+                start = dateutil.parser.parse(day['day_start']).replace(hour=start_hour)
                 day['day_start'] = start.isoformat()
             day['rooms'] = OrderedDict()
         return Schedule(json=schedule)
@@ -252,7 +252,7 @@ class Schedule:
     def version(self):
         return self._schedule['schedule']['version']
 
-    def conference(self, key = None):
+    def conference(self, key=None):
         if key:
             return self._schedule['schedule']['conference'][key]
         else:
@@ -313,7 +313,7 @@ class Schedule:
         if not self.room_exists(day, event['room']):
             self.add_room(day, event['room'])
 
-        self.days()[day-1]['rooms'][event['room']].append(event)
+        self.days()[day - 1]['rooms'][event['room']].append(event)
 
     def foreach_event(self, func):
         out = []
@@ -354,7 +354,7 @@ class Schedule:
                 self.stats.max_id = event['id']
 
             for person in event.get('persons', []):
-                if isinstance(person['id'], int) or  person['id'].isnumeric():
+                if isinstance(person['id'], int) or person['id'].isnumeric():
                     if self.stats.person_min_id is None or int(person['id']) < self.stats.person_min_id:
                         self.stats.person_min_id = int(person['id'])
                     if self.stats.person_max_id is None or int(person['id']) > self.stats.person_max_id:
@@ -393,7 +393,7 @@ class Schedule:
         self._schedule['schedule']['version'] += " " + other_schedule.version()
 
         if offset:
-            print ("  calculated conference start day offset: {}".format(offset))
+            print("  calculated conference start day offset: {}".format(offset))
 
         for day in other_schedule.days():
             target_day = day["index"] + offset
@@ -405,7 +405,7 @@ class Schedule:
                 continue
 
             if day["date"] != self.day(target_day)["date"]:
-                #print(target_day)
+                # print(target_day)
                 print("  ERROR: the other schedule's days have to match primary schedule, in some extend!")
                 return False
 
@@ -532,7 +532,7 @@ class Schedule:
                 # (as they are mapped to an attribute)
                 count = len(d)
                 recording_license = ''
-                for k,v in d.items():
+                for k, v in d.items():
                     if parent == 'day':
                         if k[:4] == 'day_':
                             # remove day_ prefix from items
@@ -610,9 +610,9 @@ class Schedule:
         _to_etree(body, root_node, 'schedule')
 
         if sys.version_info[0] >= 3:
-            return ET.tounicode(root_node, pretty_print = True)
+            return ET.tounicode(root_node, pretty_print=True)
         else:
-            return ET.tostring(root_node, pretty_print = True, encoding='UTF-8')
+            return ET.tostring(root_node, pretty_print=True, encoding='UTF-8')
 
 
 class ScheduleEncoder(json.JSONEncoder):

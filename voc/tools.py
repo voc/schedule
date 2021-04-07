@@ -120,7 +120,6 @@ def load_json(filename):
         # data = json.load(fp)
         # maintain order from file
         data = parse_json(fp.read())
-        
     return data
 
 

@@ -141,8 +141,6 @@ def remove_event(event_guid):
           }
         '''), {'input': {'guid': event_guid}})
     except Exception as e:
-        print(json.dumps(data, indent=2))
-        print()
         print(e)
         print()
 

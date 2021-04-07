@@ -3,10 +3,9 @@
 import os
 import sys
 import json
-import pytz
 import optparse
+import pytz
 import git as gitlib
-
 
 from voc.schedule import Schedule, ScheduleEncoder, Event
 from voc.c3data import C3data
@@ -213,6 +212,7 @@ def push_c3data(schedule):
 
 def git(args):
     os.system('/usr/bin/env git {}'.format(args))
+
 
 if __name__ == '__main__':
     main()
