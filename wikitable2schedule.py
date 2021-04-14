@@ -1,6 +1,4 @@
 # -*- coding: UTF-8 -*-
-from typing import Dict
-
 import os
 import sys
 import json
@@ -12,7 +10,7 @@ import traceback
 import requests
 import pytz
 import dateutil.parser
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
 
 import voc.tools
 from voc.schedule import Schedule
@@ -47,25 +45,6 @@ template = {"schedule": {
 
 def get_track_id(track_name):
     return 10
-
-
-def parse_html_formatted_links(td: Tag) -> Dict[str, str]:
-    """
-    Returns a dictionary containing all HTML formatted links found in the given table row.
-
-    - Key: The URL of the link.
-    - Value: The title of the link. Might be the same as the URL.
-
-    :param td: A table row HTML tag.
-    """
-    links = {}
-    for link in td.find_all("a"):
-        href = link.attrs["href"]
-        title = link.attrs["title"].strip()
-        text = link.get_text().strip()
-        links[href] = title if text is None else text
-    return links
-
 
 def fetch_schedule(wiki_url):
     global template, days
@@ -143,7 +122,7 @@ def fetch_schedule(wiki_url):
                 # if type(td) != NoneType:
                 key = td.attrs['class'][0]
                 data[key] = re.compile(r'\s*\n\s*').split(td.get_text().strip())
-                external_links = parse_html_formatted_links(td)
+                external_links = voc.tools.parse_html_formatted_links(td)
             try:
                 time = re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0])
                 title = data['col1'][0]

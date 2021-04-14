@@ -1,14 +1,17 @@
 # -*- coding: UTF-8 -*-
-
 from os import path
-from collections import OrderedDict
 import uuid
 import json
 import re
 import sys
 import git
 
+from typing import Dict
+from collections import OrderedDict
+from bs4 import Tag
+
 import __main__
+
 
 sos_ids = {}
 last_edited = {}
@@ -139,3 +142,23 @@ def generator_info():
         "name": "voc/schedule/" + module,
         "version": get_version()
     })
+
+
+def parse_html_formatted_links(td: Tag) -> Dict[str, str]:
+    """
+    Returns a dictionary containing all HTML formatted links found 
+    in the given table row.
+
+    - Key: The URL of the link.
+    - Value: The title of the link. Might be the same as the URL.
+
+    :param td: A table row HTML tag.
+    """
+    links = {}
+    for link in td.find_all("a"):
+        href = link.attrs["href"]
+        title = link.attrs["title"].strip()
+        text = link.get_text().strip()
+        links[href] = title if text is None else text
+
+    return links
