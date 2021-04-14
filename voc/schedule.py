@@ -8,6 +8,7 @@ import collections
 from collections import OrderedDict
 import dateutil.parser
 from datetime import datetime
+import pytz
 from urllib.parse import urlparse
 
 from lxml import etree as ET
@@ -38,15 +39,15 @@ class Day:
     start = None
     end = None
 
-    def __init__(self, i=None, year=None, month=12, day=None, json=None):
+    def __init__(self, i=None, year=None, month=12, day=None, dt=None, json=None):
         if json:
             self._day = json
-        elif i and year and day:
+        elif i is not None and (day or (year and day)):
             self._day = {
                 "index": i + 1,
-                "date": "{}-{}-{}".format(year, month, day),
-                "day_start": "{}-{}-{}T06:00:00+01:00".format(year, month, day),
-                "day_end": "{}-{}-{}T04:00:00+01:00".format(year, month, day + 1),
+                "date": "{}-{:02d}-{:02d}".format(year, month, day),
+                "day_start": "{}-{:02d}-{:02d}T06:00:00+01:00".format(year, month, day),
+                "day_end": "{}-{:02d}-{:02d}T04:00:00+01:00".format(year, month, day + 1),
                 "rooms": {}
             }
         else:
@@ -57,6 +58,12 @@ class Day:
 
     def __getitem__(self, key):
         return self._day[key]
+
+    def __len__(self):
+        return len(self._day)
+
+    def items(self):
+        return self._day.items()
 
 
 class Event(collections.abc.Mapping):
@@ -153,7 +160,6 @@ class Schedule:
         else:
             self.reset_generator()
 
-
         self._days = [None] * self.conference()['daysCount']
         self._generate_stats()
 
@@ -173,6 +179,7 @@ class Schedule:
         if 'version' not in data['schedule']:
             data['schedule']['version'] = ''
 
+
         schedule = Schedule(json=data)
         schedule.origin_url = url
         schedule.origin_system = urlparse(url).netloc
@@ -185,6 +192,33 @@ class Schedule:
 
         return Schedule(json=schedule)
 
+
+    @classmethod
+    def from_template(cls, title, acronym, year, month, day, days_count=1):
+        schedule = {
+            "schedule": OrderedDict([
+                ("version", datetime.now().strftime('%Y-%m-%d %H:%M')),
+                ("conference", OrderedDict([
+                    ("acronym", acronym.lower()),
+                    ("title", title),
+                    ("start", "{}-{:02d}-{:02d}".format(year, month, day)),
+                    ("end", "{}-{:02d}-{:02d}".format(year, month, day + days_count - 1)),
+                    ("daysCount", days_count),
+                    ("timeslot_duration", "00:15"),
+                    ("time_zone_name", "Europe/Amsterdam"),
+                    ("rooms", []),
+                    ("days", [])
+                ]))
+            ])
+        }
+        days = schedule['schedule']['conference']['days']
+        for i in range(days_count):
+            days.append(Day(i, year, month, day))
+            day += 1
+
+        return Schedule(json=schedule)
+
+
     @classmethod
     def from_XC3_template(cls, name, congress_nr, start_day, days_count):
         year = str(1983 + congress_nr)
@@ -196,7 +230,7 @@ class Schedule:
                     ("acronym", u"{}C3".format(congress_nr) + ('-' + name.lower() if name else '')),
                     ("title", u"{}. Chaos Communication Congress".format(congress_nr) + (' - ' + name if name else '')),
                     ("start", "{}-12-{}".format(year, start_day)),
-                    ("end", "{}-12-{}".format(year, start_day+days_count-1)),
+                    ("end", "{}-12-{}".format(year, start_day + days_count - 1)),
                     ("daysCount", days_count),
                     ("timeslot_duration", "00:15"),
                     ("time_zone_name", "Europe/Amsterdam"),
@@ -251,6 +285,10 @@ class Schedule:
 
     def version(self):
         return self._schedule['schedule']['version']
+
+    def tz(self):
+        return pytz.timezone(self.conference('time_zone_name'))
+
 
     def conference(self, key=None):
         if key:
@@ -523,7 +561,7 @@ class Schedule:
             elif parent == 'person':
                 node.text = d['public_name']
                 _set_attrib(node, 'id', d['id'])
-            elif isinstance(d, dict) or isinstance(d, OrderedDict) or isinstance(d, Event):
+            elif isinstance(d, dict) or isinstance(d, OrderedDict) or isinstance(d, Event) or isinstance(d, Day):
                 if parent == 'schedule' and 'base_url' in d:
                     d['conference']['base_url'] = d['base_url']
                     del d['base_url']
@@ -621,4 +659,6 @@ class ScheduleEncoder(json.JSONEncoder):
             return obj._schedule
         if isinstance(obj, Event):
             return obj._event
+        if isinstance(obj, Day):
+            return obj._day
         return json.JSONEncoder.default(self, obj)
