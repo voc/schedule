@@ -69,7 +69,7 @@ def fetch_schedule(series_title, source_url):
         )),
         ('url', source_url),
         ('title', title),
-        ('subtitle', ''),
+        ('subtitle', 'debate {id}'.format(id=local_id)),
         ('track', None),
         ('type', None),
         ('language', 'de'),
