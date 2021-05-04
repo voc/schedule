@@ -8,7 +8,7 @@ import locale
 import argparse
 import requests
 import pytz
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 
 import voc.tools
 from voc.schedule import Schedule, Event
@@ -45,7 +45,7 @@ def fetch_schedule(series_title, source_url):
     schedule.schedule().version = '1.0'
 
     guid = voc.tools.gen_uuid('{}-{}'.format(start, acronym))
-    local_id = (start.year - 2020) * 100 + start.month
+    local_id = sum(1 for node in soup.find('h3').parent.children if type(node) is element.Tag)
     title = soup.select('h2')[0].text
     abstract = None
     body = soup.select('div.ce_rs_column_start > div.ce_text.block > p')[0]
