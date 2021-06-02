@@ -50,7 +50,11 @@ def fetch_schedule(series_title, source_url):
     abstract = None
     body = soup.select('div.ce_rs_column_start > div.ce_text.block > p')[0]
     persons = []
-    external_links = voc.tools.parse_html_formatted_links(body)
+    external_links = {}
+    try:
+        external_links = voc.tools.parse_html_formatted_links(body)
+    except:
+        pass
 
     print("Found event on {} with title '{}'".format(start, title))
 
