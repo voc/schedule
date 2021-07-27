@@ -87,7 +87,7 @@ def get_conference(acronym):
       }'''), variable_values={'acronym': acronym})
 
 
-def add_room(confernce_id, room_name):
+def add_room(conference_id, room_name):
     result = client.execute(gql('''
       mutation addRoom($input: UpsertRoomInput!) {
         upsertRoom(input: $input) {
@@ -95,7 +95,7 @@ def add_room(confernce_id, room_name):
         }
       }'''), {'input': {'room': {
           'name': room_name,
-          'conferenceId': confernce_id
+          'conferenceId': conference_id
         }
     }})
 
