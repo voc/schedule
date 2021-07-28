@@ -110,7 +110,7 @@ class Event(collections.abc.Mapping):
             del r['answers']
         # fix wrong formatted links
         if len(r['links']) > 0 and isinstance(r['links'][0], str):
-            r['links'] = [ {'url': url, 'title': url} for url in r['links'] ]
+            r['links'] = [{'url': url, 'title': url} for url in r['links']]
         return r
 
     # export all attributes which are not part of rC3 core event model
@@ -131,7 +131,7 @@ class Event(collections.abc.Mapping):
         #    del r['answers']
         # fix wrong formatted links
         if len(r['links']) > 0 and isinstance(r['links'][0], str):
-            r['links'] = [ {'url': url, 'title': url} for url in r['links'] ]
+            r['links'] = [{'url': url, 'title': url} for url in r['links']]
         return r
 
     def __str__(self):
@@ -151,7 +151,7 @@ class Schedule:
     origin_system = None
     stats = None
 
-    def __init__(self, name = None, url = None, json = None):
+    def __init__(self, name=None, url=None, json=None):
         # TODO remove or revert class methods below to object methods
         # if url:
         #    self.from_url(url)
@@ -179,7 +179,6 @@ class Schedule:
         if 'version' not in data['schedule']:
             data['schedule']['version'] = ''
 
-
         schedule = Schedule(json=data)
         schedule.origin_url = url
         schedule.origin_system = urlparse(url).netloc
@@ -189,9 +188,7 @@ class Schedule:
     def from_file(cls, name):
         with open("{}".format(name), "r") as fp:
             schedule = tools.parse_json(fp.read())
-
         return Schedule(json=schedule)
-
 
     @classmethod
     def from_template(cls, title, acronym, year, month, day, days_count=1):
@@ -217,7 +214,6 @@ class Schedule:
             day += 1
 
         return Schedule(json=schedule)
-
 
     @classmethod
     def from_XC3_template(cls, name, congress_nr, start_day, days_count):
@@ -288,7 +284,6 @@ class Schedule:
 
     def tz(self):
         return pytz.timezone(self.conference('time_zone_name'))
-
 
     def conference(self, key=None):
         if key:
@@ -418,14 +413,16 @@ class Schedule:
             fp.write(self.xml())
 
         # validate xml
-        result = os.system('/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {filter}'.format(validator=validator, prefix=prefix, filter=validator_filter) + '; exit \${PIPESTATUS[0]}"')
+        result = os.system('/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {filter}'
+                           .format(validator=validator, prefix=prefix, filter=validator_filter) +
+                           '; exit \${PIPESTATUS[0]}"')
         if result != 0 and validator_filter:
             print('  (some validation errors might be hidden by validator_filter)')
 
     def __str__(self):
         return json.dumps(self._schedule, indent=2, cls=ScheduleEncoder)
 
-    def add_events_from(self, other_schedule, id_offset = None, options = {}):
+    def add_events_from(self, other_schedule, id_offset=None, options={}):
         offset = (other_schedule.conference_start() - other_schedule.conference_start()).days
 
         self._schedule['schedule']['version'] += " " + other_schedule.version()
@@ -437,7 +434,7 @@ class Schedule:
             target_day = day["index"] + offset
 
             if target_day < 1:
-                print( "  ignoring day {} from {}, as primary schedule starts at {}".format(
+                print("  ignoring day {} from {}, as primary schedule starts at {}".format(
                     day["date"], other_schedule.conference()["acronym"], self.conference()["start"])
                 )
                 continue
@@ -465,7 +462,7 @@ class Schedule:
                         if q is not None:
                             event['id'] = q['answer']
                     elif id_offset:
-                            event['id'] = int(event['id']) + id_offset
+                        event['id'] = int(event['id']) + id_offset
                         # TODO? offset for person IDs?
                     
                     # workaround for rC3 – TODO make configurable
@@ -496,7 +493,7 @@ class Schedule:
                 self.add_room_with_events(target_day, target_room, events)
         return True
 
-    def find_event(self, id = None, guid = None):
+    def find_event(self, id=None, guid=None):
         if not id and not guid:
             raise RuntimeError('Please provide either id or guid')
 
@@ -506,16 +503,16 @@ class Schedule:
             result = self.foreach_event(lambda event: event if event['guid'] == guid else None)
 
         if len(result) > 1:
-            print('Warning: Found multipe events with id ' + id)
+            print('Warning: Found multiple events with id ' + id)
             return result
 
         if len(result) == 0:
             raise Warning('could not find event with id ' + id)
-            #return None
+            # return None
 
         return result[0]
 
-    def remove_event(self, id = None, guid = None):
+    def remove_event(self, id=None, guid=None):
         if not id and not guid:
             raise RuntimeError('Please provide either id or guid')
 
@@ -526,15 +523,12 @@ class Schedule:
                         print('removing', event['title'])
                         day['rooms'][room].remove(event)
 
-
-
     # dict_to_etree from http://stackoverflow.com/a/10076823
 
     # TODO:
     #  * check links conversion
     #  * ' vs " in xml
     #  * logo is in json but not in xml
-
     def xml(self):
         root_node = None
 
@@ -551,7 +545,7 @@ class Schedule:
             else:
                 print("  error: unknown attribute type %s=%s" % (k, v))
 
-        def _to_etree(d, node, parent = ''):
+        def _to_etree(d, node, parent=''):
             if not d:
                 pass
             elif isinstance(d, str):
