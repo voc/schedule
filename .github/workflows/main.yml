@@ -3,7 +3,7 @@ name: Mirroring
 on: [push, delete]
 
 jobs:
-  to_gitlab:
+  to_git-c3voc-de:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
