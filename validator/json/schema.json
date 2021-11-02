@@ -1,0 +1,284 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schedule": {
+      "$ref": "#/definitions/Schedule"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": ["schedule"],
+  "definitions": {
+    "Schedule": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "base_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "conference": {
+          "$ref": "#/definitions/Conference"
+        }
+      },
+      "required": ["base_url", "conference", "version"]
+    },
+    "Conference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "acronym": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        },
+        "daysCount": {
+          "type": "integer"
+        },
+        "timeslot_duration": {
+          "type": "string"
+        },
+        "rooms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Room"
+          }
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Day"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "acronym",
+        "days",
+        "daysCount",
+        "start",
+        "end",
+        "timeslot_duration"
+      ],
+      "title": "Conference"
+    },
+    "Day": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "day_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "day_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "rooms": {
+          "type": "object",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        }
+      },
+      "required": ["date", "day_end", "day_start", "index", "rooms"]
+    },
+    "Event": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "guid": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "start": {
+          "type": "string"
+        },
+        "duration": {
+          "$ref": "#/definitions/Duration"
+        },
+        "room": {
+          "$ref": "#/definitions/RoomName"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "track": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "abstract": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "recording_license": {
+          "type": "string"
+        },
+        "do_not_record": {
+          "type": "boolean"
+        },
+        "persons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Person"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {}
+        },
+        "attachments": {
+          "type": "array",
+          "items": {}
+        },
+        "answers": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "abstract",
+        "answers",
+        "attachments",
+        "date",
+        "description",
+        "do_not_record",
+        "duration",
+        "guid",
+        "id",
+        "language",
+        "links",
+        "logo",
+        "persons",
+        "recording_license",
+        "room",
+        "slug",
+        "start",
+        "subtitle",
+        "title",
+        "track",
+        "type",
+        "url"
+      ],
+      "title": "Room"
+    },
+    "Person": {
+      "anyOf": [
+        { "$ref": "#/definitions/FrabPerson" },
+        { "$ref": "#/definitions/PretalxPerson" }
+      ]
+    },
+    "FrabPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "public_name": {
+          "type": "string"
+        }
+      },
+      "required": ["public_name", "id"]
+    },
+    "PretalxPerson": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "biography": {
+          "type": "string"
+        },
+        "answers": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": ["name"]
+    },
+    "Room": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "guid": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": {
+          "type": ["string", "null"]
+        },
+        "capacity": {
+          "type": ["number", "null"]
+        }
+      },
+      "required": ["guid", "name"]
+    },
+    "RoomName": {
+      "type": "string"
+    },
+    "Duration": {
+      "title": "Duration (hh:mm)",
+      "type": "string",
+      "examples": ["00:30", "01:30"],
+      "pattern": "^[0-9]+:[0-9]{2}$"
+    }
+  }
+}

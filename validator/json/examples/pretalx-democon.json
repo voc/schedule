@@ -1,0 +1,1268 @@
+{
+  "$schema": "../schema.json",
+  "schedule": {
+    "version": "v1.1",
+    "base_url": "http://localhost/democon/schedule/",
+    "conference": {
+      "acronym": "democon",
+      "title": "DemoCon",
+      "start": "2020-12-14",
+      "end": "2020-12-16",
+      "daysCount": 3,
+      "timeslot_duration": "00:05",
+      "rooms": [
+        {
+          "name": "Gray Room",
+          "guid": "b379c473-93b9-4eae-9a09-d482e86cede3",
+          "description": null,
+          "capacity": null
+        },
+        {
+          "name": "Tan Room",
+          "guid": "b379c473-93b9-4eae-9a09-d482e86cede3",
+          "description": null,
+          "capacity": null
+        }
+      ],
+      "days": [
+        {
+          "index": 1,
+          "date": "2020-12-14",
+          "day_start": "2020-12-14T04:00:00+01:00",
+          "day_end": "2020-12-15T03:59:00+01:00",
+          "rooms": {
+            "Gray Room": [
+              {
+                "id": 25,
+                "guid": "8079583e-8321-506c-95af-fd2903a5f075",
+                "logo": "",
+                "date": "2020-12-14T09:00:00+01:00",
+                "start": "09:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-25-focused-5thgeneration-hardware",
+                "url": "http://localhost/democon/talk/G9JGWY/",
+                "title": "Focused 5thgeneration hardware",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Brand back-end models!",
+                "description": "Station provide certain mean. Toward region beautiful language blood.\nProfessional economic pattern a. Human plan institution thus.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 26,
+                    "code": "NQTF8Y",
+                    "public_name": "Brian Robinson",
+                    "biography": "Break through direction. Power cultural most should.\nWhole party memory fire. Suggest no item spring. Do believe exactly.\n\nPhone front role just agreement safe might need. Break experience wear thing set.\nLess mother notice future set.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 26,
+                "guid": "2d64f8e2-26ee-529f-b5ab-3b3f326e31b9",
+                "logo": "",
+                "date": "2020-12-14T09:30:00+01:00",
+                "start": "09:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-26-quality-focused-6thgeneration-website",
+                "url": "http://localhost/democon/talk/3NEFSQ/",
+                "title": "Quality-focused 6thgeneration website",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Brand dynamic applications!",
+                "description": "Show next word trade executive. Production certainly nearly small. Operation law thousand become get.\nVoice own music kid safe responsibility. Court world remain by. Site finish little four house.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 27,
+                    "code": "XHSHNG",
+                    "public_name": "Jordan Parks",
+                    "biography": "Success grow face yeah through bar. Nice building career number significant focus lose. None place within eye current.\n\nCell carry practice course long throw government. Computer resource campaign produce.\nPick scene may evidence item. Evening one brother miss first rise police.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 33,
+                "guid": "a179c8ac-e6eb-5b25-8ed0-c5828ef7b6d9",
+                "logo": "",
+                "date": "2020-12-14T10:00:00+01:00",
+                "start": "10:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-33-secured-mobile-concept",
+                "url": "http://localhost/democon/talk/SCYPFZ/",
+                "title": "Secured mobile concept",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Grow frictionless architectures!",
+                "description": "Between administration Congress development those green.\nSimilar another rock again participant stuff lot.\nEach crime near almost decision pull though. Together protect the.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 34,
+                    "code": "QLYZSY",
+                    "public_name": "Kimberly Griffin",
+                    "biography": "Change region lawyer whole. Past black which among president.\nMoney with clear unit himself yet. Live reach well knowledge herself speech. Other turn middle company. Recently firm phone single.\n\nDream allow career join entire. Suddenly bar around now born small.\nTax business look church race address free. Pull until campaign lead.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 37,
+                "guid": "fe76305f-d58f-5880-8918-dedadf9acfe5",
+                "logo": "",
+                "date": "2020-12-14T11:30:00+01:00",
+                "start": "11:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-37-focused-contextually-based-help-desk",
+                "url": "http://localhost/democon/talk/VZAGQK/",
+                "title": "Focused contextually-based help-desk",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Reinvent granular deliverables!",
+                "description": "Though test during half listen mean fund. Strategy myself eye prove. Physical because specific fear.\nNor color many always. Nature agreement discussion protect meeting beyond ten.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 38,
+                    "code": "CUWS98",
+                    "public_name": "Jenna Alexander",
+                    "biography": "Sister lose operation not. Detail art recently customer check.\nPerson pretty whether our one.\n\nBehind many piece central study. Our assume bag student apply serious. Point character hard serious agree.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 43,
+                "guid": "162d1d85-2b14-5316-b9c7-533d1f7474b9",
+                "logo": "",
+                "date": "2020-12-14T12:00:00+01:00",
+                "start": "12:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-43-triple-buffered-methodical-superstructure",
+                "url": "http://localhost/democon/talk/HYDP7Q/",
+                "title": "Triple-buffered methodical superstructure",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Reinvent granular roi!",
+                "description": "Follow follow summer use open only middle serious. Property page drug someone probably begin physical assume. Food top there develop.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 20,
+                    "code": "FMXAED",
+                    "public_name": "Curtis Andrews",
+                    "biography": "Something five significant young wide away assume. Window sign deal area cost. Successful want tax western start special.\n\nHome age respond fear development. Require high herself race. Season mission court hour focus civil.\nAssume simply future put present. Order now return decide challenge consumer huge.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 55,
+                "guid": "6891f957-c9f3-56d4-8e00-c9dad12fba18",
+                "logo": "",
+                "date": "2020-12-14T12:30:00+01:00",
+                "start": "12:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-55-polarized-object-oriented-toolset",
+                "url": "http://localhost/democon/talk/JXEWLR/",
+                "title": "Polarized object-oriented toolset",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Architect rich models!",
+                "description": "Around scientist three bank economic situation. Evidence bit red response.\nWrong mother morning sound pass onto.\nTraining onto action. Several short which little professional budget idea.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 41,
+                    "code": "LMCTF9",
+                    "public_name": "Holly Noble",
+                    "biography": "Happy prepare data whose mention especially. Choose maybe black exist daughter care. Plan benefit another full.\nHuge opportunity reveal without risk. Reduce bar others service up forward.\n\nUnder individual safe difference evening manage listen. Three certain inside suggest name worry.\nWhere artist head card shoulder. Third collection base important development.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 57,
+                "guid": "c0b59b72-8985-54f0-9534-234ceb9e5272",
+                "logo": "",
+                "date": "2020-12-14T14:00:00+01:00",
+                "start": "14:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-57-stand-alone-asymmetric-toolset",
+                "url": "http://localhost/democon/talk/AYUDFU/",
+                "title": "Stand-alone asymmetric toolset",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Cultivate b2c deliverables!",
+                "description": "Point purpose at difficult feeling. Option cover main senior strategy certain three.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 8,
+                    "code": "E8AHC3",
+                    "public_name": "Mariah Estrada",
+                    "biography": "Us item billion catch information window. Last apply wall.\nTurn increase five such during. Court cell indeed best all space. Indicate eight truth herself worker.\n\nNone each site. Bed anyone blue. Speak her foot reveal experience despite.\nEffort lay speak individual interest happy majority half. These across teach.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 59,
+                "guid": "490be9c7-04da-58e8-951a-bf4cccd7d270",
+                "logo": "",
+                "date": "2020-12-14T14:30:00+01:00",
+                "start": "14:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-59-enhanced-maximized-middleware",
+                "url": "http://localhost/democon/talk/EKNZQR/",
+                "title": "Enhanced maximized middleware",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Maximize back-end applications!",
+                "description": "Ago material best. Trade why attack think join finish.\nCollege put computer worry ability speak. Perform rule tell for sort many rate.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 20,
+                    "code": "FMXAED",
+                    "public_name": "Curtis Andrews",
+                    "biography": "Something five significant young wide away assume. Window sign deal area cost. Successful want tax western start special.\n\nHome age respond fear development. Require high herself race. Season mission court hour focus civil.\nAssume simply future put present. Order now return decide challenge consumer huge.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 16,
+                "guid": "c8d0f959-e262-5455-87d4-e646c30ca6f1",
+                "logo": "",
+                "date": "2020-12-14T15:00:00+01:00",
+                "start": "15:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-16-networked-modular-help-desk",
+                "url": "http://localhost/democon/talk/GSFRBY/",
+                "title": "Networked modular help-desk",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Implement distributed e-commerce!",
+                "description": "Why line song happen draw wind. Major believe stock range dark hundred itself. Difficult watch too record.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 17,
+                    "code": "DA7HQX",
+                    "public_name": "Maria Williams",
+                    "biography": "Direction perform by reveal act difficult professional. Star raise like partner behind.\n\nTree spend memory sign clear fact method. Mention beautiful thousand after standard. Happy easy music process north American college nearly.",
+                    "answers": []
+                  },
+                  {
+                    "id": 8,
+                    "code": "E8AHC3",
+                    "public_name": "Mariah Estrada",
+                    "biography": "Us item billion catch information window. Last apply wall.\nTurn increase five such during. Court cell indeed best all space. Indicate eight truth herself worker.\n\nNone each site. Bed anyone blue. Speak her foot reveal experience despite.\nEffort lay speak individual interest happy majority half. These across teach.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              }
+            ],
+            "Tan Room": [
+              {
+                "id": 14,
+                "guid": "3a74bb53-ef1a-57ce-9ba7-904d27e9eb5f",
+                "logo": "",
+                "date": "2020-12-14T09:00:00+01:00",
+                "start": "09:00",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-14-managed-stable-function",
+                "url": "http://localhost/democon/talk/VBTHYJ/",
+                "title": "Managed stable function",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Leverage end-to-end vortals!",
+                "description": "Six more easy determine popular. Above fall food air human. Executive court word same charge ask modern indicate.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 15,
+                    "code": "R7LF7T",
+                    "public_name": "Jeremy Beck",
+                    "biography": "Enough catch quite community building create drug food. Along pick reach front past for.\nPush provide work girl current. Hotel organization include production.\n\nOil set institution agent chair want dark. Couple view night Congress politics standard theory.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 15,
+                "guid": "ba72da9d-a522-54f6-9301-4bf4f3446425",
+                "logo": "",
+                "date": "2020-12-14T11:30:00+01:00",
+                "start": "11:30",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-15-secured-grid-enabled-policy",
+                "url": "http://localhost/democon/talk/WT8C8H/",
+                "title": "Secured grid-enabled policy",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Synergize efficient paradigms!",
+                "description": "Attack huge effect central class religious long. Son let religious study. Practice treatment pick any same message occur. Little us own first.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 16,
+                    "code": "HGPC7S",
+                    "public_name": "Amy Sanchez",
+                    "biography": "It more start apply sing why group. Report air although church idea indeed of. World cut range party prepare special drive me.\n\nMoment not much tax wind. Sit method see protect.\nLeast movie these analysis already. Them never half skill challenge set health.",
+                    "answers": []
+                  },
+                  {
+                    "id": 21,
+                    "code": "WRQGFG",
+                    "public_name": "Teresa Terrell",
+                    "biography": "Prevent above green mean. Range bit range. Data start decade imagine.\nInternational standard ask firm. Foot board majority own family long happy north. Glass heart fact as should.\n\nSimilar thank family friend him. Between though first performance race Mrs risk.\nFeeling stand language whom green. Answer mind apply realize name page Mr decision.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 39,
+                "guid": "517218e5-c6e9-5628-b059-4b98e8b17745",
+                "logo": "",
+                "date": "2020-12-14T14:00:00+01:00",
+                "start": "14:00",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-39-monitored-24hour-customer-loyalty",
+                "url": "http://localhost/democon/talk/WE88DZ/",
+                "title": "Monitored 24hour customer loyalty",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Seize one-to-one web services!",
+                "description": "Decide thousand manage act activity. History month into ball.\nCan investment process although. Fall let will allow finish article language challenge.",
+                "recording_license": "",
+                "do_not_record": true,
+                "persons": [
+                  {
+                    "id": 40,
+                    "code": "8KYFC8",
+                    "public_name": "Audrey Campbell",
+                    "biography": "Make trade add item student. Trip draw study recently course somebody drop.\nAnalysis decision begin next. Guy production nice hundred. Set wide person expect she without those.\n\nSport without study practice moment. Remember have peace they practice name provide. Total land human run bed star.\nLight very rest commercial.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              }
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "date": "2020-12-15",
+          "day_start": "2020-12-15T04:00:00+01:00",
+          "day_end": "2020-12-16T03:59:00+01:00",
+          "rooms": {
+            "Gray Room": [
+              {
+                "id": 22,
+                "guid": "35173228-cb1a-59de-84f1-cf91b83b8929",
+                "logo": "",
+                "date": "2020-12-15T09:00:00+01:00",
+                "start": "09:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-22-user-centric-non-volatile-moderator",
+                "url": "http://localhost/democon/talk/FX38ZD/",
+                "title": "User-centric non-volatile moderator",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Whiteboard visionary interfaces!",
+                "description": "Their guess ask return to. Tv power without several type form. Similar every maybe choice painting serious.\nAlone catch person drop treat section why seek. Whatever paper because option within.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 23,
+                    "code": "CFSPQZ",
+                    "public_name": "Thomas Morgan",
+                    "biography": "Thousand rise cell notice million development huge fire. Camera last baby. Raise both dog force energy wrong.\n\nFinancial natural system money old when. Rule technology money dream. Help because reach do.\nEver early provide dog statement industry.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 27,
+                "guid": "5203882f-d225-51ee-9886-8059331cf100",
+                "logo": "",
+                "date": "2020-12-15T09:30:00+01:00",
+                "start": "09:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-27-down-sized-directional-algorithm",
+                "url": "http://localhost/democon/talk/TJCTZW/",
+                "title": "Down-sized directional algorithm",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Enhance vertical action-items!",
+                "description": "Artist none region around. Analysis instead order music.\nAlready hotel recently oil. Us set fall full bad executive able arm. Each light three impact.",
+                "recording_license": "",
+                "do_not_record": true,
+                "persons": [
+                  {
+                    "id": 28,
+                    "code": "X7KRKG",
+                    "public_name": "Taylor Hensley",
+                    "biography": "Represent middle woman language attorney major. Out yeah tough anyone responsibility. Draw involve late social after join memory.\nPressure nor keep from. None the goal team security.\n\nCenter college street kid value. Skill north message artist.\nTerm newspaper watch.\nTeacher work bad responsibility wife. Away reality occur entire.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 54,
+                "guid": "aa7c8acc-5e77-5c1a-979f-6366ef26e72a",
+                "logo": "",
+                "date": "2020-12-15T10:00:00+01:00",
+                "start": "10:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-54-operative-analyzing-approach",
+                "url": "http://localhost/democon/talk/LFAMVU/",
+                "title": "Operative analyzing approach",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Maximize plug-and-play applications!",
+                "description": "Good which do billion she trouble style. Scene red whether box identify especially. Who number debate wind either.\nPoor simply yeah education. Have he miss political remain.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 34,
+                    "code": "QLYZSY",
+                    "public_name": "Kimberly Griffin",
+                    "biography": "Change region lawyer whole. Past black which among president.\nMoney with clear unit himself yet. Live reach well knowledge herself speech. Other turn middle company. Recently firm phone single.\n\nDream allow career join entire. Suddenly bar around now born small.\nTax business look church race address free. Pull until campaign lead.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 6,
+                "guid": "0364a317-1363-50ae-aa2a-f7e4483d0881",
+                "logo": "",
+                "date": "2020-12-15T11:30:00+01:00",
+                "start": "11:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-6-reverse-engineered-asymmetric-complexity",
+                "url": "http://localhost/democon/talk/DSCRGK/",
+                "title": "Reverse-engineered asymmetric complexity",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Architect next-generation roi!",
+                "description": "Law note pick worry officer do. Though project minute sing her security natural woman. Five whole any respond religious family. Benefit blood suddenly management large before former.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 7,
+                    "code": "KBBKHB",
+                    "public_name": "Jesse Drake",
+                    "biography": "All religious at after walk yourself general. Bag serve somebody different theory. Reduce population scientist prevent also.\nBad everybody be north plant all.\nMean authority share.\n\nMarket marriage drive whether buy church.\nThird office room.\nSet movie create decision. Very call low rich.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 8,
+                "guid": "7f3c8793-2764-5e6f-ae67-eb45f367d19a",
+                "logo": "",
+                "date": "2020-12-15T12:00:00+01:00",
+                "start": "12:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-8-multi-channeled-encompassing-algorithm",
+                "url": "http://localhost/democon/talk/UDYMLF/",
+                "title": "Multi-channeled encompassing algorithm",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Revolutionize impactful solutions!",
+                "description": "Loss pick movement common sort. Professor attack administration audience city everyone six. Door consider mission several author training.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 9,
+                    "code": "LHBKJE",
+                    "public_name": "Adrian Pennington",
+                    "biography": "About character painting hot performance despite PM. Magazine difference happen any.\n\nWalk here environment. Yes push everything young buy institution. Themselves skin focus list political crime maintain present.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 9,
+                "guid": "924a03f8-9b30-571f-ad7d-4faeb577acfc",
+                "logo": "",
+                "date": "2020-12-15T12:30:00+01:00",
+                "start": "12:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-9-multi-channeled-eco-centric-product",
+                "url": "http://localhost/democon/talk/GJQXUU/",
+                "title": "Multi-channeled eco-centric product",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Iterate back-end web-readiness!",
+                "description": "Per film method control specific ahead. Expert religious glass health here professor.\nCell another itself morning. Me money though best control commercial hundred despite.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 10,
+                    "code": "D9MYSL",
+                    "public_name": "Jerry Rios",
+                    "biography": "Whom cultural where operation apply. Consider together plant religious.\n\nAgain to discuss argue anything. Whole leg spend. Cover company ok apply appear center also.\nSomeone ahead former reach impact imagine conference. Understand president likely evening out.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 21,
+                "guid": "b4be4b3d-4baa-5035-8e51-af3b42601abe",
+                "logo": "",
+                "date": "2020-12-15T14:00:00+01:00",
+                "start": "14:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-21-ameliorated-4thgeneration-firmware",
+                "url": "http://localhost/democon/talk/SEJJBV/",
+                "title": "Ameliorated 4thgeneration firmware",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Reinvent back-end e-tailers!",
+                "description": "Inside fear court between. Itself else those well unit.\nMoment today artist state. Nation group writer improve democratic region question.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 22,
+                    "code": "HHPPSJ",
+                    "public_name": "Catherine Harris",
+                    "biography": "Since simple coach whom purpose card matter. Hour current story television become Mrs. Radio attention tell allow computer.\n\nOffice body training fire brother consider. Spend bag whether wear. Six general learn less between rate woman occur.",
+                    "answers": []
+                  },
+                  {
+                    "id": 23,
+                    "code": "CFSPQZ",
+                    "public_name": "Thomas Morgan",
+                    "biography": "Thousand rise cell notice million development huge fire. Camera last baby. Raise both dog force energy wrong.\n\nFinancial natural system money old when. Rule technology money dream. Help because reach do.\nEver early provide dog statement industry.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 23,
+                "guid": "617d2964-7130-51b3-9627-4b4ab4a71108",
+                "logo": "",
+                "date": "2020-12-15T14:30:00+01:00",
+                "start": "14:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-23-ameliorated-asymmetric-function",
+                "url": "http://localhost/democon/talk/QSJDZC/",
+                "title": "Ameliorated asymmetric function",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Extend synergistic e-tailers!",
+                "description": "Stop process nice old read. Ago field by. Contain notice happen send newspaper peace identify give.\nMeet thought floor.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 24,
+                    "code": "T3XDP9",
+                    "public_name": "Lisa Floyd",
+                    "biography": "Manager themselves successful though move. Spring analysis stage few agreement use catch.\nCenter support prevent present drop you. Compare stand drop moment.\n\nSay information our including wrong yard side. Value land science base task catch wish.\nBecome remember number southern policy.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 34,
+                "guid": "0ff98fb7-513a-59f6-9722-ff818ec4c3a5",
+                "logo": "",
+                "date": "2020-12-15T15:00:00+01:00",
+                "start": "15:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-34-expanded-client-server-moderator",
+                "url": "http://localhost/democon/talk/SQHELP/",
+                "title": "Expanded client-server moderator",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Optimize back-end web-readiness!",
+                "description": "Conference blood then mind. Story them summer player ball situation plan although.\nCondition result Congress. Under onto seat determine assume head. Like movie several writer begin improve.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 35,
+                    "code": "QZS7TR",
+                    "public_name": "Jeffrey Morgan",
+                    "biography": "Worker personal of position dinner. Commercial seem serious. Social degree specific skin go design.\n\nOther term commercial hot. Ago skill somebody store skin prove person.\nOut administration face. Over station provide option law college understand.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              }
+            ],
+            "Tan Room": [
+              {
+                "id": 49,
+                "guid": "bd773c8c-47c8-5098-8c82-ee7358d3cda2",
+                "logo": "",
+                "date": "2020-12-15T09:00:00+01:00",
+                "start": "09:00",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-49-advanced-24hour-hub",
+                "url": "http://localhost/democon/talk/W3SGMU/",
+                "title": "Advanced 24hour hub",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Repurpose interactive systems!",
+                "description": "After part billion what least do. Question leader might woman. You local situation indeed effect. Each although interview family hit perhaps sell.\nCampaign option democratic at second list.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 20,
+                    "code": "FMXAED",
+                    "public_name": "Curtis Andrews",
+                    "biography": "Something five significant young wide away assume. Window sign deal area cost. Successful want tax western start special.\n\nHome age respond fear development. Require high herself race. Season mission court hour focus civil.\nAssume simply future put present. Order now return decide challenge consumer huge.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 56,
+                "guid": "ea809ce1-c980-55f2-b400-013d44c746f8",
+                "logo": "",
+                "date": "2020-12-15T11:30:00+01:00",
+                "start": "11:30",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-56-cross-group-dedicated-success",
+                "url": "http://localhost/democon/talk/3ZKWJY/",
+                "title": "Cross-group dedicated success",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Empower front-end paradigms!",
+                "description": "Medical participant Congress pick his. Town all occur all.\nBest keep matter case prevent next. Reach ten blue same question.\nIts property outside exactly morning. Serve get once lay.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 20,
+                    "code": "FMXAED",
+                    "public_name": "Curtis Andrews",
+                    "biography": "Something five significant young wide away assume. Window sign deal area cost. Successful want tax western start special.\n\nHome age respond fear development. Require high herself race. Season mission court hour focus civil.\nAssume simply future put present. Order now return decide challenge consumer huge.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 4,
+                "guid": "f96eeea5-843a-5f23-9ca8-ab8aa9d35d8e",
+                "logo": "",
+                "date": "2020-12-15T14:00:00+01:00",
+                "start": "14:00",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-4-synergized-uniform-toolset",
+                "url": "http://localhost/democon/talk/R8KFQC/",
+                "title": "Synergized uniform toolset",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Innovate holistic mindshare!",
+                "description": "Work general environmental. These next wife stuff because act stuff. Give staff method own hold answer about.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 5,
+                    "code": "SVBHAA",
+                    "public_name": "Carl Barber",
+                    "biography": "Choice across beyond white common black. Reflect center into thousand ahead. Record reflect good pick.\n\nWhat view nice agreement including political.\nRule artist town any deal world scientist. Seven real bad nature. Congress political must start. Strong those nice movement process.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              }
+            ]
+          }
+        },
+        {
+          "index": 3,
+          "date": "2020-12-16",
+          "day_start": "2020-12-16T04:00:00+01:00",
+          "day_end": "2020-12-17T03:59:00+01:00",
+          "rooms": {
+            "Gray Room": [
+              {
+                "id": 35,
+                "guid": "806afc02-d877-5c65-bfe4-e4c45f68b6a3",
+                "logo": "",
+                "date": "2020-12-16T09:00:00+01:00",
+                "start": "09:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-35-enhanced-dynamic-interface",
+                "url": "http://localhost/democon/talk/RHWPH8/",
+                "title": "Enhanced dynamic interface",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Synthesize integrated solutions!",
+                "description": "Those surface but that east man. Response author large manager both.\nDecision four determine peace her foot everything involve. Food ahead result religious give. New surface second energy likely.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 36,
+                    "code": "LFTKAR",
+                    "public_name": "Jonathan Conway",
+                    "biography": "Smile throw risk cost low who accept. Hard option idea other couple how third. Bar chance if firm.\nView when girl over water difference reveal. Choice Mr difference.\n\nBenefit medical growth before face simply century. Activity realize few per speech kid financial. Thus factor writer strategy.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 36,
+                "guid": "8def099f-0871-5d9f-95b8-de50f694e747",
+                "logo": "",
+                "date": "2020-12-16T09:30:00+01:00",
+                "start": "09:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-36-re-engineered-bandwidth-monitored-focus-group",
+                "url": "http://localhost/democon/talk/EKLJTK/",
+                "title": "Re-engineered bandwidth-monitored focus group",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Optimize interactive platforms!",
+                "description": "Seem then certain both try property. Soon arrive as wrong.\nParticipant perhaps look ground.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 37,
+                    "code": "N33EUY",
+                    "public_name": "Stephanie Hudson",
+                    "biography": "Court western human control environmental word growth.\n\nNice everyone with artist hundred enough window.\nQuestion language child television end may activity. Now street sign ok whatever.",
+                    "answers": []
+                  },
+                  {
+                    "id": 8,
+                    "code": "E8AHC3",
+                    "public_name": "Mariah Estrada",
+                    "biography": "Us item billion catch information window. Last apply wall.\nTurn increase five such during. Court cell indeed best all space. Indicate eight truth herself worker.\n\nNone each site. Bed anyone blue. Speak her foot reveal experience despite.\nEffort lay speak individual interest happy majority half. These across teach.",
+                    "answers": []
+                  },
+                  {
+                    "id": 2,
+                    "code": "7HN7KY",
+                    "public_name": "Kathy Wallace",
+                    "biography": "Perform piece weight artist maybe fear under. Girl start evidence product quite age. Where chair season entire sound direction. Computer lose four month.\n\nWatch determine thousand detail building policy begin former. Leg market house election at instead. Throughout focus lose hospital parent wide less.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 38,
+                "guid": "e0bdbb4d-5171-5818-a0bd-b2bacbde781c",
+                "logo": "",
+                "date": "2020-12-16T10:00:00+01:00",
+                "start": "10:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-38-seamless-systematic-interface",
+                "url": "http://localhost/democon/talk/WPWJAN/",
+                "title": "Seamless systematic interface",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Optimize front-end bandwidth!",
+                "description": "Mind develop less figure. Recently paper form cup expect.\nTogether seven best let city off exactly. Important finally quite in garden her relationship.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 39,
+                    "code": "RXZAKL",
+                    "public_name": "Brooke Sanders DDS",
+                    "biography": "Radio city their finish seven article toward. Task much himself visit Mrs serve. Own husband product participant.\nYou admit board someone. Young then evidence people.\n\nClearly purpose moment none task which. Suddenly leg ahead plant many. Play simply class head itself perhaps quickly difficult.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 44,
+                "guid": "22261205-d816-56be-8ac9-f7bea0105a0c",
+                "logo": "",
+                "date": "2020-12-16T11:30:00+01:00",
+                "start": "11:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-44-exclusive-systematic-artificial-intelligence",
+                "url": "http://localhost/democon/talk/JKWGYX/",
+                "title": "Exclusive systematic artificial intelligence",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Disintermediate leading-edge channels!",
+                "description": "Employee behind others bill edge present. Public foreign charge answer mind officer continue. Continue yard skin live over west common.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 36,
+                    "code": "LFTKAR",
+                    "public_name": "Jonathan Conway",
+                    "biography": "Smile throw risk cost low who accept. Hard option idea other couple how third. Bar chance if firm.\nView when girl over water difference reveal. Choice Mr difference.\n\nBenefit medical growth before face simply century. Activity realize few per speech kid financial. Thus factor writer strategy.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 45,
+                "guid": "d6de8489-3832-5d5f-9881-1ebe3dc25e67",
+                "logo": "",
+                "date": "2020-12-16T12:00:00+01:00",
+                "start": "12:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-45-ergonomic-multi-state-installation",
+                "url": "http://localhost/democon/talk/HEF9FZ/",
+                "title": "Ergonomic multi-state installation",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Target holistic methodologies!",
+                "description": "Situation training but here. Them produce him defense car. Piece member suggest through tax.\nCompare trade look. Fact describe first movement himself.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 40,
+                    "code": "8KYFC8",
+                    "public_name": "Audrey Campbell",
+                    "biography": "Make trade add item student. Trip draw study recently course somebody drop.\nAnalysis decision begin next. Guy production nice hundred. Set wide person expect she without those.\n\nSport without study practice moment. Remember have peace they practice name provide. Total land human run bed star.\nLight very rest commercial.",
+                    "answers": []
+                  },
+                  {
+                    "id": 10,
+                    "code": "D9MYSL",
+                    "public_name": "Jerry Rios",
+                    "biography": "Whom cultural where operation apply. Consider together plant religious.\n\nAgain to discuss argue anything. Whole leg spend. Cover company ok apply appear center also.\nSomeone ahead former reach impact imagine conference. Understand president likely evening out.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 48,
+                "guid": "50169afe-ce3c-55d2-bc07-0ab5abeeabc7",
+                "logo": "",
+                "date": "2020-12-16T12:30:00+01:00",
+                "start": "12:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-48-visionary-context-sensitive-throughput",
+                "url": "http://localhost/democon/talk/CLGPPB/",
+                "title": "Visionary context-sensitive throughput",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Transition innovative infrastructures!",
+                "description": "Rich list officer let less. Whole throw person much doctor still. Win own age five reduce notice human.\nNumber education cause. Authority west million.\nCampaign within industry say positive.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 14,
+                    "code": "PAUP8P",
+                    "public_name": "Randy Crawford",
+                    "biography": "Music provide central information debate its. Either eight after billion memory. Create two significant Congress debate receive many recently. Reach attention Mr phone party.\n\nProperty quickly leave same many west. Close phone mouth author year test.\nBrother treat stay eight. Big eat out chair serve economy.\nMuch director human own service wide.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 53,
+                "guid": "8aedb18f-f504-5c42-8b10-acf976dcdf42",
+                "logo": "",
+                "date": "2020-12-16T14:00:00+01:00",
+                "start": "14:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-53-distributed-empowering-service-desk",
+                "url": "http://localhost/democon/talk/MDEFDZ/",
+                "title": "Distributed empowering service-desk",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Incentivize next-generation applications!",
+                "description": "Between glass condition bit drop ten no record. Evening message week soon. However strategy her any.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 37,
+                    "code": "N33EUY",
+                    "public_name": "Stephanie Hudson",
+                    "biography": "Court western human control environmental word growth.\n\nNice everyone with artist hundred enough window.\nQuestion language child television end may activity. Now street sign ok whatever.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 61,
+                "guid": "15220a98-96e1-5af3-a496-286da4e9b269",
+                "logo": "",
+                "date": "2020-12-16T14:30:00+01:00",
+                "start": "14:30",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-61-up-sized-intangible-pricing-structure",
+                "url": "http://localhost/democon/talk/TPKKR7/",
+                "title": "Up-sized intangible pricing structure",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Incentivize web-enabled schemas!",
+                "description": "Down we number actually. Close Mr style resource woman factor choice. They stage mission push some. Forget it none my sure tonight half where.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 21,
+                    "code": "WRQGFG",
+                    "public_name": "Teresa Terrell",
+                    "biography": "Prevent above green mean. Range bit range. Data start decade imagine.\nInternational standard ask firm. Foot board majority own family long happy north. Glass heart fact as should.\n\nSimilar thank family friend him. Between though first performance race Mrs risk.\nFeeling stand language whom green. Answer mind apply realize name page Mr decision.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 62,
+                "guid": "aac20e55-76df-58ad-be13-de3665d51593",
+                "logo": "",
+                "date": "2020-12-16T15:00:00+01:00",
+                "start": "15:00",
+                "duration": "00:30",
+                "room": "Gray Room",
+                "slug": "democon-62-seamless-real-time-installation",
+                "url": "http://localhost/democon/talk/H8QBBM/",
+                "title": "Seamless real-time installation",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Talk",
+                "language": "en",
+                "abstract": "Engage world-class users!",
+                "description": "Reason day agent there.\nMajor break local girl few time face hundred. Dream election offer imagine participant.\nEconomy do fund provide religious. Professor boy help culture many civil.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 20,
+                    "code": "FMXAED",
+                    "public_name": "Curtis Andrews",
+                    "biography": "Something five significant young wide away assume. Window sign deal area cost. Successful want tax western start special.\n\nHome age respond fear development. Require high herself race. Season mission court hour focus civil.\nAssume simply future put present. Order now return decide challenge consumer huge.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              }
+            ],
+            "Tan Room": [
+              {
+                "id": 20,
+                "guid": "630051b3-c874-5093-bd3e-487fe2049e76",
+                "logo": "",
+                "date": "2020-12-16T09:00:00+01:00",
+                "start": "09:00",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-20-inverse-motivating-array",
+                "url": "http://localhost/democon/talk/9FNRXK/",
+                "title": "Inverse motivating array",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Leverage real-time web services!",
+                "description": "Program hope notice professor doctor as medical provide.\nExperience forget act. Form modern vote summer. Or cold occur degree per either citizen.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 21,
+                    "code": "WRQGFG",
+                    "public_name": "Teresa Terrell",
+                    "biography": "Prevent above green mean. Range bit range. Data start decade imagine.\nInternational standard ask firm. Foot board majority own family long happy north. Glass heart fact as should.\n\nSimilar thank family friend him. Between though first performance race Mrs risk.\nFeeling stand language whom green. Answer mind apply realize name page Mr decision.",
+                    "answers": []
+                  },
+                  {
+                    "id": 37,
+                    "code": "N33EUY",
+                    "public_name": "Stephanie Hudson",
+                    "biography": "Court western human control environmental word growth.\n\nNice everyone with artist hundred enough window.\nQuestion language child television end may activity. Now street sign ok whatever.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 30,
+                "guid": "ab6f1e60-90ef-5009-ab9f-6aa2f9dbf21b",
+                "logo": "",
+                "date": "2020-12-16T11:30:00+01:00",
+                "start": "11:30",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-30-decentralized-solution-oriented-secured-line",
+                "url": "http://localhost/democon/talk/WW9LXS/",
+                "title": "Decentralized solution-oriented secured line",
+                "subtitle": "",
+                "track": "Phased",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "E-enable robust partnerships!",
+                "description": "Himself far able save sit accept production. When family size outside billion identify. Watch these activity administration.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 31,
+                    "code": "QLLEE3",
+                    "public_name": "Kathy Moore",
+                    "biography": "Difficult myself people issue magazine. Word defense different staff.\nEverybody by sort. Month institution hope onto rather response.\nOff line amount sing.\n\nSeem forward field because whose. Reveal process meeting church. Like start beautiful evidence determine think out.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              },
+              {
+                "id": 50,
+                "guid": "2b2f1972-ee1f-536d-a364-f36561b3ecce",
+                "logo": "",
+                "date": "2020-12-16T14:00:00+01:00",
+                "start": "14:00",
+                "duration": "01:30",
+                "room": "Tan Room",
+                "slug": "democon-50-proactive-leadingedge-graphical-user-interface",
+                "url": "http://localhost/democon/talk/CEZNQP/",
+                "title": "Proactive leadingedge Graphical User Interface",
+                "subtitle": "",
+                "track": "Horizontal",
+                "type": "Workshop",
+                "language": "en",
+                "abstract": "Streamline world-class synergies!",
+                "description": "Media could case. Western practice he economy during various painting. Power move address visit lot might scientist individual.\nUnderstand may camera take.",
+                "recording_license": "",
+                "do_not_record": false,
+                "persons": [
+                  {
+                    "id": 14,
+                    "code": "PAUP8P",
+                    "public_name": "Randy Crawford",
+                    "biography": "Music provide central information debate its. Either eight after billion memory. Create two significant Congress debate receive many recently. Reach attention Mr phone party.\n\nProperty quickly leave same many west. Close phone mouth author year test.\nBrother treat stay eight. Big eat out chair serve economy.\nMuch director human own service wide.",
+                    "answers": []
+                  }
+                ],
+                "links": [],
+                "attachments": [],
+                "answers": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
