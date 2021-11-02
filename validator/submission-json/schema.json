@@ -1,0 +1,327 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/Submisson",
+    "definitions": {
+        "Submisson": {
+            "description": "A proposed talk, workshop, or other event",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "guid": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "subtitle": {
+                    "type": ["string", "null"]
+                },
+                "abstract": {
+                    "description": "The abstract, a short note of the submission’s content",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "The description, a more expansive description of the submission’s content",
+                    "type": ["string", "null"]
+                },
+                "duration": {
+                    "description": "The talk’s duration in minutes, or null",
+                    "type": ["integer", "null"],
+                    "examples": [30, 45, 90, null],
+                    "maximum": 840
+                },
+                "image": {
+                    "type": ["string", "null"]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["talk", "podium", "meeting", "workshop", "film", "performance", "music", "other"]
+                },
+                "do_not_record": {
+                    "description": "Indicates if the speaker consent to recordings of their talk",
+                    "type": "boolean"
+                },
+                "track": {
+                    "description": "The track this talk belongs to",
+                    "type": ["string", "null"],
+                    "examples": ["security", "design", null]
+                },
+                "speakers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Person"
+                    }
+                },
+                "language": {
+                    "description": "The language the submission is in, e.g. “en” or “de”",
+                    "type": "string",
+                    "enum": ["en", "de", "", "TODO"],
+                    "format": ""
+                },
+                "recording_license": {
+                    "type": ["string", "null"]
+                },
+                "links": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/Reference" }
+                },
+                "attachments": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/Reference" }
+                },
+                "answers": {
+                    "$ref": "#/definitions/Answers"
+                },
+                "event_classifiers": {
+                    "$ref": "#/definitions/EventClassifiers"
+                },
+                "slot": {
+                    "type": "object",
+                    "description": "An explanation about the purpose of this instance.",
+                    "required": [
+                        "start",
+                        "end",
+                        "room"
+                    ],
+                    "properties": {
+                        "start": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "end": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "room": {
+                            "type": "string",
+                            "examples": ["R101"]
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "internal_notes": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "description": "The tags attached to the current submission, as a list of strings.",
+                    "additionalItems": false,
+                    "items": {
+                        "examples": ["science"],
+                        "type": "string"
+                    }
+                },
+                "origin": {
+                    "type": "string",
+                    "format": "hostname"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "public_url": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "$schema": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title",
+                "abstract",
+                "guid",
+                "language",
+                "speakers"
+            ]
+        },
+        "Person": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "public_name": {
+                    "type": ["string", "null"]
+                },
+                "full_name": {
+                    "type": ["string", "null"]
+                },
+                "guid": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "avatar": {
+                    "type": ["string", "null"],
+                    "format": "uri"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "biography": {
+                    "type": ["string", "null"]
+                },
+                "links": {
+                    "type": "array",
+                    "items": {}
+                },
+                "contacts": {
+                    "type": "array",
+                    "items": {}
+                },
+                "state": {
+                    "type": ["string", "null"]
+                },
+                "availabilities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Availability"
+                    }
+                },
+                "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "examples": ["https://domain.tld/democon/people/101"]
+                },
+                "public_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "examples": ["https://domain.tld/democon/public/events/528"]
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "Reference": {
+            "title": "Link or Attachment",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": ["url"]
+        },
+        "Availability": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "start": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "end": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "end",
+                "start"
+            ],
+            "examples": [{
+                "start": "2021-10-20T11:00:00+02:00",
+                "end": "2021-10-20T17:00:00+02:00"
+            }]
+        },
+        "EventClassifiers": {
+            "type": "object",
+            "additionalProperties": true
+            /* TODO */
+        },
+        "Answers": {
+            "type": "array",
+            "description": "The question answers given by the speakers.",
+            "additionalItems": false,
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "question",
+                    "answer",
+                    "answer_file",
+                    "submission",
+                    "person",
+                    "options"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "question": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "question",
+                            "target"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "question": {
+                                "type": "object",
+                                "patternProperties": {
+                                    "^[a-z]{2}$": {
+                                        "type": "string",
+                                        "examples": ["How much do you like green, on a scale from 1-10?"]
+                                    }
+                                },
+                                "additionalProperties": true
+                            },
+                            "required": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "target": {
+                                "type": "string",
+                                "examples": ["submission"]
+                            },
+                            "options": {
+                                "type": "array",
+                                "additionalItems": true
+                            }
+                        },
+                        "additionalProperties": true
+                    },
+                    "answer": {
+                        "type": "string",
+                        "examples": ["11"]
+                    },
+                    "answer_file": {
+                        "type": ["string", "null"]
+                    },
+                    "submission": {
+                        "type": "string",
+                        "examples": ["ABCDE"]
+                    },
+                    "person": {
+                        "type": ["string", "null"]
+                    },
+                    "options": {
+                        "type": "array",
+                        "additionalItems": true
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    }
+}

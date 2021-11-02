@@ -1,0 +1,87 @@
+{
+  "$schema": "../schema.json",
+  "guid": "83ae8aec-0724-4eef-9b5a-6ead8698e629",
+  "title": "Vanity Fair",
+  "subtitle": "You can't connect the array without indexing the open-source ADP hard drive",
+  "description": "Squid austin chartreuse xoxo raw denim vinyl. Kickstarter mixtape 8-bit selvage cornhole. Microdosing gluten-free phlogiston.",
+  "duration": 2700,
+  "logo": null,
+  "type": "workshop",
+  "do_not_record": false,
+  "track": "online",
+  "abstract": "Pitchfork trust fund celiac echo pop-up aesthetic 3 wolf moon. Organic bicycle rights etsy wolf street yuccie marfa chia. Synth fixie pickled celiac occupy biodiesel vhs.",
+  "speakers": [
+    {
+      "id": 100,
+      "name": "rjakubowski",
+      "email": "royce_jakubowski@example.net",
+      "avatar": null,
+      "biography": null,
+      "links": [],
+      "full_name": "Royce Jakubowski",
+      "contacts": [],
+      "state": "unclear",
+      "availabilities": [
+        {
+          "start": "2021-10-20T11:00:00+02:00",
+          "end": "2021-10-20T17:00:00+02:00"
+        },
+        {
+          "start": "2021-10-19T12:00:00+02:00",
+          "end": "2021-10-19T15:00:00+02:00"
+        },
+        {
+          "start": "2021-10-18T11:00:00+02:00",
+          "end": "2021-10-18T15:00:00+02:00"
+        },
+        {
+          "start": "2021-10-17T11:00:00+02:00",
+          "end": "2021-10-17T15:00:00+02:00"
+        }
+      ],
+      "url": "http://localhost:3000/en/democon/people/100",
+      "public_url": "http://localhost:3000/en/democon/public/events/528"
+    },
+    {
+      "id": 101,
+      "public_name": "ntillman",
+      "email": "tillman.neida@example.org",
+      "avatar": null,
+      "biography": null,
+      "links": [],
+      "full_name": "Neida Tillman",
+      "contacts": [],
+      "state": "confirmed",
+      "availabilities": [
+        {
+          "start": "2021-10-20T11:00:00+02:00",
+          "end": "2021-10-20T18:00:00+02:00"
+        },
+        {
+          "start": "2021-10-19T12:00:00+02:00",
+          "end": "2021-10-19T16:00:00+02:00"
+        },
+        {
+          "start": "2021-10-18T10:00:00+02:00",
+          "end": "2021-10-18T15:00:00+02:00"
+        }
+      ],
+      "url": "http://localhost:3000/en/democon/people/101",
+      "public_url": "http://localhost:3000/en/democon/public/events/528"
+    }
+  ],
+  "event_classifiers": {},
+  "language": "",
+  "recording_license": "CC BY 4.0",
+  "links": [{
+    "url": "https://example.com/path/foo.html",
+    "title": "Title"
+  }],
+  "attachments": [{
+    "url": "https://example.com/path/foo.pdf",
+    "title": "Slides"
+  }],
+  "origin": "localhost",
+  "url": "http://localhost:3000/en/democon/events/528",
+  "public_url": "http://localhost:3000/en/democon/public/events/528"
+}

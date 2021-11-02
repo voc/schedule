@@ -1,0 +1,53 @@
+/* from https://docs.pretalx.org/en/latest/api/resources/submissions.html#get--api-events-(event)-submissions-code */
+{
+  "$schema": "../schema.json",
+  "code": "ABCDE",
+  "speakers": [
+    {
+      "name": "Jane",
+      "code": "DEFAB",
+      "biography": "A speaker",
+      "avatar": "avatar.png"
+    }
+  ],
+  "title": "A talk",
+  "submission_type": "talk",
+  "state": "confirmed",
+  "abstract": "A good talk.",
+  "description": "I will expand upon the properties of the talk, primarily its high quality.",
+  "duration": 30,
+  "do_not_record": true,
+  "is_featured": false,
+  "content_locale": "en",
+  "slot": {
+    "start": "2017-12-27T10:00:00Z",
+    "end": "2017-12-27T10:30:00Z",
+    "room": "R101"
+  },
+  "image": "submission.png",
+  "answers": [
+    {
+      "id": 1,
+      "question": {
+        "id": 1,
+        "question": {
+          "en": "How much do you like green, on a scale from 1-10?"
+        },
+        "required": false,
+        "target": "submission",
+        "options": []
+      },
+      "answer": "11",
+      "answer_file": null,
+      "submission": "ABCDE",
+      "person": null,
+      "options": []
+    }
+  ],
+  "resources": [
+    { "resource": "/path/to/file", "description": "Slides" }
+  ],
+  "notes": "Please make sure you give me red M&Ms",
+  "internal_notes": "Absolutely no M&Ms, but cool proposal otherwise!",
+  "tags": ["science"]
+}
