@@ -33,7 +33,12 @@ def fetch_schedule(series_title, source_url):
     infobox = soup.select('div.info-box > p')
     date = infobox[0].get_text().replace('Start', '')
     # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
-    start = tz.localize(datetime.strptime(date, '%A %d.%m.%Y %H:%M'))
+    try:
+        start = tz.localize(datetime.strptime(date, '%A %d.%m.%Y %H:%M'))
+    except ValueError:
+        time = next(filter(lambda x: 'Beginn:' in x.get_text(), infobox)).get_text().replace('Beginn:', '').strip()
+        start = tz.localize(datetime.strptime(f'{date} {time}', '%A %d.%m.%Y %H:%M'))
+
     duration = 2 * 60
 
     schedule = Schedule.from_template(
@@ -61,7 +66,7 @@ def fetch_schedule(series_title, source_url):
         ('date', start.isoformat()),
         ('start', start.strftime('%H:%M')),
         ('duration', '%d:%02d' % divmod(duration, 60)),
-        ('room', 'Saal 23'),
+        ('room', 'Crisis Response Makerspace'),
         ('slug', '{slug}-{id}-{name}'.format(
             slug=acronym,
             id=local_id,
