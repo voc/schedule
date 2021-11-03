@@ -267,6 +267,7 @@ class Schedule:
 
     def reset_generator(self):
         self._schedule['schedule']['generator'] = tools.generator_info()
+        self._schedule["schedule"].move_to_end('generator', last=False)
 
     def copy(self, name):
         schedule = copy.deepcopy(self._schedule)
