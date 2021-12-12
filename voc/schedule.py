@@ -169,6 +169,7 @@ class Schedule:
         schedule_r = requests.get(url)  # , verify=False)
 
         if schedule_r.ok is False:
+            schedule_r.raise_for_status() 
             raise Exception("  Request failed, HTTP {0}.".format(schedule_r.status_code))
 
         # self.schedule = tools.parse_json(schedule_r.text)
@@ -467,11 +468,11 @@ class Schedule:
                         # TODO? offset for person IDs?
                     
                     # workaround for rC3 – TODO make configurable
-                    if int(event['id']) < 10000:
-                        event['id'] = int(re.sub('[^0-9]+', '', event['guid'])[0:6])
+                    #if int(event['id']) < 10000:
+                    #    event['id'] = int(re.sub('[^0-9]+', '', event['guid'])[0:6])
 
                     # overwrite slug for pretalx schedule.json input
-                    if 'answers' in event:
+                    if options.get('overwrite_slug', False) and 'answers' in event:
                         event['slug'] = '{slug}-{id}-{name}'.format(
                             slug=self.conference('acronym').lower(),
                             id=event['id'],
