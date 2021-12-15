@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-import sys, os, locale, argparse
+import locale
+import argparse
+import os
 import requests
 import json
 from collections import OrderedDict
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 import csv
 import hashlib
 import pytz
@@ -55,6 +56,22 @@ else:
 # specifies the date format used in the CSV file respectivly the google docs spreadsheet
 date_format = '%Y-%m-%d %H:%M'
 default_talk_length = timedelta(minutes=args.default_talk_length)
+
+# Coloum keys of CSV
+if args.default_language == 'en':
+    date = 'Date'
+    time = 'Time'
+    title = 'Title'
+    description = 'Description'
+    room = 'Room'
+    persons = 'Presenter'
+else:
+    date = 'Datum'
+    time = 'Uhrzeit'
+    title = 'Title'
+    description = 'Beschreibung'
+    room = 'Raum'
+    persons = 'Vortragende'
 # end config
 
 if not os.path.exists(output_dir):
@@ -135,14 +152,14 @@ def process(acronym, base_id, source_csv_url):
 
             try:
                 start_time = tz.localize(datetime.strptime(
-                    items['meta']['Datum'] + ' ' + items['meta']['Uhrzeit'],
+                    items['meta'][date] + ' ' + items['meta'].get(time, '12:00'),
                     date_format
                 ))
                 items['start_time'] = start_time
                 items['end_time'] = start_time + default_talk_length
 
                 # only accept valid entries
-                if len(items['meta']) > 0 and 'Titel' in items['meta']:
+                if len(items['meta']) > 0 and title in items['meta']:
                     csv_schedule.append(items)
 
                     if min_date is None or start_time < min_date:
@@ -181,12 +198,11 @@ def process(acronym, base_id, source_csv_url):
 
     for event in csv_schedule:
         id = str(base_id + int(event['meta']['ID']))
-        room = event['meta']['Raum']
         guid = gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
         duration = (event['end_time'] - event['start_time']).seconds / 60
 
         if args.split_persons:
-            event['Vortragende'] = event['Vortragende'].split(',')
+            event[persons] = event[persons].split(',')
 
         event_n = OrderedDict([
             ('id', id),
@@ -195,21 +211,22 @@ def process(acronym, base_id, source_csv_url):
             ('date', event['start_time'].isoformat()),
             ('start', event['start_time'].strftime('%H:%M')),
             ('duration', '%d:%02d' % divmod(duration, 60)),
-            ('room', room),
-            ('slug', '-'.join([acronym, id, normalise_string(event['meta']['Titel'])])),
-            ('title', event['meta']['Titel']),
+            ('room', event['meta'].get(room, 'Room')),
+            ('slug', '-'.join([acronym, id, normalise_string(event['meta'][title])])),
+            ('title', event['meta'][title]),
             ('subtitle', event['meta'].get('Untertitel', '')),
             ('track', ''),
             ('type', ''),
             ('language', event['meta'].get('Sprache', args.default_language)),
             ('abstract', ''),
-            ('description', event['meta'].get('Beschreibung', '')),
+            ('description', event['meta'].get(description, '')),
             ('do_not_record', event['meta'].get('Aufzeichnung?', '') == 'nein'),
+            ('video_download_url', event['meta'].get('video_download_url')),
             ('persons', [OrderedDict([
                 ('id', get_id(gen_uuid(p.strip().split('\n')[0]))),
                 ('public_name', p.strip()),
                 # ('#text', p),
-            ]) for p in event['Vortragende'].values()]),
+            ]) for p in event[persons].values()]),
             ('links', [])
         ])
 
