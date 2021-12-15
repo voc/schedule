@@ -5,24 +5,20 @@ import sys, os, locale, argparse
 import requests
 import json
 from collections import OrderedDict
-import dateutil.parser
 from datetime import datetime
 from datetime import timedelta
 import csv
 import hashlib
 import pytz
+import math
 
-
-if sys.version_info[0] < 3:
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
+from voc.tools import normalise_string, gen_uuid, get_id
+from voc.schedule import Schedule, Event
 
 days = []
-de_tz = pytz.timezone('Europe/Amsterdam')
+tz = pytz.timezone('Europe/Amsterdam')
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
-# some functions used in multiple files of this script collection
-import voc.tools
 
 parser = argparse.ArgumentParser()
 parser.add_argument('acronym', help='the event acronym')
@@ -61,21 +57,6 @@ date_format = '%Y-%m-%d %H:%M'
 default_talk_length = timedelta(minutes=args.default_talk_length)
 # end config
 
-
-template = { "schedule":  OrderedDict([
-        ("version", "1.0"),
-        ("conference",  OrderedDict([
-            ("title", ""),
-            ("acronym", acronym),
-            ("daysCount", 1),
-            ("start", ""),
-            ("end",   ""),
-            ("timeslot_duration", "00:15"),
-            ("days", [])
-        ]))
-    ])
-}
-
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 os.chdir(output_dir)
@@ -84,9 +65,8 @@ os.chdir(output_dir)
 def main():
     process(acronym, 0, source_csv_url)
 
-def process(acronym, base_id, source_csv_url):
-    out = template
 
+def process(acronym, base_id, source_csv_url):
     print('Processing ' + acronym)
 
     if not offline:
@@ -105,6 +85,8 @@ def process(acronym, base_id, source_csv_url):
     csv_schedule = []
     max_date = None
     min_date = None
+    conference_title = None
+    version = None
 
     filename = 'schedule-' + acronym + '.csv'
     if sys.version_info[0] < 3:
@@ -118,8 +100,11 @@ def process(acronym, base_id, source_csv_url):
         # first header
         keys = next(reader)
         # store conference title from top left cell into schedule
-        out['schedule']['conference']['title'] = keys[0].split('#')[0].strip()
-        out['schedule']['version'] = keys[0].split('#')[1].replace('Version', '').strip()
+        conference_title = keys[0].split('#')[0].strip()
+        try:
+            version = keys[0].split('#')[1].replace('Version', '').strip()
+        except:
+            pass
         last = keys[0] = 'meta'
         keys_uniq = []
         for i, k in enumerate(keys):
@@ -135,38 +120,41 @@ def process(acronym, base_id, source_csv_url):
         last = None
         for row in reader:
             i = 0
-            items = OrderedDict([ (k, OrderedDict()) for k in keys_uniq ])
+            items = OrderedDict([(k, OrderedDict()) for k in keys_uniq])
             row_iter = iter(row)
 
             for value in row_iter:
                 value = value.strip()
                 if keys2[i] != '' and value != '':
                     try:
-                      items[keys[i]][keys2[i]] = value#.decode('utf-8')
+                        items[keys[i]][keys2[i]] = value  # .decode('utf-8')
                     except AttributeError as e:
-                      print("Error in row {}, cell {} value: {}".format(keys[i],keys2[i], value))
-                      raise e
+                        print("Error in row {}, cell {} value: {}".format(keys[i], keys2[i], value))
+                        raise e
                 i += 1
 
             try:
-                start_time = datetime.strptime( items['meta']['Datum'] + ' ' + items['meta']['Uhrzeit'], date_format)
+                start_time = tz.localize(datetime.strptime(
+                    items['meta']['Datum'] + ' ' + items['meta']['Uhrzeit'],
+                    date_format
+                ))
                 items['start_time'] = start_time
                 items['end_time'] = start_time + default_talk_length
 
                 # only accept valid entries
                 if len(items['meta']) > 0 and 'Titel' in items['meta']:
-                  csv_schedule.append(items)
+                    csv_schedule.append(items)
 
-                  if min_date is None or start_time < min_date:
-                      min_date = start_time
-                  if max_date is None or start_time > max_date:
-                      max_date = start_time
+                    if min_date is None or start_time < min_date:
+                        min_date = start_time
+                    if max_date is None or start_time > max_date:
+                        max_date = start_time
 
-                  # check if end_time of previous event (calculated from default_talk_length) overlaps with start_time
-                  # long term TODO: check also other events not only the previous one
-                  if last is not None and last['end_time'] > start_time:
-                      last['end_time'] = start_time
-                  last = items
+                    # check if end_time of previous event (calculated from default_talk_length) overlaps with start_time
+                    # long term TODO: check also other events not only the previous one
+                    if last is not None and last['end_time'] > start_time:
+                        last['end_time'] = start_time
+                    last = items
                 else:
                     print(" ignoring empty/invalid row in CSV file")
             except RuntimeError as e:
@@ -176,31 +164,26 @@ def process(acronym, base_id, source_csv_url):
     if args.verbose:
         print(json.dumps(csv_schedule, indent=4, default=str))
 
-    out['schedule']['conference']['start'] = min_date.strftime('%Y-%m-%d')
-    out['schedule']['conference']['end'] = max_date.strftime('%Y-%m-%d')
-    out['schedule']['conference']['daysCount'] = (max_date - min_date).days + 1
+    delta = max_date - min_date
+    days_count = math.ceil(delta.days + (delta.seconds / 3600) / 24) + 1
+    print(days_count, delta)
+
+    schedule = Schedule.from_template(
+        title=conference_title,
+        acronym=acronym,
+        year=min_date.year,
+        month=min_date.month,
+        day=min_date.day,
+        days_count=days_count)
+    schedule.schedule().version = '1.0' or version
 
     print(" converting to schedule ")
-    conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
-
-    for i in range(out['schedule']['conference']['daysCount']):
-        date = conference_start_date + timedelta(days=i)
-        start = date + timedelta(hours=8) # conference day starts at 8:00
-        end = start + timedelta(hours=17)  # conference day lasts 17 hours
-
-        out['schedule']['conference']['days'].append(OrderedDict([
-            ('index', i+1),
-            ('date' , date.strftime('%Y-%m-%d')),
-            ('start', start.isoformat()),
-            ('end', end.isoformat()),
-            ('rooms', OrderedDict())
-        ]))
 
     for event in csv_schedule:
         id = str(base_id + int(event['meta']['ID']))
         room = event['meta']['Raum']
-        guid = voc.tools.gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
-        duration = (event['end_time'] - event['start_time']).seconds/60
+        guid = gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
+        duration = (event['end_time'] - event['start_time']).seconds / 60
 
         if args.split_persons:
             event['Vortragende'] = event['Vortragende'].split(',')
@@ -211,46 +194,34 @@ def process(acronym, base_id, source_csv_url):
             # ('logo', None),
             ('date', event['start_time'].isoformat()),
             ('start', event['start_time'].strftime('%H:%M')),
-            ('duration', '%d:%02d' % divmod(duration, 60) ),
+            ('duration', '%d:%02d' % divmod(duration, 60)),
             ('room', room),
-            ('slug', '-'.join([acronym, id, voc.tools.normalise_string(event['meta']['Titel'])])),
+            ('slug', '-'.join([acronym, id, normalise_string(event['meta']['Titel'])])),
             ('title', event['meta']['Titel']),
             ('subtitle', event['meta'].get('Untertitel', '')),
             ('track', ''),
             ('type', ''),
-            ('language', event['meta'].get('Sprache', args.default_language) ),
+            ('language', event['meta'].get('Sprache', args.default_language)),
             ('abstract', ''),
-            ('description', event['meta'].get('Beschreibung', '') ),
+            ('description', event['meta'].get('Beschreibung', '')),
             ('do_not_record', event['meta'].get('Aufzeichnung?', '') == 'nein'),
-            ('persons', [ OrderedDict([
-                ('id', 0),
-                ('full_public_name', p.strip()),
-                #('#text', p),
-            ]) for p in event['Vortragende'].values() ]),
+            ('persons', [OrderedDict([
+                ('id', get_id(gen_uuid(p.strip().split('\n')[0]))),
+                ('public_name', p.strip()),
+                # ('#text', p),
+            ]) for p in event['Vortragende'].values()]),
             ('links', [])
         ])
 
         if args.verbose:
             print(event_n['title'])
-
-        day = (event['start_time'] - conference_start_date).days + 1
-        day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
-        if room not in day_rooms:
-            day_rooms[room] = list()
-        day_rooms[room].append(event_n)
-
-    if args.verbose:
-        print(json.dumps(out, indent=2))
+        try:
+            schedule.add_event(Event(event_n))
+        except Warning as e:
+            print(e)
 
     print(" writing results to disk")
-    with open('schedule-' + acronym + '.json', 'w') as fp:
-        json.dump(out, fp, indent=4)
-
-    with open('schedule-' + acronym + '.xml', 'w') as fp:
-        fp.write(voc.tools.dict_to_schedule_xml(out));
-
-    # TODO: Validate XML via schema file
-    print(' end')
+    schedule.export(acronym)
 
 
 if __name__ == '__main__':
