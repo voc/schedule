@@ -30,14 +30,11 @@ local = False
 use_offline_frab_schedules = False
 only_workshops = False
 
-xc3 = 'rC3_21'
-
-main_schedule_url = 'https://fahrplan.events.ccc.de/rc3/2020/Fahrplan/schedule.json'
-
-#channels = requests \
+# channels = requests \
 #    .get('https://c3voc.de/wiki/lib/exe/graphql2.php?query={channels{nodes{name:slug,url:schedule_url,schedule_room,room_guid,prefix}}}') \
 #    .json()['data']['channels']['nodes']
 
+xc3 = 'rC3_21'
 channels = [
     {'url': 'https://pretalx.c3voc.de/rc3-2021-fem/schedule/export/schedule.json', 'name': 'FeM'},
     {'url': 'https://pretalx.c3voc.de/rc3-2021-cbase/schedule/export/schedule.json', 'name': 'c-base'},
@@ -45,7 +42,13 @@ channels = [
     {'url': 'https://pretalx.c3voc.de/rc3-2021-chaosstudiohamburg/schedule/export/schedule.json', 'name': 'Chaosstudio Hamburg'},
     {'url': 'https://pretalx.c3voc.de/rc3-2021-chaoszone/schedule/export/schedule.json', 'name': 'ChaosZone TV'},
     {'url': 'https://pretalx.c3voc.de/rc3-2021-r3s/schedule/export/schedule.json', 'name': 'R3S'},
-    {'url': 'https://cfp.franconian.net/end-of-year-event-2021/schedule/export/schedule.json', 'name': 'franconian.net'},
+    {
+        'url': 'https://cfp.franconian.net/end-of-year-event-2021/schedule/export/schedule.json', 
+        'name': 'franconian.net',
+        'options': {
+            'overwrite_slug': True
+        }
+    },
     {'url': 'https://pretalx.c3voc.de/rc3-2021-hacc-a-f/schedule/export/schedule.json', 'name': 'about:future / hackers against climate change München'},
     {'url': 'https://pretalx.c3voc.de/rc3-2021-sendezentrum/schedule/export/schedule.json', 'name': 'Sendezentrum'},
     {'url': 'https://pretalx.c3voc.de/rc3-2021-haecksen/schedule/export/schedule.json', 'name': 'haecksen'},
@@ -67,7 +70,6 @@ channels = [
 additional_schedule_urls = channels
 
 id_offsets = {
-    'chaoszone': 1500
     # c3voc preatax schedule local ids's range from to till 500
 }
 
@@ -76,10 +78,19 @@ id_offsets = {
 # other rooms/assemblies are added at the end on demand.
 rooms = {
     'channels': [
-        # 'restrealitaet',
         # channels with video recordings/livestream – same order as streaming website
+        'Chaos-West TV',
+        'Chaosstudio Hamburg',
+        'ChaosZone TV',
+        'r3s - Monheim/Rhein',
+        'franconian.net Livestream',
+        'about:future stage',
+        'Sendezentrum Bühne',
+        'Haecksen Stream',
+        'xHain Mainhall',
     ],
     'rooms': [
+        'xHain Workshop-Area',
     ],
     'music': [
     ]
@@ -106,6 +117,7 @@ os.chdir(output_dir)
 if not os.path.exists('events'):
     os.mkdir('events')
 
+
 def main():
     #try:
     #    full_schedule = Schedule.from_url(main_schedule_url)
@@ -117,12 +129,7 @@ def main():
     conference['acronym'] = 'rc3-2021'
     conference['title'] = 'rC3 NOWHERE'
 
-    # frab_rooms = full_schedule.rooms()
-
-    loaded_schedules = {
-        #main_schedule_url: True,
-        #'https://frab.cccv.de/': True
-    }
+    loaded_schedules = {}
 
     # add addional rooms from this local config now, so they are in the correct order
     for key in rooms:
