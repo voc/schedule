@@ -348,21 +348,20 @@ def harmonize_event_type(event):
 
         # TALKS
         'Talk': 'Talk',
-        'Talk 20 Minuten + 5 Minuten Fragen': 'Talk',
-        'Talk 30 min + 10min Q&A': 'Talk',
-        'Talk 45 Minuten + 10 Minuten für Fragen': 'Talk',
-        'Talk 45+10 Min': 'Talk',
-        'Talk 20+5 Min': 'Talk',
-        'Talk 60min + 20min Q&A': 'Talk',
         'Vortrag': 'Talk',
-        'Vortrag Maintrack': 'Track',
         'lecture': 'Talk',
         'Beitrag': 'Talk',
         'Track': 'Talk',
+        'Live on stage': 'Talk',
+        'Recorded': 'Talk',
+        '60 min Talk + 15 min Q&A': 'Talk',
+        '30 min Short Talk + 10 min Q&A': 'Talk',
 
         # LIGHTNING TALK
+        'Lightningtalk': 'Lightning Talk',
         'lightning_talk': 'Lightning Talk',
-        'LightningTalk 15min 10min Q&A': 'Lightning Talk',
+        'LightningTalk': 'Lightning Talk',
+        'Lightning': 'Lightning Talk',
 
         # MEETUP
         'Meetup': 'Meetup',
@@ -377,10 +376,9 @@ def harmonize_event_type(event):
         'podium': 'Podium',
 
         # PERFORMANCE
-        'Theater, Performance, oder irgendwas ganz anderes formatsprengendes': 'Performance',
+        'Theater,': 'Performance',
         'performance': 'Performance',
         'Performance': 'Performance',
-        'Performance 60min': 'Performance',
 
         # CONCERT
         'Konzert': 'Concert',
@@ -391,17 +389,18 @@ def harmonize_event_type(event):
 
         # WORKSHOP
         'Workshop': 'Workshop',
-        'Workshop 110min': 'Workshop',
-        'Workshop 60 Min': 'Workshop',
 
         # LIVE-PODCAST
         'Live-Podcast': 'Live-Podcast',
     }
-    if event.get('type') in type_mapping:
-        event['type'] = type_mapping[event['type']]
 
-    if not(event.get('type')):
+    type = event.get('type').split()
+    if not(type):
         event['type'] = 'Other'
+    elif event.get('type') in type_mapping:
+        event['type'] = type_mapping[event['type']]
+    elif type[0] in type_mapping:
+        event['type'] = type_mapping[type[0]]
 
     if event.get('language') is not None:
         event['language'] = event['language'].lower()
