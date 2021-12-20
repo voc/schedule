@@ -360,6 +360,7 @@ def harmonize_event_type(event):
         # LIGHTNING TALK
         'Lightningtalk': 'Lightning Talk',
         'lightning_talk': 'Lightning Talk',
+        'Lightning-Talk': 'Lightning Talk',
         'LightningTalk': 'Lightning Talk',
         'Lightning': 'Lightning Talk',
 
