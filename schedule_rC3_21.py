@@ -82,15 +82,15 @@ rooms = {
         'Chaos-West TV',
         'Chaosstudio Hamburg',
         'ChaosZone TV',
+        'c-base',
         'r3s - Monheim/Rhein',
         'franconian.net Livestream',
         'about:future stage',
         'Sendezentrum Bühne',
         'Haecksen Stream',
-        'xHain Mainhall',
+        'Lichtung',
     ],
     'rooms': [
-        'xHain Workshop-Area',
     ],
     'music': [
     ]
