@@ -43,7 +43,7 @@ channels = [
     {'url': 'https://pretalx.c3voc.de/rc3-2021-chaoszone/schedule/export/schedule.json', 'name': 'ChaosZone TV'},
     {'url': 'https://pretalx.c3voc.de/rc3-2021-r3s/schedule/export/schedule.json', 'name': 'R3S'},
     {
-        'url': 'https://cfp.franconian.net/end-of-year-event-2021/schedule/export/schedule.json', 
+        'url': 'https://cfp.franconian.net/end-of-year-event-2021/schedule/export/schedule.json',
         'name': 'franconian.net',
         'options': {
             'overwrite_slug': True
@@ -211,7 +211,7 @@ def main():
 
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
-        git('git remove events/*')
+        git('rm events/*')
 
     # write seperate file for each event, to get better git diffs
     def export_event(event: Event):
