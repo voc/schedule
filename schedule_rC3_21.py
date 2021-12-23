@@ -39,37 +39,37 @@ channels = [
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-fem/schedule/export/schedule.json', 
         'name': 'FeM',
-        'room_guid': '',
+        'room_guid': '69371c99-1f93-4d01-8ea6-65b0e748b9e0',
         'stage': 'FeM Channel'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-cbase/schedule/export/schedule.json',
         'name': 'c-base',
-        'room_guid': '',
+        'room_guid': '5cfed623-26cc-4ac4-a4b2-0653195ddb4a',
         'stage': 'c-base'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-cwtv/schedule/export/schedule.json',
         'name': 'CWTV',
-        'room_guid': '',
+        'room_guid': '01a11ad1-38e2-464d-b0bb-de6a85534ed4',
         'stage': 'Chaos-West TV'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-chaosstudiohamburg/schedule/export/schedule.json',
         'name': 'Chaosstudio Hamburg',
-        'room_guid': '',
+        'room_guid': 'a4475839-786e-451b-aaa4-b37ed830ab2f',
         'stage': 'Chaosstudio Hamburg'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-chaoszone/schedule/export/schedule.json',
         'name': 'ChaosZone TV',
-        'room_guid': '',
+        'room_guid': 'e72d07ac-75b2-4b93-8f05-4bc7fe6e7e96',
         'stage': 'ChaosZone TV'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-r3s/schedule/export/schedule.json',
         'name': 'r3s',
-        'room_guid': '',
+        'room_guid': 'f91f4af4-b667-4705-9aab-5c280177bf49',
         'stage': 'r3s - Monheim/Rhein'
     },
     {
@@ -78,25 +78,25 @@ channels = [
         'options': {
             'overwrite_slug': True
         },
-        'room_guid': '',
+        'room_guid': '6e8bfc10-0670-412e-bbe9-7b9aa1dcd714',
         'stage': 'franconian.net Livestream'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-hacc-a-f/schedule/export/schedule.json',
         'name': 'about:future / hacc',
-        'room_guid': '',
+        'room_guid': 'c2789542-5d1a-41a7-a934-119f762fbdb0',
         'stage': 'about:future stage'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-sendezentrum/schedule/export/schedule.json',
         'name': 'Sendezentrum',
-        'room_guid': '',
+        'room_guid': 'd1915b0a-6d9d-47f0-b9e8-3c00ab62e2fe',
         'stage': 'Sendezentrum Bühne'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-haecksen/schedule/export/schedule.json',
         'name': 'haecksen',
-        'room_guid': '',
+        'room_guid': '6246d4db-85df-47de-b4ef-1edb76b5bd7b',
         'stage': 'Haecksen Stream'
     },
     {
@@ -108,7 +108,7 @@ channels = [
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-xhain/schedule/export/schedule.json',
         'name': 'xHain',
-        'room_guid': '',
+        'room_guid': '32277bdb-ae00-4cfb-81f1-e9ef36aee72d',
         'stage': 'Lichtung'
     },
 ]
