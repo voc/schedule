@@ -36,24 +36,81 @@ only_workshops = False
 
 xc3 = 'rC3_21'
 channels = [
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-fem/schedule/export/schedule.json', 'name': 'FeM'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-cbase/schedule/export/schedule.json', 'name': 'c-base'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-cwtv/schedule/export/schedule.json', 'name': 'CWTV'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-chaosstudiohamburg/schedule/export/schedule.json', 'name': 'Chaosstudio Hamburg'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-chaoszone/schedule/export/schedule.json', 'name': 'ChaosZone TV'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-r3s/schedule/export/schedule.json', 'name': 'R3S'},
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-fem/schedule/export/schedule.json', 
+        'name': 'FeM',
+        'room_guid': '',
+        'stage': 'FeM Channel'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-cbase/schedule/export/schedule.json',
+        'name': 'c-base',
+        'room_guid': '',
+        'stage': 'c-base'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-cwtv/schedule/export/schedule.json',
+        'name': 'CWTV',
+        'room_guid': '',
+        'stage': 'Chaos-West TV'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-chaosstudiohamburg/schedule/export/schedule.json',
+        'name': 'Chaosstudio Hamburg',
+        'room_guid': '',
+        'stage': 'Chaosstudio Hamburg'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-chaoszone/schedule/export/schedule.json',
+        'name': 'ChaosZone TV',
+        'room_guid': '',
+        'stage': 'ChaosZone TV'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-r3s/schedule/export/schedule.json',
+        'name': 'r3s',
+        'room_guid': '',
+        'stage': 'r3s - Monheim/Rhein'
+    },
     {
         'url': 'https://cfp.franconian.net/end-of-year-event-2021/schedule/export/schedule.json',
         'name': 'franconian.net',
         'options': {
             'overwrite_slug': True
-        }
+        },
+        'room_guid': '',
+        'stage': 'franconian.net Livestream'
     },
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-hacc-a-f/schedule/export/schedule.json', 'name': 'about:future / hackers against climate change München'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-sendezentrum/schedule/export/schedule.json', 'name': 'Sendezentrum'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-haecksen/schedule/export/schedule.json', 'name': 'haecksen'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-gehacktes-from-hell/schedule/export/schedule.json', 'name': 'gehacktes from hell'},
-    {'url': 'https://pretalx.c3voc.de/rc3-2021-xhain/schedule/export/schedule.json', 'name': 'xhain hack+makespace'},
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-hacc-a-f/schedule/export/schedule.json',
+        'name': 'about:future / hacc',
+        'room_guid': '',
+        'stage': 'about:future stage'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-sendezentrum/schedule/export/schedule.json',
+        'name': 'Sendezentrum',
+        'room_guid': '',
+        'stage': 'Sendezentrum Bühne'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-haecksen/schedule/export/schedule.json',
+        'name': 'haecksen',
+        'room_guid': '',
+        'stage': 'Haecksen Stream'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-gehacktes-from-hell/schedule/export/schedule.json',
+        'name': 'hell',
+        'room_guid': 'e5d65c11-3c4e-418c-aebe-4fc7a655176b',
+        'stage': 'Bierscheune'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-xhain/schedule/export/schedule.json',
+        'name': 'xHain',
+        'room_guid': '',
+        'stage': 'Lichtung'
+    },
 ]
 
 '''    {
@@ -84,6 +141,7 @@ rooms = {
         'ChaosZone TV',
         'c-base',
         'r3s - Monheim/Rhein',
+        'FeM Channel',
         'franconian.net Livestream',
         'about:future stage',
         'Sendezentrum Bühne',
@@ -136,10 +194,10 @@ def main():
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
 
-    # add guid's from wiki to schedule class
+    # add room guid's to schedule class
     for entry in channels:
         if entry.get('room_guid'):
-            full_schedule._room_ids[entry['schedule_room'] or entry['name']] = entry['room_guid']
+            full_schedule._room_ids[entry['stage'] or entry['name']] = entry['room_guid']
 
 
     # add events from additional_schedule's to full_schedule
