@@ -89,6 +89,7 @@ rooms = {
         'Sendezentrum Bühne',
         'Haecksen Stream',
         'Lichtung',
+        'Bierscheune',
     ],
     'rooms': [
     ],
@@ -201,7 +202,7 @@ def main():
 
 
     # write all events from the channels to a own schedule.json/xml
-    # channel_schedule = export_stages_schedule(full_schedule)
+    channel_schedule = export_stages_schedule(full_schedule)
 
     # write all events from non-frab to a own schedule.json/xml
     # def non_frab_filter(key):
@@ -302,7 +303,7 @@ def export_stages_schedule(full_schedule):
         i = 0
         room_keys = list(day['rooms'].keys())
         for room_key in room_keys:
-            if ('Workshop' in room_key or 'Meetup' in room_key) and not(i < 4 or room_key in rooms['channels']):
+            if not(room_key in rooms['channels']):
                 del day['rooms'][room_key]
             i += 1
 
