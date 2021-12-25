@@ -90,7 +90,13 @@ class Event(collections.abc.Mapping):
 
     def items(self):
         return self._event.items()
-    
+
+    def persons(self):
+        return [
+            p.get('name', p.get('public_name'))
+            for p in self._event['persons']
+        ]
+
     def graphql(self):
         r = dict((re.sub(r'_([a-z])', lambda m: (m.group(1).upper()), k), v) for k, v in self._event.items())
         r["localId"] = self._event['id']
@@ -111,6 +117,29 @@ class Event(collections.abc.Mapping):
         # fix wrong formatted links
         if len(r['links']) > 0 and isinstance(r['links'][0], str):
             r['links'] = [{'url': url, 'title': url} for url in r['links']]
+        return r
+
+    def voctoimport(self):
+        r = dict(self._event.items())
+        r['talkid'] = self._event['id']
+        del r['id']
+        del r['type']
+        del r['start']
+        del r['persons']
+        del r['logo']
+        del r['subtitle']
+        if 'recording_license' in r:
+            del r['recording_license']
+        if 'do_not_record' in r:
+            del r['do_not_record']
+        if 'video_download_url' in r:
+            del r['video_download_url']
+        if 'answers' in r:
+            del r['answers']
+        if 'links' in r:
+            del r['links']
+        if 'attachments' in r:
+            del r['attachments']
         return r
 
     # export all attributes which are not part of rC3 core event model
