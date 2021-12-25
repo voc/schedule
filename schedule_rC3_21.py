@@ -79,7 +79,7 @@ channels = [
             'overwrite_slug': True
         },
         'room_guid': '6e8bfc10-0670-412e-bbe9-7b9aa1dcd714',
-        'stage': 'franconian.net Livestream'
+        'stage': 'franconian.net'
     },
     {
         'url': 'https://pretalx.c3voc.de/rc3-2021-hacc-a-f/schedule/export/schedule.json',
@@ -142,7 +142,7 @@ rooms = {
         'c-base',
         'r3s - Monheim/Rhein',
         'FeM Channel',
-        'franconian.net Livestream',
+        'franconian.net',
         'about:future stage',
         'Sendezentrum Bühne',
         'Haecksen Stream',
