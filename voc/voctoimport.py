@@ -1,4 +1,5 @@
 from os import getenv
+from sys import stdout
 import json
 import time
 
@@ -26,21 +27,17 @@ def get_conference(acronym):
           id
           title
         }
-      }'''), variable_values={'acronym': acronym})
+      }'''), variable_values={'acronym': acronym})['conference']
 
 
-def add_event(conference_slug, event):
+def add_event(conference_id, event):
     data = {
         "event": {
             'talkid': event['id'],
             'persons': ', '.join([p for p in event.persons()]),
             **(event.voctoimport()),
             'published': False,
-            'conferenceToConferenceId': {
-                'connectBySlug': {
-                    'slug': conference_slug
-                }
-            }
+            'conferenceId': conference_id
         }
     }
 
@@ -54,6 +51,8 @@ def add_event(conference_slug, event):
 
     try:
         client.execute(query, {'input': data})
+        stdout.write('.')
+        stdout.flush()
     except Exception as e:
         print(json.dumps(data, indent=2))
         print()
@@ -76,13 +75,15 @@ def remove_event(event_guid):
 
 class VoctoImport:
     schedule = None
+    conference = None
 
     def __init__(self, schedule: Schedule, create=False):
         self.schedule = schedule
+        self.conference = get_conference(schedule.conference('acronym'))
         pass
 
     def upsert_event(self, event):
-        add_event(self.schedule.conference('acronym'), Event(event))
+        add_event(self.conference['id'], Event(event))
 
     def depublish_event(self, event_guid):
         remove_event(event_guid)
@@ -94,7 +95,7 @@ def push_schedule(schedule: Schedule, create=False):
 
 
 def test():
-    schedule = Schedule.from_url('https://pretalx.c3voc.de/rc3-2021-haecksen/schedule/export/schedule.json')
+    schedule = Schedule.from_url('https://pretalx.c3voc.de/rc3-2021-chaoszone/schedule/export/schedule.json')
     # schedule = Schedule.from_file('rc3/everything.schedule.json')
 
     try:
@@ -105,4 +106,4 @@ def test():
 
 if __name__ == '__main__':
     test()
-    print('test done')
+    print('\nimport done')
