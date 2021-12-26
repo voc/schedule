@@ -111,23 +111,32 @@ channels = [
         'room_guid': '32277bdb-ae00-4cfb-81f1-e9ef36aee72d',
         'stage': 'Lichtung'
     },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-lounge/schedule/export/schedule.json',
+        'name': 'lounge',
+        'room_guid': '3fa26587-25ef-4b6e-9d16-e9e16bc26854',
+        'stage': 'rC3 Lounge'
+    },
+    {
+        'url': 'https://pretalx.c3voc.de/rc3-2021-chill-lounge/schedule/export/schedule.json',
+        'name': 'abchillgleis',
+        'room_guid': '94170a45-363b-40e3-9157-c044f1c56309',
+        'stage': 'Abchillgleis'
+    },
 ]
-
-'''    {
-    'name': 'rc3-channels',
-    'url': 'https://pretalx.rc3.studio/rc3-channels-2020/schedule/export/schedule.json',
-    'options': {
-        'rewrite_id_from_question': 15,
-        'room-map': {
-            'ChaosTrawler Stubnitz/Gängeviertel Hamburg': 'ChaosTrawler'
-        },
-    }
-} '''
 
 additional_schedule_urls = channels
 
+targets = [
+    'filesystem',
+    'voctoimport',
+    # 'rc3hub'
+]
+
 id_offsets = {
-    # c3voc preatax schedule local ids's range from to till 500
+    # franconian local talk ids are <100, but speaker integer ids might collide 
+    #   when 10 additional speakers are created there
+    # c3voc preatax schedule local ids's range from 120 to till >500
 }
 
 
