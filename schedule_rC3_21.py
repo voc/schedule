@@ -161,6 +161,8 @@ rooms = {
     'rooms': [
     ],
     'music': [
+        'rC3 Lounge',
+        'Abchillgleis',
     ]
 }
 
@@ -269,13 +271,8 @@ def main():
 
 
     # write all events from the channels to a own schedule.json/xml
-    channel_schedule = export_stages_schedule(full_schedule)
-
-    # write all events from non-frab to a own schedule.json/xml
-    # def non_frab_filter(key):
-    #    return not(key in frab_rooms)
-    #export_filtered_schedule('non-frab', channel_schedule, non_frab_filter)
-
+    export_stages_schedule(full_schedule)
+    export_streams_schedule(full_schedule)
 
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
@@ -378,7 +375,23 @@ def export_stages_schedule(full_schedule):
     for room in schedule.rooms():
         print('   - {} {}'.format(full_schedule._room_ids.get(room), room))
 
+    schedule._schedule['schedule']['version'] = schedule.version().split(';')[0]
     schedule.export('channels')
+    return schedule
+
+def export_streams_schedule(full_schedule):
+    write('\nExporting streams... ')
+    schedule = full_schedule.copy('Streams')
+    for day in schedule.days():
+        i = 0
+        room_keys = list(day['rooms'].keys())
+        for room_key in room_keys:
+            if not(room_key in rooms['channels']) and not(room_key in rooms['music']):
+                del day['rooms'][room_key]
+            i += 1
+
+    schedule._schedule['schedule']['version'] = schedule.version().split(';')[0]
+    schedule.export('streams')
     return schedule
 
 
