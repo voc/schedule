@@ -269,10 +269,10 @@ class Schedule:
         day = start_day
         for i in range(days_count):
             days.append({
-                "index": i+1,
+                "index": i + 1,
                 "date": "{}-12-{}".format(year, day),
-                "day_start": "{}-12-{}T06:00:00+01:00".format(year, day),
-                "day_end": "{}-12-{}T04:00:00+01:00".format(year, day + 1),
+                "day_start": "{}-12-{}T10:00:00+01:00".format(year, day),
+                "day_end": "{}-12-{}T09:59:59+01:00".format(year, day + 1),
                 "rooms": OrderedDict()
             })
             day += 1
