@@ -2,6 +2,7 @@ from os import getenv
 from sys import stdout
 import json
 import time
+import argparse
 
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
@@ -13,11 +14,11 @@ except ImportError:
     from schedule import Schedule, Event
 
 transport = AIOHTTPTransport(
-    url=getenv('C3D_URL', 'https://import.c3voc.de/graphql'),
+    url=getenv('IMPORT_URL', 'https://import.c3voc.de/graphql'),
     headers={'Authorization': getenv('IMPORT_TOKEN', 'Basic|Bearer|Token XXXX')}
 )
-# Create a GraphQL client using the defined transport
 client = Client(transport=transport, fetch_schema_from_transport=True)
+args = None
 
 
 def get_conference(acronym):
@@ -36,6 +37,7 @@ def add_event(conference_id, event):
             'talkid': event['id'],
             'persons': ', '.join([p for p in event.persons()]),
             **(event.voctoimport()),
+            'abstract': event.get('abstract') or '',
             'published': False,
             'conferenceId': conference_id
         }
@@ -78,8 +80,14 @@ class VoctoImport:
     conference = None
 
     def __init__(self, schedule: Schedule, create=False):
+        global args
+
         self.schedule = schedule
-        self.conference = get_conference(schedule.conference('acronym'))
+        print(schedule)
+        acronym = args.conference or args.acronym or schedule.conference('acronym')
+        self.conference = get_conference(acronym)
+        if not self.conference:
+            raise Exception(f'Unknown conference {acronym}')
         pass
 
     def upsert_event(self, event):
@@ -94,8 +102,10 @@ def push_schedule(schedule: Schedule, create=False):
     schedule.foreach_event(instace.upsert_event)
 
 
-def test():
-    schedule = Schedule.from_url('https://pretalx.c3voc.de/rc3-2021-chaoszone/schedule/export/schedule.json')
+def run(args):
+    schedule = Schedule.from_url(
+        args.url or f'https://pretalx.c3voc.de/{args.acronym}/schedule/export/schedule.json'
+    )
     # schedule = Schedule.from_file('rc3/everything.schedule.json')
 
     try:
@@ -105,5 +115,11 @@ def test():
 
 
 if __name__ == '__main__':
-    test()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--url', action='store', help='url to schedule.json')
+    parser.add_argument('--acronym', '-a', help='the conference acronym in pretalx.c3voc.de')
+    parser.add_argument('--conference', '-c', help='the confence slug in import.c3voc.de')
+    args = parser.parse_args()
+
+    run(args)
     print('\nimport done')
