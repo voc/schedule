@@ -12,6 +12,7 @@ import csv
 import hashlib
 import pytz
 import math
+import sys
 
 from voc.tools import normalise_string, gen_uuid, get_id
 from voc.schedule import Schedule, Event
