@@ -27,9 +27,9 @@ options, args = parser.parse_args()
 local = False
 
 xc3 = 'divoc'
-acronym = 'divoc_r2r'
+acronym = 'divoc_bb3'
 wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
-main_schedule_url = 'https://pretalx.c3voc.de/divoc-reboot-to-respawn-2021/schedule/export/schedule.json'
+main_schedule_url = 'https://pretalx.c3voc.de/divoc-bb3/schedule/export/schedule.json'
 
 additional_schedule_urls = [
 ]
@@ -74,15 +74,16 @@ def write(x):
 
 
 def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
+    try:
+        wiki_schedule = fetch_schedule(wiki_url)
 
-    wiki_schedule = fetch_schedule(wiki_url)
+        write('Exporting... ')
+        wiki_schedule.export('wiki')
 
-    write('Exporting... ')
-    wiki_schedule.export('wiki')
-
-    print('Wiki: done \n')
-    return wiki_schedule
-
+        print('Wiki: done \n')
+        return wiki_schedule
+    except:
+        pass
 
 def main():
     global local, options
@@ -140,7 +141,8 @@ def main():
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
 
     full_schedule._schedule['schedule']['version'] += "; wiki"
-    full_schedule.add_events_from(wiki_schedule)
+    if wiki_schedule:
+        full_schedule.add_events_from(wiki_schedule)
 
     # write all events to one big schedule.json/xml
     write('\nExporting... ')

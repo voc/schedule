@@ -21,7 +21,7 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
 voc.tools.set_base_id(1000)
 
-year = 2021
+year = 2022
 wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
 output_dir = "/srv/www/schedule/divoc"
 secondary_output_dir = "./divoc"
@@ -30,11 +30,11 @@ secondary_output_dir = "./divoc"
 template = {"schedule": {
     "version": "1.0",
     "conference": {
-        "title": "divoc - r2r",
-        "acronym": "divoc-r2r",
+        "title": "DiVOC Bridging Bubbles",
+        "acronym": "divoc_bb3",
         "daysCount": 4,
-        "start": "2021-04-02",
-        "end":   "2021-04-05",
+        "start": "2022-04-15",
+        "end":   "2022-04-18",
         "timeslot_duration": "00:15",
         "time_zone_name": "Europe/Amsterdam",
         "days": [],
@@ -105,7 +105,7 @@ def fetch_schedule(wiki_url):
 
         # ignore sections which are not in target time span
         if day_dt < conference_start_date:
-            print(' ignoring ' + section_title)
+            print(' ignoring ' + section_title.text)
             continue
 
         rows = element.find_all('tr')
