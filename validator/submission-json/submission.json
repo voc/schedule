@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://c3voc.de/schedule/submission",
+  "description": "A proposed talk, workshop, or other event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "abstract", "guid", "language", "speakers"],
+  "properties": {
+    "guid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": ["string", "null"]
+    },
+    "abstract": {
+      "description": "The abstract, a short note of the submission’s content",
+      "type": "string"
+    },
+    "description": {
+      "description": "The description, a more expansive description of the submission’s content",
+      "type": ["string", "null"]
+    },
+    "duration": {
+      "description": "The talk’s duration in minutes, or null",
+      "type": ["integer", "null"],
+      "examples": [30, 45, 90, null],
+      "maximum": 840
+    },
+    "image": {
+      "type": ["string", "null"]
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "talk",
+        "podium",
+        "meeting",
+        "workshop",
+        "film",
+        "performance",
+        "music",
+        "other"
+      ]
+    },
+    "do_not_record": {
+      "description": "Indicates if the speaker consent to recordings of their talk",
+      "type": "boolean"
+    },
+    "track": {
+      "description": "The track this talk belongs to",
+      "type": ["string", "null"],
+      "examples": ["security", "design", null]
+    },
+    "speakers": {
+      "type": "array",
+      "items": {
+        "$ref": "https://c3voc.de/schedule/person"
+      }
+    },
+    "language": {
+      "description": "The language the submission is in, e.g. “en” or “de”",
+      "type": "string",
+      "enum": ["en", "de", "", "TODO"],
+      "format": ""
+    },
+    "recording_license": {
+      "type": ["string", "null"]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "title": "Link",
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "title": "Attachment",
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "answers": {
+      "$ref": "#/definitions/Answers"
+    },
+    "event_classifiers": {
+      "$ref": "#/definitions/EventClassifiers"
+    },
+    "slot": {
+      "type": "object",
+      "description": "An explanation about the purpose of this instance.",
+      "required": ["start", "end", "room"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "room": {
+          "type": "string",
+          "examples": ["R101"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "description": "The tags attached to the current submission, as a list of strings.",
+      "additionalItems": false,
+      "items": {
+        "examples": ["science"],
+        "type": "string"
+      }
+    },
+    "origin": {
+      "type": "string",
+      "format": "hostname"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "public_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  }
+
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://c3voc.de/schedule/person",
+  "description": "A person e.g. speaker, contributor etc.",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "public_name": {
+      "type": ["string", "null"]
+    },
+    "full_name": {
+      "type": ["string", "null"]
+    },
+    "guid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "id": {
+      "type": "integer"
+    },
+    "code": {
+      "type": "string"
+    },
+    "avatar": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "email": {
+      "type": "string"
+    },
+    "biography": {
+      "type": ["string", "null"]
+    },
+    "links": {
+      "type": "array",
+      "items": {}
+    },
+    "contacts": {
+      "type": "array",
+      "items": {}
+    },
+    "state": {
+      "type": ["string", "null"]
+    },
+    "availabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Availability"
+      }
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://domain.tld/democon/people/101"]
+    },
+    "public_url": {
+      "type": "string",
+      "format": "uri",
+      "examples": ["https://domain.tld/democon/public/events/528"]
+    }
+  },
+  "definitions": {
+    "Availability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["end", "start"],
+      "examples": [
+        {
+          "start": "2021-10-20T11:00:00+02:00",
+          "end": "2021-10-20T17:00:00+02:00"
+        }
+      ]
+    }
+  }
+}

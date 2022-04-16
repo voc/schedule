@@ -3,6 +3,7 @@
     "$ref": "#/definitions/Submisson",
     "definitions": {
         "Submisson": {
+            "$id": "https://c3voc.de/schedule/submission",
             "description": "A proposed talk, workshop, or other event",
             "type": "object",
             "additionalProperties": false,
@@ -140,6 +141,8 @@
             ]
         },
         "Person": {
+            "$id": "https://c3voc.de/schedule/person",
+            "description": "A person e.g. speaker, contributor etc.",
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -174,7 +177,9 @@
                 },
                 "links": {
                     "type": "array",
-                    "items": {}
+                    "items": {
+                        "$ref": "#/definitions/Reference"
+                    }
                 },
                 "contacts": {
                     "type": "array",
@@ -243,8 +248,8 @@
         },
         "EventClassifiers": {
             "type": "object",
-            "additionalProperties": true
-            /* TODO */
+            "additionalProperties": true,
+            "TODO": "specify?"
         },
         "Answers": {
             "type": "array",
