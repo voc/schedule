@@ -36,7 +36,7 @@ def fetch_schedule(series_title, source_url):
     try:
         start = tz.localize(datetime.strptime(date, '%A %d.%m.%Y %H:%M'))
     except ValueError:
-        time = next(filter(lambda x: 'Beginn:' in x.get_text(), infobox)).get_text().replace('Beginn:', '').strip()
+        time = next(filter(lambda x: 'Stream:' in x.get_text(), infobox)).get_text().strip().split(' ')[-1]
         start = tz.localize(datetime.strptime(f'{date} {time}', '%A %d.%m.%Y %H:%M'))
 
     duration = 2 * 60
