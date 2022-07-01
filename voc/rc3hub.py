@@ -4,7 +4,7 @@ import requests
 
 try:
     from .schedule import Schedule
-except:
+except ImportError:
     from schedule import Schedule
 
 url = getenv('HUB_URL', 'https://api-test.rc3.cccv.de/api/c/rc3/')

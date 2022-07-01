@@ -69,9 +69,9 @@ def copy_base_structure(subtree, level):
             if isinstance(value, (basestring, int)):
                 ret[key] = value
             elif isinstance(value, list):
-                ret[key] = copy_base_structure_list(value, level-1)
+                ret[key] = copy_base_structure_list(value, level - 1)
             else:
-                ret[key] = copy_base_structure(value, level-1)
+                ret[key] = copy_base_structure(value, level - 1)
     return ret
 
 
@@ -82,9 +82,9 @@ def copy_base_structure_list(subtree, level):
             if isinstance(value, (basestring, int)):
                 ret.append(value)
             elif isinstance(value, list):
-                ret.append(copy_base_structure_list(value, level-1))
+                ret.append(copy_base_structure_list(value, level - 1))
             else:
-                ret.append(copy_base_structure(value, level-1))
+                ret.append(copy_base_structure(value, level - 1))
     return ret
 
 

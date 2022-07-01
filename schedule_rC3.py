@@ -100,6 +100,7 @@ os.chdir(output_dir)
 if not os.path.exists("events"):
     os.mkdir("events")
 
+
 def main():
     try:
         full_schedule = Schedule.from_url(main_schedule_url)

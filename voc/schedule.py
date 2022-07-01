@@ -7,7 +7,7 @@ import requests
 import collections
 from collections import OrderedDict
 import dateutil.parser
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 from urllib.parse import urlparse
 
@@ -16,7 +16,7 @@ from lxml import etree as ET
 
 try:
     import voc.tools as tools
-except:
+except ImportError:
     import tools
 
 # validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
@@ -427,8 +427,8 @@ class Schedule:
         self.foreach_event(calc_stats)
 
     def get_day_from_time(self, start_time):
-        for i in range(self.conference()['daysCount']):
-            day = self.day(i+1)
+        for i in range(self.conference('daysCount')):
+            day = self.day(i + 1)
             if day.start <= start_time < day.end:
                 # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'], start_time, day['end'])
                 # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'].strftime("%s"), start_time.strftime("%s"), day['end'].strftime("%s"))
@@ -516,7 +516,7 @@ class Schedule:
                     if options.get('prefix_person_ids'):
                         prefix = options.get('prefix_person_ids')
                         for person in event['persons']:
-                            person['id'] = "{}-{}".format(prefix, person['id'])
+                            person['id'] = f"{prefix}-{person['id']}"
                     
                     events.append(Event(event, origin=other_schedule))
 
@@ -664,7 +664,7 @@ class Schedule:
                             _to_etree(v, node_, k)
                         else:
                             _to_etree(v, ET.SubElement(node_, k), k)
-            else: 
+            else:
                 assert d == 'invalid type'
         assert isinstance(self._schedule, dict) and len(self._schedule) == 1
         tag, body = next(iter(self._schedule.items()))

@@ -126,6 +126,7 @@ def generate_wiki_schedules(wiki_url):
     print('done')
     return wiki_schedule
 
+
 warnings = False
 events_with_warnings = 0
 events_in_halls_with_warnings = 0
@@ -145,7 +146,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
     used_guids = []
     debug = options and options.debug
 
-    def warn(msg, force = False):
+    def warn(msg, force=False):
         global warnings, events_with_warnings, events_in_halls_with_warnings
         if not warnings:
             warnings = True
@@ -167,7 +168,6 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
         if is_workshop_room_session or options.show_assembly_warnings or force:
             print(msg)
     
-    #for event_wiki_name, event_r in wiki.events.iteritems(): #python2
     for event_wiki_name, event_r in wiki.events.items(): #python3
         
         warnings = False
@@ -182,7 +182,7 @@ def process_wiki_events(wiki, wiki_schedule, workshop_schedule = None, timestamp
             event = event_r['printouts']
             event_n = None
             events_total += 1
-                    
+
             # One Event take place in multiple rooms...
             # WORKAROND If that is the case just pick the first one
             room = ''
@@ -451,7 +451,6 @@ class Wiki:
 
         return session
 
-    
     @classmethod
     def remove_prefix(cls, foo):
         if ':' in foo:

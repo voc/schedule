@@ -46,6 +46,7 @@ template = {"schedule": {
 def get_track_id(track_name):
     return 10
 
+
 def fetch_schedule(wiki_url):
     global template, days
 
@@ -221,17 +222,16 @@ def first(x):
     else:
         return x[0]
 
-def main():
 
+def main():
     schedule = fetch_schedule(wiki_url)
     schedule.export('wiki')
-    
+
     print('')
     print('end')
 
 
 if __name__ == '__main__':
-
     if len(sys.argv) == 2:
         output_dir = sys.argv[1]
 
@@ -242,7 +242,7 @@ if __name__ == '__main__':
             output_dir = secondary_output_dir
             local = True
     os.chdir(output_dir)
-    
+
     main()
 
     if not local:  

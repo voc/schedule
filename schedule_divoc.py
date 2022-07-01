@@ -9,7 +9,7 @@ import git as gitlib
 
 from voc.schedule import Schedule, ScheduleEncoder, Event
 from voc.c3data import C3data
-from voc.tools import load_json, get_version
+from voc.tools import write
 
 from wikitable2schedule import fetch_schedule
 
@@ -59,18 +59,13 @@ if not os.path.exists(output_dir):
         else:
             output_dir = secondary_output_dir
             local = True
-    except:
+    except Exception:
         print('Please create directory named {} if you want to run in local mode'.format(secondary_output_dir))
         exit(-1)
 os.chdir(output_dir)
 
 # if not os.path.exists("events"):
 #    os.mkdir("events")
-
-
-def write(x):
-    sys.stdout.write(x)
-    sys.stdout.flush()
 
 
 def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
@@ -82,8 +77,10 @@ def generate_wiki_schedule(wiki_url: str, full_schedule: Schedule):
 
         print('Wiki: done \n')
         return wiki_schedule
-    except:
+    except Exception as e:
+        print(e)
         pass
+
 
 def main():
     global local, options
@@ -94,6 +91,10 @@ def main():
 
     print('  version: ' + full_schedule.version())
     print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
+
+    def fix_slug(event: Event):
+        event['slug'] = event['slug'].replace('divoc-', 'divoc_').strip('_')
+    full_schedule.foreach_event(fix_slug)
 
     # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:
@@ -192,8 +193,12 @@ def main():
 def push_c3data(schedule):
     print("\n== Updating c3data via API…")
 
-    c3data = C3data(schedule)
     repo = gitlib.Repo('.')
+    c3data = C3data(schedule)
+    c3data.process_changed_events(repo, options)
+
+    '''
+
     changed_items = repo.index.diff('HEAD~1', 'events')
     for i in changed_items:
         write(i.change_type + ': ')
@@ -208,6 +213,7 @@ def push_c3data(schedule):
             print(e)
             if options.exit_when_exception_occours:
                 raise e
+    '''
     print("\n\n")
     exit(2)
 
