@@ -1,5 +1,6 @@
-from os import getenv
+from os import getenv, path
 import json
+import git
 
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
@@ -7,8 +8,12 @@ from gql.transport.exceptions import TransportQueryError
 
 try:
     from .schedule import Schedule, Event
+    from .tools import load_json, write, normalise_string
+
 except ImportError:
     from schedule import Schedule, Event
+    from tools import load_json, write
+
 
 transport = AIOHTTPTransport(
     url=getenv('C3D_URL', 'https://data.c3voc.de/graphql'),
@@ -165,6 +170,22 @@ class C3data:
 
     def depublish_event(self, event_guid):
         remove_event(event_guid)
+
+    def process_changed_events(self, repo: git.Repo, options):
+        changed_items = repo.index.diff('HEAD~1', 'events')
+        for i in changed_items:
+            write(i.change_type + ': ')
+            try:
+                if i.change_type == 'D':
+                    event_guid = path.splitext(path.basename(i.a_path))[0]
+                    self.depublish_event(event_guid)
+                else:
+                    event = load_json(i.a_path)
+                    self.upsert_event(event)
+            except Exception as e:
+                print(e)
+                if options.exit_when_exception_occours:
+                    raise e
 
 
 def push_schedule(schedule: Schedule, create=False):

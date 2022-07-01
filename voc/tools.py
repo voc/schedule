@@ -42,6 +42,24 @@ def get_id(guid):
     return sos_ids[guid]
 
 
+def load_sos_ids():
+    global sos_ids, next_id, generated_ids
+    if path.isfile("_sos_ids.json"):
+        with open("_sos_ids.json", "r") as fp:
+            # maintain order from file
+            temp = fp.read()
+            sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
+        
+            next_id = max(sos_ids.values())+1
+
+
+# write sos_ids to disk
+def store_sos_ids():
+    global sos_ids
+    with open("_sos_ids.json", "w") as fp:
+        json.dump(sos_ids, fp, indent=4)
+
+
 def gen_random_uuid():
     return uuid.uuid4()
 
