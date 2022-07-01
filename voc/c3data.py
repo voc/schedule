@@ -43,6 +43,7 @@ def create_conference(schedule: Schedule):
             'roomsUsingId': {
                 'create': [{
                     'name': room,
+                    'slug': normalise_string(room.lower()),
                 } for room in schedule.rooms()]
             }
         }
@@ -58,6 +59,7 @@ mutation createConferenceAndDaysAndRooms($input: CreateConferenceInput!) {
       rooms {
         nodes {
           guid
+          slug
           name
         }
       }
