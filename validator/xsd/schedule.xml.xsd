@@ -138,6 +138,12 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="string-nonempty">
+    <xs:restriction base="xs:string">
+      <xs:pattern value=".+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:complexType name="recording">
     <xs:all>
       <xs:element type="xs:string"  name="license"/>
@@ -152,7 +158,7 @@
       <xs:element name="person" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
           <xs:simpleContent>
-            <xs:extension base="xs:string">
+            <xs:extension base="string-nonempty">
               <xs:attribute type="xs:positiveInteger" name="id"/>
             </xs:extension>
           </xs:simpleContent>
