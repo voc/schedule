@@ -21,7 +21,7 @@ except ImportError:
 
 # validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
 # validator = 'xmllint --noout --schema {path}/validator/xsd/schedule.xml.xsd'.format(path=sys.path[0])
-validator = 'xmllint --noout --schema {path}/validator/xsd/schedule-without-person.xml.xsd'.format(path=sys.path[0])
+validator = 'xmllint --noout --schema {path}/../validator/xsd/schedule-without-person.xml.xsd'.format(path=os.path.dirname(__file__))
 validator_filter = ''
 
 

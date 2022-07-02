@@ -47,7 +47,7 @@ rooms = {
 }
 
 output_dir = "/srv/www/" + xc3
-secondary_output_dir = "./" + xc3
+secondary_output_dir = "../tmp/" + xc3
 
 if len(sys.argv) == 2:
     output_dir = sys.argv[1]

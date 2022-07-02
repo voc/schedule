@@ -2,7 +2,6 @@
 # vim: set ts=4 sw=4 tw=0 et pm=:
 
 # TODO: use argparser
-# 
 
 import lxml.etree as ET
 
