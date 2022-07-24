@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://c3voc.de/schedule/schema.json",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -31,12 +32,27 @@
     },
     "Conference": {
       "type": "object",
+      "title": "Conference",
+      "required": [
+        "title",
+        "acronym",
+        "days",
+        "daysCount",
+        "start",
+        "end",
+        "timeslot_duration"
+      ],
       "additionalProperties": false,
       "properties": {
         "acronym": {
-          "type": "string"
+          "type": "string",
+          "examples": ["36c3", "rc3", "divoc-ptt"],
+          "pattern": "^[a-z0-9_-]+$"
         },
         "title": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "start": {
@@ -53,6 +69,34 @@
         "timeslot_duration": {
           "type": "string"
         },
+        "time_zone_name": {
+          "type": "string",
+          "examples": ["Europe/Amsterdam", "Europe/Berlin"],
+          "pattern": "^[A-Z][a-z+]/[A-Z][a-z+]$"
+        },
+        "colors": {
+          "type": "object",
+          "properties": {
+            "main": {
+              "type": "string",
+              "format": "color"
+            },
+            "background": {
+              "type": "string",
+              "format": "color"
+            }
+          }
+        },
+        "keywords" :{
+          "type":"array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
         "rooms": {
           "type": "array",
           "items": {
@@ -65,17 +109,7 @@
             "$ref": "#/definitions/Day"
           }
         }
-      },
-      "required": [
-        "title",
-        "acronym",
-        "days",
-        "daysCount",
-        "start",
-        "end",
-        "timeslot_duration"
-      ],
-      "title": "Conference"
+      }
     },
     "Day": {
       "type": "object",
