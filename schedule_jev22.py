@@ -11,7 +11,7 @@ import git as gitlib
 from urllib.parse import urlparse
 
 from voc.schedule import Schedule, ScheduleEncoder, Event
-from voc.tools import load_json, write
+from voc.tools import commit_changes_if_something_relevant_changed, git, harmonize_event_type, load_json, write, ensure_folders_exist
 from voc import rc3hub
 
 
@@ -136,34 +136,15 @@ rooms = {
 
 output_dir = '/srv/www/' + xc3
 secondary_output_dir = './' + xc3
-
 if len(sys.argv) == 2:
     output_dir = sys.argv[1]
 
-if not os.path.exists(output_dir):
-    try:
-        if not os.path.exists(secondary_output_dir):
-            os.mkdir(output_dir)
-        else:
-            output_dir = secondary_output_dir
-            local = True
-    except Exception:
-        print('Please create directory named {} if you want to run in local mode'.format(secondary_output_dir))
-        exit(-1)
-os.chdir(output_dir)
-
-if not os.path.exists('events'):
-    os.mkdir('events')
+ensure_folders_exist(output_dir, secondary_output_dir)
 
 headers = {'Authorization': 'Token ' + os.getenv('PRETALX_TOKEN', ''), 'Content-Type': 'application/json'}
 
 
 def main():
-    #try:
-    #    full_schedule = Schedule.from_url(main_schedule_url)
-    #    print('  version: ' + full_schedule.version())
-    #    #print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
-    #except:
     full_schedule = Schedule.from_XC3_template(None, 39, 27, 4)
     conference = full_schedule.conference()
     conference['acronym'] = 'jev22'
@@ -240,13 +221,10 @@ def main():
             if options.exit_when_exception_occours:
                 raise e
 
-    # remove breaks from lightning talk schedule import
-    # full_schedule.remove_event(guid='bca1ec84-e62d-528a-b254-68401ece6c7c')
-
     if options.only_stats:
         exit()
 
-    full_schedule.foreach_event(harmonize_event_type)
+    full_schedule.foreach_event(harmonize_event_type, options)
 
     # write all events from the channels to a own schedule.json/xml
     #  export_stages_schedule(full_schedule)
@@ -298,141 +276,7 @@ def main():
     print()
 
     if not local or options.git:
-        content_did_not_change = os.system("/usr/bin/env git diff -U0 --no-prefix | grep -e '^[+-]  ' | grep -v version > /dev/null")
-
-        if content_did_not_change:
-            print('nothing relevant changed, reverting to previous state')
-            git('reset --hard')
-            exit(0)
-
-        git('add *.json *.xml events/*.json')
-        git('commit -m "version {}"'.format(full_schedule.version()))
-        git('push')
-
-        # update hub
-        if False:
-            print('\n== Updating rc3.world via API…')
-
-            rc3hub.init(conferences)
-            repo = gitlib.Repo('.')
-            changed_items = repo.index.diff('HEAD~1', 'events')
-            for i in changed_items:
-                write(i.change_type + ': ')
-                try:
-                    if i.change_type == 'D':
-                        event_guid = os.path.splitext(os.path.basename(i.a_path))[0]
-                        rc3hub.depublish_event(event_guid)
-                    else:
-                        event = load_json(i.a_path)
-                        if event.get('origin') != 'rc3.world':
-                            rc3hub.upsert_event(event)
-                except Exception as e:
-                    print(e)
-                    if options.exit_when_exception_occours:
-                        raise e
-            print('\n\n')
-            exit(2)
-
-
-def git(args):
-    os.system('/usr/bin/env git {}'.format(args))
-
-
-def export_filtered_schedule(output_name, parent_schedule, filter):
-    write('\nExporting {} schedule... '.format(output_name))
-    schedule = parent_schedule.copy(output_name)
-    for day in schedule.days():
-        room_keys = list(day['rooms'].keys())
-        for room_key in room_keys:
-            if not (filter(room_key)):
-                del day['rooms'][room_key]
-
-    print('\n  {}: '.format(output_name))
-    for room in schedule.rooms():
-        print('   - {}'.format(room))
-
-    schedule.export(output_name)
-    return schedule
-
-
-# remove talks starting before 9 am
-def remove_too_early_events(room):
-    for event in room:
-        start_time = Event(event).start
-        if start_time.hour > 4 and start_time.hour < 9:
-            print('removing {} from full schedule, as it takes place at {} which is too early in the morning'.format(event['title'], start_time.strftime('%H:%M')))
-            room.remove(event)
-        else:
-            break
-
-
-# harmonize event types
-def harmonize_event_type(event):
-    type_mapping = {
-
-        # TALKS
-        'Talk': 'Talk',
-        'Vortrag': 'Talk',
-        'lecture': 'Talk',
-        'Beitrag': 'Talk',
-        'Track': 'Talk',
-        'Live on stage': 'Talk',
-        'Recorded': 'Talk',
-        '60 min Talk + 15 min Q&A': 'Talk',
-        '30 min Short Talk + 10 min Q&A': 'Talk',
-
-        # LIGHTNING TALK
-        'Lightningtalk': 'Lightning Talk',
-        'lightning_talk': 'Lightning Talk',
-        'Lightning-Talk': 'Lightning Talk',
-        'LightningTalk': 'Lightning Talk',
-        'Lightning': 'Lightning Talk',
-
-        # MEETUP
-        'Meetup': 'Meetup',
-
-        # OTHER
-        'other': 'Other',
-        'Other': 'Other',
-        'Pausenfüllmaterial': 'Other',
-        '': 'Other',
-
-        # PODIUM
-        'podium': 'Podium',
-
-        # PERFORMANCE
-        'Theater,': 'Performance',
-        'performance': 'Performance',
-        'Performance': 'Performance',
-
-        # CONCERT
-        'Konzert': 'Concert',
-        'concert': 'Concert',
-
-        # DJ Set
-        'DJ Set': 'DJ Set',
-
-        # WORKSHOP
-        'Workshop': 'Workshop',
-
-        # LIVE-PODCAST
-        'Live-Podcast': 'Live-Podcast',
-    }
-
-    type = event.get('type').split()
-    if not (type):
-        event['type'] = 'Other'
-    elif event.get('type') in type_mapping:
-        event['type'] = type_mapping[event['type']]
-    elif type[0] in type_mapping:
-        event['type'] = type_mapping[type[0]]
-
-    if event.get('language') is not None:
-        event['language'] = event['language'].lower()
-
-    if options.debug:
-        print(event['type'])
-
+        commit_changes_if_something_relevant_changed(full_schedule)
 
 if __name__ == '__main__':
     main()

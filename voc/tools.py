@@ -1,16 +1,19 @@
 # -*- coding: UTF-8 -*-
 from os import path
+import os
 import uuid
 import json
 import re
 import sys
-import git
+import git as gitlib
 
 from typing import Dict
 from collections import OrderedDict
 from bs4 import Tag
 
 import __main__
+
+from voc.schedule import Event, Schedule
 
 
 sos_ids = {}
@@ -180,3 +183,134 @@ def parse_html_formatted_links(td: Tag) -> Dict[str, str]:
         links[href] = title if text is None else text
 
     return links
+
+
+def ensure_folders_exist(output_dir, secondary_output_dir):
+    global local
+    if not os.path.exists(output_dir):
+        try:
+            if not os.path.exists(secondary_output_dir):
+                os.mkdir(output_dir)
+            else:
+                output_dir = secondary_output_dir
+                local = True
+        except Exception:
+            print('Please create directory named {} if you want to run in local mode'.format(secondary_output_dir))
+            exit(-1)
+    os.chdir(output_dir)
+
+    if not os.path.exists('events'):
+        os.mkdir('events')
+
+
+def export_filtered_schedule(output_name, parent_schedule, filter):
+    write('\nExporting {} schedule... '.format(output_name))
+    schedule = parent_schedule.copy(output_name)
+    for day in schedule.days():
+        room_keys = list(day['rooms'].keys())
+        for room_key in room_keys:
+            if not(filter(room_key)):
+                del day['rooms'][room_key]
+
+    print('\n  {}: '.format(output_name))
+    for room in schedule.rooms():
+        print('   - {}'.format(room))
+
+    schedule.export(output_name)
+    return schedule
+
+
+def git(args):
+    os.system('/usr/bin/env git {}'.format(args))
+
+
+def commit_changes_if_something_relevant_changed(schedule: Schedule):
+    content_did_not_change = os.system("/usr/bin/env git diff -U0 --no-prefix | grep -e '^[+-]  ' | grep -v version > /dev/null")
+
+    if content_did_not_change:
+        print('nothing relevant changed, reverting to previous state')
+        git('reset --hard')
+        exit(0)
+
+    git('add *.json *.xml events/*.json')
+    git('commit -m "version {}"'.format(schedule.version()))
+    git('push')
+
+
+# remove talks starting before 9 am
+def remove_too_early_events(room):
+    for event in room:
+        start_time = Event(event).start
+        if start_time.hour > 4 and start_time.hour < 9:
+            print('removing {} from full schedule, as it takes place at {} which is too early in the morning'.format(event['title'], start_time.strftime('%H:%M')))
+            room.remove(event)
+        else:
+            break
+
+
+# harmonize event types
+def harmonize_event_type(event, options):
+    type_mapping = {
+
+        # TALKS
+        'Talk': 'Talk',
+        'Vortrag': 'Talk',
+        'lecture': 'Talk',
+        'Beitrag': 'Talk',
+        'Track': 'Talk',
+        'Live on stage': 'Talk',
+        'Recorded': 'Talk',
+        '60 min Talk + 15 min Q&A': 'Talk',
+        '30 min Short Talk + 10 min Q&A': 'Talk',
+
+        # LIGHTNING TALK
+        'Lightningtalk': 'Lightning Talk',
+        'lightning_talk': 'Lightning Talk',
+        'Lightning-Talk': 'Lightning Talk',
+        'LightningTalk': 'Lightning Talk',
+        'Lightning': 'Lightning Talk',
+
+        # MEETUP
+        'Meetup': 'Meetup',
+
+        # OTHER
+        'other': 'Other',
+        'Other': 'Other',
+        'Pausenfüllmaterial': 'Other',
+        '': 'Other',
+
+        # PODIUM
+        'podium': 'Podium',
+
+        # PERFORMANCE
+        'Theater,': 'Performance',
+        'performance': 'Performance',
+        'Performance': 'Performance',
+
+        # CONCERT
+        'Konzert': 'Concert',
+        'concert': 'Concert',
+
+        # DJ Set
+        'DJ Set': 'DJ Set',
+
+        # WORKSHOP
+        'Workshop': 'Workshop',
+
+        # LIVE-PODCAST
+        'Live-Podcast': 'Live-Podcast',
+    }
+
+    type = event.get('type').split()
+    if not type:
+        event['type'] = 'Other'
+    elif event.get('type') in type_mapping:
+        event['type'] = type_mapping[event['type']]
+    elif type[0] in type_mapping:
+        event['type'] = type_mapping[type[0]]
+
+    if event.get('language') is not None:
+        event['language'] = event['language'].lower()
+
+    if options.debug:
+        print(event['type'])
