@@ -417,12 +417,12 @@ class Schedule:
 
         self.days()[day - 1]['rooms'][event['room']].append(event)
 
-    def foreach_event(self, func, options={}):
+    def foreach_event(self, func, *args):
         out = []
         for day in self._schedule['schedule']['conference']['days']:
             for room in day['rooms']:
                 for event in day['rooms'][room]:
-                    result = func(event, options)
+                    result = func(event, *args)
                     if result:
                         out.append(result)
 
