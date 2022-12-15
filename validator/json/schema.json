@@ -71,8 +71,8 @@
         },
         "time_zone_name": {
           "type": "string",
-          "examples": ["Europe/Amsterdam", "Europe/Berlin"],
-          "pattern": "^[A-Z][a-z+]/[A-Z][a-z+]$"
+          "examples": ["Europe/Amsterdam", "Europe/Berlin", "UTC"],
+          "pattern": "^([A-Z][a-z]+/[A-Z][a-z]+)|UTC$"
         },
         "colors": {
           "type": "object",

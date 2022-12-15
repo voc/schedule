@@ -9,6 +9,7 @@
       "start": "2020-12-14",
       "end": "2020-12-16",
       "daysCount": 3,
+      "time_zone_name": "UTC",
       "timeslot_duration": "00:05",
       "rooms": [
         {

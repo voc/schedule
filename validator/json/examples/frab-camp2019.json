@@ -1,6 +1,6 @@
 {
-  "$schema": "./schema.json",
-  "sched ule": {
+  "$schema": "../schema.json",
+  "schedule": {
     "version": "Gacrux",
     "base_url": "https://fahrplan.events.ccc.de/camp/2019/Fahrplan/",
     "conference": {
@@ -9,6 +9,7 @@
       "start": "2019-08-21",
       "end": "2019-08-26",
       "daysCount": 5,
+      "time_zone_name": "Europe/Berlin",
       "timeslot_duration": "00:15",
       "days": [
         {
