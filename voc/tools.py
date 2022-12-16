@@ -5,16 +5,13 @@ import uuid
 import json
 import re
 import sys
-import git as gitlib
 
 from typing import Dict
 from collections import OrderedDict
 from bs4 import Tag
+from git import Repo
 
 import __main__
-
-from voc.schedule import Event, Schedule
-
 
 sos_ids = {}
 last_edited = {}
@@ -87,7 +84,7 @@ def copy_base_structure(subtree, level):
     ret = OrderedDict()
     if level > 0:
         for key, value in subtree.iteritems():
-            if isinstance(value, (basestring, int)):
+            if isinstance(value, (str, int)):
                 ret[key] = value
             elif isinstance(value, list):
                 ret[key] = copy_base_structure_list(value, level - 1)
@@ -100,7 +97,7 @@ def copy_base_structure_list(subtree, level):
     ret = []
     if level > 0:
         for value in subtree:
-            if isinstance(value, (basestring, int)):
+            if isinstance(value, (str, int)):
                 ret.append(value)
             elif isinstance(value, list):
                 ret.append(copy_base_structure_list(value, level - 1))
@@ -150,7 +147,7 @@ def load_json(filename):
 def get_version():
     global VERSION
     if VERSION is None:
-        repo = git.Repo(path=__file__, search_parent_directories=True)
+        repo = Repo(path=__file__, search_parent_directories=True)
         sha = repo.head.object.hexsha
         VERSION = repo.git.rev_parse(sha, short=5)
     return VERSION
@@ -202,6 +199,8 @@ def ensure_folders_exist(output_dir, secondary_output_dir):
     if not os.path.exists('events'):
         os.mkdir('events')
 
+    return local
+
 
 def export_filtered_schedule(output_name, parent_schedule, filter):
     write('\nExporting {} schedule... '.format(output_name))
@@ -209,7 +208,7 @@ def export_filtered_schedule(output_name, parent_schedule, filter):
     for day in schedule.days():
         room_keys = list(day['rooms'].keys())
         for room_key in room_keys:
-            if not(filter(room_key)):
+            if not filter(room_key):
                 del day['rooms'][room_key]
 
     print('\n  {}: '.format(output_name))
@@ -224,7 +223,7 @@ def git(args):
     os.system('/usr/bin/env git {}'.format(args))
 
 
-def commit_changes_if_something_relevant_changed(schedule: Schedule):
+def commit_changes_if_something_relevant_changed(schedule):
     content_did_not_change = os.system("/usr/bin/env git diff -U0 --no-prefix | grep -e '^[+-]  ' | grep -v version > /dev/null")
 
     if content_did_not_change:
@@ -239,6 +238,8 @@ def commit_changes_if_something_relevant_changed(schedule: Schedule):
 
 # remove talks starting before 9 am
 def remove_too_early_events(room):
+    from .schedule import Event
+
     for event in room:
         start_time = Event(event).start
         if start_time.hour > 4 and start_time.hour < 9:

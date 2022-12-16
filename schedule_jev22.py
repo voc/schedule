@@ -4,26 +4,30 @@
 import requests
 import json
 import pytz
-import os
 import sys
 import optparse
-import git as gitlib
-from urllib.parse import urlparse
 
 from voc.schedule import Schedule, ScheduleEncoder, Event
-from voc.tools import commit_changes_if_something_relevant_changed, git, harmonize_event_type, load_json, write, ensure_folders_exist
-from voc import rc3hub
+from voc.schedule import set_validator_filter
+from voc.tools import (
+    commit_changes_if_something_relevant_changed,
+    git,
+    harmonize_event_type,
+    write,
+    ensure_folders_exist,
+)
 
 
-tz = pytz.timezone('Europe/Amsterdam')
+tz = pytz.timezone("Europe/Amsterdam")
 
 parser = optparse.OptionParser()
-parser.add_option('--online', action='store_true', dest='online', default=False)
-parser.add_option('--show-assembly-warnings', action='store_true', dest='show_assembly_warnings', default=False)
-parser.add_option('--fail', action='store_true', dest='exit_when_exception_occours', default=False)
-parser.add_option('--stats', action='store_true', dest='only_stats', default=False)
-parser.add_option('--git', action='store_true', dest='git', default=False)
-parser.add_option('--debug', action='store_true', dest='debug', default=False)
+parser.add_option("--online", action="store_true", dest="online", default=False)
+parser.add_option(
+    "--fail", action="store_true", dest="exit_when_exception_occours", default=local
+)
+parser.add_option("--stats", action="store_true", dest="only_stats", default=False)
+parser.add_option("--git", action="store_true", dest="git", default=False)
+parser.add_option("--debug", action="store_true", dest="debug", default=local)
 
 
 options, args = parser.parse_args()
@@ -110,13 +114,12 @@ conferences = [
 additional_schedule_urls = conferences
 
 targets = [
-    'filesystem',
+    "filesystem",
     # 'voctoimport',
     # 'rc3hub'
 ]
 
 id_offsets = {
-    # franconian local talk ids are <100, but speaker integer ids might collide 
     #   when 10 additional speakers are created there
     # c3voc preatax schedule local ids's range from 120 to till >500
 }
@@ -125,32 +128,28 @@ id_offsets = {
 # this list/map is required to sort the events in the schedule.xml in the correct way
 # other rooms/assemblies are added at the end on demand.
 rooms = {
-    'channels': [
+    "channels": [
         # channels with video recordings/livestream – same order as streaming website
     ],
-    'rooms': [
-    ],
-    'music': [
-    ]
+    "rooms": [],
+    "music": [],
 }
 
-output_dir = '/srv/www/' + xc3
-secondary_output_dir = './' + xc3
+output_dir = "/srv/www/" + xc3
+secondary_output_dir = "./" + xc3
 if len(sys.argv) == 2:
     output_dir = sys.argv[1]
 
-ensure_folders_exist(output_dir, secondary_output_dir)
 
 headers = {'Authorization': 'Token ' + os.getenv('PRETALX_TOKEN', ''), 'Content-Type': 'application/json'}
+local = ensure_folders_exist(output_dir, secondary_output_dir)
 
 
 def main():
     full_schedule = Schedule.from_XC3_template(None, 39, 27, 4)
     conference = full_schedule.conference()
-    conference['acronym'] = 'jev22'
-    conference['title'] = 'Dezentrale Jahresendveranstaltungen'
-
-    loaded_schedules = {}
+    conference["acronym"] = "jev22"
+    conference["title"] = "Dezentrale Jahresendveranstaltungen"
 
     # add addional rooms from this local config now, so they are in the correct order
     for key in rooms:
@@ -158,8 +157,10 @@ def main():
 
     # add room guid's to schedule class
     for entry in conferences:
-        if entry.get('room_guid'):
-            full_schedule._room_ids[entry['stage'] or entry['name']] = entry['room_guid']
+        if entry.get("room_guid"):
+            full_schedule._room_ids[entry["stage"] or entry["name"]] = entry[
+                "room_guid"
+            ]
 
     # add events from additional_schedule's to full_schedule
     for entry in additional_schedule_urls:
@@ -188,36 +189,54 @@ def main():
             if 'version' in other_schedule.schedule():
                 full_schedule._schedule['schedule']['version'] += '; {}'.format(entry['name'])
                 print('  version: ' + other_schedule.version())
+                print("  version: " + schedule.version())
             else:
-                print('  WARNING: schedule "{}" does not have a version number'.format(entry['name']))
+                print(
+                    f'  WARNING: schedule of "{entry}" does not have a version number'
+                )
 
             try:
-                print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**other_schedule.stats.__dict__))
-                print('    local person ids from {person_min_id} to {person_max_id}'.format(**other_schedule.stats.__dict__))
-                print('    rooms: {}'.format(', '.join(other_schedule.rooms())))
+                print(
+                    "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(
+                        **schedule.stats.__dict__
+                    )
+                )
+                print(
+                    "    local person ids from {person_min_id} to {person_max_id}".format(
+                        **schedule.stats.__dict__
+                    )
+                )
+                print("    rooms: {}".format(", ".join(schedule.rooms())))
 
             except Exception:
                 pass
 
-            id_offset = entry.get('id_offset') or id_offsets.get(entry['name']) or 0 
+            id_offset = entry.get("id_offset") or id_offsets.get(entry["name"]) or 0
 
-            if full_schedule.add_events_from(other_schedule, id_offset=id_offset, options={
-                **(entry.get('options') or {}),
-                'prefix_person_ids': entry.get('prefix')
-            }):
-                print('  success')
+            if full_schedule.add_events_from(
+                schedule,
+                id_offset=id_offset,
+                options={
+                    **(entry.get("options") or {}),
+                    "prefix_person_ids": entry.get("prefix"),
+                },
+            ):
+                print("  success")
+
+        except ScheduleException as e:
+            print(e)
 
         except KeyboardInterrupt:
             exit()
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 404:
-                print('  not yet available (404)')
+                print("  not yet available (404)")
             else:
-                print('  HTTP ERROR: ' + str(e))
+                print("  HTTP ERROR: " + str(e))
                 if options.exit_when_exception_occours:
                     raise e
         except Exception as e:
-            print('  UNEXPECTED ERROR:' + str(sys.exc_info()[1]))
+            print("  UNEXPECTED ERROR: " + str(e) + str(sys.exc_info()[1]))
             if options.exit_when_exception_occours:
                 raise e
 
@@ -232,7 +251,7 @@ def main():
 
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
-        git('rm events/*')
+        git("rm events/*")
 
     # write seperate file for each event, to get better git diffs
     def export_event(event: Event):
@@ -240,43 +259,59 @@ def main():
         if isinstance(event, Event):
             origin_system = event.origin.origin_system
 
-        with open('events/{}.json'.format(event['guid']), 'w') as fp:
-            json.dump({
-                **event,
-                'room_id': full_schedule._room_ids.get(event['room'], None),
-                'origin': origin_system or None,
-            }, fp, indent=2, cls=ScheduleEncoder)
+        with open("events/{}.json".format(event["guid"]), "w") as fp:
+            json.dump(
+                {
+                    **event,
+                    "room_id": full_schedule._room_ids.get(event["room"], None),
+                    "origin": origin_system or None,
+                },
+                fp,
+                indent=2,
+                cls=ScheduleEncoder,
+            )
 
     full_schedule.foreach_event(export_event)
 
     # write all events to one big schedule.json/xml
-    write('\nExporting... ')
-    full_schedule.export('everything')
+    set_validator_filter(["precomputed", "fire-shonks-2022", "hip-berlin-2022"])
+    write("\nExporting... ")
+    full_schedule.reset_generator()
+    full_schedule.export("everything")
 
     # expose metadata to own file
-    with open('meta.json', 'w') as fp:
-        json.dump({
-            'data': {
-                'version': full_schedule.version(),
-                'source_urls': list(loaded_schedules.keys()),
-                'rooms': [{
-                    'guid': full_schedule._room_ids.get(room, None),
-                    'schedule_name': room
-                } for room in full_schedule.rooms()],
-                'conferences': conferences
+    with open("meta.json", "w") as fp:
+        json.dump(
+            {
+                "data": {
+                    "version": full_schedule.version(),
+                    # 'source_urls': list(loaded_schedules.keys()),
+                    "rooms": [
+                        {
+                            "guid": full_schedule._room_ids.get(room, None),
+                            "schedule_name": room,
+                        }
+                        for room in full_schedule.rooms()
+                    ],
+                    "conferences": conferences,
+                },
             },
-        }, fp, indent=2, cls=ScheduleEncoder)
+            fp,
+            indent=2,
+            cls=ScheduleEncoder,
+        )
 
-    print('\nDone')
-    print('  version: ' + full_schedule.version())
+    print("\nDone")
+    print("  version: " + full_schedule.version())
 
-    print('\n  rooms: ')
+    print("\n  rooms: ")
     for room in full_schedule.rooms():
-        print('   - ' + room)
+        print("   - " + room)
     print()
 
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
