@@ -6,17 +6,35 @@ import dateutil.parser
 from datetime import datetime
 
 
-class Schedule:
+class EventSourceInterface:
+    origin_system = None
+
+
+class Schedule(EventSourceInterface):
     pass
 
 
 class Event(collections.abc.Mapping):
     _event = None
-    origin: Schedule = None
+    origin: EventSourceInterface = None
     start: datetime = None
 
-    def __init__(self, attributes, start_time=None, origin=None):
-        self._event = OrderedDict(attributes)
+    def __init__(self, data, start_time: datetime = None, origin: EventSourceInterface = None):
+        # first remove empty optional fields – and url... Does anybody remember why `url`, too?
+        for field in ["video_download_url", "answers", "url"]:
+            if field in data and not (data[field]):
+                del data[field]
+
+        assert 'id' in data or data.get('guid'), "guid (or id) is required"
+        assert 'title' in data
+        assert 'date' in data
+
+        self._event = OrderedDict(data)
+
+        # generate id from guid, when not set so old apps can still process this event
+        if 'id' not in data and 'guid' in data:
+            from voc.tools import get_id
+            self._event['id'] = get_id(self['guid'])
         self.origin = origin
         self.start = start_time or dateutil.parser.parse(self._event["date"])
 

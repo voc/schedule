@@ -419,6 +419,9 @@ class Schedule(dict):
 
                 events = []
                 for event in day["rooms"][room]:
+                    if options.get("track"):
+                        event["track"] = options['track']
+
                     if options.get("rewrite_id_from_question"):
                         q = next(
                             (
@@ -433,6 +436,7 @@ class Schedule(dict):
                     elif id_offset:
                         event["id"] = int(event["id"]) + id_offset
                         # TODO? offset for person IDs?
+
                     # workaround for fresh pretalx instances
                     elif options.get("randomize_small_ids") and int(event["id"]) < 1000:
                         event["id"] = int(re.sub("[^0-9]+", "", event["guid"])[0:4])
@@ -444,11 +448,6 @@ class Schedule(dict):
                             id=event["id"],
                             name=tools.normalise_string(event["title"].split(":")[0]),
                         )
-
-                    # remove empty optional fields
-                    for field in ["url", "video_download_url", "answers"]:
-                        if field in event and not (event[field]):
-                            del event[field]
 
                     if options.get("prefix_person_ids"):
                         prefix = options.get("prefix_person_ids")
@@ -537,6 +536,7 @@ class Schedule(dict):
                 or isinstance(d, Event)
                 or isinstance(d, ScheduleDay)
             ):
+                # location of base_url sadly differs in frab's json and xml serialisation :-(
                 if parent == "schedule" and "base_url" in d:
                     d["conference"]["base_url"] = d["base_url"]
                     del d["base_url"]
