@@ -271,61 +271,64 @@ def harmonize_event_type(event, options):
     type_mapping = {
 
         # TALKS
-        'Talk': 'Talk',
-        'Vortrag': 'Talk',
+        'talk': 'Talk',
+        'talk/panel': 'Talk',
+        'vortrag': 'Talk',
         'lecture': 'Talk',
-        'Beitrag': 'Talk',
-        'Track': 'Talk',
-        'Live on stage': 'Talk',
-        'Recorded': 'Talk',
+        'beitrag': 'Talk',
+        'track': 'Talk',
+        'live on stage': 'Talk',
+        'recorded': 'Talk',
         '60 min Talk + 15 min Q&A': 'Talk',
         '30 min Short Talk + 10 min Q&A': 'Talk',
 
         # LIGHTNING TALK
-        'Lightningtalk': 'Lightning Talk',
+        'lightningtalk': 'Lightning Talk',
         'lightning_talk': 'Lightning Talk',
-        'Lightning-Talk': 'Lightning Talk',
-        'LightningTalk': 'Lightning Talk',
+        'lightning-talk': 'Lightning Talk',
         'Lightning': 'Lightning Talk',
 
         # MEETUP
-        'Meetup': 'Meetup',
+        'meetup': 'Meetup',
 
         # OTHER
         'other': 'Other',
-        'Other': 'Other',
-        'Pausenfüllmaterial': 'Other',
         '': 'Other',
+        'Pausenfüllmaterial': 'Other',
 
         # PODIUM
         'podium': 'Podium',
 
         # PERFORMANCE
-        'Theater,': 'Performance',
+        'theater': 'Performance',
         'performance': 'Performance',
-        'Performance': 'Performance',
 
         # CONCERT
-        'Konzert': 'Concert',
+        'konzert': 'Concert',
         'concert': 'Concert',
 
         # DJ Set
+        'dj set': 'DJ Set',
         'DJ Set': 'DJ Set',
 
         # WORKSHOP
-        'Workshop': 'Workshop',
+        'workshop': 'Workshop',
 
         # LIVE-PODCAST
         'Live-Podcast': 'Live-Podcast',
     }
 
-    type = event.get('type').split()
-    if not type:
+    type = event.get('type', '').split(' ')
+    if not type or not type[0]:
         event['type'] = 'Other'
     elif event.get('type') in type_mapping:
         event['type'] = type_mapping[event['type']]
+    elif event.get('type').lower() in type_mapping:
+        event['type'] = type_mapping[event['type'].lower()]
     elif type[0] in type_mapping:
         event['type'] = type_mapping[type[0]]
+    elif type[0].lower() in type_mapping:
+        event['type'] = type_mapping[type[0].lower()]
     elif options.debug:
         log.debug(f"Unknown event type: {event['type']}")
 
