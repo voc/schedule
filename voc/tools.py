@@ -54,7 +54,7 @@ def load_sos_ids():
             temp = fp.read()
             sos_ids = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(temp)
         
-            next_id = max(sos_ids.values())+1
+            next_id = max(sos_ids.values()) + 1
 
 
 # write sos_ids to disk

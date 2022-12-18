@@ -90,10 +90,7 @@ class Schedule(dict):
     stats = None
     generator = None
 
-    def __init__(self, name=None, json=None, version=None, conference=None, start_hour=9):
-        # TODO remove or revert class methods below to object methods
-        # if url:
-        #    self.from_url(url)
+    def __init__(self, name: str = None, json=None, version: str = None, conference=None, start_hour=9):
         if json:
             dict.__init__(self, json["schedule"])
         elif conference:
@@ -102,22 +99,23 @@ class Schedule(dict):
                 "conference": conference
             })
 
+        if "rooms" not in self["conference"]:
+            # looks like we have an old style schedule json,
+            # so let's construct room map from the scheduling data
+            room_names = {}
+            for day in self["conference"].get("days", []):
+                # TODO: why are don't we use a Set?
+                room_names.update([(k, None) for k in day["rooms"].keys()])
+            self["conference"]["rooms"] = [{"name": name} for name in room_names]
+
         if "days" not in self["conference"] or len(self["conference"]["days"]) == 0:
             tz = self.tz()
             date = tz.localize(self.conference_start()).replace(hour=start_hour)
             days = []
             for i in range(self.conference("daysCount")):
                 days.append(ScheduleDay(i, dt=date))
-                date += timedelta(24)
+                date += timedelta(hours=24)
             self["conference"]["days"] = days
-
-        if "rooms" not in self["conference"]:
-            # looks like we have an old style schedule json,
-            # so let's construct room map from the scheduling data
-            room_names = {}
-            for day in self["conference"]["days"]:
-                room_names.update([(k, None) for k in day["rooms"].keys()])
-            self["conference"]["rooms"] = [{"name": name} for name in room_names]
 
         self._generate_stats()
 
@@ -216,10 +214,11 @@ class Schedule(dict):
         self.generator = tools.generator_info()
 
     # TODO: test if this method still works after refactoring of Schedule class to dict child
-    def copy(self, name):
+    def copy(self, name=None):
         schedule = copy.deepcopy(self)
-        schedule["conference"]["title"] += " - " + name
-        return Schedule(json=schedule)
+        if name:
+            schedule["conference"]["title"] += f" - {name}"
+        return Schedule(json={"schedule": schedule})
 
     def version(self):
         return self["version"]
@@ -259,11 +258,14 @@ class Schedule(dict):
             for day in self.days():
                 if room not in day["rooms"]:
                     day["rooms"][room] = list()
-        # otherwise add room metadata to confernce
+        # otherwise add new room dict to confernce
         elif "name" in room:
+            if room["name"] in self._room_ids and self._room_ids[room["name"]] == room.get('guid'):
+                # we know this room already, so return early
+                return
+            
             self.conference("rooms").append(room)
-            if "guid" in room:
-                self._room_ids[room["name"]] = room["guid"]
+            self._room_ids[room["name"]] = room.get("guid")
             self.add_room(room["name"])
 
     def room_exists(self, day: int, name: str):
@@ -386,7 +388,7 @@ class Schedule(dict):
 
     def add_events_from(self, other_schedule, id_offset=None, options={}):
         offset = (
-            other_schedule.conference_start() - other_schedule.conference_start()
+            other_schedule.conference_start() - self.conference_start()
         ).days
 
         self["version"] += " " + other_schedule.version()
@@ -454,8 +456,8 @@ class Schedule(dict):
                         prefix = options.get("prefix_person_ids")
                         for person in event["persons"]:
                             person["id"] = f"{prefix}-{person['id']}"
-
-                    events.append(Event(event, origin=other_schedule))
+        
+                    events.append(event if type(event) == Event else Event(event, origin=other_schedule))
 
                 # copy whole day_room to target schedule
                 self.add_room_with_events(target_day, target_room, events)

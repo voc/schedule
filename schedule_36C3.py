@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-import requests
 import json
-from collections import OrderedDict
-import dateutil.parser
-from datetime import datetime
 import pytz
 import os
 import sys
-import traceback
 import optparse
-from voc.schedule import Schedule, ScheduleEncoder, Event, set_validator_filter
+from voc.schedule import Schedule, ScheduleEncoder, Event
 
 tz = pytz.timezone('Europe/Amsterdam')
 
@@ -213,7 +208,7 @@ def main():
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
 
-    full_schedule._schedule['schedule']['version'] += "; wiki"
+    full_schedule['version'] += "; wiki"
     full_schedule.add_events_from(wiki_schedule)
     # remove rooms from wiki import, which we already have in more detail as pretalx rooms
     full_schedule.remove_room('Assembly:Art-and-Play')
