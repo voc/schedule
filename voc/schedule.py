@@ -628,9 +628,11 @@ class Schedule(dict):
         assert isinstance(self, dict)
 
         root_node = ET.Element("schedule")
+        root_node.set("{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation", "https://c3voc.de/schedule/schema.xsd")
         _to_etree(self, root_node, "schedule")
 
-        return ET.tounicode(root_node, pretty_print=True)
+        return ET.tounicode(root_node, pretty_print=True, doctype='<?xml version="1.0"?>')
+
     def json(self):
         return {
             "$schema": "https://c3voc.de/schedule/schema.json",
