@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+from datetime import timedelta
+from logging import Logger
 from os import path
 import os
 import uuid
@@ -6,7 +8,7 @@ import json
 import re
 import sys
 
-from typing import Dict
+from typing import Dict, Union
 from collections import OrderedDict
 from bs4 import Tag
 from git import Repo
@@ -17,7 +19,7 @@ sos_ids = {}
 last_edited = {}
 next_id = 1000
 generated_ids = 0
-uuid_namespace = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
+NAMESPACE_VOC = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
 VERSION = None
 
 
@@ -64,8 +66,12 @@ def gen_random_uuid():
     return uuid.uuid4()
 
 
+def gen_person_uuid(email):
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, 'acct:' + email))
+
+
 def gen_uuid(name):
-    return str(uuid.uuid5(uuid_namespace, str(name)))
+    return str(uuid.uuid5(NAMESPACE_VOC, str(name)))
 
 
 # deprecated, use Schedule.foreach_event() instead
@@ -128,6 +134,15 @@ def normalise_time(timestr):
         timestr = timestr.replace('0:00', '12:00')
 
     return timestr
+
+
+def format_duration(value: Union[int, timedelta]) -> str: 
+    if type(value) == timedelta:
+        minutes = round(value.total_seconds() / 60)
+    else:
+        minutes = value
+
+    return '%d:%02d' % divmod(minutes, 60)
 
 
 def parse_json(text):

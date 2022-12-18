@@ -283,13 +283,13 @@ class Schedule(dict):
             if room_key in day["rooms"]:
                 del day["rooms"][room_key]
 
-    def add_event(self, event: Event):
+    def add_event(self, event: Event, options=None):
         day = self.get_day_from_time(event.start)
-        if event["slug"] is None:
+        if event.get("slug") is None:
             event["slug"] = "{acronym}-{id}-{name}".format(
-                acronym=self.conference["acronym"],
+                acronym=self.conference()["acronym"],
                 id=event["id"],
-                name=tools.normalise_string(self["title"]),
+                name=tools.normalise_string(event["title"]),
             )
 
         if not self.room_exists(day, event["room"]):

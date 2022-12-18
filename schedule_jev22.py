@@ -125,6 +125,14 @@ conferences = [
             ],
         },
     ),
+    WebcalConference(
+        "webcals://ramac.mudbyte.de/remote.php/dav/public-calendars/YTtwyZcXsmZDfSoo/?export",
+        {
+            "name": "ChilyConChaos",  # (28.–30.)
+            "location": "Gießen/Wetzlar",
+            "links": ["https://chilyconchaos.de/"],
+        },
+    ),
     PretalxConference(
         "https://talks.w.icmp.camp",
         {
