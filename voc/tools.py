@@ -22,6 +22,8 @@ generated_ids = 0
 NAMESPACE_VOC = uuid.UUID('0C9A24B4-72AA-4202-9F91-5A2B6BFF2E6F')
 VERSION = None
 
+log = Logger(__name__)
+
 
 def write(x):
     sys.stdout.write(x)
@@ -324,9 +326,9 @@ def harmonize_event_type(event, options):
         event['type'] = type_mapping[event['type']]
     elif type[0] in type_mapping:
         event['type'] = type_mapping[type[0]]
+    elif options.debug:
+        log.debug(f"Unknown event type: {event['type']}")
 
     if event.get('language') is not None:
         event['language'] = event['language'].lower()
 
-    if options.debug:
-        print(event['type'])

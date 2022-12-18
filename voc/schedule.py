@@ -11,13 +11,16 @@ from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from lxml import etree as ET
 
-
 try:
     import voc.tools as tools
+    from voc.logger import Logger
     from .event import Event
 except ImportError:
     import tools
+    from logger import Logger
     from event import Event
+
+log = Logger(__name__)
 
 # validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
 # validator = 'xmllint --noout --schema {path}/validator/xsd/schedule.xml.xsd'.format(path=sys.path[0])
@@ -117,7 +120,7 @@ class Schedule(dict):
 
     @classmethod
     def from_url(cls, url):
-        print("Requesting " + url)
+        log.info("Requesting " + url)
         schedule_r = requests.get(url, timeout=2)
 
         if schedule_r.ok is False:
@@ -270,7 +273,7 @@ class Schedule(dict):
         if not data or len(data) == 0:
             return
 
-        #  print('  adding room {} to day {} with {} events'.format(target_room, day, len(data)))
+        #  log.debug('  adding room {} to day {} with {} events'.format(target_room, day, len(data)))
         target_day_rooms = self.day(day)["rooms"]
 
         if self.room_exists(day, target_room):
@@ -373,7 +376,7 @@ class Schedule(dict):
             f'/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {validator_filter}; exit \\${{PIPESTATUS[0]}}"'
         )
         if result != 0 and validator_filter:
-            print("  (validation errors might be hidden by validator_filter)")
+            log.warn("  (validation errors might be hidden by validator_filter)")
 
     def __str__(self):
         return json.dumps(self, indent=2, cls=ScheduleEncoder)
@@ -386,22 +389,17 @@ class Schedule(dict):
         self["version"] += " " + other_schedule.version()
 
         if offset:
-            print("  calculated conference start day offset: {}".format(offset))
+            log.info("  calculated conference start day offset: {}".format(offset))
 
         for day in other_schedule.days():
             target_day = day["index"] + offset
 
             if target_day < 1:
-                print(
-                    f"  ignoring day {day['date']} from {other_schedule.conference('acronym')}, as primary schedule starts at {self.conference('start')}"
-                )
+                log.warn(f"  ignoring day {day['date']} from {other_schedule.conference('acronym')}, as primary schedule starts at {self.conference('start')}")
                 continue
 
             if day["date"] != self.day(target_day)["date"]:
-                # print(target_day)
-                print(
-                    "  ERROR: the other schedule's days have to match primary schedule, in some extend!"
-                )
+                log.error(f"  ERROR: the other schedule's days have to match primary schedule, in some extend {day['date']} != {self.day(target_day)['date']}!")
                 return False
 
             self.add_rooms(other_schedule.conference("rooms"))
@@ -474,7 +472,7 @@ class Schedule(dict):
             )
 
         if len(result) > 1:
-            print("Warning: Found multiple events with id " + id)
+            log.warn("Warning: Found multiple events with id " + id)
             return result
 
         if len(result) == 0:
@@ -495,7 +493,7 @@ class Schedule(dict):
                         or event["id"] == str(id)
                         or event["guid"] == guid
                     ):
-                        print("removing", event["title"])
+                        log.info("removing", event["title"])
                         day["rooms"][room].remove(event)
 
     # dict_to_etree from http://stackoverflow.com/a/10076823
@@ -518,7 +516,7 @@ class Schedule(dict):
             elif isinstance(v, int):
                 tag.set(k, str(v))
             else:
-                print("  error: unknown attribute type %s=%s" % (k, v))
+                log.error("  error: unknown attribute type %s=%s" % (k, v))
 
         def _to_etree(d, node, parent=""):
             if not d:
