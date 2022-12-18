@@ -56,6 +56,9 @@ class Event(collections.abc.Mapping):
     def persons(self):
         return [p.get("name", p.get("public_name")) for p in self._event["persons"]]
 
+    def json(self):
+        return self._event
+
     def graphql(self):
         r = dict(
             (re.sub(r"_([a-z])", lambda m: (m.group(1).upper()), k), v)

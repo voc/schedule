@@ -76,6 +76,9 @@ class ScheduleDay(dict):
         self.start = dateutil.parser.parse(self["day_start"])
         self.end = dateutil.parser.parse(self["day_end"])
 
+    def json(self):
+        return self
+
 
 class Schedule(dict):
     """Schedule class with import and export methods"""
@@ -366,7 +369,7 @@ class Schedule(dict):
 
     def export(self, prefix):
         with open("{}.schedule.json".format(prefix), "w") as fp:
-            json.dump(self, fp, indent=2, cls=ScheduleEncoder)
+            json.dump(self.json(), fp, indent=2, cls=ScheduleEncoder)
 
         with open("{}.schedule.xml".format(prefix), "w") as fp:
             fp.write(self.xml())
@@ -628,18 +631,22 @@ class Schedule(dict):
         _to_etree(self, root_node, "schedule")
 
         return ET.tounicode(root_node, pretty_print=True)
+    def json(self):
+        return {
+            "$schema": "https://c3voc.de/schedule/schema.json",
+            "schedule": {
+                "generator": self.generator or tools.generator_info(),
+                **self
+            }
+        }
 
 
 class ScheduleEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Schedule):
-            return {
-                "$schema": "https://c3voc.de/schedule/schema.json",
-                "generator": obj.generator or tools.generator_info(),
-                "schedule": obj
-            }
+            return obj.json()
         if isinstance(obj, ScheduleDay):
             return obj
         if isinstance(obj, Event):
-            return obj._event
+            return obj.json()
         return json.JSONEncoder.default(self, obj)
