@@ -18,7 +18,7 @@ from voc import (
     ScheduleException,
     Logger
 )
-from voc.schedule import set_validator_filter
+# from voc.schedule import set_validator_filter
 from voc.tools import (
     commit_changes_if_something_relevant_changed,
     git,
@@ -47,6 +47,20 @@ xc3 = "jev22"
 # source pad https://lab.nrw/hedgedoc/_hV5kXt9TKuiV0DVsdIwgg
 conferences = [
     PretalxConference(
+        url="https://pretalx.c3voc.de/fire-shonks-2022",
+        data={
+            "name": "FireShonks",  # (27.–30.)
+            "location": "Remote & Wülfrath",
+            "links": [
+                "https://events.ccc.de/2022/10/27/fireshonks-cfp/",
+                "https://events.haecksen.org/fireshonks/",
+            ],
+        },
+        options={
+            "track": lambda e: e['track'].split(' ')[0]
+        }
+    ),
+    PretalxConference(
         url="https://pretalx.c3voc.de/hip-berlin-2022",
         data={
             "name": "Hacking in Parallel",  # (27.–30.)
@@ -54,31 +68,36 @@ conferences = [
             "links": ["https://wiki.hip-berlin.de/"],
         },
         options={
-            "track": "c-base"
+            "track": lambda e: "E.T.I." if e['room'] != 'c-base mainhall' else 'c-base'
         }
     ),
     PretalxConference(
-        "TBD",
-        {
+        url="https://cfp.ccc-p.org/rtc22",
+        data={
+            "name": "Reconnect To Chaos!",  # (27.–30.)
+            "location": "Potsdam, Chaostreff",
+            "links": ["https://www.ccc-p.org/rtc22/"],
+        },
+    ),
+    PretalxConference(
+        url="TBD",
+        data={
             "name": "dezentrale Chaos-Culture",  # (27.–28.)
             "location": "Bielefeld, Digitalcourage",
             "links": ["https://digitalcourage.de/"],
         },
     ),
     PretalxConference(
-        "https://pretalx.c3voc.de/hacking-in-hell-2022",
-        {
+        url="https://pretalx.c3voc.de/hacking-in-hell-2022",
+        data={
             "name": "Hellarious: Hacking in Hell",
             "location": "Brandenburg, Alte Hölle",
             "links": ["https://alte-hoelle.de/"],
-        },
-        options={
-            "track": "Hell"
         }
     ),
     PretalxConference(
-        "https://pretalx.c3voc.de/xrelog-2022",
-        {
+        url="https://pretalx.c3voc.de/xrelog-2022",
+        data={
             "name": "xrelog22: Independent Multiverses",  # (28.–30.)
             "location": "Hamburg, FTZ/HAW",
             "links": [
@@ -88,66 +107,68 @@ conferences = [
         },
     ),
     GenericConference(
-        "TBD",
-        {
+        url="TBD",
+        data={
             "name": "localverse2022",  # (27.–30.)
             "location": "Leipzig",
             "links": [
-                "https://dezentrale.space/posts/2022/11/localverse2022-call-for-participation-20221118/",
+                "https://dezentrale.space/posts/2022/11/localverse2022-call-for-participation/",
                 "https://matrix.to/#/#localverse2022:chat.dezentrale.space",
             ],
         },
     ),
     PretalxConference(
-        "https://forum.freiraeumen.jetzt/freiraumforum",
-        {
+        url="https://forum.freiraeumen.jetzt/freiraumforum",
+        data={
             "name": "Forum für Freiräume - Gib Uns Mehr!",  # (26.–31.)
             "location": "München",
             "links": ["https://events.ccc.de/2022/11/18/ff22-cfp/"],
         },
     ),
-    PretalxConference(
-        "https://cfp.ccc-p.org/rtc22",
-        {
-            "name": "Reconnect To Chaos!",  # (27.–30.)
-            "location": "Potsdam, Chaostreff",
-            "links": ["https://www.ccc-p.org/rtc22/"],
-        },
-    ),
-    PretalxConference(
-        "https://pretalx.c3voc.de/fire-shonks-2022",
-        {
-            "name": "FireShonks",  # (27.–30.)
-            "location": "Remote & Wülfrath",
-            "links": [
-                "https://events.ccc.de/2022/10/27/fireshonks-cfp/",
-                "https://events.haecksen.org/fireshonks/",
-            ],
-        },
-    ),
     WebcalConference(
-        "webcals://ramac.mudbyte.de/remote.php/dav/public-calendars/YTtwyZcXsmZDfSoo/?export",
-        {
+        url="webcals://ramac.mudbyte.de/remote.php/dav/public-calendars/YTtwyZcXsmZDfSoo/?export",
+        data={
             "name": "ChilyConChaos",  # (28.–30.)
             "location": "Gießen/Wetzlar",
             "links": ["https://chilyconchaos.de/"],
         },
     ),
     PretalxConference(
-        "https://talks.w.icmp.camp",
-        {
+        url="https://talks.w.icmp.camp",
+        data={
             "slug": "wicmp1",
             "name": "Wintergalaktische Club Mate Party",  # (27.–30.)
             "location": "Erlangen, Bits'n'Bugs + ZAM",
             "links": ["https://w.icmp.camp"],
         },
     ),
+    GenericConference(
+        url="TBD",
+        # https://github.com/laborluxeria/winterchaos2022/tree/main/_sessions – michi will create an schedule.json endpoint: https://matrix.to/#/!dNLGFiIKTpsztEgQmA:kittywit.ch/$0DE0cyAWDNlvE5eQ5rEbeA00BwIjD0N_WwKt9AfNgn8?via=kittywit.ch&via=matrix.org&via=fairydust.space
+        data={
+            "name": "Winterchaos",
+            "location": "Luzern, CH",
+            "description": "Ein gemütlicher Jahresabschluss des LABOR Luzern und der LuXeria Luzern mit lokalen Vorträgen und Workshops.",
+            "geolocation": [47.0360555, 8.2799098],
+            "links": ["https://laborluxeria.github.io/winterchaos2022/schedule/", "https://laborluxeria.github.io/winterchaos2022/feed.xml"]
+        }
+    ),
+    PretalxConference(
+        url="https://pretalx.hackwerk.fun/jev-2022",
+        data={
+            "name": "End-of-Year event",
+            "location": "Aalen, Hackwerk",
+            "description": "Auch wir würden gerne bei der dezentralen Jahresendveranstaltung mitmachen. Hierzu laden wir vom 29.12-31.12. zum netten Zusammensein mit vielen Chaos-Wesen nach Aalen ein. \n\n Wir schauen bei einigen Glühtschunks und Mate zusammen die Streams auf media.ccc.de an, haben aber auch vor selbst Vorträge zu halten und zu Streamen. \n\n Bitte hier ein Ticket klicken (wir verwenden das Ticketsystem, um die Teilnehmerzahl zu wissen)  – für Talk-Einreichungen haben wir ein Pretalx eingerichtet.",
+            "links": ["https://tickets.hackwerk.fun/hackwerk/jev2022/", "https://pretalx.hackwerk.fun/jev-2022/cfp"]
+        }
+    )
 ]
 
 targets = [
     "filesystem",
-    # 'voctoimport',
-    # 'rc3hub'
+    # "c3data",
+    # "voctoimport",
+    # "rc3hub"
 ]
 
 id_offsets = {
@@ -191,14 +212,7 @@ def main():
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
 
-    # add room guid's to schedule class
-    for entry in conferences:
-        if entry.get("room_guid"):
-            full_schedule._room_ids[entry["stage"] or entry["name"]] = entry[
-                "room_guid"
-            ]
-
-    # add events from additional_schedule's to full_schedule
+    # add events to full_schedule
     for entry in conferences:
         try:
             print(f"\n== Conference {entry['name']} ({entry['location']})")
@@ -224,9 +238,10 @@ def main():
                 options={
                     "randomize_small_ids": True,
                     "overwrite_slug": True,
-                    **(entry.get("options") or {}),
+                    **(entry.options or {}),
                     "prefix_person_ids": entry.get("prefix"),
                 },
+                context=entry
             ):
                 print("  success")
 
