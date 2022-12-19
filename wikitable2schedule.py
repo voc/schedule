@@ -18,11 +18,11 @@ days = []
 local = False
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
-voc.tools.set_base_id(1000)
+voc.tools.set_base_id(2000)
 
 year = 2022
 wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
-output_dir = "/srv/www/schedule/divoc"
+output_dir = "/srv/www/divoc"
 secondary_output_dir = "./divoc"
 
 
@@ -80,6 +80,7 @@ def fetch_schedule(wiki_url):
             if section_title.attrs['id'] in sections_to_ignore:
                 continue
 
+        #print(section_title.text)
         day = section_title.text.split(',')[1].strip()
         day_dt = tz.localize(datetime.strptime(day, '%d.%m.%Y'))
 
