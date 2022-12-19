@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from lxml import etree as ET
 
+from voc.event import EventSourceInterface
+
 try:
     import voc.tools as tools
     from voc.logger import Logger
@@ -247,12 +249,12 @@ class Schedule(dict):
     def rooms(self):
         return [room['name'] for room in self.conference('rooms')]
 
-    def add_rooms(self, rooms: list):
+    def add_rooms(self, rooms: list, context: EventSourceInterface = {}):
         if rooms:
             for x in rooms:
-                self.add_room(x)
+                self.add_room(x, context)
 
-    def add_room(self, room: str | dict):
+    def add_room(self, room: str | dict, context: EventSourceInterface = {}):
         # if rooms is str, use the old behaviour – for backwords compability
         if type(room) is str:
             for day in self.days():
@@ -264,6 +266,9 @@ class Schedule(dict):
                 # we know this room already, so return early
                 return
             
+            if 'location' in context:
+                room['location'] = context['location']
+
             self.conference("rooms").append(room)
             self._room_ids[room["name"]] = room.get("guid")
             self.add_room(room["name"])
@@ -369,24 +374,7 @@ class Schedule(dict):
 
         raise Warning("  illegal start time: " + start_time.isoformat())
 
-    def export(self, prefix):
-        with open("{}.schedule.json".format(prefix), "w") as fp:
-            json.dump(self.json(), fp, indent=2, cls=ScheduleEncoder)
-
-        with open("{}.schedule.xml".format(prefix), "w") as fp:
-            fp.write(self.xml())
-
-        # validate xml
-        result = os.system(
-            f'/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {validator_filter}; exit \\${{PIPESTATUS[0]}}"'
-        )
-        if result != 0 and validator_filter:
-            log.warn("  (validation errors might be hidden by validator_filter)")
-
-    def __str__(self):
-        return json.dumps(self, indent=2, cls=ScheduleEncoder)
-
-    def add_events_from(self, other_schedule, id_offset=None, options={}):
+    def add_events_from(self, other_schedule, id_offset=None, options={}, context: EventSourceInterface = {}):
         offset = (
             other_schedule.conference_start() - self.conference_start()
         ).days
@@ -407,7 +395,7 @@ class Schedule(dict):
                 log.error(f"  ERROR: the other schedule's days have to match primary schedule, in some extend {day['date']} != {self.day(target_day)['date']}!")
                 return False
 
-            self.add_rooms(other_schedule.conference("rooms"))
+            self.add_rooms(other_schedule.conference("rooms"), context)
 
             for room in day["rooms"]:
                 if options and "room-map" in options and room in options["room-map"]:
@@ -423,7 +411,7 @@ class Schedule(dict):
                 events = []
                 for event in day["rooms"][room]:
                     if options.get("track"):
-                        event["track"] = options['track']
+                        event["track"] = options['track'](event) if callable(options["track"]) else options["track"]
 
                     if options.get("rewrite_id_from_question"):
                         q = next(
@@ -507,7 +495,7 @@ class Schedule(dict):
     #  * check links conversion
     #  * ' vs " in xml
     #  * logo is in json but not in xml
-    def xml(self):
+    def xml(self, method="string"):
         root_node = None
 
         def dict_to_attrib(d, root):
@@ -633,16 +621,43 @@ class Schedule(dict):
         root_node.set("{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation", "https://c3voc.de/schedule/schema.xsd")
         _to_etree(self, root_node, "schedule")
 
-        return ET.tounicode(root_node, pretty_print=True, doctype='<?xml version="1.0"?>')
+        if method == 'xml':
+            return root_node
+        elif method == 'bytes':
+            return ET.tostring(root_node, pretty_print=True, xml_declaration=True)
 
-    def json(self):
-        return {
+        return ET.tostring(root_node, pretty_print=True, encoding="unicode", doctype='<?xml version="1.0"?>')
+
+    def json(self, method="json", **args):
+        json = {
             "$schema": "https://c3voc.de/schedule/schema.json",
             "schedule": {
                 "generator": self.generator or tools.generator_info(),
                 **self
             }
         }
+        if method == 'string':
+            return json.dumps(self, indent=2, cls=ScheduleEncoder, **args)
+
+        return json
+
+    def export(self, prefix):
+        with open("{}.schedule.json".format(prefix), "w") as fp:
+            json.dump(self.json(), fp, indent=2, cls=ScheduleEncoder)
+
+        with open("{}.schedule.xml".format(prefix), "w") as fp:
+            fp.write(self.xml())
+
+        # TODO use python XML validator instead of shell call
+        # validate xml
+        result = os.system(
+            f'/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {validator_filter}; exit \\${{PIPESTATUS[0]}}"'
+        )
+        if result != 0 and validator_filter:
+            log.warn("  (validation errors might be hidden by validator_filter)")
+
+    def __str__(self):
+        return json.dumps(self, indent=2, cls=ScheduleEncoder)
 
 
 class ScheduleEncoder(json.JSONEncoder):
