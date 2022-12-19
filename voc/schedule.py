@@ -7,6 +7,7 @@ import requests
 import pytz
 import dateutil.parser
 from collections import OrderedDict
+from typing import Union
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from lxml import etree as ET
@@ -254,7 +255,7 @@ class Schedule(dict):
             for x in rooms:
                 self.add_room(x, context)
 
-    def add_room(self, room: str | dict, context: EventSourceInterface = {}):
+    def add_room(self, room: Union[str, dict], context: EventSourceInterface = {}):
         # if rooms is str, use the old behaviour – for backwords compability
         if type(room) is str:
             for day in self.days():

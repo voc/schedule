@@ -204,7 +204,7 @@ def main():
         "daysCount": 4,
         "timeslot_duration": "00:15",
         "time_zone_name": "Europe/Amsterdam"
-    }, version=str(datetime.now()))
+    }, version=str(datetime.now().strftime("%Y-%m-%d %H:%M")))
 
     full_schedule = base_schedule.copy()
 

@@ -201,6 +201,7 @@ def parse_html_formatted_links(td: Tag) -> Dict[str, str]:
 
 def ensure_folders_exist(output_dir, secondary_output_dir):
     global local
+    local = False
     if not os.path.exists(output_dir):
         try:
             if not os.path.exists(secondary_output_dir):
