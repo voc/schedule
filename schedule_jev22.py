@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
+from typing import List
 import requests
 import json
 import pytz
@@ -45,7 +46,7 @@ options, args = parser.parse_args()
 xc3 = "jev22"
 
 # source pad https://lab.nrw/hedgedoc/_hV5kXt9TKuiV0DVsdIwgg
-conferences = [
+conferences: List[GenericConference] = [
     PretalxConference(
         url="https://pretalx.c3voc.de/fire-shonks-2022",
         data={
@@ -143,8 +144,8 @@ conferences = [
         },
     ),
     GenericConference(
-        url="TBD",
-        # https://github.com/laborluxeria/winterchaos2022/tree/main/_sessions – michi will create an schedule.json endpoint: https://matrix.to/#/!dNLGFiIKTpsztEgQmA:kittywit.ch/$0DE0cyAWDNlvE5eQ5rEbeA00BwIjD0N_WwKt9AfNgn8?via=kittywit.ch&via=matrix.org&via=fairydust.space
+        url="https://laborluxeria.github.io/winterchaos2022/schedule.json",
+        # https://github.com/laborluxeria/winterchaos2022/tree/main/_sessions – michi 
         data={
             "name": "Winterchaos",
             "location": "Luzern, CH",
