@@ -479,7 +479,7 @@ class Schedule(dict):
         if not id and not guid:
             raise RuntimeError("Please provide either id or guid")
 
-        for day in self._schedule["schedule"]["conference"]["days"]:
+        for day in self["conference"]["days"]:
             for room in day["rooms"]:
                 for event in day["rooms"][room]:
                     if (
