@@ -8,3 +8,4 @@ aiohttp>=3.7.4.post0
 gitpython
 bs4
 html5lib
+ics

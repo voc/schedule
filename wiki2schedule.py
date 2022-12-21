@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
-# Imports sessions from a semantic mediawiki instance, and can also be used as library – compare schedule_36C3.py
+# Imports sessions from a semantic mediawiki instance, 
+# and can also be used as library – compare schedule_36C3.py
 #
 import requests
 import json
 from collections import OrderedDict
-import dateutil.parser
 from datetime import datetime
 import pytz
 import os
@@ -22,16 +22,8 @@ import urllib.parse
 import voc.tools
 from voc.schedule import Schedule, Event
 
-# reconfigure default encoding to utf8 for python2
-if sys.version_info.major < 3:
-    reload(sys)
-    sys.setdefaultencoding("utf-8")
-
-# TODO for python3:
-# * fix NameError: name 'basestring' is not defined in voc.tools.dict_to_schedule_xml()
-
 tz = pytz.timezone("Europe/Amsterdam")
-time_stamp_offset = -3600  #  Workaround until MediaWiki server will be fixed
+time_stamp_offset = -3600  # Workaround until MediaWiki server will be fixed
 
 parser = optparse.OptionParser()
 parser.add_option("--online", action="store_true", dest="online", default=False)
@@ -154,7 +146,7 @@ def process_wiki_events(
 ):
     global sessions_complete, warnings, time_stamp_offset
 
-    if not timestamp_offset is None:
+    if timestamp_offset is not None:
         time_stamp_offset = timestamp_offset
 
     sessions_complete = OrderedDict()

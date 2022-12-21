@@ -25,6 +25,7 @@ args = parser.parse_args()
 
 acronym = args.acronym.lower()
 
+
 def fetch_schedule(series_title, source_url):
     print("Requesting source")
 
@@ -58,41 +59,40 @@ def fetch_schedule(series_title, source_url):
     external_links = {}
     try:
         external_links = voc.tools.parse_html_formatted_links(body)
-    except:
+    except Exception:
         pass
 
     print("Found event on {} with title '{}'".format(start, title))
 
-    schedule.add_event(Event(OrderedDict([
-        ('id', local_id),
-        ('guid', guid),
-        # ('logo', None),
-        ('date', start.isoformat()),
-        ('start', start.strftime('%H:%M')),
-        ('duration', '%d:%02d' % divmod(duration, 60)),
-        ('room', 'Crisis Response Makerspace'),
-        ('slug', '{slug}-{id}-{name}'.format(
+    schedule.add_event(Event({
+        'id': local_id,
+        'guid': guid,
+        # ('logo', None,
+        'date': start.isoformat(),
+        'start': start.strftime('%H:%M'),
+        'duration': '%d:%02d' % divmod(duration, 60),
+        'room': 'Crisis Response Makerspace',
+        'slug': '{slug}-{id}-{name}'.format(
             slug=acronym,
             id=local_id,
             name=voc.tools.normalise_string(title.lower())
-        )),
-        ('url', source_url),
-        ('title', title),
-        ('subtitle', 'debate {id}'.format(id=local_id)),
-        ('track', None),
-        ('type', None),
-        ('language', 'de'),
-        ('abstract', abstract or ''),
-        ('description', str(body)),
-        ('persons', [OrderedDict([
-            ('id', 0),
-            ('public_name', p.strip()),
-            # ('#text', p),
-        ]) for p in persons]),
-        ('links', [
+        ),
+        'url': source_url,
+        'title': title,
+        'subtitle': 'debate {id}'.format(id=local_id),
+        'track': None,
+        'type': None,
+        'language': 'de',
+        'abstract': abstract or '',
+        'description': str(body),
+        'persons': [{
+            'id': 0,
+            'public_name': p.strip(),
+        } for p in persons],
+        'links': [
             {'url': link_url, 'title': link_title} for link_url, link_title in external_links.items()
-        ])
-    ])))
+        ]
+    }))
 
     return schedule
 
