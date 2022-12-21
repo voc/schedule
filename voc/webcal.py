@@ -37,6 +37,7 @@ def convert_to_dict(e: ics.Event, context: WebcalConference) -> dict:
         "title": title,
         "subtitle": subtitle,
         "abstract": e.description,
+        "description": '',  # empty description for pretalx importer (temporary workaround)
         "date": e.begin.isoformat(),
         "start": e.begin.format("HH:mm"),
         "duration": format_duration(e.duration),

@@ -29,6 +29,15 @@ class Event(collections.abc.Mapping):
         assert 'title' in data
         assert 'date' in data
 
+        self.start = start_time or dateutil.parser.parse(data["date"])
+
+        if 'start' not in data:
+            data['start'] = self.start.strftime('%H:%M')
+
+        # empty description for pretalx importer (temporary workaround)
+        if 'description' not in data:
+            data['description'] = ''
+
         self._event = OrderedDict(data)
 
         # generate id from guid, when not set so old apps can still process this event
@@ -36,7 +45,6 @@ class Event(collections.abc.Mapping):
             from voc.tools import get_id
             self._event['id'] = get_id(self['guid'])
         self.origin = origin
-        self.start = start_time or dateutil.parser.parse(self._event["date"])
 
     def __getitem__(self, key):
         return self._event[key]
