@@ -9,8 +9,8 @@ from voc.tools import format_duration, gen_person_uuid
 
 
 class WebcalConference(GenericConference, EventSourceInterface):
-    def __init__(self, url, data):
-        GenericConference.__init__(self, url, data)
+    def __init__(self, **args):
+        GenericConference.__init__(self, **args)
 
     def schedule(self, template: Schedule):
         if not self.schedule_url or self.schedule_url == 'TBD':

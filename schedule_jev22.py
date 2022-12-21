@@ -65,7 +65,7 @@ conferences: List[GenericConference] = [
         url="https://pretalx.c3voc.de/hip-berlin-2022",
         data={
             "name": "Hacking in Parallel",  # (27.–30.)
-            "location": "Berlin, c-base",
+            "location": "Berlin, ETI Schauspielschule + c-base",
             "links": ["https://wiki.hip-berlin.de/"],
         },
         options={
@@ -81,19 +81,14 @@ conferences: List[GenericConference] = [
         },
     ),
     PretalxConference(
-        url="TBD",
-        data={
-            "name": "dezentrale Chaos-Culture",  # (27.–28.)
-            "location": "Bielefeld, Digitalcourage",
-            "links": ["https://digitalcourage.de/"],
-        },
-    ),
-    PretalxConference(
         url="https://pretalx.c3voc.de/hacking-in-hell-2022",
         data={
             "name": "Hellarious: Hacking in Hell",
             "location": "Brandenburg, Alte Hölle",
             "links": ["https://alte-hoelle.de/"],
+        },
+        options={
+            "track": "Hellarious"
         }
     ),
     PretalxConference(
@@ -107,25 +102,6 @@ conferences: List[GenericConference] = [
             ],
         },
     ),
-    GenericConference(
-        url="TBD",
-        data={
-            "name": "localverse2022",  # (27.–30.)
-            "location": "Leipzig",
-            "links": [
-                "https://dezentrale.space/posts/2022/11/localverse2022-call-for-participation/",
-                "https://matrix.to/#/#localverse2022:chat.dezentrale.space",
-            ],
-        },
-    ),
-    PretalxConference(
-        url="https://forum.freiraeumen.jetzt/freiraumforum",
-        data={
-            "name": "Forum für Freiräume - Gib Uns Mehr!",  # (26.–31.)
-            "location": "München",
-            "links": ["https://events.ccc.de/2022/11/18/ff22-cfp/"],
-        },
-    ),
     WebcalConference(
         url="webcals://ramac.mudbyte.de/remote.php/dav/public-calendars/YTtwyZcXsmZDfSoo/?export",
         data={
@@ -133,6 +109,10 @@ conferences: List[GenericConference] = [
             "location": "Gießen/Wetzlar",
             "links": ["https://chilyconchaos.de/"],
         },
+        options={
+            "track": "Gießen/Wetzlar",
+
+        }
     ),
     PretalxConference(
         url="https://talks.w.icmp.camp",
@@ -155,6 +135,14 @@ conferences: List[GenericConference] = [
         }
     ),
     PretalxConference(
+        url="https://forum.freiraeumen.jetzt/freiraumforum",
+        data={
+            "name": "Forum für Freiräume - Gib Uns Mehr!",  # (26.–31.)
+            "location": "München",
+            "links": ["https://events.ccc.de/2022/11/18/ff22-cfp/"],
+        },
+    ),
+    PretalxConference(
         url="https://pretalx.hackwerk.fun/jev-2022",
         data={
             "name": "End-of-Year event",
@@ -162,7 +150,18 @@ conferences: List[GenericConference] = [
             "description": "Auch wir würden gerne bei der dezentralen Jahresendveranstaltung mitmachen. Hierzu laden wir vom 29.12-31.12. zum netten Zusammensein mit vielen Chaos-Wesen nach Aalen ein. \n\n Wir schauen bei einigen Glühtschunks und Mate zusammen die Streams auf media.ccc.de an, haben aber auch vor selbst Vorträge zu halten und zu Streamen. \n\n Bitte hier ein Ticket klicken (wir verwenden das Ticketsystem, um die Teilnehmerzahl zu wissen)  – für Talk-Einreichungen haben wir ein Pretalx eingerichtet.",
             "links": ["https://tickets.hackwerk.fun/hackwerk/jev2022/", "https://pretalx.hackwerk.fun/jev-2022/cfp"]
         }
-    )
+    ),
+    GenericConference(
+        url="TBD",
+        data={
+            "name": "localverse2022",  # (27.–30.)
+            "location": "Leipzig",
+            "links": [
+                "https://dezentrale.space/posts/2022/11/localverse2022-call-for-participation/",
+                "https://matrix.to/#/#localverse2022:chat.dezentrale.space",
+            ],
+        },
+    ),
 ]
 
 targets = [
@@ -295,6 +294,9 @@ def main():
             )
 
     full_schedule.foreach_event(export_event)
+
+    # remove overlapping 'Lötworkshop mit Lötchallenge' 
+    full_schedule.remove_event(guid='bd75d959-dad1-43b4-81fb-33dfb43c10ec')
 
     # set_validator_filter(["precomputed", "fire-shonks-2022", "hip-berlin-2022"])
     # write all events to one big schedule.json/xml
