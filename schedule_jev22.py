@@ -19,7 +19,7 @@ from voc import (
     ScheduleException,
     Logger
 )
-# from voc.schedule import set_validator_filter
+from voc.schedule import set_validator_filter
 from voc.tools import (
     commit_changes_if_something_relevant_changed,
     git,
@@ -299,6 +299,7 @@ def main():
     # set_validator_filter(["precomputed", "fire-shonks-2022", "hip-berlin-2022"])
     # write all events to one big schedule.json/xml
     write("\nExporting... ")
+    # set_validator_filter('strange')
     full_schedule.export("everything")
 
     # expose metadata to own file
