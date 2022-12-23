@@ -253,7 +253,22 @@
       "title": "Room"
     },
     "Person": {
-      "anyOf": [
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "guid": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Person UUID generated from email adress via uuid5(NS_URL, 'acct:user@domain.tld') or random uuid4() if email not available"
+        },
+        "id": {
+          "type": "integer",
+          "description": "deprecated integer person id, use guid with uuid5(NS_URL, 'acct:user@domain.tld') instead"
+        }
+      },
+      "oneOf": [
         { "$ref": "#/definitions/FrabPerson" },
         { "$ref": "#/definitions/PretalxPerson" }
       ]

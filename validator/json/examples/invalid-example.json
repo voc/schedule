@@ -40,8 +40,8 @@
                   "do_not_record": true,
                   "persons": [
                     {
-                      "id": 0,
-                      "code": "MÄN0",
+                      "id": "dsadf",
+                      "code": "MÄaN0",
                       "public_name": "Mänu",
                       "biography": "",
                       "answers": []
