@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
+import os
 from typing import List
 import requests
 import json
@@ -185,6 +186,14 @@ id_offsets = {
 rooms = {
     "channels": [
         # channels with video recordings/livestream – same order as streaming website
+        'c62a781e-48a3-4546-bb5c-dee2080738f7',  # Fireshonks-Stream
+        '6f12618c-0f1c-4318-a201-099152f86ac0',  # RTC-Bühne (Sparti)
+        '0ce1f1b3-35c6-48ee-b3db-1c54e85f36b4',  # Bierschoine
+        'Seminarraum',  # WICMP, Erlangen
+        'Vortragsraum 1 - Ahlam - H2-1.6',  # Freiräume
+        'Vortragsraum 2 - Bhavani - H1-5.2',  # Freiräume
+        'ad28953f-122e-4293-836d-860320183a1c',  # xrelog22
+        # TODO
     ],
     "rooms": [],
     "music": [],
@@ -309,6 +318,7 @@ def main():
     write("\nExporting... ")
     # set_validator_filter('strange')
     full_schedule.export("everything")
+    full_schedule.export_filtered("channels", rooms=rooms['channels'])
 
     # expose metadata to own file
     with open("meta.json", "w") as fp:

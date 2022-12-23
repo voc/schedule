@@ -7,12 +7,13 @@ import requests
 import pytz
 import dateutil.parser
 from collections import OrderedDict
-from typing import Union
+from typing import Callable, List, Union
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from lxml import etree as ET
 
 from voc.event import EventSourceInterface
+from voc.tools import write
 
 try:
     import voc.tools as tools
@@ -231,9 +232,12 @@ class Schedule(dict):
             self._tz = pytz.timezone(self.conference("time_zone_name"))
         return self._tz
 
-    def conference(self, key=None):
+    def conference(self, key=None, filter: Callable = None, fallback=None):
         if key:
-            return self["conference"][key]
+            if filter:
+                return next((item for item in self["conference"][key] if filter(item)), fallback)
+
+            return self["conference"].get(key, fallback)
         else:
             return self["conference"]
 
@@ -246,6 +250,14 @@ class Schedule(dict):
 
     def day(self, day: int):
         return self.days()[day - 1]
+
+    def room(self, name=None, guid=None):
+        if guid:
+            return self.conference('rooms', lambda x: x['guid'] == guid, {'name': name, 'guid': guid})
+        if name:
+            return self.conference('rooms', lambda x: x['name'] == name, {'name': name, 'guid': guid})
+
+        raise Exception('Either name or guid has to be provided')
 
     def rooms(self):
         return [room['name'] for room in self.conference('rooms')]
@@ -641,6 +653,27 @@ class Schedule(dict):
             return json.dumps(self, indent=2, cls=ScheduleEncoder, **args)
 
         return json
+
+    def export_filtered(self, name: str, rooms: Union[List[str], Callable]):
+        write(f'\nExporting {name}... ')
+        schedule = self.copy(name)
+
+        for room in schedule.conference('rooms'):
+            if not (rooms(room) if callable(rooms) else (room['name'] in rooms or room.get('guid') in rooms)):
+                del room
+
+        for day in schedule.days():
+            i = 0
+            room_keys = list(day['rooms'].keys())
+            for room_key in room_keys:
+                room = self.room(name=room_key)
+                if not (rooms(room) if callable(rooms) else (room_key in rooms or room.get('guid') in rooms)):
+                    del day['rooms'][room_key]
+                i += 1
+
+        schedule['version'] = self.version().split(';')[0]
+        schedule.export(name.lower())
+        return schedule
 
     def export(self, prefix):
         with open("{}.schedule.json".format(prefix), "w") as fp:
