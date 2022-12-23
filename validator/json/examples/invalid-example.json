@@ -1,0 +1,68 @@
+{
+    "$schema": "../schema.json",
+    "schedule": {
+      "version": "0.1",
+      "base_url": "https://laborluxeria.github.io/winterchaos2022/schedule/",
+      "conference": {
+        "acronym": "winterchaos2022",
+        "title": "Winterchaos",
+        "start": "2022-12-28",
+        "end": "2022-12-30",
+        "daysCount": 3,
+        "timeslot_duration": "00:05",
+        "time_zone_name": "Europe/Zurich",
+        "days": [
+          {
+            "index": 1,
+            "date": "2022-12-28",
+            "day_start": "2022-12-28T13:00:00+01:00",
+            "day_end": "2022-12-28T23:59:59+01:00",
+            "rooms": {
+              "Winterchaos": [
+                {
+                  "id": "2814",
+                  "guid": "7a0fc001-e587-47e1-b378-b6ec7e666337",
+                  "logo": "",
+                  "date": "2022-12-28T14:00:00+01:00",
+                  "start": "14:00",
+                  "duration": "00:45",
+                  "room": "Winterchaos",
+                  "slug": "2814-internal-network-penetration-testing-basics",
+                  "url": "https://laborluxeria.github.io/winterchaos2022/sessions/2814-internal-network-penetration-testing-basics",
+                  "title": "Internal Penetration Testing Basics",
+                  "subtitle": "",
+                  "track": "Winterchaos",
+                  "type": "talk",
+                  "language": "de",
+                  "abstract": "Dieser Talk zeigt einige Basics zu internal Network Penetration Testing. Es wird gezeigt, wie typische Active Directory Umgebungen auf ihre Sicherheit hin analysiert werden können. Eine Mischung aus Theorie und Live Demos erklärt den Weg von einem Low Privileged User zum Domain Admin.",
+                  "description": "Dieser Talk zeigt einige Basics zu internal Network Penetration Testing in typischen Active Directory Umgebungen von Firmen. Es wird gezeigt, wie Active Directory Umgebungen auf ihre Sicherheit hin analysiert, und wie die dabei identifizierten Schwachstellen ausgenützt werden können.<br /><br />Eine Mischung aus Theorie und Live Demos erklärt den Weg wie es möglich ist, seine Privilegien im Netzwerk zu erhöhen um schlussendlich die ganze Domain unter Kontrolle zu bringen.<br /><br />Dabei werden unter anderem folgende Themen vorgestellt:<br /><br />* Einführung ins Active Directory<br />* Analyse von Active Directory Umgebungen<br />* Local Privilege Escalation auf Windows Systemen<br />* Credential Dumping<br />* Lateral Movement in Windows Umgebungen<br /><br />Dies ist ein Beginners Talk für Personen, welche an typischen Schwachstellen in Active Directory Umgebungen interessiert sind. Grundlegend technisches Verständnis von Netzwerken, Active Directory oder Windows ist sicher nützlich, aber es ist kein tiefes Know-How bzgl. Netzwerk- und Systemsicherheit nötig.<br />",
+                  "recording_license": "",
+                  "do_not_record": true,
+                  "persons": [
+                    {
+                      "id": 0,
+                      "code": "MÄN0",
+                      "public_name": "Mänu",
+                      "biography": "",
+                      "answers": []
+                    }
+                  ],
+                  "links": [],
+                  "attachments": [],
+                  "answers": []
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rooms": [
+        {
+          "name": "Winterchaos",
+          "guid": "99411f15-7335-4d36-abac-3ff0419ec954",
+          "description": "Talks at LuXerias and LABOR Luzerns Winterchaos 2022",
+          "capacity": null
+        }
+      ]
+    }
+  }

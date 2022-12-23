@@ -26,7 +26,8 @@
         },
         "conference": {
           "$ref": "#/definitions/Conference"
-        }
+        },
+        "rooms": false
       },
       "required": ["base_url", "conference", "version"]
     },
@@ -47,7 +48,7 @@
         "acronym": {
           "type": "string",
           "examples": ["36c3", "rc3", "divoc-ptt"],
-          "pattern": "^[a-z0-9_-]+$"
+          "pattern": "^[a-z0-9_-][a-z0-9_]{3,}(-2[0-9]{3}-[a-z]+)?$"
         },
         "title": {
           "type": "string"
@@ -132,10 +133,12 @@
         },
         "rooms": {
           "type": "object",
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/Event"
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
             }
           }
         }
@@ -147,7 +150,8 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 1
         },
         "guid": {
           "type": "string",
@@ -270,7 +274,8 @@
       "type": "object",
       "properties": {
         "code": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[A-Z0-9]+$"
         },
         "name": {
           "type": "string"
