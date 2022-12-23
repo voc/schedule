@@ -357,10 +357,11 @@ class Schedule(dict):
         def calc_stats(event):
             self.stats.events_count += 1
 
-            if self.stats.min_id is None or event["id"] < self.stats.min_id:
-                self.stats.min_id = event["id"]
-            if self.stats.max_id is None or event["id"] > self.stats.max_id:
-                self.stats.max_id = event["id"]
+            id = int(event["id"])
+            if self.stats.min_id is None or id < self.stats.min_id:
+                self.stats.min_id = id
+            if self.stats.max_id is None or id > self.stats.max_id:
+                self.stats.max_id = id
 
             for person in event.get("persons", []):
                 if isinstance(person["id"], int) or person["id"].isnumeric():
