@@ -102,13 +102,14 @@ conferences: List[GenericConference] = [
         },
     ),
     PretalxConference(
-        url="https://talks.w.icmp.camp",
+        url="https://talks.w.icmp.camp/wicmp1",
         data={
             "slug": "wicmp1",
             "name": "Wintergalaktische Club Mate Party",  # (27.–30.)
             "location": "Erlangen, Bits'n'Bugs + ZAM",
             "links": ["https://w.icmp.camp"],
         },
+        options={"track": "Erlangen"},
     ),
     GenericConference(
         url="https://laborluxeria.github.io/winterchaos2022/schedule.json",
@@ -142,6 +143,7 @@ conferences: List[GenericConference] = [
             "location": "München",
             "links": ["https://events.ccc.de/2022/11/18/ff22-cfp/"],
         },
+        options={"track": "Freiräume"},
     ),
     PretalxConference(
         url="https://pretalx.hackwerk.fun/jev-2022",

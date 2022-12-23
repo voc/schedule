@@ -426,6 +426,9 @@ class Schedule(dict):
                     if options.get("track"):
                         event["track"] = options['track'](event) if callable(options["track"]) else options["track"]
 
+                    if options.get("do_not_record"):
+                        event["do_not_record"] = options['do_not_record'](event) if callable(options["do_not_record"]) else options["do_not_record"]
+
                     if options.get("rewrite_id_from_question"):
                         q = next(
                             (
