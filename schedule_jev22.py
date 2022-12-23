@@ -17,9 +17,10 @@ from voc import (
     Schedule,
     ScheduleEncoder,
     ScheduleException,
-    Logger
+    Logger,
 )
-from voc.schedule import set_validator_filter
+
+# from voc.schedule import set_validator_filter
 from voc.tools import (
     commit_changes_if_something_relevant_changed,
     git,
@@ -57,20 +58,7 @@ conferences: List[GenericConference] = [
                 "https://events.haecksen.org/fireshonks/",
             ],
         },
-        options={
-            "track": lambda e: e['track'].split(' ')[0]
-        }
-    ),
-    PretalxConference(
-        url="https://pretalx.c3voc.de/hip-berlin-2022",
-        data={
-            "name": "Hacking in Parallel",  # (27.–30.)
-            "location": "Berlin, ETI Schauspielschule + c-base",
-            "links": ["https://wiki.hip-berlin.de/"],
-        },
-        options={
-            "track": lambda e: "E.T.I." if e['room'] != 'c-base mainhall' else 'c-base'
-        }
+        options={"track": lambda e: e["track"].split(" ")[0]},
     ),
     PretalxConference(
         url="https://cfp.ccc-p.org/rtc22",
@@ -79,6 +67,7 @@ conferences: List[GenericConference] = [
             "location": "Potsdam, Chaostreff",
             "links": ["https://www.ccc-p.org/rtc22/"],
         },
+        options={"track": "Potsdam"},
     ),
     PretalxConference(
         url="https://pretalx.c3voc.de/hacking-in-hell-2022",
@@ -87,9 +76,7 @@ conferences: List[GenericConference] = [
             "location": "Brandenburg, Alte Hölle",
             "links": ["https://alte-hoelle.de/"],
         },
-        options={
-            "track": "Hellarious"
-        }
+        options={"track": "Hellarious"},
     ),
     PretalxConference(
         url="https://pretalx.c3voc.de/xrelog-2022",
@@ -111,8 +98,7 @@ conferences: List[GenericConference] = [
         },
         options={
             "track": "Gießen/Wetzlar",
-
-        }
+        },
     ),
     PretalxConference(
         url="https://talks.w.icmp.camp",
@@ -125,14 +111,28 @@ conferences: List[GenericConference] = [
     ),
     GenericConference(
         url="https://laborluxeria.github.io/winterchaos2022/schedule.json",
-        # https://github.com/laborluxeria/winterchaos2022/tree/main/_sessions – michi 
+        # https://github.com/laborluxeria/winterchaos2022/tree/main/_sessions – michi
         data={
             "name": "Winterchaos",
             "location": "Luzern, CH",
             "description": "Ein gemütlicher Jahresabschluss des LABOR Luzern und der LuXeria Luzern mit lokalen Vorträgen und Workshops.",
             "geolocation": [47.0360555, 8.2799098],
-            "links": ["https://laborluxeria.github.io/winterchaos2022/schedule/", "https://laborluxeria.github.io/winterchaos2022/feed.xml"]
-        }
+            "links": [
+                "https://laborluxeria.github.io/winterchaos2022/schedule/",
+                "https://laborluxeria.github.io/winterchaos2022/feed.xml",
+            ],
+        },
+    ),
+    PretalxConference(
+        url="https://pretalx.c3voc.de/hip-berlin-2022",
+        data={
+            "name": "Hacking in Parallel",  # (27.–30.)
+            "location": "Berlin, ETI Schauspielschule + c-base",
+            "links": ["https://wiki.hip-berlin.de/"],
+        },
+        options={
+            "track": lambda e: "E.T.I." if e["room"] != "c-base mainhall" else "c-base"
+        },
     ),
     PretalxConference(
         url="https://forum.freiraeumen.jetzt/freiraumforum",
@@ -148,8 +148,11 @@ conferences: List[GenericConference] = [
             "name": "End-of-Year event",
             "location": "Aalen, Hackwerk",
             "description": "Auch wir würden gerne bei der dezentralen Jahresendveranstaltung mitmachen. Hierzu laden wir vom 29.12-31.12. zum netten Zusammensein mit vielen Chaos-Wesen nach Aalen ein. \n\n Wir schauen bei einigen Glühtschunks und Mate zusammen die Streams auf media.ccc.de an, haben aber auch vor selbst Vorträge zu halten und zu Streamen. \n\n Bitte hier ein Ticket klicken (wir verwenden das Ticketsystem, um die Teilnehmerzahl zu wissen)  – für Talk-Einreichungen haben wir ein Pretalx eingerichtet.",
-            "links": ["https://tickets.hackwerk.fun/hackwerk/jev2022/", "https://pretalx.hackwerk.fun/jev-2022/cfp"]
-        }
+            "links": [
+                "https://tickets.hackwerk.fun/hackwerk/jev2022/",
+                "https://pretalx.hackwerk.fun/jev-2022/cfp",
+            ],
+        },
     ),
     GenericConference(
         url="TBD",
@@ -196,15 +199,18 @@ local = ensure_folders_exist(output_dir, secondary_output_dir)
 
 
 def main():
-    base_schedule = Schedule(conference={
-        "acronym": "jev22",
-        "title": "Dezentrale Jahresendveranstaltungen",
-        "start": "2022-12-27",
-        "end": "2022-12-30",
-        "daysCount": 4,
-        "timeslot_duration": "00:15",
-        "time_zone_name": "Europe/Amsterdam"
-    }, version=str(datetime.now().strftime("%Y-%m-%d %H:%M")))
+    base_schedule = Schedule(
+        conference={
+            "acronym": "jev22",
+            "title": "Dezentrale Jahresendveranstaltungen",
+            "start": "2022-12-27",
+            "end": "2022-12-31",
+            "daysCount": 5,
+            "timeslot_duration": "00:15",
+            "time_zone_name": "Europe/Amsterdam",
+        },
+        version=str(datetime.now().strftime("%Y-%m-%d %H:%M")),
+    )
 
     full_schedule = base_schedule.copy()
 
@@ -241,7 +247,7 @@ def main():
                     **(entry.options or {}),
                     "prefix_person_ids": entry.get("prefix"),
                 },
-                context=entry
+                context=entry,
             ):
                 print("  success")
 

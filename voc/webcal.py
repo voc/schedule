@@ -30,7 +30,7 @@ class WebcalConference(GenericConference, EventSourceInterface):
     
 
 def convert_to_dict(e: ics.Event, context: WebcalConference) -> dict:
-    title, subtitle, event_type = re.match(r"^(.+?)(?:( ?[:–] .+?))?(?: (\(.+\)))?$", e.name).groups()
+    title, subtitle, event_type = re.match(r"^(.+?)(?:( ?[:–] .+?))?(?: \((.+?)\))?$", e.name).groups()
     track, = list(e.categories) or [None]
     return {
         "guid": e.uid,
