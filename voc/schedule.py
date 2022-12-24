@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from lxml import etree as ET
 
 from voc.event import EventSourceInterface
+from voc.room import Room
 from voc.tools import write
 
 try:
@@ -259,8 +260,11 @@ class Schedule(dict):
 
         raise Exception('Either name or guid has to be provided')
 
-    def rooms(self):
-        return [room['name'] for room in self.conference('rooms')]
+    def rooms(self, mode='names'):
+        if mode == 'names':
+            return [room['name'] for room in self.conference('rooms')]
+        else:
+            return self.conference('rooms')
 
     def add_rooms(self, rooms: list, context: EventSourceInterface = {}):
         if rooms:
@@ -658,12 +662,29 @@ class Schedule(dict):
 
         return json
 
-    def export_filtered(self, name: str, rooms: Union[List[str], Callable]):
+    def export_filtered(self, name: str, rooms: Union[List[Union[str, Room]], Callable]):
         write(f'\nExporting {name}... ')
         schedule = self.copy(name)
 
+        if callable(rooms):
+            def filterRoom(room):
+                return rooms(room)
+        else:
+            room_names = set()
+            room_guids = set()
+            for room in rooms:
+                if isinstance(room, Room):
+                    if room.guid:
+                        room_guids.add(room.guid)
+                    if room.name:
+                        room_names.add(room.name)
+
+            def filterRoom(room):
+                return room['name'] in room_names or \
+                    room.get('guid') in room_guids
+
         for room in schedule.conference('rooms'):
-            if not (rooms(room) if callable(rooms) else (room['name'] in rooms or room.get('guid') in rooms)):
+            if not (filterRoom(room)):
                 del room
 
         for day in schedule.days():
@@ -671,7 +692,7 @@ class Schedule(dict):
             room_keys = list(day['rooms'].keys())
             for room_key in room_keys:
                 room = self.room(name=room_key)
-                if not (rooms(room) if callable(rooms) else (room_key in rooms or room.get('guid') in rooms)):
+                if not (filterRoom(room)):
                     del day['rooms'][room_key]
                 i += 1
 

@@ -18,6 +18,7 @@ from voc import (
     Schedule,
     ScheduleEncoder,
     ScheduleException,
+    Room,
     Logger,
 )
 
@@ -188,18 +189,23 @@ id_offsets = {
 rooms = {
     "channels": [
         # channels with video recordings/livestream – same order as streaming website
-        'c62a781e-48a3-4546-bb5c-dee2080738f7',  # Fireshonks-Stream
-        '6f12618c-0f1c-4318-a201-099152f86ac0',  # RTC-Bühne (Sparti)
-        '0ce1f1b3-35c6-48ee-b3db-1c54e85f36b4',  # Bierschoine
-        'Seminarraum',  # WICMP, Erlangen
-        'Vortragsraum 1 - Ahlam - H2-1.6',  # Freiräume
-        'Vortragsraum 2 - Bhavani - H1-5.2',  # Freiräume
-        'ad28953f-122e-4293-836d-860320183a1c',  # xrelog22
-        # TODO
+        Room(guid='c62a781e-48a3-4546-bb5c-dee2080738f7', stream='fireshonks', name="Fireshonks-Stream"),  # Remote
+        Room(guid='6f12618c-0f1c-4318-a201-099152f86ac0', stream='s4', name="RTC-Bühne (Sparti)"),  # Potsdam
+        Room(guid='0ce1f1b3-35c6-48ee-b3db-1c54e85f36b4', stream='s6', name="Bierschoine"),  # Alte Hölle
+        Room(name='Seminarraum', stream='s2'),  # WICMP, Erlangen
+        Room(guid='568cabc6-82f2-11ed-82f7-cf29158272bb', stream='s1', name="Vortragsraum 1 - Ahlam - H2-1.6"),  # Freiräume
+        Room(guid='64f358c2-82f2-11ed-b6f2-370ab4c5fdf0', stream='s5', name="Vortragsraum 2 - Bhavani - H1-5.2"),  # Freiräume
+        Room(guid='ad28953f-122e-4293-836d-860320183a1c', stream='xrelog22'),  # xrelog22
+        # TODO: Where is the Curious Community Labs scheulde with more structure? https://curious.bio/2022/11/remote-chaos-experience/
+        # Room(stream='', name='Curious Community Labs')
     ],
     "rooms": [],
     "music": [],
 }
+
+channels = {}
+for c in rooms['channels']:
+    channels[c.guid or c.name] = c
 
 output_dir = "/srv/www/" + xc3
 secondary_output_dir = "./" + xc3
@@ -226,8 +232,8 @@ def main():
     full_schedule = base_schedule.copy()
 
     # add addional rooms from this local config now, so they are in the correct order
-    for key in rooms:
-        full_schedule.add_rooms(rooms[key])
+    # for key in rooms:
+    #     full_schedule.add_rooms(rooms[key])
 
     # add events to full_schedule
     for entry in conferences:
@@ -329,14 +335,15 @@ def main():
                 "data": {
                     "version": full_schedule.version(),
                     # 'source_urls': list(loaded_schedules.keys()),
-                    "conferences": conferences,
                     "rooms": [
                         {
-                            "guid": full_schedule._room_ids.get(room, None),
-                            "schedule_name": room,
+                            **room,
+                            "schedule_name": room['name'],
+                            "stream": channels.get(room.get('guid', room['name']), Room()).stream
                         }
-                        for room in full_schedule.rooms()
+                        for room in full_schedule.rooms(mode='v2')
                     ],
+                    "conferences": conferences,
                 },
             },
             fp,
