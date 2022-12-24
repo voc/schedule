@@ -683,8 +683,8 @@ class Schedule(dict):
                 return room['name'] in room_names or \
                     room.get('guid') in room_guids
 
-        for room in schedule.conference('rooms'):
-            if not (filterRoom(room)):
+        for room in schedule['conference']['rooms']:
+            if not filterRoom(room):
                 del room
 
         for day in schedule.days():
@@ -692,7 +692,7 @@ class Schedule(dict):
             room_keys = list(day['rooms'].keys())
             for room_key in room_keys:
                 room = self.room(name=room_key)
-                if not (filterRoom(room)):
+                if not filterRoom(room):
                     del day['rooms'][room_key]
                 i += 1
 

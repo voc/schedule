@@ -35,7 +35,12 @@ def set_base_id(value):
     next_id = value
 
 
-def get_id(guid):
+def get_id(guid, length=None):
+    # use newer mode without external state if length is set
+    if length:
+        # generate numeric id from first x numbers from guid, stipping leading zeros
+        return int(re.sub("^0+", "", re.sub("[^0-9]+", "", guid))[0:length])
+    
     global sos_ids, next_id, generated_ids
     if guid not in sos_ids:
         # generate new id
@@ -72,8 +77,8 @@ def gen_person_uuid(email):
     return str(uuid.uuid5(uuid.NAMESPACE_URL, 'acct:' + email))
 
 
-def gen_uuid(name):
-    return str(uuid.uuid5(NAMESPACE_VOC, str(name)))
+def gen_uuid(value):
+    return str(uuid.uuid5(NAMESPACE_VOC, str(value)))
 
 
 # deprecated, use Schedule.foreach_event() instead
