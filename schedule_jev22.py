@@ -192,7 +192,7 @@ rooms = {
         Room(guid='c62a781e-48a3-4546-bb5c-dee2080738f7', stream='fireshonks', name="Fireshonks-Stream"),  # Remote
         Room(guid='6f12618c-0f1c-4318-a201-099152f86ac0', stream='s4', name="RTC-Bühne (Sparti)"),  # Potsdam
         Room(guid='0ce1f1b3-35c6-48ee-b3db-1c54e85f36b4', stream='s6', name="Bierschoine"),  # Alte Hölle
-        Room(name='Seminarraum', stream='s2'),  # WICMP, Erlangen
+        Room(guid='99808216-837b-11ed-85fb-6c400891b752', stream='s2', name='Seminarraum'),  # WICMP, Erlangen
         Room(guid='568cabc6-82f2-11ed-82f7-cf29158272bb', stream='s1', name="Vortragsraum 1 - Ahlam - H2-1.6"),  # Freiräume
         Room(guid='64f358c2-82f2-11ed-b6f2-370ab4c5fdf0', stream='s5', name="Vortragsraum 2 - Bhavani - H1-5.2"),  # Freiräume
         Room(guid='ad28953f-122e-4293-836d-860320183a1c', stream='xrelog22'),  # xrelog22
@@ -361,7 +361,6 @@ def main():
 
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
-
 
 if __name__ == "__main__":
     main()
