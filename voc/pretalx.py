@@ -1,8 +1,8 @@
 from os import path, getenv
-from urllib.parse import urlparse
 import requests
+from urllib.parse import urlparse
 
-from voc import GenericConference
+from voc import GenericConference, logger
 
 headers = {'Authorization': 'Token ' + getenv('PRETALX_TOKEN', ''), 'Content-Type': 'application/json'}
 
@@ -22,9 +22,13 @@ class PretalxConference(GenericConference):
             # /api/events/hip-berlin-2022
             self.api_url = path.join(f"{r.scheme}://{r.netloc}{path.dirname(r.path)}", "api/events", self.slug)
 
-            # load additional metadata via pretalx REST API
-            self['meta'] = self.meta()
-            self['rooms'] = self.rooms()
+            try:
+                # load additional metadata via pretalx REST API
+                self['meta'] = self.meta()
+                self['rooms'] = self.rooms()
+            except Exception as e:
+                logger.warn(e)
+                pass
 
     def meta(self):
         return requests.get(self.api_url, timeout=1) \
