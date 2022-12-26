@@ -172,6 +172,17 @@ conferences: List[GenericConference] = [
             ],
         },
     ),
+    GenericConference(
+        url="https://data.jtbx.de/jev22_ccl/schedule.json",
+        data={
+            "name": "jev22_ccl",  # (27.–29.)
+            "location": "Hamburg",
+            "links": [
+                "https://curious.bio/2022/11/remote-chaos-experience/",
+            ],
+        },
+        options={"track": "Curious Community Labs"},
+    )
 ]
 
 targets = [
