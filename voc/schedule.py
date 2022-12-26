@@ -437,7 +437,7 @@ class Schedule(dict):
                         event["do_not_record"] = options['do_not_record'](event) if callable(options["do_not_record"]) else options["do_not_record"]
 
                     if options.get("remove_title_additions"):
-                        event["title"], subtitle, event_type = re.match(r"^(.+?)(?:( ?[:–] .+?))?(?: \((.+?)\))?$", event["title"]).groups()
+                        event["title"], subtitle, event_type = re.match(r"^(.{5,}?)(?:( ?[:–] .+?))?(?: \((.+?)\))?$", event["title"]).groups()
                         if not event.get("subtitle") and subtitle:
                             event["subtitle"] = subtitle
 
@@ -457,7 +457,7 @@ class Schedule(dict):
                         # TODO? offset for person IDs?
 
                     # workaround for fresh pretalx instances
-                    elif options.get("randomize_small_ids") and int(event["id"]) < 1000:
+                    elif options.get("randomize_small_ids") and int(event["id"]) < 1500:
                         event["id"] = int(re.sub("[^0-9]+", "", event["guid"])[0:4])
 
                     # overwrite slug for pretalx schedule.json input

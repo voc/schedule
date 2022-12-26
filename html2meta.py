@@ -23,7 +23,6 @@ args = parser.parse_args()
 
 acronym = 'jev22'  # args.acronym.lower()
 
-
 @dataclass
 class Location:
     id: str
@@ -72,37 +71,39 @@ def fetch_post(source_url):
         cid = chapter['id'].split('-')[3]
         print("\n==", cid, chapter.string)
 
-        region = None
-        location = None
-        subsection = None
+        elements = chapter.find_next_siblings('h4')
+        element = next(elements)
 
-        # TODO: next_siblings vs next_elements
-        for region in chapter.find_next_siblings('h3'):
-            print(region.string)
-            
-            for element in region.find_next_siblings('h4'):
-                location = Location(
-                    id=element['id'],
-                    name=element.string,
-                    region=region,
-                    country=cid
-                )
-                print("-", location.name)
-                conferences.append(location)
+        while True:
+            location = Location(
+                id=element['id'],
+                name=element.string,
+                region=element.find_previous_sibling('h3'),
+                country=cid
+            )
+            print("-", location.name)
+            conferences.append(location)
 
-                subsection = None
-                for p in element.find_all('p'):
-                    if p.get('class') == ['subsection']:
-                        subsection = p.string.strip()
-                        continue
+            subsection = None
+            for p in element.next_siblings:
+                if p.name != 'p':
+                    break
 
-                    if subsection == 'Info':
-                        location.infos = [list(li.children) for li in p.select('li')]
-                        continue
+                if p.get('class') == ['subsection']:
+                    subsection = p.string.strip()
+                    continue
 
-                    if subsection and location:
-                        location.description[subsection] += p.text.prettify()
-                        continue
+                if subsection == 'Info':
+                    location.infos = [list(li.children) for li in p.select('li')]
+                    continue
+
+                if subsection and location:
+                    location.description[subsection] += p.text.prettify()
+                    continue
+
+            element = next(elements)
+            if not element or element.previous_sibling.name == 'h2':
+                break
 
     return conferences
         

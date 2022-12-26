@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-import os
 from typing import List
 import requests
 import json
@@ -83,6 +82,21 @@ conferences: List[GenericConference] = [
         },
         options={"track": "Hellarious"},
     ),
+    GenericConference(
+        url="https://data.jtbx.de/jev22_ccl/schedule.json",
+        data={
+            "name": "Curious Community Labs e.V.",  # (27.–29.)
+            "location": "Hamburg",
+            "links": [
+                "https://curious.bio/2022/11/remote-chaos-experience/",
+            ],
+            "osm_url": "https://www.openstreetmap.org/node/9615054340#v1"
+        },
+        options={
+            "track": "Curious Community Labs",
+            "id_offsets": -200
+        },
+    ),
     PretalxConference(
         url="https://pretalx.c3voc.de/xrelog-2022",
         data={
@@ -94,6 +108,16 @@ conferences: List[GenericConference] = [
             ],
         },
     ),
+    PretalxConference(
+        url="https://talks.w.icmp.camp/wicmp1",
+        data={
+            "slug": "wicmp1",
+            "name": "Wintergalaktische Club Mate Party",  # (27.–30.)
+            "location": "Erlangen, Bits'n'Bugs + ZAM",
+            "links": ["https://w.icmp.camp"],
+        },
+        options={"track": "Erlangen"},
+    ),
     WebcalConference(
         url="webcals://ramac.mudbyte.de/remote.php/dav/public-calendars/YTtwyZcXsmZDfSoo/?export",
         data={
@@ -104,16 +128,6 @@ conferences: List[GenericConference] = [
         options={
             "track": "Gießen/Wetzlar",
         },
-    ),
-    PretalxConference(
-        url="https://talks.w.icmp.camp/wicmp1",
-        data={
-            "slug": "wicmp1",
-            "name": "Wintergalaktische Club Mate Party",  # (27.–30.)
-            "location": "Erlangen, Bits'n'Bugs + ZAM",
-            "links": ["https://w.icmp.camp"],
-        },
-        options={"track": "Erlangen"},
     ),
     GenericConference(
         url="https://laborluxeria.github.io/winterchaos2022/schedule.json",
@@ -162,7 +176,8 @@ conferences: List[GenericConference] = [
         },
     ),
     GenericConference(
-        url="TBD",
+        # TODO: add XML import from https://dezentrale.space/2022/12/localverse2022-fahrplan.xml
+        url="TBD",  # https://dezentrale.space/2022/12/localverse2022-fahrplan.xml",
         data={
             "name": "localverse2022",  # (27.–30.)
             "location": "Leipzig",
@@ -173,16 +188,18 @@ conferences: List[GenericConference] = [
         },
     ),
     GenericConference(
-        url="https://data.jtbx.de/jev22_ccl/schedule.json",
+        url="https://woodbine.nyc/2022/12/dweb-jev/schedule.json",
         data={
-            "name": "jev22_ccl",  # (27.–29.)
-            "location": "Hamburg",
+            "name": "DWeb NY Pre-kickoff + RemoteCCC @ Woodbine",
+            "location": "New York, USA",
+            "address": "Basement, Woodbine, 585 Woodward Ave, Ridgewood, Queens, NY 11385",
+            "description": "A new DWeb Node is being formed! What does this mean? Come and find out! \n\n Relevant topics include: decentralized web, digital commons, co-ops, governance, privacy, anti-surveillance, software freedom.",
             "links": [
-                "https://curious.bio/2022/11/remote-chaos-experience/",
+                "https://dweb.events/stuff/ny/2022/woodbine-remoteccc/",
             ],
-        },
-        options={"track": "Curious Community Labs"},
-    )
+            "osm_url": "https://www.openstreetmap.org/node/5365063316#v13"
+        }
+    ),
 ]
 
 targets = [
@@ -314,6 +331,7 @@ def main():
         git("rm events/*")
 
     # write seperate file for each event, to get better git diffs
+    # TODO: use Event.export()
     def export_event(event: Event):
         origin_system = None
         if isinstance(event, Event):
