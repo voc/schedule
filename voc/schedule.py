@@ -263,6 +263,8 @@ class Schedule(dict):
     def rooms(self, mode='names'):
         if mode == 'names':
             return [room['name'] for room in self.conference('rooms')]
+        elif mode == 'obj':
+            return [Room.from_dict(r) for r in self.conference('rooms')]
         else:
             return self.conference('rooms')
 
@@ -332,7 +334,7 @@ class Schedule(dict):
         for day in self["conference"]["days"]:
             for room in day["rooms"]:
                 for event in day["rooms"][room]:
-                    result = func(event, *args)
+                    result = func(event if isinstance(event, Event) else Event(event), *args)
                     if result:
                         out.append(result)
 

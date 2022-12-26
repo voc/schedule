@@ -88,7 +88,7 @@ class Event(collections.abc.Mapping):
         if "answers" in r:
             del r["answers"]
         # fix wrong formatted links
-        if len(r["links"]) > 0 and isinstance(r["links"][0], str):
+        if "links" in r and len(r["links"]) > 0 and isinstance(r["links"][0], str):
             r["links"] = [{"url": url, "title": url} for url in r["links"]]
         return r
 

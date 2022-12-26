@@ -1,3 +1,4 @@
+import argparse
 from os import getenv, path
 import json
 import git
@@ -7,11 +8,17 @@ from gql.transport.aiohttp import AIOHTTPTransport
 from gql.transport.exceptions import TransportQueryError
 
 try:
-    from .schedule import Schedule, Event
-    from .tools import load_json, write, normalise_string
+    from .schedule import Schedule
+    from .event import Event
+    from .room import Room
+    from .tools import load_json, write
 
 except ImportError:
+    import sys
+    sys.path.append('.')
+
     from schedule import Schedule, Event
+    from room import Room
     from tools import load_json, write
 
 
@@ -41,10 +48,7 @@ def create_conference(schedule: Schedule):
                 } for day in schedule.days()]
             },
             'roomsUsingId': {
-                'create': [{
-                    'name': room,
-                    'slug': normalise_string(room.lower()),
-                } for room in schedule.rooms()]
+                'create': [room.graphql() for room in schedule.rooms(mode='obj')]
             }
         }
     }
@@ -94,23 +98,23 @@ def get_conference(acronym):
       }'''), variable_values={'acronym': acronym})
 
 
-def add_room(conference_id, room_name):
+def add_room(conference_id, room: Room):
     result = client.execute(gql('''
       mutation addRoom($input: UpsertRoomInput!) {
         upsertRoom(input: $input) {
           room { guid }
         }
       }'''), {'input': {'room': {
-          'name': room_name,
-          'conferenceId': conference_id
-        }
+        **room.graphql(),
+        'conferenceId': conference_id
+    }
     }})
 
     print(result)
     return result['upsertRoom']['room']['guid']
 
 
-def add_event(conference_id, room_id, event):
+def add_event(conference_id, room_id, event: Event):
     data = {
         "event": {
             **(event.graphql()),
@@ -118,7 +122,8 @@ def add_event(conference_id, room_id, event):
             "roomId": room_id,
             "eventPeopleUsingGuid": {
                 "create": [
-                    {"personId": str(p['id']), "publicName": p['public_name']} for p in event['persons']
+                    # TODO: add person guid
+                    {"personId": str(p['id']), "publicName": p.get('name') or p.get('public_name')} for p in event['persons']
                 ]}
         }
     }
@@ -132,6 +137,7 @@ def add_event(conference_id, room_id, event):
     ''')
 
     try:
+        write('.')
         client.execute(query, {'input': data})
     except Exception as e:
         print(json.dumps(data, indent=2))
@@ -161,14 +167,22 @@ class C3data:
         self.conference_id = result['conference']['id']
         self.room_ids = {x['name']: x['guid'] for x in result['conference']['rooms']['nodes']}
 
-    def upsert_event(self, event):
+        # check for new/updated rooms
+        for room in schedule.rooms(mode='obj'):
+            if room.name not in self.room_ids:
+                room_id = add_room(self.conference_id, room)
+                self.room_ids[room.name] = room_id
+
+        # TODO check for new rooms and create them now
+
+    def upsert_event(self, event: Event):
         if event['room'] in self.room_ids:
             room_id = self.room_ids[event['room']]
         else:
             print('WARNING: Room {} does not exist, creating.'.format(event['room']))
-            room_id = add_room(self.conference_id, event['room'])
+            room_id = add_room(self.conference_id, Room(name=event['room']))
             self.room_ids[event['room']] = room_id
-        add_event(self.conference_id, room_id, Event(event))
+        add_event(self.conference_id, room_id, event)
 
     def depublish_event(self, event_guid):
         remove_event(event_guid)
@@ -182,7 +196,7 @@ class C3data:
                     event_guid = path.splitext(path.basename(i.a_path))[0]
                     self.depublish_event(event_guid)
                 else:
-                    event = load_json(i.a_path)
+                    event = Event(load_json(i.a_path))
                     self.upsert_event(event)
             except Exception as e:
                 print(e)
@@ -190,19 +204,26 @@ class C3data:
                     raise e
 
 
-def push_schedule(schedule: Schedule, create=False):
+def upsert_schedule(schedule: Schedule, create=False):
     c3data = C3data(schedule, create)
     schedule.foreach_event(c3data.upsert_event)
 
 
 def test():
     # schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
-    schedule = Schedule.from_file('divoc/everything.schedule.json')
-    # schedule = Schedule.from_file('rc3/everything.schedule.json')
+    schedule = Schedule.from_file('jev22/everything.schedule.json')
 
-    push_schedule(schedule)
+    upsert_schedule(schedule, create=False)
 
 
 if __name__ == '__main__':
-    test()
-    print('test done')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('url', action="store", help="url or local path source schedule.json")
+    parser.add_argument('--create', action="store_true", default=False)
+    args = parser.parse_args()
+
+    schedule = Schedule.from_url(args.url) if args.url.startswith('http') else Schedule.from_file(args.url)
+    upsert_schedule(schedule, create=args.create)
+
+    print('')
+    print('done')

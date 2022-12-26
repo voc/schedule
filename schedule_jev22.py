@@ -22,6 +22,9 @@ from voc import (
     Logger,
 )
 
+from voc.c3data import C3data
+from git import Repo
+
 # from voc.schedule import set_validator_filter
 from voc.tools import (
     commit_changes_if_something_relevant_changed,
@@ -173,7 +176,7 @@ conferences: List[GenericConference] = [
 
 targets = [
     "filesystem",
-    # "c3data",
+    "c3data",
     # "voctoimport",
     # "rc3hub"
 ]
@@ -361,6 +364,13 @@ def main():
 
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
+
+    if "c3data" in targets:
+        print("\n== Updating c3data via API…")
+
+        c3data = C3data(full_schedule)
+        c3data.process_changed_events(Repo('.'), options)
+
 
 if __name__ == "__main__":
     main()
