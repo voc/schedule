@@ -85,7 +85,7 @@ conferences: List[GenericConference] = [
     GenericConference(
         url="https://data.jtbx.de/jev22_ccl/schedule.json",
         data={
-            "name": "Curious Community Labs e.V.",  # (27.–29.)
+            "name": "Curious Community Labs Chaos Experience",  # (27.–29.)
             "location": "Hamburg",
             "links": [
                 "https://curious.bio/2022/11/remote-chaos-experience/",
@@ -227,8 +227,7 @@ rooms = {
         Room(guid='568cabc6-82f2-11ed-82f7-cf29158272bb', stream='s1', name="Vortragsraum 1 - Ahlam - H2-1.6"),  # Freiräume
         Room(guid='64f358c2-82f2-11ed-b6f2-370ab4c5fdf0', stream='s5', name="Vortragsraum 2 - Bhavani - H1-5.2"),  # Freiräume
         Room(guid='ad28953f-122e-4293-836d-860320183a1c', stream='xrelog22'),  # xrelog22
-        # TODO: Where is the Curious Community Labs scheulde with more structure? https://curious.bio/2022/11/remote-chaos-experience/
-        # Room(stream='', name='Curious Community Labs')
+        Room(guid='3100bf0b-d2c9-43be-8bf4-c083b4239a78', stream='s3', name='Curious Community Labs Chaos Experience')  # CCL Hamburg
     ],
     "rooms": [],
     "music": [],
