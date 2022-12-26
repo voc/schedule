@@ -13,7 +13,7 @@ class PretalxConference(GenericConference):
 
     def __init__(self, url, data, options={}):
         GenericConference.__init__(self, url, data, options)
-        
+
         if url and url != 'TBD':
             self.schedule_url = url + "/schedule/export/schedule.json"
             r = urlparse(url)
@@ -35,6 +35,16 @@ class PretalxConference(GenericConference):
             .json()
 
     def rooms(self):
-        return requests.get(self.api_url + '/rooms', timeout=1, headers=headers) \
+        return requests.get(self.api_url + '/rooms', timeout=1, headers=headers if self.origin_system == 'pretalx.c3voc.de' else {'Content-Type': 'application/json'}) \
             .json() \
             .get('results')
+
+    def latest_schedule(self):
+        return requests.get(self.api_url + '/schedules/latest/', timeout=1) \
+            .json()
+        # Custom pretalx schedule format
+
+    # def tracks(self):
+    #    return requests.get(self.api_url + '/tracks', timeout=1, headers=headers) if self.origin_system == 'pretalx.c3voc.de' else {} \
+    #        .json() \
+    #        .get('results')

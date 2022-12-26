@@ -31,3 +31,5 @@ __pycache__
 archive/*
 .vscode
 .env*
+.idea
+tmp
