@@ -20,7 +20,13 @@ class Event(collections.abc.Mapping):
     start: datetime = None
 
     def __init__(self, data, start_time: datetime = None, origin: EventSourceInterface = None):
-        # first remove empty optional fields – and url... Does anybody remember why `url`, too?
+        # when being restored from single event file, we have to specially process the origin attribute
+        if 'origin' in data:
+            self.origin = EventSourceInterface()
+            self.origin.origin_system = data['origin']
+            del data['origin']
+
+        # remove empty optional fields – and url... Does anybody remember why `url`, too?
         for field in ["video_download_url", "answers", "url"]:
             if field in data and not (data[field]):
                 del data[field]

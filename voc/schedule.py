@@ -456,7 +456,7 @@ class Schedule(dict):
                         event["id"] = int(re.sub("[^0-9]+", "", event["guid"])[0:4])
 
                     # overwrite slug for pretalx schedule.json input
-                    if options.get("overwrite_slug", False) and "answers" in event:
+                    if options.get("overwrite_slug", False):
                         event["slug"] = "{slug}-{id}-{name}".format(
                             slug=self.conference("acronym").lower(),
                             id=event["id"],
