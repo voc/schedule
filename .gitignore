@@ -30,3 +30,4 @@ __pycache__
 /36C3
 archive/*
 .vscode
+.env*
