@@ -102,7 +102,7 @@ def add_room(conference_id, room: Room):
     result = client.execute(gql('''
       mutation addRoom($input: UpsertRoomInput!) {
         upsertRoom(input: $input) {
-          room { guid }
+          room { guid, name, slug, meta }
         }
       }'''), {'input': {'room': {
         **room.graphql(),
@@ -180,7 +180,7 @@ class C3data:
             room_id = self.room_ids[event['room']]
         else:
             print('WARNING: Room {} does not exist, creating.'.format(event['room']))
-            room_id = add_room(self.conference_id, Room(name=event['room']))
+            room_id = add_room(self.conference_id, Room(name=event['room'], guid=event.get('room_id')))
             self.room_ids[event['room']] = room_id
         add_event(self.conference_id, room_id, event)
 
@@ -198,6 +198,8 @@ class C3data:
                 else:
                     event = Event(load_json(i.a_path))
                     self.upsert_event(event)
+            except KeyboardInterrupt:
+                break
             except Exception as e:
                 print(e)
                 if options.exit_when_exception_occours:
@@ -206,7 +208,10 @@ class C3data:
 
 def upsert_schedule(schedule: Schedule, create=False):
     c3data = C3data(schedule, create)
-    schedule.foreach_event(c3data.upsert_event)
+    try:
+        schedule.foreach_event(c3data.upsert_event)
+    except KeyboardInterrupt:
+        pass
 
 
 def test():
