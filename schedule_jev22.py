@@ -220,9 +220,9 @@ def main():
         conference={
             "acronym": "jev22",
             "title": "Dezentrale Jahresendveranstaltungen",
-            "start": "2022-12-27",
+            "start": "2022-12-26",
             "end": "2022-12-31",
-            "daysCount": 5,
+            "daysCount": 6,
             "timeslot_duration": "00:15",
             "time_zone_name": "Europe/Amsterdam",
         },
