@@ -436,6 +436,11 @@ class Schedule(dict):
                     if options.get("do_not_record"):
                         event["do_not_record"] = options['do_not_record'](event) if callable(options["do_not_record"]) else options["do_not_record"]
 
+                    if options.get("remove_title_additions"):
+                        event["title"], subtitle, event_type = re.match(r"^(.+?)(?:( ?[:–] .+?))?(?: \((.+?)\))?$", event["title"]).groups()
+                        if not event.get("subtitle") and subtitle:
+                            event["subtitle"] = subtitle
+
                     if options.get("rewrite_id_from_question"):
                         q = next(
                             (

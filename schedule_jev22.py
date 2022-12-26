@@ -264,6 +264,7 @@ def main():
                 options={
                     "randomize_small_ids": True,
                     "overwrite_slug": True,
+                    "remove_title_additions": True,
                     **(entry.options or {}),
                     "prefix_person_ids": entry.get("prefix"),
                 },
