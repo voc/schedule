@@ -152,7 +152,7 @@ def remove_event(event_guid):
           mutation deleteEvent($guid: UUID!) {
             deleteEvent(input: {guid: $guid}) { deletedEventNodeId }
           }
-        '''), {'input': {'guid': event_guid}})
+        '''), {'guid': event_guid})
     except Exception as e:
         print(e)
         print()
