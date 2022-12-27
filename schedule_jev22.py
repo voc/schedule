@@ -76,7 +76,8 @@ conferences: List[GenericConference] = [
     PretalxConference(
         url="https://pretalx.c3voc.de/hacking-in-hell-2022",
         data={
-            "name": "Hellarious: Hacking in Hell",
+            "name": "Hellarious",
+            "title": "Hellarious: Hacking in Hell",
             "location": "Brandenburg, Alte Hölle",
             "links": ["https://alte-hoelle.de/"],
         },
@@ -85,7 +86,8 @@ conferences: List[GenericConference] = [
     GenericConference(
         url="https://data.jtbx.de/jev22_ccl/schedule.json",
         data={
-            "name": "Curious Community Labs Chaos Experience",  # (27.–29.)
+            "name": "CCL CE",
+            "title": "Curious Community Labs Chaos Experience",  # (27.–29.)
             "location": "Hamburg",
             "links": [
                 "https://curious.bio/2022/11/remote-chaos-experience/",
@@ -157,7 +159,8 @@ conferences: List[GenericConference] = [
     PretalxConference(
         url="https://forum.freiraeumen.jetzt/freiraumforum",
         data={
-            "name": "Forum für Freiräume - Gib Uns Mehr!",  # (26.–31.)
+            "name": "Freiraumforum",  # (26.–31.)
+            "title": "Forum für Freiräume - Gib Uns Mehr!",
             "location": "München",
             "links": ["https://events.ccc.de/2022/11/18/ff22-cfp/"],
         },
@@ -166,8 +169,8 @@ conferences: List[GenericConference] = [
     PretalxConference(
         url="https://pretalx.hackwerk.fun/jev-2022",
         data={
-            "name": "End-of-Year event",
-            "location": "Aalen, Hackwerk",
+            "name": "Hackwerk",
+            "location": "Aalen",
             "description": "Auch wir würden gerne bei der dezentralen Jahresendveranstaltung mitmachen. Hierzu laden wir vom 29.12-31.12. zum netten Zusammensein mit vielen Chaos-Wesen nach Aalen ein. \n\n Wir schauen bei einigen Glühtschunks und Mate zusammen die Streams auf media.ccc.de an, haben aber auch vor selbst Vorträge zu halten und zu Streamen. \n\n Bitte hier ein Ticket klicken (wir verwenden das Ticketsystem, um die Teilnehmerzahl zu wissen)  – für Talk-Einreichungen haben wir ein Pretalx eingerichtet.",
             "links": [
                 "https://tickets.hackwerk.fun/hackwerk/jev2022/",
@@ -190,7 +193,7 @@ conferences: List[GenericConference] = [
     GenericConference(
         url="https://woodbine.nyc/2022/12/dweb-jev/schedule.json",
         data={
-            "name": "DWeb NY Pre-kickoff + RemoteCCC @ Woodbine",
+            "name": "Woodbine",
             "location": "New York, USA",
             "address": "Basement, Woodbine, 585 Woodward Ave, Ridgewood, Queens, NY 11385",
             "description": "A new DWeb Node is being formed! What does this mean? Come and find out! \n\n Relevant topics include: decentralized web, digital commons, co-ops, governance, privacy, anti-surveillance, software freedom.",
@@ -224,10 +227,16 @@ rooms = {
         Room(guid='6f12618c-0f1c-4318-a201-099152f86ac0', stream='s4', name="RTC-Bühne (Sparti)"),  # Potsdam
         Room(guid='0ce1f1b3-35c6-48ee-b3db-1c54e85f36b4', stream='s6', name="Bierschoine"),  # Alte Hölle
         Room(guid='99808216-837b-11ed-85fb-6c400891b752', stream='s2', name='Seminarraum'),  # WICMP, Erlangen
-        Room(guid='568cabc6-82f2-11ed-82f7-cf29158272bb', stream='s1', name="Vortragsraum 1 - Ahlam - H2-1.6"),  # Freiräume
-        Room(guid='64f358c2-82f2-11ed-b6f2-370ab4c5fdf0', stream='s5', name="Vortragsraum 2 - Bhavani - H1-5.2"),  # Freiräume
+        Room(guid='568cabc6-82f2-11ed-82f7-cf29158272bb', stream='s1', name="Ahlam"),  # Freiräume
+        Room(guid='64f358c2-82f2-11ed-b6f2-370ab4c5fdf0', stream='s5', name="Bhavani"),  # Freiräume
         Room(guid='ad28953f-122e-4293-836d-860320183a1c', stream='xrelog22'),  # xrelog22
-        Room(guid='3100bf0b-d2c9-43be-8bf4-c083b4239a78', stream='s3', name='Curious Community Labs Chaos Experience')  # CCL Hamburg
+        Room(guid='3100bf0b-d2c9-43be-8bf4-c083b4239a78', stream='s3', name='CCL'),  # Curious Community Labs Chaos Experience Hamburg
+        Room(guid='7ddef1dc-d3e8-451b-9ea5-3441bfa22e23', stream='aalend', name='Hackwerk'),
+        Room(guid='a24f561b-6f4a-4ee3-87fb-d22fff05f0da', stream='cbase1', name='HIP1'),
+        Room(guid='a24f561b-6f4a-4ee3-87fb-d22fff05f0dc', stream='cbase2', name='HIP2'),
+        Room(guid='99411f15-7335-4d36-abac-3ff0419ec954', stream='winterchaos'),
+        Room(guid='a6f1969c-8349-4344-9d4e-8b1e1ecd0ecf', stream='woodbine'),
+        # Room(guid='????', stream='wongress', name=''), # KampHack: Wongress (Münster)
     ],
     "rooms": [],
     "music": [],
@@ -386,15 +395,16 @@ def main():
     print("\nDone")
     print("  version: " + full_schedule.version())
 
-    print("\n  rooms: ")
-    for room in full_schedule.rooms():
-        print("   - " + room)
-    print()
+    if options.debug:
+        print("\n  rooms: ")
+        for room in full_schedule.rooms():
+            print("   - " + room)
+        print()
 
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
 
-    if "c3data" in targets:
+    if not local and "c3data" in targets:
         print("\n== Updating c3data via API…")
 
         c3data = C3data(full_schedule)
