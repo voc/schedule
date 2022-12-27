@@ -398,13 +398,17 @@ class Schedule(dict):
         offset = (
             other_schedule.conference_start() - self.conference_start()
         ).days
+        days = other_schedule.days()
+        # worksround if other schedule starts with index 0 instead of 1
+        if days[0]["index"] == 0:
+            offset += 1
 
         self["version"] += " " + other_schedule.version()
 
         if offset:
-            log.info("  calculated conference start day offset: {}".format(offset))
+            log.warn("  calculated conference start day index offset: {}".format(offset))
 
-        for day in other_schedule.days():
+        for day in days:
             target_day = day["index"] + offset
 
             if target_day < 1:
