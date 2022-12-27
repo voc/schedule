@@ -128,7 +128,7 @@
 
   <xs:simpleType name="slug">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[a-z0-9_]{3,}(-2[0-9]{3}-[a-z]+)?-[0-9]{1,6}-[a-z0-9\-_]{4,}"/>
+      <xs:pattern value="[a-z0-9_]{3,}(-2[0-9]{3}-[a-z]+)?-[0-9]{1,6}-[a-z0-9\-_]{3,}"/>
     </xs:restriction>
   </xs:simpleType>
 
