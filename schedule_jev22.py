@@ -223,8 +223,8 @@ id_offsets = {
 rooms = {
     "channels": [
         # channels with video recordings/livestream – same order as streaming website
-        Room(guid='c62a781e-48a3-4546-bb5c-dee2080738f7', stream='fireshonks', name="Fireshonks-Stream"),  # Remote
-        Room(guid='6f12618c-0f1c-4318-a201-099152f86ac0', stream='s4', name="RTC-Bühne (Sparti)"),  # Potsdam
+        Room(guid='c62a781e-48a3-4546-bb5c-dee2080738f7', stream='fireshonks', name="Fireshonks"),  # Remote
+        Room(guid='6f12618c-0f1c-4318-a201-099152f86ac0', stream='s4', name="Sparti"),  # Potsdam
         Room(guid='0ce1f1b3-35c6-48ee-b3db-1c54e85f36b4', stream='s6', name="Bierschoine"),  # Alte Hölle
         Room(guid='99808216-837b-11ed-85fb-6c400891b752', stream='s2', name='Seminarraum'),  # WICMP, Erlangen
         Room(guid='568cabc6-82f2-11ed-82f7-cf29158272bb', stream='s1', name="Ahlam"),  # Freiräume
@@ -367,7 +367,15 @@ def main():
     write("\nExporting... ")
     # set_validator_filter('strange')
     full_schedule.export("everything")
-    full_schedule.export_filtered("channels", rooms=rooms['channels'])
+
+    streams_schedule = full_schedule.filter("channels", rooms=rooms['channels'])
+    replacements = {}
+    for stream in rooms['channels']:
+        r = streams_schedule.room(guid=stream.guid)
+        if stream.name and stream.name != r['name']:
+            replacements[r['name']] = stream.name
+    streams_schedule.rename_rooms(replacements)
+    streams_schedule.export("channels")
 
     # expose metadata to own file
     with open("meta.json", "w") as fp:

@@ -7,23 +7,21 @@ import requests
 import pytz
 import dateutil.parser
 from collections import OrderedDict
-from typing import Callable, List, Union
+from typing import Callable, Dict, List, Union
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from lxml import etree as ET
 
-from voc.event import EventSourceInterface
-from voc.room import Room
-from voc.tools import write
-
 try:
     import voc.tools as tools
+    from voc.tools import write
+    from voc.event import Event, EventSourceInterface
+    from voc.room import Room
     from voc.logger import Logger
-    from .event import Event
 except ImportError:
     import tools
     from logger import Logger
-    from event import Event
+    from event import Event, EventSourceInterface
 
 log = Logger(__name__)
 
@@ -272,6 +270,27 @@ class Schedule(dict):
         if rooms:
             for x in rooms:
                 self.add_room(x, context)
+
+    def rename_rooms(self, replacements: Dict[str, str]):
+
+        name_replacements = {}
+
+        for old_name_or_guid, new_name in replacements.items():
+            r = self.room(name=old_name_or_guid) or self.room(guid=old_name_or_guid)
+            if r['name'] != new_name:
+                name_replacements[r['name']] = new_name
+                r['name'] = new_name
+                if r.get('guid'):
+                    self._room_ids[new_name] = r['guid']
+
+
+        for day in self['conference']['days']:
+            for room_key, events in list(day['rooms'].items()):
+                new_name = replacements.get(room_key, room_key)
+                day['rooms'][new_name] = day['rooms'].pop(room_key)
+                if room_key != new_name:
+                    for event in events:
+                        event['room'] = new_name
 
     def add_room(self, room: Union[str, dict], context: EventSourceInterface = {}):
         # if rooms is str, use the old behaviour – for backwords compability
@@ -673,7 +692,7 @@ class Schedule(dict):
 
         return json
 
-    def export_filtered(self, name: str, rooms: Union[List[Union[str, Room]], Callable]):
+    def filter(self, name: str, rooms: Union[List[Union[str, Room]], Callable]):
         write(f'\nExporting {name}... ')
         schedule = self.copy(name)
 
@@ -696,6 +715,7 @@ class Schedule(dict):
 
         for room in schedule['conference']['rooms']:
             if not filterRoom(room):
+                log.debug(f"deleting room {room['name']} on conference")
                 del room
 
         for day in schedule.days():
@@ -704,11 +724,11 @@ class Schedule(dict):
             for room_key in room_keys:
                 room = self.room(name=room_key)
                 if not filterRoom(room):
+                    log.debug(f"deleting {room_key} on Day {day['index']}")
                     del day['rooms'][room_key]
                 i += 1
 
         schedule['version'] = self.version().split(';')[0]
-        schedule.export(name.lower())
         return schedule
 
     def export(self, prefix):
