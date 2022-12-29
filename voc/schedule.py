@@ -462,7 +462,7 @@ class Schedule(dict):
                         event["do_not_record"] = options['do_not_record'](event) if callable(options["do_not_record"]) else options["do_not_record"]
 
                     if options.get("remove_title_additions"):
-                        event["title"], subtitle, event_type = re.match(r"^(.{5,}?)(?:( ?[:–-]+ .+?))?(?: \((.+?)\))?$", event["title"]).groups()
+                        event["title"], subtitle, event_type = re.match(r"^(.{5,}?)(?: ?[:–-]+ (.+?))?(?: \((.+?)\))?$", event["title"]).groups()
                         if not event.get("subtitle") and subtitle:
                             event["subtitle"] = subtitle
 
