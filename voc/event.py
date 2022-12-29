@@ -3,7 +3,7 @@ import json
 import collections
 from collections import OrderedDict
 import dateutil.parser
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class EventSourceInterface:
@@ -18,6 +18,7 @@ class Event(collections.abc.Mapping):
     _event = None
     origin: EventSourceInterface = None
     start: datetime = None
+    duration: timedelta = None
 
     def __init__(self, data, start_time: datetime = None, origin: EventSourceInterface = None):
         # when being restored from single event file, we have to specially process the origin attribute
@@ -36,6 +37,8 @@ class Event(collections.abc.Mapping):
         assert 'date' in data
 
         self.start = start_time or dateutil.parser.parse(data["date"])
+        h, m = data['duration'].split(':', 2)
+        self.duration = timedelta(hours=int(h), minutes=int(m))
 
         if 'start' not in data:
             data['start'] = self.start.strftime('%H:%M')
@@ -51,6 +54,10 @@ class Event(collections.abc.Mapping):
             from voc.tools import get_id
             self._event['id'] = get_id(self['guid'], length=4)
         self.origin = origin
+
+    @property
+    def end(self):
+        return self.start + self.duration
 
     def __getitem__(self, key):
         return self._event[key]

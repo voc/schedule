@@ -245,7 +245,7 @@ rooms = {
         Room(guid='a24f561b-6f4a-4ee3-87fb-d22fff05f0dc', stream='cbase2', name='HIP2'),
         Room(guid='99411f15-7335-4d36-abac-3ff0419ec954', stream='winterchaos'),
         Room(guid='a6f1969c-8349-4344-9d4e-8b1e1ecd0ecf', stream='woodbine'),
-        # Room(guid='????', stream='wongress', name=''), # KampHack: Wongress (Münster)
+        Room(guid='9be59b3e-fc43-5618-ba0f-bfa5dc5b0c9b', stream='wongress'), # KampHack: Wongress (Münster)
     ],
     "rooms": [],
     "music": [],

@@ -263,8 +263,9 @@ def commit_changes_if_something_relevant_changed(schedule):
 def remove_too_early_events(room):
     from .schedule import Event
 
-    for event in room:
-        start_time = Event(event).start
+    for e in room:
+        event = e if isinstance(e, Event) else Event(e)
+        start_time = event.start
         if start_time.hour > 4 and start_time.hour < 9:
             print('removing {} from full schedule, as it takes place at {} which is too early in the morning'.format(event['title'], start_time.strftime('%H:%M')))
             room.remove(event)

@@ -104,6 +104,14 @@ class Schedule(dict):
                 "conference": conference
             })
 
+        if "days" in self["conference"]:
+            self._generate_stats("start" not in self["conference"])
+
+        if "start" not in self["conference"]:
+            self["conference"]["start"] = self.stats.first_event.start.isoformat()
+        if "end" not in self["conference"]:
+            self["conference"]["end"] = self.stats.last_event.end.isoformat()
+        
         if "rooms" not in self["conference"]:
             # looks like we have an old style schedule json,
             # so let's construct room map from the scheduling data
@@ -122,8 +130,6 @@ class Schedule(dict):
                 date += timedelta(hours=24)
             self["conference"]["days"] = days
 
-        self._generate_stats()
-
     @classmethod
     def from_url(cls, url):
         log.info("Requesting " + url)
@@ -136,6 +142,15 @@ class Schedule(dict):
             )
 
         data = schedule_r.json()
+
+        # add sourounding schedule obj for inproperly formated schedule.json's
+        if "schedule" not in data and "conference" in data:
+            data = {"schedule": data}
+        # move days into conference obj for inproperly formated schedule.json's
+        if "days" in data['schedule']:
+            data['schedule']['conference']['days'] = data['schedule'].pop("days")
+            print(json.dumps(data, indent=2))
+
         if "version" not in data["schedule"]:
             data["schedule"]["version"] = ""
 
@@ -285,7 +300,6 @@ class Schedule(dict):
                 if r.get('guid'):
                     self._room_ids[new_name] = r['guid']
 
-
         for day in self['conference']['days']:
             for room_key, events in list(day['rooms'].items()):
                 new_name = replacements.get(room_key, room_key)
@@ -371,17 +385,19 @@ class Schedule(dict):
 
         return out
 
-    def _generate_stats(self):
+    def _generate_stats(self, enable_time_stats=False):
         class ScheduleStats:
             min_id = None
             max_id = None
             person_min_id = None
             person_max_id = None
             events_count = 0
+            first_event: Event = None
+            last_event: Event = None
 
         self.stats = ScheduleStats()
 
-        def calc_stats(event):
+        def calc_stats(event: Event):
             self.stats.events_count += 1
 
             id = int(event["id"])
@@ -389,6 +405,11 @@ class Schedule(dict):
                 self.stats.min_id = id
             if self.stats.max_id is None or id > self.stats.max_id:
                 self.stats.max_id = id
+
+            if self.stats.first_event is None or event.start < self.stats.first_event.start:
+                self.stats.first_event = event
+            if self.stats.last_event is None or event.start < self.stats.last_event.start:
+                self.stats.last_event = event
 
             for person in event.get("persons", []):
                 if isinstance(person["id"], int) or person["id"].isnumeric():
@@ -648,13 +669,16 @@ class Schedule(dict):
                             recording_license = v
                             # skip forward to next loop iteration
                             continue
-                        elif k == "do_not_record":
+                        elif k == "do_not_record" or k == "recording":
                             k = "recording"
                             # not in schedule.json: license information for an event
                             v = {
                                 "license": recording_license,
-                                "optout": "true" if v else "false",
+                                "optout": "true" if v is True else "false",
                             }
+                        # new style schedule.json (version 2022-12)
+                        elif k == "optout":
+                            v = "true" if v is True else "false"
 
                         # iterate over lists
                         if isinstance(v, list):
