@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
+import os
 from typing import List
 import requests
 import json
@@ -337,6 +338,7 @@ def main():
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
         git("rm events/*")
+    os.makedirs('events', exist_ok=True)
 
     # write seperate file for each event, to get better git diffs
     # TODO: use Event.export()
