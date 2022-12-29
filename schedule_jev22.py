@@ -66,6 +66,17 @@ conferences: List[GenericConference] = [
         options={"track": lambda e: e["track"].split(" ")[0]},
     ),
     PretalxConference(
+        url="https://pretalx.c3voc.de/hip-berlin-2022",
+        data={
+            "name": "Hacking in Parallel",  # (27.–30.)
+            "location": "Berlin, ETI Schauspielschule + c-base",
+            "links": ["https://wiki.hip-berlin.de/"],
+        },
+        options={
+            "track": lambda e: "E.T.I." if e["room"] != "c-base mainhall" else "c-base"
+        },
+    ),
+    PretalxConference(
         url="https://cfp.ccc-p.org/rtc22",
         data={
             "name": "Reconnect To Chaos!",  # (27.–30.)
@@ -147,17 +158,6 @@ conferences: List[GenericConference] = [
         },
     ),
     PretalxConference(
-        url="https://pretalx.c3voc.de/hip-berlin-2022",
-        data={
-            "name": "Hacking in Parallel",  # (27.–30.)
-            "location": "Berlin, ETI Schauspielschule + c-base",
-            "links": ["https://wiki.hip-berlin.de/"],
-        },
-        options={
-            "track": lambda e: "E.T.I." if e["room"] != "c-base mainhall" else "c-base"
-        },
-    ),
-    PretalxConference(
         url="https://forum.freiraeumen.jetzt/freiraumforum",
         data={
             "name": "Freiraumforum",  # (26.–31.)
@@ -178,6 +178,14 @@ conferences: List[GenericConference] = [
                 "https://pretalx.hackwerk.fun/jev-2022/cfp",
             ],
         },
+    ),
+    GenericConference(
+        url="https://import.c3voc.de/schedule/warpzone.json?showall=yes",
+        data={
+            "name": "KampHack: Wongress",
+            "location": "Münster",
+            "links": [],
+        }
     ),
     GenericConference(
         # TODO: add XML import from https://dezentrale.space/2022/12/localverse2022-fahrplan.xml
