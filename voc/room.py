@@ -1,8 +1,11 @@
 from dataclasses import dataclass, fields
-from voc.event import Schedule
 
-from voc.tools import gen_uuid, normalise_string
-
+try:
+    from voc.event import Schedule
+    from voc.tools import gen_uuid, normalise_string
+except:
+    from event import Schedule
+    from tools import gen_uuid, normalise_string
 
 @dataclass
 class Room:

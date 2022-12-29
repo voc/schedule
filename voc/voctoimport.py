@@ -83,7 +83,6 @@ class VoctoImport:
         global args
 
         self.schedule = schedule
-        print(schedule)
         acronym = args.conference or args.acronym or schedule.conference('acronym')
         self.conference = get_conference(acronym)
         if not self.conference:
@@ -103,13 +102,21 @@ def push_schedule(schedule: Schedule, create=False):
 
 
 def run(args):
-    schedule = Schedule.from_url(
-        args.url or f'https://pretalx.c3voc.de/{args.acronym}/schedule/export/schedule.json'
-    )
-    # schedule = Schedule.from_file('rc3/everything.schedule.json')
+    if args.url or args.acronym:
+        schedule = Schedule.from_url(
+            args.url or f'https://pretalx.c3voc.de/{args.acronym}/schedule/export/schedule.json'
+        )
+    else:
+        schedule = Schedule.from_file('jev22/channels.schedule.json')
+
+    instace = VoctoImport(schedule)
+
+    def upsert_event(event):
+        if (len(args.room) == 0 or event['room'] in args.room) and event['do_not_record'] is not True:
+            instace.upsert_event(event)
 
     try:
-        push_schedule(schedule)
+        schedule.foreach_event(upsert_event)
     except KeyboardInterrupt:
         pass
 
@@ -119,6 +126,8 @@ if __name__ == '__main__':
     parser.add_argument('--url', action='store', help='url to schedule.json')
     parser.add_argument('--acronym', '-a', help='the conference acronym in pretalx.c3voc.de')
     parser.add_argument('--conference', '-c', help='the confence slug in import.c3voc.de')
+    parser.add_argument('--room', '-r', action='append', help='filter rooms (multiple possible)')
+
     args = parser.parse_args()
 
     run(args)

@@ -22,6 +22,8 @@ except ImportError:
     import tools
     from logger import Logger
     from event import Event, EventSourceInterface
+    from room import Room
+    from logger import Logger
 
 log = Logger(__name__)
 
