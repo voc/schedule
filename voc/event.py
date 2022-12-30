@@ -96,6 +96,10 @@ class Event(collections.abc.Mapping):
         duration = self._event["duration"].split(":")
         r["duration"] = {"hours": int(duration[0]), "minutes": int(duration[1])}
         del r["persons"]
+        if "recording" in r:
+            if r["recording"].get("optout") is True:
+                r["do_not_record"] = True
+            del r["recording"]
         if "videoDownloadUrl" in r:
             del r["videoDownloadUrl"]
         if "answers" in r:
@@ -116,6 +120,8 @@ class Event(collections.abc.Mapping):
         del r["subtitle"]
         if "recording_license" in r:
             del r["recording_license"]
+        if "recording" in r:
+            del r["recording"]
         if "do_not_record" in r:
             del r["do_not_record"]
         if "video_download_url" in r:
