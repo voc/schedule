@@ -77,15 +77,6 @@ conferences: List[GenericConference] = [
         },
     ),
     PretalxConference(
-        url="https://cfp.ccc-p.org/rtc22",
-        data={
-            "name": "Reconnect To Chaos!",  # (27.–30.)
-            "location": "Potsdam, Chaostreff",
-            "links": ["https://www.ccc-p.org/rtc22/"],
-        },
-        options={"track": "Potsdam"},
-    ),
-    PretalxConference(
         url="https://pretalx.c3voc.de/hacking-in-hell-2022",
         data={
             "name": "Hellarious",
@@ -94,33 +85,6 @@ conferences: List[GenericConference] = [
             "links": ["https://alte-hoelle.de/"],
         },
         options={"track": "Hellarious"},
-    ),
-    GenericConference(
-        url="https://data.jtbx.de/jev22_ccl/schedule.json",
-        data={
-            "name": "CCL CE",
-            "title": "Curious Community Labs Chaos Experience",  # (27.–29.)
-            "location": "Hamburg",
-            "links": [
-                "https://curious.bio/2022/11/remote-chaos-experience/",
-            ],
-            "osm_url": "https://www.openstreetmap.org/node/9615054340#v1"
-        },
-        options={
-            "track": "Curious Community Labs",
-            "id_offsets": -200
-        },
-    ),
-    PretalxConference(
-        url="https://pretalx.c3voc.de/xrelog-2022",
-        data={
-            "name": "xrelog22: Independent Multiverses",  # (28.–30.)
-            "location": "Hamburg, FTZ/HAW",
-            "links": [
-                "https://events.ccc.de/2022/11/13/xrelog22-cfp/",
-                "https://matrix.to/#/#xrevent:matrix.org",
-            ],
-        },
     ),
     PretalxConference(
         url="https://talks.w.icmp.camp/wicmp1",
@@ -141,6 +105,62 @@ conferences: List[GenericConference] = [
         },
         options={
             "track": "Gießen/Wetzlar",
+        },
+    ),
+    GenericConference(
+        url="https://import.c3voc.de/schedule/warpzone.json?showall=yes",
+        data={
+            "name": "KampHack: Wongress",
+            "location": "Münster",
+            "links": [],
+        }
+    ),
+    PretalxConference(
+        url="https://cfp.ccc-p.org/rtc22",
+        data={
+            "name": "Reconnect To Chaos!",  # (27.–30.)
+            "location": "Potsdam, Chaostreff",
+            "links": ["https://www.ccc-p.org/rtc22/"],
+        },
+        options={"track": "Potsdam"},
+    ),
+    PretalxConference(
+        url="https://pretalx.c3voc.de/xrelog-2022",
+        data={
+            "name": "xrelog22: Independent Multiverses",  # (28.–30.)
+            "location": "Hamburg, FTZ/HAW",
+            "links": [
+                "https://events.ccc.de/2022/11/13/xrelog22-cfp/",
+                "https://matrix.to/#/#xrevent:matrix.org",
+            ],
+        },
+    ),
+    GenericConference(
+        url="https://data.jtbx.de/jev22_ccl/schedule.json",
+        data={
+            "name": "CCL CE",
+            "title": "Curious Community Labs Chaos Experience",  # (27.–29.)
+            "location": "Hamburg",
+            "links": [
+                "https://curious.bio/2022/11/remote-chaos-experience/",
+            ],
+            "osm_url": "https://www.openstreetmap.org/node/9615054340#v1"
+        },
+        options={
+            "track": "Curious Community Labs",
+            "id_offsets": -200
+        },
+    ),
+    PretalxConference(
+        url="https://pretalx.hackwerk.fun/jev-2022",
+        data={
+            "name": "Hackwerk",
+            "location": "Aalen",
+            "description": "Auch wir würden gerne bei der dezentralen Jahresendveranstaltung mitmachen. Hierzu laden wir vom 29.12-31.12. zum netten Zusammensein mit vielen Chaos-Wesen nach Aalen ein. \n\n Wir schauen bei einigen Glühtschunks und Mate zusammen die Streams auf media.ccc.de an, haben aber auch vor selbst Vorträge zu halten und zu Streamen. \n\n Bitte hier ein Ticket klicken (wir verwenden das Ticketsystem, um die Teilnehmerzahl zu wissen)  – für Talk-Einreichungen haben wir ein Pretalx eingerichtet.",
+            "links": [
+                "https://tickets.hackwerk.fun/hackwerk/jev2022/",
+                "https://pretalx.hackwerk.fun/jev-2022/cfp",
+            ],
         },
     ),
     GenericConference(
@@ -166,26 +186,6 @@ conferences: List[GenericConference] = [
             "links": ["https://events.ccc.de/2022/11/18/ff22-cfp/"],
         },
         options={"track": "Freiräume"},
-    ),
-    PretalxConference(
-        url="https://pretalx.hackwerk.fun/jev-2022",
-        data={
-            "name": "Hackwerk",
-            "location": "Aalen",
-            "description": "Auch wir würden gerne bei der dezentralen Jahresendveranstaltung mitmachen. Hierzu laden wir vom 29.12-31.12. zum netten Zusammensein mit vielen Chaos-Wesen nach Aalen ein. \n\n Wir schauen bei einigen Glühtschunks und Mate zusammen die Streams auf media.ccc.de an, haben aber auch vor selbst Vorträge zu halten und zu Streamen. \n\n Bitte hier ein Ticket klicken (wir verwenden das Ticketsystem, um die Teilnehmerzahl zu wissen)  – für Talk-Einreichungen haben wir ein Pretalx eingerichtet.",
-            "links": [
-                "https://tickets.hackwerk.fun/hackwerk/jev2022/",
-                "https://pretalx.hackwerk.fun/jev-2022/cfp",
-            ],
-        },
-    ),
-    GenericConference(
-        url="https://import.c3voc.de/schedule/warpzone.json?showall=yes",
-        data={
-            "name": "KampHack: Wongress",
-            "location": "Münster",
-            "links": [],
-        }
     ),
     GenericConference(
         # TODO: add XML import from https://dezentrale.space/2022/12/localverse2022-fahrplan.xml
