@@ -292,7 +292,7 @@ def main():
             if schedule.get('version'):
                 full_schedule['version'] += f"; {entry['name']}"
             else:
-                log.warn(f'  WARNING: schedule of "{entry}" does not have a version number')
+                log.warning(f'  WARNING: schedule of "{entry}" does not have a version number')
 
             try:
                 print(f"  from {schedule['conference']['start']} to {schedule['conference']['end']}")
@@ -345,7 +345,7 @@ def main():
 
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
-        git("rm events/*")
+        git("rm events/*  >/dev/null")
     os.makedirs('events', exist_ok=True)
 
     # write seperate file for each event, to get better git diffs
@@ -382,7 +382,7 @@ def main():
     replacements = {}
     for stream in rooms['channels']:
         r = streams_schedule.room(guid=stream.guid)
-        if stream.name and stream.name != r['name']:
+        if r and stream.name and stream.name != r['name']:
             replacements[r['name']] = stream.name
     streams_schedule.rename_rooms(replacements)
     streams_schedule.export("channels")
@@ -421,6 +421,8 @@ def main():
 
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
+        # Attention: This method exits the script, if nothing relevant changed
+        # TOOD: make this fact more obvious or refactor code
 
     if not local and "c3data" in targets:
         print("\n== Updating c3data via API…")

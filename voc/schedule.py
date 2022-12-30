@@ -14,16 +14,15 @@ from lxml import etree as ET
 
 try:
     import voc.tools as tools
-    from voc.tools import write
     from voc.event import Event, EventSourceInterface
     from voc.room import Room
     from voc.logger import Logger
 except ImportError:
     import tools
-    from logger import Logger
     from event import Event, EventSourceInterface
     from room import Room
     from logger import Logger
+
 
 log = Logger(__name__)
 
@@ -448,13 +447,13 @@ class Schedule(dict):
         self["version"] += " " + other_schedule.version()
 
         if offset:
-            log.warn("  calculated conference start day index offset: {}".format(offset))
+            log.warning("  calculated conference start day index offset: {}".format(offset))
 
         for day in days:
             target_day = day["index"] + offset
 
             if target_day < 1:
-                log.warn(f"  ignoring day {day['date']} from {other_schedule.conference('acronym')}, as primary schedule starts at {self.conference('start')}")
+                log.warning(f"  ignoring day {day['date']} from {other_schedule.conference('acronym')}, as primary schedule starts at {self.conference('start')}")
                 continue
 
             if day["date"] != self.day(target_day)["date"]:
@@ -539,7 +538,7 @@ class Schedule(dict):
             )
 
         if len(result) > 1:
-            log.warn("Warning: Found multiple events with id " + id)
+            log.warning("Warning: Found multiple events with id " + id)
             return result
 
         if len(result) == 0:
@@ -719,7 +718,7 @@ class Schedule(dict):
         return json
 
     def filter(self, name: str, rooms: Union[List[Union[str, Room]], Callable]):
-        write(f'\nExporting {name}... ')
+        log.info(f'\nExporting {name}... ')
         schedule = self.copy(name)
 
         if callable(rooms):
@@ -770,7 +769,7 @@ class Schedule(dict):
             f'/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {validator_filter}; exit \\${{PIPESTATUS[0]}}"'
         )
         if result != 0 and validator_filter:
-            log.warn("  (validation errors might be hidden by validator_filter)")
+            log.warning("  (validation errors might be hidden by validator_filter)")
 
     def __str__(self):
         return json.dumps(self, indent=2, cls=ScheduleEncoder)

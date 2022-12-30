@@ -243,7 +243,7 @@ def export_filtered_schedule(output_name, parent_schedule, filter):
 
 
 def git(args):
-    os.system('/usr/bin/env git {}'.format(args))
+    os.system(f'/usr/bin/env git {args}')
 
 
 def commit_changes_if_something_relevant_changed(schedule):

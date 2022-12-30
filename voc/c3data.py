@@ -164,6 +164,8 @@ class C3data:
 
     def __init__(self, schedule: Schedule, create=False):
         result = create_conference(schedule) if create else get_conference(schedule.conference('acronym'))
+        if "errors" in result:
+            logger.error(result['errors'])
         self.conference_id = result['conference']['id']
         self.room_ids = {x['name']: x['guid'] for x in result['conference']['rooms']['nodes']}
 
