@@ -13,12 +13,11 @@ import hashlib
 import pytz
 import math
 import sys
-
 from voc.tools import normalise_string, gen_uuid, get_id
 from voc.schedule import Schedule, Event
 
 days = []
-tz = pytz.timezone('Europe/Amsterdam')
+tz = pytz.timezone('Europe/Berlin')
 locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
 
@@ -69,9 +68,9 @@ if args.default_language == 'en':
 else:
     date = 'Datum'
     time = 'Uhrzeit'
-    title = 'Title'
+    title = 'Titel'
     description = 'Beschreibung'
-    room = 'Raum'
+    room = 'Ort'
     persons = 'Vortragende'
 # end config
 
@@ -106,7 +105,7 @@ def process(acronym, base_id, source_csv_url):
     conference_title = None
     version = None
 
-    filename = 'schedule-' + acronym + '.csv'
+    filename = f'schedule-{acronym}.csv'
     if sys.version_info[0] < 3:
         infile = open(filename, 'rb')
     else:
@@ -133,7 +132,6 @@ def process(acronym, base_id, source_csv_url):
 
         # second header
         keys2 = next(reader)
-
         # data rows
         last = None
         for row in reader:
@@ -193,8 +191,7 @@ def process(acronym, base_id, source_csv_url):
         month=min_date.month,
         day=min_date.day,
         days_count=days_count)
-    schedule.schedule().version = '1.0' or version
-
+    schedule.version = '1.0' or version
     print(" converting to schedule ")
 
     for event in csv_schedule:

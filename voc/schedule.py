@@ -11,7 +11,6 @@ from typing import Callable, Dict, List, Union
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from lxml import etree as ET
-
 try:
     import voc.tools as tools
     from voc.event import Event, EventSourceInterface
@@ -182,10 +181,6 @@ class Schedule(dict):
         )
         tzinfo = pytz.timezone(tz)
         days = schedule["conference"]["days"]
-        for i in range(days_count):
-            d = ScheduleDay(i, year, month, day + i, tz=tzinfo)
-            days.append(d)
-
         return schedule
 
     @classmethod
