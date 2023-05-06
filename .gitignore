@@ -34,4 +34,4 @@ archive/*
 .env*
 .idea
 tmp
-venv(
+/venv
