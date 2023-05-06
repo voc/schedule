@@ -4,6 +4,7 @@
 /31C3
 /32C3
 /33C3
+jh23dd
 /asm16
 /camp15
 /jh16
@@ -33,3 +34,4 @@ archive/*
 .env*
 .idea
 tmp
+venv(
