@@ -283,7 +283,7 @@ def process_wiki_events(events, sessions):
             # http://stackoverflow.com/questions/22698244/how-to-merge-two-json-string-in-python
             # This will only work if there are unique keys in each json string.
             combined = dict(session.items() + event.items()) #python2
-            #combined = session.copy() #python3 TOOD test if this really leads to the same result
+            #combined = session.copy() #python3 TODO test if this really leads to the same result
             #combined.update(event)
             
             

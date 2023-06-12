@@ -127,7 +127,7 @@ def main():
     print('  version: ' + full_schedule.version())
 
 
-    # add addional rooms from this local config now, so they are in the correct order
+    # add additional rooms from this local config now, so they are in the correct order
     full_schedule.add_rooms(rooms)
 
     # add events from additional_schedule's to full_schedule
@@ -150,7 +150,7 @@ def main():
             print('  UNEXPECTED ERROR:' + str(sys.exc_info()[1]))
 
 
-    # write all events from the three big stages to a own schedule.json/xml
+    # write all events from the three big stages to an own schedule.json/xml
     write('\nExporting three main stages... ')
     full_schedule.export('stages')
 
@@ -169,7 +169,7 @@ def main():
     write('\nExporting... ')
     full_schedule.export('everything')
 
-    # write seperate file for each event, to get better git diffs
+    # write separate file for each event, to get better git diffs
     #full_schedule.foreach_event(lambda event: event.export('events/'))
     def export_event(event):
         with open("events/{}.json".format(event['guid']), "w") as fp:

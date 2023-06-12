@@ -62,7 +62,7 @@ channels += [{
 id_offsets = {
     'wikipaka': 1000,
     'chaoszone': 1500
-    # main schedule local ids's start at about 10.000
+    # main schedule local ids' start at about 10.000
 }
 
 
@@ -107,7 +107,7 @@ def main():
         'https://frab.cccv.de/': True
     }
 
-    # add addional rooms from this local config now, so they are in the correct order
+    # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
 
@@ -161,10 +161,10 @@ def main():
 
     full_schedule.foreach_event(harmonize_event_type)
 
-    # write all events from the channels to a own schedule.json/xml
+    # write all events from the channels to an own schedule.json/xml
     channel_schedule = export_stages_schedule(full_schedule)
 
-    # write all events from non-frab to a own schedule.json/xml
+    # write all events from non-frab to an own schedule.json/xml
     def non_frab_filter(key):
         return not (key in frab_rooms)
     export_filtered_schedule('non-frab', channel_schedule, non_frab_filter)
@@ -173,7 +173,7 @@ def main():
     if not local or options.git:
         git('git remove events/*')
 
-    # write seperate file for each event, to get better git diffs
+    # write separate file for each event, to get better git diffs
     def export_event(event: Event):
         origin_system = None
         if isinstance(event, Event):

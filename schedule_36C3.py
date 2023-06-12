@@ -45,7 +45,7 @@ additional_schedule_urls = [
     { 'name': 'lightning',      'url': 'https://c3lt.de/36c3/schedule/export/schedule.json',                            'id_offset': 3000},
     { 'name': 'art-play',       'url': 'https://stage.artesmobiles.art/36c3/schedule/export/schedule.json',             'id_offset': 4100},
     { 'name': 'cdc',            'url': 'https://frab.riat.at/en/36C3/public/schedule.json',                             'id_offset': 4200},
-    # main schedule local ids's start at about 10.000
+    # main schedule local ids' start at about 10.000
 ]
 
 
@@ -137,7 +137,7 @@ def main():
 
 
 
-    # add addional rooms from this local config now, so they are in the correct order
+    # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
 
@@ -184,7 +184,7 @@ def main():
     full_schedule.remove_event(guid='f33dd7b7-99d6-574b-9282-26986b5a0ea0')
 
 
-    # write all events from the stages to a own schedule.json/xml
+    # write all events from the stages to an own schedule.json/xml
     write('\nExporting main stages... ')
     stages = full_schedule.copy('Stages')
     for day in stages._schedule['schedule']['conference']['days']:
@@ -234,7 +234,7 @@ def main():
     write('\nExporting... ')
     full_schedule.export('everything')
 
-    # write seperate file for each event, to get better git diffs
+    # write separate file for each event, to get better git diffs
     #full_schedule.foreach_event(lambda event: event.export('events/'))
     def export_event(event):
         with open("events/{}.json".format(event['guid']), "w") as fp:
