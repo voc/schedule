@@ -234,7 +234,7 @@ def process_wiki_events(
             # combined = dict(session.items() + event.items()) #python2
             combined = (
                 session.copy()
-            )  # python3 TOOD test if this really leads to the same result
+            )  # python3 TODO test if this really leads to the same result
             combined.update(event)
             sessions_complete[event_wiki_name] = combined
 

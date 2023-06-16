@@ -223,7 +223,7 @@ targets = [
 
 id_offsets = {
     #   when 10 additional speakers are created there
-    # c3voc preatax schedule local ids's range from 120 to till >500
+    # c3voc pretalx schedule local ids' range from 120 to till >500
 }
 
 
@@ -279,7 +279,7 @@ def main():
 
     full_schedule = base_schedule.copy()
 
-    # add addional rooms from this local config now, so they are in the correct order
+    # add additional rooms from this local config now, so they are in the correct order
     # for key in rooms:
     #     full_schedule.add_rooms(rooms[key])
 
@@ -339,7 +339,7 @@ def main():
 
     full_schedule.foreach_event(harmonize_event_type, options)
 
-    # write all events from the channels to a own schedule.json/xml
+    # write all events from the channels to an own schedule.json/xml
     #  export_stages_schedule(full_schedule)
     #  export_streams_schedule(full_schedule)
 
@@ -348,7 +348,7 @@ def main():
         git("rm events/*  >/dev/null")
     os.makedirs('events', exist_ok=True)
 
-    # write seperate file for each event, to get better git diffs
+    # write separate file for each event, to get better git diffs
     # TODO: use Event.export()
     def export_event(event: Event):
         origin_system = None
@@ -422,7 +422,7 @@ def main():
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
         # Attention: This method exits the script, if nothing relevant changed
-        # TOOD: make this fact more obvious or refactor code
+        # TODO: make this fact more obvious or refactor code
 
     if not local and "c3data" in targets:
         print("\n== Updating c3data via API…")

@@ -136,7 +136,7 @@ targets = [
 id_offsets = {
     # franconian local talk ids are <100, but speaker integer ids might collide 
     #   when 10 additional speakers are created there
-    # c3voc preatax schedule local ids's range from 120 to till >500
+    # c3voc pretalx schedule local ids' range from 120 to till >500
 }
 
 
@@ -186,7 +186,7 @@ def main():
 
     loaded_schedules = {}
 
-    # add addional rooms from this local config now, so they are in the correct order
+    # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:
         full_schedule.add_rooms(rooms[key])
 
@@ -254,7 +254,7 @@ def main():
 
     full_schedule.foreach_event(harmonize_event_type)
 
-    # write all events from the channels to a own schedule.json/xml
+    # write all events from the channels to an own schedule.json/xml
     export_stages_schedule(full_schedule)
     export_streams_schedule(full_schedule)
 
@@ -262,7 +262,7 @@ def main():
     if not local or options.git:
         git('rm events/*')
 
-    # write seperate file for each event, to get better git diffs
+    # write separate file for each event, to get better git diffs
     def export_event(event: Event):
         origin_system = None
         if isinstance(event, Event):
