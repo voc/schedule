@@ -9,4 +9,4 @@ gitpython
 bs4
 html5lib
 ics
-dataclass
+dataclasses
