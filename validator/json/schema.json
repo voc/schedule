@@ -29,7 +29,7 @@
         },
         "rooms": false
       },
-      "required": ["base_url", "conference", "version"]
+      "required": ["conference", "version"]
     },
     "Conference": {
       "type": "object",
@@ -58,7 +58,10 @@
         },
         "start": {
           "type": "string",
-          "format": "date"
+          "$oneOf": [
+            { "format": "date" },
+            { "format": "date-time" }
+          ]
         },
         "end": {
           "type": "string",
@@ -184,10 +187,10 @@
           "type": "string"
         },
         "subtitle": {
-          "type": "string"
+          "type": ["string", "null"]
         },
         "track": {
-          "type": "string"
+          "type":  ["string", "null"]
         },
         "type": {
           "type": "string"
@@ -196,16 +199,19 @@
           "type": "string"
         },
         "abstract": {
-          "type": "string"
+          "type":  ["string", "null"]
         },
         "description": {
-          "type": "string"
+          "type":  ["string", "null"]
         },
         "recording_license": {
           "type": "string"
         },
         "do_not_record": {
-          "type": "boolean"
+          "type":  ["string", "null"]
+        },
+        "do_not_stream": {
+          "type":  ["string", "null"]
         },
         "persons": {
           "type": "array",
@@ -228,19 +234,13 @@
       },
       "required": [
         "abstract",
-        "answers",
-        "attachments",
         "date",
-        "description",
-        "do_not_record",
         "duration",
         "guid",
         "id",
         "language",
         "links",
-        "logo",
         "persons",
-        "recording_license",
         "room",
         "slug",
         "start",
@@ -249,8 +249,7 @@
         "track",
         "type",
         "url"
-      ],
-      "title": "Room"
+      ]
     },
     "Person": {
       "type": "object",
