@@ -21,6 +21,7 @@
           "type": "string"
         },
         "base_url": {
+          "description": "base for relative media URIs in this document",
           "type": "string",
           "format": "uri"
         },
@@ -78,10 +79,16 @@
           "examples": ["Europe/Amsterdam", "Europe/Berlin", "UTC"],
           "pattern": "^([A-Z][a-z]+/[A-Z][a-z]+)|UTC$"
         },
+        "logo": {
+          "type": "string",
+          "format": "uri",
+          "$comment": "absolute URL, or relative to base_url"
+        },
         "colors": {
           "type": "object",
+          "additionalProperties": true,
           "properties": {
-            "main": {
+            "primary": {
               "type": "string",
               "format": "color"
             },
@@ -98,14 +105,34 @@
           }
         },
         "url": {
+          "description": "URL to the conference schedule or public website",
           "type": "string",
           "format": "uri"
+        },
+        "tracks" :{
+          "type":"array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "color": {
+                "type": "string",
+                "format": "color"
+              }
+            }
+          }
         },
         "rooms": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Room"
           }
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true
         },
         "days": {
           "type": "array",
@@ -161,14 +188,17 @@
           "format": "uuid"
         },
         "logo": {
-          "type": "string"
+          "type": "string",
+          "format": "uri",
+          "$comment": "absolute URL, or relative to base_url"
         },
         "date": {
           "type": "string",
           "format": "date-time"
         },
         "start": {
-          "type": "string"
+          "type": "string",
+          "format": "date-time"
         },
         "duration": {
           "$ref": "#/definitions/Duration"
@@ -177,7 +207,8 @@
           "$ref": "#/definitions/RoomName"
         },
         "slug": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
         },
         "url": {
           "type": "string",
@@ -193,10 +224,20 @@
           "type":  ["string", "null"]
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "examples": [
+            "talk",
+            "workshop",
+            "hands-on",
+            "meeting",
+            "discussion",
+            "game",
+            "other"
+          ]
         },
         "language": {
-          "type": "string"
+          "type": "string",
+          "examples": ["en", "de", "cs", "ab"]
         },
         "abstract": {
           "type":  ["string", "null"]
@@ -222,10 +263,12 @@
         "links": {
           "type": "array",
           "items": {}
+          // TODO: string vs object
         },
         "attachments": {
           "type": "array",
           "items": {}
+          // TODO
         },
         "answers": {
           "type": "array",
@@ -279,7 +322,9 @@
           "type": "integer"
         },
         "public_name": {
-          "type": "string"
+          "type": "string",
+          "deprecated": true,
+          "$comment": "use name instead"
         }
       },
       "required": ["public_name", "id"]
@@ -293,6 +338,10 @@
         },
         "name": {
           "type": "string"
+        },
+        "avatar": {
+          "type": "string",
+          "format": "uri"
         },
         "biography": {
           "type": "string"
