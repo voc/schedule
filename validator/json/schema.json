@@ -203,17 +203,19 @@
           "format": "uuid"
         },
         "logo": {
-          "type": "string",
+          "type": ["string", "null"],
           "format": "uri",
-          "$comment": "absolute URL, or relative to base_url"
+          "description": "absolute URL, or relative to base_url"
         },
         "date": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "examples": ["2020-12-14T09:00:00+01:00"]
         },
         "start": {
           "type": "string",
-          "format": "date-time"
+          "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+          "examples": ["09:00"]
         },
         "duration": {
           "$ref": "#/definitions/Duration"
@@ -264,7 +266,7 @@
           "type": "string"
         },
         "do_not_record": {
-          "type":  ["string", "null"]
+          "type":  ["boolean", "null"]
         },
         "do_not_stream": {
           "type":  ["string", "null"]
@@ -277,13 +279,13 @@
         },
         "links": {
           "type": "array",
-          "items": {}
-          // TODO: string vs object
+          "items": {},
+          "$comment": "// TODO: string vs object"
         },
         "attachments": {
           "type": "array",
-          "items": {}
-          // TODO
+          "items": {},
+          "$comment": "// TODO: string vs object"
         },
         "answers": {
           "type": "array",
@@ -318,7 +320,7 @@
         "guid": {
           "type": "string",
           "format": "uuid",
-          "description": "Person UUID generated from email adress via uuid5(NS_URL, 'acct:user@domain.tld') or random uuid4() if email not available"
+          "description": "Person UUID generated from email address via uuid5(NS_URL, 'acct:user@domain.tld') or random uuid4() if email not available"
         },
         "id": {
           "type": "integer",
@@ -355,8 +357,9 @@
           "type": "string"
         },
         "avatar": {
-          "type": "string",
-          "format": "uri"
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "absolute URL, or relative to base_url"
         },
         "biography": {
           "type": "string"
