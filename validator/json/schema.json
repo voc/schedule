@@ -9,6 +9,21 @@
     },
     "$schema": {
       "type": "string"
+    },
+    "generator": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
     }
   },
   "required": ["schedule"],
