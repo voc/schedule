@@ -358,6 +358,16 @@ class Schedule(dict):
             if room_key in day["rooms"]:
                 del day["rooms"][room_key]
 
+    def event(self, guid: str) -> Event:
+        for day in self["conference"]["days"]:
+            for room in day["rooms"]:
+                for event in day["rooms"][room]:
+                    if event['guid'] == guid:
+                        if isinstance(event, Event):
+                            return event
+                        else:
+                            return Event(event)
+
     def add_event(self, event: Event, options=None):
         day = self.get_day_from_time(event.start)
         if event.get("slug") is None:

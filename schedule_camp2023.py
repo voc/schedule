@@ -262,6 +262,19 @@ def main():
     streams_schedule.rename_rooms(replacements)
     streams_schedule.export("channels")
 
+    # cleaned export for engelsystem etc.
+    cleaned_schedule = streams_schedule.copy("channels2")
+    cleaned_schedule.remove_room("Jugend Village")
+    # merge/remove lightning talks
+    cleaned_schedule.remove_event(guid='6553838c-8d09-5d60-8491-94296e3c9caa')
+    cleaned_schedule.remove_event(guid='69781345-b8d6-5c42-8444-766f5593e153')
+    cleaned_schedule.remove_event(guid='adade555-cb63-5401-93d4-23fe26f4037a')
+    cleaned_schedule.remove_event(guid='a866a3ff-6b7c-5dd2-abcc-b83baade8106')
+    cleaned_schedule.remove_event(guid='034839e5-ee0c-5909-99c5-646561e5842c')
+    lt = cleaned_schedule.event(guid='fc5f078e-bfc5-58c0-9252-e64f81a41fc2')
+    lt['duration'] = '0:50'
+    cleaned_schedule.export("channels2")
+
     # expose metadata to own file
     with open("meta.json", "w") as fp:
         json.dump(
