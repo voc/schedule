@@ -345,6 +345,15 @@ class Schedule(dict):
             target_day_rooms[target_room] = data
 
     def remove_room(self, room_key: str):
+        if room_key in self._room_ids:
+            del self._room_ids[room_key]
+
+        obj = self.room(name=room_key)
+        self["conference"]["rooms"].remove(obj)
+
+        if room_key in self._room_ids:
+            del self._room_ids[room_key]
+
         for day in self["conference"]["days"]:
             if room_key in day["rooms"]:
                 del day["rooms"][room_key]
@@ -739,24 +748,18 @@ class Schedule(dict):
                     if room.name:
                         room_names.add(room.name)
 
-            def filterRoom(room):
-                return room['name'] in room_names or \
-                    room.get('guid') in room_guids
+            def filterRoom(room: Room):
+                if isinstance(room, Room):
+                    return room.name in room_names or \
+                        room.guid in room_guids
+                else:
+                    return room['name'] in room_names or \
+                        room.get('guid', '') in room_guids
 
-        for room in schedule['conference']['rooms']:
+        for room in schedule.rooms(mode='obj'):
             if not filterRoom(room):
-                log.debug(f"deleting room {room['name']} on conference")
-                del room
-
-        for day in schedule.days():
-            i = 0
-            room_keys = list(day['rooms'].keys())
-            for room_key in room_keys:
-                room = self.room(name=room_key)
-                if not filterRoom(room):
-                    log.debug(f"deleting {room_key} on Day {day['index']}")
-                    del day['rooms'][room_key]
-                i += 1
+                log.info(f"deleting room {room.name} on conference")
+                schedule.remove_room(room.name)
 
         schedule['version'] = self.version().split(';')[0]
         return schedule

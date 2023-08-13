@@ -67,7 +67,8 @@ conferences: List[GenericConference] = [
     PretalxConference(
         url="https://fahrplan.alpaka.space/camp-2023",
         data={
-            "name": "jugendvillage"
+            "name": "jugendvillage",
+            "location":  "Jugend Village",
         },
     ),
 ]
@@ -116,7 +117,8 @@ rooms = {
         Room(name="Digitalcourage", stream="s3", guid="7c1ad02f-4d33-4d48-a5a3-0e6798a18d01"),
         Room(name="N:O:R:T:x",      stream="s4", guid="52f1a9fa-580e-4a32-bf20-4326902717aa"),
         Room(name="Bits & Bäume",   stream="s5", guid="f9b82a04-1354-4ee5-9df6-c71b6cde66ea"),
-        Room(name="C3VOC.tv",       stream="s6", guid="a06db024-2ab8-49ce-940f-2814b5fb9740")
+        Room(name="C3VOC.tv",       stream="s6", guid="a06db024-2ab8-49ce-940f-2814b5fb9740"),
+        Room(name="Jugend Village", stream="s191", guid="e89b5a42-da11-4298-ac84-d20e777055c9"),
     ],
     "rooms": [
     ],
@@ -245,12 +247,12 @@ def main():
     # remove overlapping 'Lötworkshop mit Lötchallenge'
     #full_schedule.remove_event(guid='bd75d959-dad1-43b4-81fb-33dfb43c10ec')
 
-    # set_validator_filter(["precomputed", "fire-shonks-2022", "hip-berlin-2022"])
     # write all events to one big schedule.json/xml
     write("\nExporting... ")
     # set_validator_filter('strange')
     full_schedule.export("everything")
 
+    # write channel/stages only schedule.json/xml
     streams_schedule = full_schedule.filter("channels", rooms=rooms['channels'])
     replacements = {}
     for stream in rooms['channels']:
@@ -292,10 +294,16 @@ def main():
             print("   - " + room)
         print()
 
+        print("\n  channels: ")
+        for room in streams_schedule.rooms():
+            print("   - " + room)
+        print()
+
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
         # Attention: This method exits the script, if nothing relevant changed
         # TOOD: make this fact more obvious or refactor code
+
 
     if not local and "c3data" in targets:
         print("\n== Updating c3data via API…")
