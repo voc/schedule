@@ -168,10 +168,13 @@ def load_json(filename):
 
 def get_version():
     global VERSION
-    if VERSION is None:
-        repo = Repo(path=__file__, search_parent_directories=True)
-        sha = repo.head.object.hexsha
-        VERSION = repo.git.rev_parse(sha, short=5)
+    try:
+        if VERSION is None:
+            repo = Repo(path=__file__, search_parent_directories=True)
+            sha = repo.head.object.hexsha
+            VERSION = repo.git.rev_parse(sha, short=5)
+    except ValueError:
+        pass
     return VERSION
 
 

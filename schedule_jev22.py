@@ -286,7 +286,7 @@ def main():
     # add events to full_schedule
     for entry in conferences:
         try:
-            print(f"\n== Conference {entry['name']} ({entry['location']})")
+            print(f"\n== Conference {entry['name']} ({entry.get('location', '')})")
             schedule = entry.schedule(base_schedule)
 
             if schedule.get('version'):

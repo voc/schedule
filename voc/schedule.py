@@ -483,7 +483,10 @@ class Schedule(dict):
 
                     if options.get("remove_title_additions"):
                         # event["title"], subtitle, event_type = re.match(r"^(.{15,}?)(?:(?::| [–-]+) (.+?))?(?: \((.+?)\))?$", event["title"]).groups()
-                        event["title"], subtitle, event_type = re.match(r"^(.{5,}?)(?:(?::| [–-]+) (.+?))?(?: \((.+?)\))?$", event["title"]).groups()
+
+                        match = re.match(r"^(.{5,}?)(?:(?::| [–-]+) (.+?))?(?: \((.+?)\))?$", event["title"])
+                        if match:
+                            event["title"], subtitle, event_type = match.groups()
 
                         if not event.get("subtitle") and subtitle:
                             event["subtitle"] = subtitle
