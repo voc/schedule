@@ -33,3 +33,4 @@ archive/*
 .env*
 .idea
 tmp
+process_rC3.sh

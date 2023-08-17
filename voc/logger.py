@@ -11,7 +11,7 @@ class Logger(logging.Logger):
 
 
 def configure_logging(args):
-    verbosity = (args.verbose or 0) - (args.quiet or 0)
+    verbosity = (args.verbose or args.debug or 0) - (args.quiet or 0)
     if verbosity <= -2:
         level = logging.CRITICAL
     elif verbosity == -1:

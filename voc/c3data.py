@@ -218,7 +218,7 @@ def upsert_schedule(schedule: Schedule, create=False):
 
 def test():
     # schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
-    schedule = Schedule.from_file('jev22/everything.schedule.json')
+    schedule = Schedule.from_file('camp2023/everything.schedule.json')
 
     upsert_schedule(schedule, create=False)
 
