@@ -130,9 +130,9 @@ class Schedule(dict):
             self["conference"]["days"] = days
 
     @classmethod
-    def from_url(cls, url):
+    def from_url(cls, url, timeout=10):
         log.info("Requesting " + url)
-        schedule_r = requests.get(url, timeout=2)
+        schedule_r = requests.get(url, timeout=timeout)
 
         if schedule_r.ok is False:
             schedule_r.raise_for_status()

@@ -31,16 +31,16 @@ class PretalxConference(GenericConference):
                 pass
 
     def meta(self):
-        return requests.get(self.api_url, timeout=1) \
+        return requests.get(self.api_url, timeout=self.timeout) \
             .json()
 
     def rooms(self):
-        return requests.get(self.api_url + '/rooms', timeout=1, headers=headers if self.origin_system == 'pretalx.c3voc.de' else {'Content-Type': 'application/json'}) \
+        return requests.get(self.api_url + '/rooms', timeout=self.timeout, headers=headers if self.origin_system == 'pretalx.c3voc.de' else {'Content-Type': 'application/json'}) \
             .json() \
             .get('results')
 
     def latest_schedule(self):
-        return requests.get(self.api_url + '/schedules/latest/', timeout=1) \
+        return requests.get(self.api_url + '/schedules/latest/', timeout=self.timeout) \
             .json()
         # Custom pretalx schedule format
 
