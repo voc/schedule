@@ -178,7 +178,7 @@ def process(acronym, base_id, source_csv_url):
     
     for event in csv_schedule:
         id = str(base_id + int(event['ID']))
-        guid = voc.tools.gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
+        guid = voc.tools.gen_uuid(acronym + id).hexdigest())
         duration = (event['end_time'] - event['start_time']).seconds/60
 
         title = event['Was']
@@ -210,7 +210,7 @@ def process(acronym, base_id, source_csv_url):
             ('do_not_record', event.get('Aufzeichnung?', '') == 'nein'),
             ('persons', [ OrderedDict([
                 ('id', 0),
-                ('full_public_name', p.strip()),
+                ('public_name', p.strip()),
                 #('#text', p),
             ]) for p in event.get('Wer', '').split(',') ]),
             ('links', [])

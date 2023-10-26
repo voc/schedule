@@ -592,6 +592,7 @@ class Schedule(dict):
     #  * check links conversion
     #  * ' vs " in xml
     #  * logo is in json but not in xml
+    # formerly named dict_to_schedule_xml()
     def xml(self, method="string"):
         root_node = None
 
@@ -616,7 +617,7 @@ class Schedule(dict):
             elif isinstance(d, int):
                 node.text = str(d)
             elif parent == "person":
-                node.text = d["public_name"]
+                node.text = d.get("public_name", d.get("name"))
                 _set_attrib(node, "id", d["id"])
             elif (
                 isinstance(d, dict)
@@ -660,7 +661,7 @@ class Schedule(dict):
                         if parent == "room":
                             # create room tag for each instance of a room name
                             node_ = ET.SubElement(node, "room")
-                            node_.set("name", k)
+                            node_.set("name", k or '')
                             if k in self._room_ids and self._room_ids[k]:
                                 node_.set("guid", self._room_ids[k])
 

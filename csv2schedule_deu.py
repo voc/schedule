@@ -107,10 +107,7 @@ def process(acronym, base_id, source_csv_url):
     version = None
 
     filename = 'schedule-' + acronym + '.csv'
-    if sys.version_info[0] < 3:
-        infile = open(filename, 'rb')
-    else:
-        infile = open(filename, 'r', newline='', encoding='utf8')
+    infile = open(filename, 'r', newline='', encoding='utf8')
 
     with infile as f:
         reader = csv.reader(f)

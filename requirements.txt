@@ -10,3 +10,4 @@ bs4
 html5lib
 ics
 dataclasses
+beautifulsoup4
