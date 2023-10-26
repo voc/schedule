@@ -71,7 +71,7 @@ template = { "schedule":  OrderedDict([
 }
 
 if not os.path.exists(output_dir):
-    os.mkdir(output_dir) 
+    os.mkdir(output_dir)
 os.chdir(output_dir)
 
 
@@ -80,18 +80,18 @@ def main():
 
 def process(acronym, base_id, source_csv_url):
     out = template
-    
+
     print('Processing ' + acronym)
-    
+
     if not offline:
         print(" requesting schedule source from url")
         schedule_r = requests.get(source_csv_url)
         # don't ask me why google docs announces by header? that it will send latin1 and then sends utf8...
         schedule_r.encoding = 'utf-8'
-        
+
         if schedule_r.ok is False:
             raise Exception("  Requesting schedule from CSV source url failed, HTTP code {0} from {1}.".format(schedule_r.status_code, source_csv_url))
-        
+
         with open('schedule-' + acronym + '.csv', 'w') as f:
             f.write(schedule_r.text)
 
@@ -99,16 +99,13 @@ def process(acronym, base_id, source_csv_url):
     csv_schedule = []
     max_date = None
     min_date = None
-    
+
     filename = 'schedule-' + acronym + '.csv'
-    if sys.version_info[0] < 3: 
-        infile = open(filename, 'rb')
-    else:
-        infile = open(filename, 'r', newline='', encoding='utf8')
+    infile = open(filename, 'r', newline='', encoding='utf8')
 
     with infile as f:
         reader = csv.reader(f)
-        
+
         # header
         keys = next(reader)
 
@@ -118,7 +115,7 @@ def process(acronym, base_id, source_csv_url):
             i = 0
             items = OrderedDict()
             row_iter = iter(row)
-            
+
             for value in row_iter:
                 value = value.strip()
                 if keys[i] != '' and value != '':
@@ -128,9 +125,7 @@ def process(acronym, base_id, source_csv_url):
                       print("Error in cell {} value: {}".format(keys[i], value))
                       raise e
                 i += 1
-            
-            #try:
-            # specifies the date format used in the CSV file respectivly the google docs spreadsheet
+
 
             #print(items)
 
@@ -152,14 +147,14 @@ def process(acronym, base_id, source_csv_url):
             #    print(" ignoring empty/invalid row in CSV file")
             #except:
             #    print(" ignoring row with invalid date in CSV file")
-    
-    #print json.dumps(csv_schedule, indent=4) 
-    
-    
+
+    #print json.dumps(csv_schedule, indent=4)
+
+
     out['schedule']['conference']['start'] = min_date.strftime('%Y-%m-%d')
     out['schedule']['conference']['end'] = max_date.strftime('%Y-%m-%d')
     out['schedule']['conference']['daysCount'] = (max_date - min_date).days + 1
-    
+
     print(" converting to schedule ")
     conference_start_date = dateutil.parser.parse(out['schedule']['conference']['start'])
 
@@ -167,7 +162,7 @@ def process(acronym, base_id, source_csv_url):
         date = conference_start_date + timedelta(days=i)
         start = date + timedelta(hours=10) # conference day starts at 10:00
         end = start + timedelta(hours=17)  # conference day lasts 17 hours
-        
+
         out['schedule']['conference']['days'].append(OrderedDict([
             ('index', i),
             ('date' , date.strftime('%Y-%m-%d')),
@@ -175,7 +170,7 @@ def process(acronym, base_id, source_csv_url):
             ('end', end.isoformat()),
             ('rooms', OrderedDict())
         ]))
-    
+
     for event in csv_schedule:
         id = str(base_id + int(event['ID']))
         guid = voc.tools.gen_uuid(acronym + id).hexdigest())
@@ -190,7 +185,7 @@ def process(acronym, base_id, source_csv_url):
                 description = event.get('Thema', '')
 
         room = 'CCL Hall 2'
-        
+
         event_n = OrderedDict([
             ('id', id),
             ('guid', guid),
@@ -215,29 +210,29 @@ def process(acronym, base_id, source_csv_url):
             ]) for p in event.get('Wer', '').split(',') ]),
             ('links', [])
         ])
-        
+
         #print event_n['title']
-        
+
         day = (event['start_time'] - conference_start_date).days + 1
         day_rooms = out['schedule']['conference']['days'][day-1]['rooms']
         if room not in day_rooms:
             day_rooms[room] = list()
         day_rooms[room].append(event_n)
-        
-        
-    
+
+
+
     #print(json.dumps(out, indent=2))
-    
+
     print(" writing results to disk")
     with open('schedule-' + acronym + '.json', 'w') as fp:
         json.dump(out, fp, indent=4)
-        
+
     with open('schedule-' + acronym + '.xml', 'w') as fp:
         fp.write(voc.tools.dict_to_schedule_xml(out));
-    
+
     # TODO: Validate XML via schema file
     print(' end')
-    
+
 
 
 if __name__ == '__main__':
