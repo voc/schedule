@@ -28,7 +28,7 @@ parser.add_argument('--offline', action='store_true')
 parser.add_argument('--verbose', '-v', action='store_true')
 parser.add_argument('--url', action='store')
 parser.add_argument('--output-folder', '-o', action='store', dest='output_folder')
-parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='de')
+parser.add_argument('--default-language', '-lang' , action='store', dest='default_language', default='en')
 parser.add_argument('--default-talk-length', '-length' , type=int, action='store', dest='default_talk_length', default=30, help='default length of a talk in minutes, will be cut when overlapping with other talk')
 parser.add_argument('--split-persons', action='store_true', dest='split_persons')
 
@@ -62,14 +62,18 @@ default_talk_length = timedelta(minutes=args.default_talk_length)
 if args.default_language == 'en':
     date = 'Date'
     time = 'Time'
+    duration = 'Duration'
     title = 'Title'
+    abstract = 'Abstract'
     description = 'Description'
     room = 'Room'
-    persons = 'Presenter'
+    persons = 'Speakers'
 else:
     date = 'Datum'
     time = 'Uhrzeit'
-    title = 'Title'
+    duration = 'Dauer'
+    title = 'Titel'
+    abstract = 'Abstract'
     description = 'Beschreibung'
     room = 'Raum'
     persons = 'Vortragende'
@@ -131,6 +135,8 @@ def process(acronym, base_id, source_csv_url):
         # second header
         keys2 = next(reader)
 
+        filter_state = 'State' in keys2
+
         # data rows
         last = None
         for row in reader:
@@ -140,21 +146,27 @@ def process(acronym, base_id, source_csv_url):
 
             for value in row_iter:
                 value = value.strip()
-                if keys2[i] != '' and value != '':
+                if keys2[i] != '' and value != '' and not('Email' in keys2[i]):
                     try:
-                        items[keys[i]][keys2[i]] = value  # .decode('utf-8')
+                        items[keys[i]][keys2[i]] = value
                     except AttributeError as e:
                         print("Error in row {}, cell {} value: {}".format(keys[i], keys2[i], value))
                         raise e
                 i += 1
 
             try:
+                # skip rows if State is not confirmed
+                if filter_state and items['meta'].get('State', 'confirmed') != 'confirmed':
+                    continue
                 start_time = tz.localize(datetime.strptime(
                     items['meta'][date] + ' ' + items['meta'].get(time, '12:00'),
                     date_format
                 ))
                 items['start_time'] = start_time
-                items['end_time'] = start_time + default_talk_length
+                if duration in items['meta']:
+                    items['end_time'] = start_time + timedelta(minutes=int(items['meta']['Duration']))
+                else:
+                    items['end_time'] = start_time + default_talk_length
 
                 # only accept valid entries
                 if len(items['meta']) > 0 and title in items['meta']:
@@ -190,14 +202,15 @@ def process(acronym, base_id, source_csv_url):
         month=min_date.month,
         day=min_date.day,
         days_count=days_count)
-    schedule.schedule().version = '1.0' or version
+
+    schedule.version = '1.0' or version
 
     print(" converting to schedule ")
 
     for event in csv_schedule:
         id = str(base_id + int(event['meta']['ID']))
         guid = gen_uuid(hashlib.md5((acronym + id).encode('utf-8')).hexdigest())
-        duration = (event['end_time'] - event['start_time']).seconds / 60
+        duration_m = (event['end_time'] - event['start_time']).seconds / 60
 
         if args.split_persons:
             event[persons] = event[persons].split(',')
@@ -208,15 +221,15 @@ def process(acronym, base_id, source_csv_url):
             # ('logo', None),
             ('date', event['start_time'].isoformat()),
             ('start', event['start_time'].strftime('%H:%M')),
-            ('duration', '%d:%02d' % divmod(duration, 60)),
+            ('duration', '%d:%02d' % divmod(duration_m, 60)),
             ('room', event['meta'].get(room, 'Room')),
             ('slug', '-'.join([acronym, id, normalise_string(event['meta'][title])])),
             ('title', event['meta'][title]),
             ('subtitle', event['meta'].get('Untertitel', '')),
-            ('track', ''),
-            ('type', ''),
+            ('track', event['meta'].get('Track', '')),
+            ('type', event['meta'].get('Event Type', '')),
             ('language', event['meta'].get('Sprache', args.default_language)),
-            ('abstract', ''),
+            ('abstract', event['meta'].get(abstract, '')),
             ('description', event['meta'].get(description, '')),
             ('do_not_record', event['meta'].get('Aufzeichnung?', '') == 'nein'),
             ('video_download_url', event['meta'].get('video_download_url')),
