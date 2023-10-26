@@ -60,7 +60,7 @@ class Event(collections.abc.Mapping):
         return self.start + self.duration
 
     def __getitem__(self, key):
-        return self._event[key]
+        return self._event.get(key)
 
     def __setitem__(self, key, value):
         self._event[key] = value

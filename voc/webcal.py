@@ -17,7 +17,7 @@ class WebcalConference(GenericConference, EventSourceInterface):
             raise ScheduleException('  has no schedule url yet – ignoring')
 
         url = re.sub(r'^webcal', 'http', self.schedule_url)
-        data = requests.get(url, timeout=1).text
+        data = requests.get(url, timeout=10).text
         cal = ics.Calendar(data)
 
         schedule = template.copy(self['name']) or Schedule(conference=self)

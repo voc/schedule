@@ -110,7 +110,7 @@ class Schedule(dict):
             self["conference"]["start"] = self.stats.first_event.start.isoformat()
         if "end" not in self["conference"]:
             self["conference"]["end"] = self.stats.last_event.end.isoformat()
-        
+
         if "rooms" not in self["conference"]:
             # looks like we have an old style schedule json,
             # so let's construct room map from the scheduling data
@@ -318,7 +318,7 @@ class Schedule(dict):
             if room["name"] in self._room_ids and self._room_ids[room["name"]] == room.get('guid'):
                 # we know this room already, so return early
                 return
-            
+
             if 'location' in context:
                 room['location'] = context['location']
 
@@ -448,8 +448,8 @@ class Schedule(dict):
         for i in range(self.conference("daysCount")):
             day = self.day(i + 1)
             if day.start <= start_time < day.end:
-                # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'], start_time, day['end'])
-                # print "Day {0}: day.start {1} <= start_time {2} < day.end {3}".format(day['index'], day['start'].strftime("%s:), start_time.strftime("%s:), day['end'].strftime("%s:)
+                # print(f"Day {day.index}: day.start {day.start} <= start_time {start_time} < day.end {day.end}")
+                #print(f"Day {day['index']}: day.start {day['start'].strftime('%s')} <= start_time {start_time.strftime('%s')} < day.end {day['end'].strftime('%s')}")
                 return day["index"]
 
         raise Warning("  illegal start time: " + start_time.isoformat())
@@ -541,7 +541,7 @@ class Schedule(dict):
                         prefix = options.get("prefix_person_ids")
                         for person in event["persons"]:
                             person["id"] = f"{prefix}-{person['id']}"
-        
+
                     events.append(event if type(event) == Event else Event(event, origin=other_schedule))
 
                 # copy whole day_room to target schedule
@@ -617,7 +617,7 @@ class Schedule(dict):
             elif isinstance(d, int):
                 node.text = str(d)
             elif parent == "person":
-                node.text = d.get("public_name", d.get("name"))
+                node.text = d.get("public_name") or d.get('full_public_name') or d.get('full_name') or d.get('name')
                 _set_attrib(node, "id", d["id"])
             elif (
                 isinstance(d, dict)
