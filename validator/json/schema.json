@@ -389,7 +389,7 @@
           "type": ["number", "null"]
         }
       },
-      "required": ["guid", "name"]
+      "required": ["name"]
     },
     "RoomName": {
       "type": "string"
