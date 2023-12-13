@@ -5,7 +5,7 @@ import getopt, sys
 import os.path
 import json
 from collections import OrderedDict
-import voc.tools
+import voc.schedule
 
 options, remainder = getopt.getopt(sys.argv[1:], 
     'i:o', 
@@ -31,7 +31,8 @@ if input_file is None:
 
 with open(input_file) as f:
     schedule_json = f.read()
-schedule = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_json)
+schedule_dict = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(schedule_json)
 
 with open(output_file, 'w') as f:
-    f.write(voc.tools.dict_to_schedule_xml(schedule))
+    schedule = voc.schedule.Schedule(json=schedule_dict)
+    f.write(schedule.xml())
