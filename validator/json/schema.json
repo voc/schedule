@@ -282,6 +282,10 @@
           "items": {},
           "$comment": "// TODO: string vs object"
         },
+        "feedback_url": {
+          "type": "string",
+          "format": "uri"
+        },
         "attachments": {
           "type": "array",
           "items": {},
