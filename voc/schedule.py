@@ -500,6 +500,9 @@ class Schedule(dict):
                     if options.get("do_not_record"):
                         event["do_not_record"] = options['do_not_record'](event) if callable(options["do_not_record"]) else options["do_not_record"]
 
+                    if options.get("do_not_stream"):
+                        event["do_not_stream"] = options['do_not_stream'](event) if callable(options["do_not_stream"]) else options["do_not_stream"]
+
                     if options.get("remove_title_additions"):
                         # event["title"], subtitle, event_type = re.match(r"^(.{15,}?)(?:(?::| [–-]+) (.+?))?(?: \((.+?)\))?$", event["title"]).groups()
 
@@ -698,7 +701,7 @@ class Schedule(dict):
                             # not in schedule.json: license information for an event
                             v = {
                                 "license": recording_license,
-                                "optout": "true" if v is True else "false",
+                                "optout": "true" if v is True else v,
                             }
                         # new style schedule.json (version 2022-12)
                         elif k == "optout":
