@@ -250,7 +250,7 @@
       <xs:enumeration value="true"/>
       <!-- Recording optout status 'maybe': We are allowed to create a recording / enable the live stream; but the speaker can decide afterwards if we can publish it  -->
       <xs:enumeration value="maybe"/>
-      <!-- Recording optout status 'unknown': We don't now if an recording will exist and recommend all on-premise participants to attent the event in persion -->
+      <!-- Recording optout status 'unknown': We don't now if a recording will exist and recommend all on-premise participants to attend the event in person -->
       <xs:enumeration value="unknown"/>
     </xs:restriction>
   </xs:simpleType>
