@@ -173,7 +173,7 @@
   <xs:complexType name="recording">
     <xs:all>
       <xs:element type="xs:string"  name="license"/>
-      <xs:element type="xs:boolean" name="optout"/>
+      <xs:element type="optoutEnum" name="optout"/>
       <xs:element type="httpURI" name="url" minOccurs="0"/>
       <xs:element type="httpURI" name="link" minOccurs="0"/>
     </xs:all>
@@ -241,5 +241,18 @@
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
+
+  <xs:simpleType name="optoutEnum">
+    <xs:restriction base="xs:string">
+      <!-- Recording optout status 'false' is the normal case: We enable the live stream and create a recording, which we publish without and feedback from the speaker -->
+      <xs:enumeration value="false"/>
+      <!-- Recording optout status 'true' means: The speaker does not want a recording of any kind. We will remove all personnel, and maybe even switch off all cameras -->
+      <xs:enumeration value="true"/>
+      <!-- Recording optout status 'maybe': We are allowed to create a recording / enable the live stream; but the speaker can decide afterwards if we can publish it  -->
+      <xs:enumeration value="maybe"/>
+      <!-- Recording optout status 'unknown': We don't now if a recording will exist and recommend all on-premise participants to attend the event in person -->
+      <xs:enumeration value="unknown"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 </xs:schema>

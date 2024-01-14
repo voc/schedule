@@ -266,10 +266,12 @@
           "type": "string"
         },
         "do_not_record": {
-          "type":  ["boolean", "null"]
+          "type":  ["boolean", "string", "null"],
+          "description": "If this value is set to `true`, the speaker does not want a recording of any kind. We will remove all video staff and maybe even switch off all cameras"
         },
         "do_not_stream": {
-          "type":  ["string", "null"]
+          "type":  ["string", "boolean", "null"],
+          "description": "If this value is set to boolean `false`, the speaker is okay with a live stream of the event; and is aware that somebody in the internet might create third party recording"
         },
         "persons": {
           "type": "array",
