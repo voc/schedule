@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 import locale
 import traceback
 import requests
-from sys import environ as env
 from bs4 import BeautifulSoup
 
 import voc.tools

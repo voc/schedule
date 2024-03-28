@@ -26,10 +26,16 @@ parser.add_option('--debug', action="store_true", dest="debug", default=False)
 options, args = parser.parse_args()
 local = False
 
-xc3 = 'divoc'
-acronym = 'divoc_bb3'
-wiki_url = 'https://di.c3voc.de/sessions-liste?do=export_xhtml#liste_der_self-organized_sessions'
-main_schedule_url = 'https://pretalx.c3voc.de/divoc-bb3/schedule/export/schedule.json'
+xc3 = 'eh21'
+# wrong_acronym = 'eh'
+acronym = 'eh21'
+wiki_url = 'https://eh21.easterhegg.eu/user:sos'
+main_schedule_url = 'https://fahrplan.eh21.easterhegg.eu/eh/schedule/export/schedule.json'
+
+
+def fix_slug(event: dict):
+    event['slug'] = event['slug'].replace('eh-', 'eh21-').strip('_')
+
 
 additional_schedule_urls = [
 ]
@@ -92,9 +98,7 @@ def main():
     print('  version: ' + full_schedule.version())
     print('  contains {events_count} events, with local ids from {min_id} to {max_id}'.format(**full_schedule.stats.__dict__))
 
-    def fix_slug(event: Event):
-        event['slug'] = event['slug'].replace('divoc-', 'divoc_').strip('_')
-    full_schedule.foreach_event(fix_slug)
+    full_schedule.foreach_event_raw(fix_slug)
 
     # add additional rooms from this local config now, so they are in the correct order
     for key in rooms:
@@ -141,8 +145,8 @@ def main():
     # wiki
     wiki_schedule = generate_wiki_schedule(wiki_url, full_schedule)
 
-    full_schedule._schedule['schedule']['version'] += "; wiki"
     if wiki_schedule:
+        full_schedule['version'] += "; wiki"
         full_schedule.add_events_from(wiki_schedule)
 
     # write all events to one big schedule.json/xml
