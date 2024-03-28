@@ -15,7 +15,7 @@ class PretalxConference(GenericConference):
         GenericConference.__init__(self, url, data, options)
 
         if url and url != 'TBD':
-            self.schedule_url = url + "/schedule/export/schedule.json"
+            self.schedule_url = path.join(url, "schedule/export/schedule.json")
             r = urlparse(url)
             self.slug = data.get('slug', path.basename(r.path))
 
@@ -27,7 +27,7 @@ class PretalxConference(GenericConference):
                 self['meta'] = self.meta()
                 self['rooms'] = self.rooms()
             except Exception as e:
-                logger.warning(e)
+                logger.warn(e)
                 pass
 
     def meta(self):

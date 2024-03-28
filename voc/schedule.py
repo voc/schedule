@@ -391,6 +391,15 @@ class Schedule(dict):
                     if result:
                         out.append(result)
 
+    def foreach_event_raw(self, func, *args):
+        out = []
+        for day in self["conference"]["days"]:
+            for room in day["rooms"]:
+                for event in day["rooms"][room]:
+                    result = func(event, *args)
+                    if result:
+                        out.append(result)
+
         return out
 
     def foreach_day_room(self, func):
@@ -542,7 +551,7 @@ class Schedule(dict):
                         for person in event["persons"]:
                             person["id"] = f"{prefix}-{person['id']}"
 
-                    events.append(event if type(event) == Event else Event(event, origin=other_schedule))
+                    events.append(event if isinstance(event, Event) else Event(event, origin=other_schedule))
 
                 # copy whole day_room to target schedule
                 self.add_room_with_events(target_day, target_room, events)
@@ -645,10 +654,12 @@ class Schedule(dict):
                         or k == "guid"
                         or (parent == "day" and isinstance(v, (str, int)))
                         or parent == "generator"
+                        or parent == "track"
+                        or parent == "color"
                     ):
                         _set_attrib(node, k, v)
                         count -= 1
-                    elif k == "url" and parent != "event":
+                    elif k == "url" and parent in ["link", "attachment"]:
                         _set_attrib(node, "href", v)
                         count -= 1
                     elif k == "title" and parent in ["link", "attachment"]:
