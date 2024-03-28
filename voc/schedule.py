@@ -709,7 +709,7 @@ class Schedule(dict):
                             # not in schedule.json: license information for an event
                             v = {
                                 "license": recording_license,
-                                "optout": "true" if v is True else "false",
+                                "optout": v,
                             }
                         # new style schedule.json (version 2022-12)
                         elif k == "optout":
