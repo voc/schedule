@@ -134,6 +134,9 @@ conferences: List[GenericConference] = [
                 "https://matrix.to/#/#xrevent:matrix.org",
             ],
         },
+        options={
+            "remove_title_additions": False,
+        }
     ),
     GenericConference(
         url="https://data.jtbx.de/jev22_ccl/schedule.json",
@@ -422,7 +425,7 @@ def main():
     if not local or options.git:
         commit_changes_if_something_relevant_changed(full_schedule)
         # Attention: This method exits the script, if nothing relevant changed
-        # TODO: make this fact more obvious or refactor code
+        # TOOD: make this fact more obvious or refactor code
 
     if not local and "c3data" in targets:
         print("\n== Updating c3data via API…")
