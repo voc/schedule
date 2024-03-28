@@ -68,7 +68,7 @@ conferences: List[GenericConference] = [
         url="https://fahrplan.alpaka.space/camp-2023",
         data={
             "name": "jugendvillage",
-            "location":  "Jugend Village",
+            "location": "Jugend Village",
         },
     ),
 ]

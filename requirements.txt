@@ -11,3 +11,4 @@ html5lib
 ics
 dataclasses
 beautifulsoup4
+icalendar
