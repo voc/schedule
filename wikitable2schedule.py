@@ -26,63 +26,19 @@ secondary_output_dir = "./eh20"
 
 
 template = {"schedule": {
-    "version": "0.20",
+    "version": "",
     "conference": {
-        "acronym": "eh20",
-        "title": "Easterhegg 20 - Back to root",
-        "start": "2023-04-07",
-        "end": "2023-04-10",
+        "acronym": "eh21",
+        "title": "Easterhegg 21",
+        "start": "2024-03-29",
+        "end": "2024-04-02",
         "daysCount": 4,
         "timeslot_duration": "00:05",
         "time_zone_name": "Europe/Amsterdam",
-        "rooms": [
-            {
-                "name": "K2 Rahel Liebeschütz-Plaut",
-                "guid": "69865dca-0a39-42fc-b3d3-44663a947ccf",
-                "description": "Vortragssaal, [https://de.wikipedia.org/wiki/Rahel_Liebeschütz-Plaut](Rahel Liebeschütz-Plaut)",
-                "capacity": 400
-            },
-            {
-                "name": "K1/1 Lötwerkstatt Knott-ter Meer",
-                "guid": "9eeb1601-955a-4f37-a910-0568b7429598",
-                "description": "Löt- und Bastelraum. https://de.wikipedia.org/wiki/Ilse_Knott-ter_Meer",
-                "capacity": 20
-            },
-            {
-                "name": "K1/1b Lötwerkstatt Knott-ter Meer",
-                "guid": "8a448869-b221-4210-a925-a01abe99c12e",
-                "description": "Zweiter, paralleler Bastelworkshop",
-                "capacity": None
-            },
-            {
-                "name": "K1/2 Workshop Valerie Thomas",
-                "guid": "3e18429d-771a-4e47-9993-9dbfdcc8ebe2",
-                "description": "[Valerie Thomas](https://de.wikipedia.org/wiki/Valerie_Thomas)",
-                "capacity": 30
-            },
-            {
-                "name": "K1/3 Workshop Marge Piercy",
-                "guid": "39784595-0f78-4be7-8d2e-69597bcfa2c6",
-                "description": "[Marge Piercy](https://de.wikipedia.org/wiki/Marge_Piercy)",
-                "capacity": 30
-            },
-            {
-                "name": "P1 Workshop Mary G. Ross",
-                "guid": "e51e46fe-df65-45d8-977e-10f7edbe24bb",
-                "description": "[Mary G. Ross](https://de.wikipedia.org/wiki/Valerie_Thomas)",
-                "capacity": 120
-            },
-            {
-                "name": "Lounge",
-                "guid": "320846da-1985-4fc1-98ca-40410863149b",
-                "description": None,
-                "capacity": 100
-            },
-        ],
+        "rooms": [],
         "days": []
     }
 }}
-
 
 def get_track_id(track_name):
     return 10
@@ -165,16 +121,30 @@ def process_row(row, tz, day, room, wiki_url):
         external_links = voc.tools.parse_html_formatted_links(td)
 
     # ignore events which are already in pretalx
+    '''
     if len(external_links) > 0:
         urls = external_links.keys()
         if list(urls)[0].startswith('https://cfp.eh20.easterhegg.eu/eh20/talk/'):
             return None
-
+    '''
+    
     try:
         time = re.compile(r'\s*(?:-|–)\s*').split(data['col0'][0])
-        title = data['col1'][0]
-        abstract = "\n".join(data['col1'][1:])
-        persons, *links = data.get('col2', [None])
+        room = room or data['col1'][0]
+        title = data['col2'][0]
+        abstract = "\n".join(data['col3'][1:])
+        persons, *links = data.get('col4', [None])
+
+        '''
+        	<tr class="row1">
+                <td class="col0"> 10:00 - 11:00 </td>
+                <td class="col1"> <a href="https://eh21.c3nav.de/l/k014/@0,395.51,91.4,3.39" class="urlextern" title="https://eh21.c3nav.de/l/k014/@0,395.51,91.4,3.39">K014</a> </td>
+                <td class="col2 leftalign"> Chaos meets THW          </td>
+                <td class="col3"> Wie funktioniert der Bevölkerungsschutz in .de und wie können sich Nerds im THW engagieren? </td>
+                <td class="col4"> Dave (@laird_dave:matrix.cert.ccc.de) </td>
+            </tr>
+        '''
+
         if time == ['']:
             # ignore empty row
             return None
