@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os
 import re
-import sys
 import json
 from datetime import datetime, timedelta
 import locale
@@ -99,9 +98,10 @@ def fetch_schedule(wiki_url):
     conference_start_date = tz.localize(schedule.conference_start())
 
     print("Requesting wiki events")
-
-    soup = BeautifulSoup(requests.get(wiki_url).text, 'html5lib')
-    # soup = BeautifulSoup(open("divoc-sessions.xhtml"), 'lxml')
+    
+    data = requests.get(wiki_url + '?do=export_xhtml').text if wiki_url.startswith('http') else open(wiki_url)
+    soup = BeautifulSoup(data, 'html5lib')
+    # soup = BeautifulSoup(data, 'lxml')
 
     # sections = soup.find_all('h3')
     elements = soup.select('h3, h2, table.inline')
@@ -124,7 +124,6 @@ def fetch_schedule(wiki_url):
             room = element.text
             continue
 
-
         # ignore some sections
         if element.name == 'table':
             if section_title.attrs['id'] in sections_to_ignore:
@@ -146,7 +145,7 @@ def fetch_schedule(wiki_url):
         next(rows_iter)
 
         for row in rows_iter:
-            event = process_row(row, tz, day, room or 'other')
+            event = process_row(row, tz, day, room, wiki_url)
             if event is not None:
                 schedule.add_event(event)
 
@@ -155,7 +154,7 @@ def fetch_schedule(wiki_url):
     return schedule
 
 
-def process_row(row, tz, day, room):
+def process_row(row, tz, day, room, wiki_url):
     event_n = None
     data = {}
     external_links = {}
@@ -176,6 +175,9 @@ def process_row(row, tz, day, room):
         title = data['col1'][0]
         abstract = "\n".join(data['col1'][1:])
         persons, *links = data.get('col2', [None])
+        if time == ['']:
+            # ignore empty row
+            return None
 
         if time == ['00:00', '24:00']:
             print('\n ignore 24h event: {}'.format(title))
@@ -217,7 +219,7 @@ def process_row(row, tz, day, room):
             'date': start.isoformat(),
             'start': start.strftime('%H:%M'),
             'duration': '%d:%02d' % divmod(duration, 60),
-            'room': room,
+            'room': room or 'other',
             'slug': None,
             'url': wiki_url.split('?')[0],
             'title': title,
@@ -234,6 +236,10 @@ def process_row(row, tz, day, room):
         if debug:
             print(event)
         return event
+    
+    except ValueError as e:
+        print(e)
+        print(json.dumps(event_n, indent=2))
 
     except Exception as e:
         print(e)
@@ -251,17 +257,11 @@ def first(x):
 
 
 def main():
-    schedule = fetch_schedule(wiki_url)
-    schedule.export('wiki')
-
-    print('')
-    print('end')
-
-
-if __name__ == '__main__':
+    import argparse
+    import sys
     if len(sys.argv) == 2:
         output_dir = sys.argv[1]
-
+    
     if not os.path.exists(output_dir):
         if not os.path.exists(secondary_output_dir):
             os.mkdir(output_dir)
@@ -269,10 +269,23 @@ if __name__ == '__main__':
             output_dir = secondary_output_dir
             local = True
     os.chdir(output_dir)
-
-    main()
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('url', action="store", help="url to a wiki page containing a event table", default='')
+    parser.add_argument('--create', action="store_true", default=False)
+    args = parser.parse_args()
+    
+    schedule = fetch_schedule(args.url)
+    schedule.export('wiki')
 
     if not local:
         os.system("git add *.json *.xml")
         os.system("git commit -m 'updates from " + str(datetime.now()) + "'")
         os.system("git push")
+
+    print('')
+    print('end')
+
+
+if __name__ == '__main__':
+    main()

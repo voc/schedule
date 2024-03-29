@@ -26,9 +26,10 @@ except ImportError:
 
 log = Logger(__name__)
 
+root_dir = sys.path[0] or (os.path.dirname(__file__) + '/..')
 # validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
-# validator = 'xmllint --noout --schema {path}/validator/xsd/schedule.xml.xsd'.format(path=sys.path[0])
-validator = f"xmllint --noout --schema {sys.path[0]}/validator/xsd/schedule-without-person.xml.xsd"
+validator = f'xmllint --noout --schema {root_dir}/validator/xsd/schedule.xml.xsd'
+# validator = f"xmllint --noout --schema {root_dir}/validator/xsd/schedule-without-person.xml.xsd"
 validator_filter = ""
 
 
@@ -628,13 +629,16 @@ class Schedule(dict):
             elif parent == "person":
                 node.text = d.get("public_name") or d.get('full_public_name') or d.get('full_name') or d.get('name')
                 _set_attrib(node, "id", d["id"])
+                if "guid" in d:
+                    _set_attrib(node, "guid", d["guid"])
+
             elif (
                 isinstance(d, dict)
                 or isinstance(d, OrderedDict)
                 or isinstance(d, Event)
                 or isinstance(d, ScheduleDay)
             ):
-                # location of base_url sadly differs in frab's json and xml serialisation :-(
+                # location of base_url sadly differs in frab's json and xml serialization :-(
                 if parent == "schedule" and "base_url" in d:
                     d["conference"]["base_url"] = d["base_url"]
                     del d["base_url"]

@@ -29,7 +29,8 @@ local = False
 xc3 = 'eh21'
 # wrong_acronym = 'eh'
 acronym = 'eh21'
-wiki_url = 'https://eh21.easterhegg.eu/user:sos'
+wiki_url = 'https://eh21.easterhegg.eu/user:sos' + '?do=export_xhtml'
+
 main_schedule_url = 'https://fahrplan.eh21.easterhegg.eu/eh/schedule/export/schedule.json'
 
 
