@@ -1,12 +1,19 @@
 name: Mirroring
 
-on: [push, delete]
-
+on: 
+  push:
+    branches-ignore:
+      - 'dependabot/*'
+  delete:
+    branches-ignore:
+      - 'dependabot/*'
 jobs:
   to_git-c3voc-de:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+      with:
+          fetch-depth: 0
     - uses: pixta-dev/repository-mirroring-action@v1
       with:
         target_repo_url:
