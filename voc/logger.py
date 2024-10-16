@@ -1,13 +1,25 @@
 import logging
 from logging import info, debug, warn, error, critical # noqa
+import argparse
 
 __all__ = [info, debug, warn, error, critical]
 
-
 class Logger(logging.Logger):
-    def __init__(name, *args):
-        logging.Logger.__init__(name, *args)
+    def __init__(self, name, args=None, level='INFO'):
+        logging.Logger.__init__(self, name, level)
         # log = logging.getLogger(name)
+
+        if False and args is None:
+            parser = argparse.ArgumentParser()
+            parser.add_argument('--quiet', action='store_true')
+            parser.add_argument('--debug', action='store_true')
+            parser.add_argument('--verbose', '-v', action='store_true')
+            args = parser.parse_args()
+
+        if args:
+            configure_logging(args)
+
+
 
 
 def configure_logging(args):
@@ -35,4 +47,4 @@ def configure_logging(args):
     else:
         log_format = '%(asctime)s - %(levelname)s - %(message)s'
 
-    logging.basicConfig(filename=args.logfile, level=level, format=log_format)
+    #logging.basicConfig(filename=args.logfile, level=level, format=log_format)
