@@ -14,7 +14,7 @@ lxml = "^4.9.1"
 gql = ">=3.0.0a5"
 aiohttp = ">=3.7.4.post0"
 GitPython = "^3.1.41"
-bs4 = "^0.0.1"
+beautifulsoup4 = "^4.12.3"
 html5lib = "^1.1"
 ics = "^0.7.2"
 

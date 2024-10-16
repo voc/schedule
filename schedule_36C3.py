@@ -187,7 +187,7 @@ def main():
     # write all events from the stages to an own schedule.json/xml
     write('\nExporting main stages... ')
     stages = full_schedule.copy('Stages')
-    for day in stages._schedule['schedule']['conference']['days']:
+    for day in stages.days():
         i = 0
         room_keys = list(day['rooms'].keys())
         for room_key in room_keys:

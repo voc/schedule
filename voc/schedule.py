@@ -26,20 +26,15 @@ except ImportError:
 
 log = Logger(__name__)
 
-root_dir = sys.path[0] or (os.path.dirname(__file__) + '/..')
-# validator = '{path}/validator/xsd/validate_schedule_xml.sh'.format(path=sys.path[0])
-validator = f'xmllint --noout --schema {root_dir}/validator/xsd/schedule.xml.xsd'
-# validator = f"xmllint --noout --schema {root_dir}/validator/xsd/schedule-without-person.xml.xsd"
+# validator = f"{sys.path[0]}/validator/xsd/validate_schedule_xml.sh"
+validator = f"xmllint --noout --schema {sys.path[0]}/validator/xsd/schedule.xml.xsd"
+# validator = f"xmllint --noout --schema {sys.path[0]}/validator/xsd/schedule-without-person.xml.xsd"
 validator_filter = ""
 
 
 def set_validator_filter(filter):
     global validator_filter
     validator_filter += " | awk '" + " && ".join(["!/" + x + "/" for x in filter]) + "'"
-
-
-class Schedule:
-    pass
 
 
 class ScheduleException(Exception):
@@ -215,7 +210,7 @@ class Schedule(dict):
         return schedule
 
     @classmethod
-    def empty_copy_of(cls, parent_schedule: Schedule, name: str, start_hour=None):
+    def empty_copy_of(cls, parent_schedule: 'Schedule', name: str, start_hour=None):
         schedule = Schedule(
             version=datetime.now().strftime("%Y:%m-%d %H:%M"),
             conference=copy.deepcopy(parent_schedule.conference()),
@@ -413,7 +408,7 @@ class Schedule(dict):
 
         return out
 
-    def _generate_stats(self, enable_time_stats=False):
+    def _generate_stats(self, enable_time_stats=False, verbose=False):
         class ScheduleStats:
             min_id = None
             max_id = None
@@ -453,6 +448,13 @@ class Schedule(dict):
                         self.stats.person_max_id = int(person["id"])
 
         self.foreach_event(calc_stats)
+
+        if verbose:
+            print(f"  from {self['conference']['start']} to {self['conference']['end']}")
+            print( "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(**schedule.stats.__dict__))  # noqa
+            print( "    local person ids from {person_min_id} to {person_max_id}".format(**self.stats.__dict__)) # noqa
+            print(f"    rooms: {', '.join(self.rooms())}")
+
 
     def get_day_from_time(self, start_time):
         for i in range(self.conference("daysCount")):

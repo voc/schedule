@@ -24,6 +24,15 @@ VERSION = None
 
 log = Logger(__name__)
 
+def DefaultOptionParser():
+    optparse.OptionParser()
+    parser.add_option("--online", action="store_true", dest="online", default=False)
+    parser.add_option(
+        "--fail", action="store_true", dest="exit_when_exception_occours", default=local
+    )
+    parser.add_option("--stats", action="store_true", dest="only_stats", default=False)
+    parser.add_option("--git", action="store_true", dest="git", default=False)
+    parser.add_option("--debug", action="store_true", dest="debug", default=local)
 
 def write(x):
     sys.stdout.write(x)

@@ -6,7 +6,7 @@ lxml
 gql>=3.0.0a5
 aiohttp>=3.7.4.post0
 gitpython
-bs4
+beautifulsoup4
 html5lib
 ics
 dataclasses

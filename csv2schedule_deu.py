@@ -146,7 +146,7 @@ def process(acronym, base_id, source_csv_url):
 
             for value in row_iter:
                 value = value.strip()
-                if keys2[i] != '' and value != '' and not('Email' in keys2[i]):
+                if keys2[i] != '' and value != '' and 'Email' not in keys2[i]:
                     try:
                         items[keys[i]][keys2[i]] = value
                     except AttributeError as e:
