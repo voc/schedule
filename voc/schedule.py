@@ -451,7 +451,7 @@ class Schedule(dict):
 
         if verbose:
             print(f"  from {self['conference']['start']} to {self['conference']['end']}")
-            print( "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(**schedule.stats.__dict__))  # noqa
+            print( "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(**self.stats.__dict__))  # noqa
             print( "    local person ids from {person_min_id} to {person_max_id}".format(**self.stats.__dict__)) # noqa
             print(f"    rooms: {', '.join(self.rooms())}")
 

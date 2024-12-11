@@ -116,8 +116,8 @@
             }
           }
         },
-        "keywords" :{
-          "type":"array",
+        "keywords": {
+          "type": "array",
           "items": {
             "type": "string"
           }
@@ -127,8 +127,8 @@
           "type": "string",
           "format": "uri"
         },
-        "tracks" :{
-          "type":"array",
+        "tracks": {
+          "type": "array",
           "items": {
             "type": "object",
             "properties": {
@@ -308,7 +308,8 @@
         },
         "answers": {
           "type": "array",
-          "items": {}
+          "items": {},
+          "$ref": "https://c3voc.de/schedule/submission#/definitions/Answers"
         }
       },
       "required": [
