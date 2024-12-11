@@ -214,6 +214,19 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "slides",
+                        "paper",
+                        "web",
+                        "blog",
+                        "article",
+                        "media",
+                        "related",
+                        "activitypub"
+                    ]
+                },
                 "url": {
                     "type": "string",
                     "format": "uri"
