@@ -345,6 +345,21 @@
         "id": {
           "type": "integer",
           "description": "deprecated integer person id, use guid with uuid5(NS_URL, 'acct:user@domain.tld') instead"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Reference"
+          }
+        },
+        "public_name": {
+          "type": "string",
+          "deprecated": true,
+          "$comment": "use name instead"
         }
       },
       "oneOf": [
