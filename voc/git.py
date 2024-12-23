@@ -1,9 +1,11 @@
 
 import argparse
+import json
 import os
 from git import Repo
 from voc.c3data import C3data
-from voc.schedule import Schedule
+from voc.event import Event
+from voc.schedule import Schedule, ScheduleEncoder
 from voc.tools import (
     commit_changes_if_something_relevant_changed,
     git,
@@ -19,7 +21,7 @@ def export_event_files(schedule: Schedule, options: argparse.Namespace, local = 
     # TODO: use Event.export()
     def export_event(event: Event):
         origin_system = None
-        if isinstance(event, Event):
+        if isinstance(event, Event) and event.origin:
             origin_system = event.origin.origin_system
 
         with open("events/{}.json".format(event["guid"]), "w") as fp:
@@ -37,7 +39,7 @@ def export_event_files(schedule: Schedule, options: argparse.Namespace, local = 
     schedule.foreach_event(export_event)
 
 
-def postprocessing(schedule: Schedule, options: argparse.Namespace, local = False):
+def postprocessing(schedule: Schedule, options: argparse.Namespace, local = False, targets = []):
     if not local or options.git:
         commit_changes_if_something_relevant_changed(schedule)
         # Attention: This method exits the script, if nothing relevant changed

@@ -5,6 +5,7 @@ from collections import OrderedDict
 import dateutil.parser
 from datetime import datetime, timedelta
 
+from voc.tools import str2timedelta
 
 class EventSourceInterface:
     origin_system = None
@@ -37,8 +38,7 @@ class Event(collections.abc.Mapping):
         assert 'date' in data
 
         self.start = start_time or dateutil.parser.parse(data["date"])
-        h, m = data['duration'].split(':', 2)
-        self.duration = timedelta(hours=int(h), minutes=int(m))
+        self.duration = str2timedelta(data["duration"])
 
         if 'start' not in data:
             data['start'] = self.start.strftime('%H:%M')
@@ -158,6 +158,6 @@ class Event(collections.abc.Mapping):
     def __str__(self):
         return json.dumps(self._event, indent=2)
 
-    def export(self, prefix):
-        with open("{}{}.json".format(prefix, self._event["guid"]), "w") as fp:
+    def export(self, prefix, suffix=""):
+        with open("{}{}{}.json".format(prefix, self._event["guid"], suffix), "w") as fp:
             json.dump(self._event, fp, indent=2)

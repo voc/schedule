@@ -18,7 +18,7 @@ class GenericConference(dict, EventSourceInterface):
     def __str__(self):
         return self['name']
 
-    def schedule(self, *args):
+    def schedule(self, *args) -> Schedule:
         if not self.schedule_url or self.schedule_url == 'TBD':
             raise ScheduleException('  has no schedule url yet – ignoring')
 

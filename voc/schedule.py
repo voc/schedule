@@ -283,21 +283,28 @@ class Schedule(dict):
             for x in rooms:
                 self.add_room(x, context)
 
-    def rename_rooms(self, replacements: Dict[str, str]):
+    def rename_rooms(self, replacements: Dict[str, str|Room]):
 
         name_replacements = {}
 
-        for old_name_or_guid, new_name in replacements.items():
+        for old_name_or_guid, new_room in replacements.items():
+            new_name = new_room if isinstance(new_room, str) else new_room.name
+
             r = self.room(name=old_name_or_guid) or self.room(guid=old_name_or_guid)
             if r['name'] != new_name:
                 name_replacements[r['name']] = new_name
                 r['name'] = new_name
-                if r.get('guid'):
+                if isinstance(new_room, Room) and new_room.guid:
+                    r['guid'] = new_room.guid
+                    self._room_ids[new_name] = new_room.guid
+                elif r.get('guid'):
                     self._room_ids[new_name] = r['guid']
 
         for day in self['conference']['days']:
             for room_key, events in list(day['rooms'].items()):
-                new_name = replacements.get(room_key, room_key)
+                new_room = replacements.get(room_key, room_key)
+                new_name = new_room if isinstance(new_room, str) else new_room.name
+
                 day['rooms'][new_name] = day['rooms'].pop(room_key)
                 if room_key != new_name:
                     for event in events:
@@ -435,7 +442,7 @@ class Schedule(dict):
                 self.stats.last_event = event
 
             for person in event.get("persons", []):
-                if isinstance(person["id"], int) or person["id"].isnumeric():
+                if "id" in person and (isinstance(person["id"], int) or person["id"].isnumeric()):
                     if (
                         self.stats.person_min_id is None
                         or int(person["id"]) < self.stats.person_min_id
@@ -630,7 +637,8 @@ class Schedule(dict):
                 node.text = str(d)
             elif parent == "person":
                 node.text = d.get("public_name") or d.get('full_public_name') or d.get('full_name') or d.get('name')
-                _set_attrib(node, "id", d["id"])
+                if "id" in d:
+                    _set_attrib(node, "id", d["id"])
                 if "guid" in d:
                     _set_attrib(node, "guid", d["guid"])
 

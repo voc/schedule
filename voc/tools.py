@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from datetime import timedelta
 from logging import Logger
+import argparse
 from os import path
 import os
 import uuid
@@ -24,15 +25,16 @@ VERSION = None
 
 log = Logger(__name__)
 
-def DefaultOptionParser():
-    optparse.OptionParser()
-    parser.add_option("--online", action="store_true", dest="online", default=False)
-    parser.add_option(
+def DefaultOptionParser(local=False):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--online", action="store_true", dest="online", default=False)
+    parser.add_argument(
         "--fail", action="store_true", dest="exit_when_exception_occours", default=local
     )
-    parser.add_option("--stats", action="store_true", dest="only_stats", default=False)
-    parser.add_option("--git", action="store_true", dest="git", default=False)
-    parser.add_option("--debug", action="store_true", dest="debug", default=local)
+    parser.add_argument("--stats", action="store_true", dest="only_stats", default=False)
+    parser.add_argument("--git", action="store_true", dest="git", default=False)
+    parser.add_argument("--debug", action="store_true", dest="debug", default=local)
+    return parser
 
 def write(x):
     sys.stdout.write(x)
@@ -160,6 +162,31 @@ def format_duration(value: Union[int, timedelta]) -> str:
 
     return '%d:%02d' % divmod(minutes, 60)
 
+
+# from https://git.cccv.de/hub/hub/-/blob/develop/src/core/utils.py
+_RE_STR2TIMEDELTA = re.compile(r'((?P<hours>\d+?)hr?\s*)?((?P<minutes>\d+?)m(ins?)?\s*)?((?P<seconds>\d+?)s)?')
+
+def str2timedelta(s):
+    if ':' in s:
+        parts = s.split(':')
+        kwargs = {'seconds': int(parts.pop())}
+        if parts:
+            kwargs['minutes'] = int(parts.pop())
+        if parts:
+            kwargs['hours'] = int(parts.pop())
+        if parts:
+            kwargs['days'] = int(parts.pop())
+        return timedelta(**kwargs)
+
+    parts = _RE_STR2TIMEDELTA.match(s)
+    if not parts:
+        return
+    parts = parts.groupdict()
+    time_params = {}
+    for name, param in parts.items():
+        if param:
+            time_params[name] = int(param)
+    return timedelta(**time_params)
 
 def parse_json(text):
     # this more complex way is necessary
