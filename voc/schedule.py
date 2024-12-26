@@ -718,6 +718,9 @@ class Schedule(dict):
                             recording_license = v
                             # skip forward to next loop iteration
                             continue
+                        elif k == "do_not_stream":
+                            # we dont expose this flag to the schedule.xml, only in schedule.json
+                            continue
                         elif k == "do_not_record" or k == "recording":
                             k = "recording"
                             # not in schedule.json: license information for an event
