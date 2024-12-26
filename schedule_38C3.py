@@ -144,8 +144,15 @@ def create_himmel_schedule(fahrplan):
         'Saal GLITCH': Room(name='Saal GLITCH Evac', guid='7202df07-050c-552f-8318-992f94e40ef1'),
         'Saal ZIGZAG': Room(name='Saal ZIGZAG Evac', guid='62251a07-13e4-5a72-bb3c-8528416ee0f3'),
     })
-
     himmel_schedule.export("himmel")
+
+    himmel2_schedule = fahrplan.copy("himmel")
+    himmel2_schedule.rename_rooms({
+        'Saal 1':      Room(name='Saal 1 Door', guid='ba692ba3-421b-5371-8309-60acc34a3c07'),
+        'Saal GLITCH': Room(name='Saal GLITCH Door', guid='7202df07-050c-552f-8318-992f94e40ef2'),
+        'Saal ZIGZAG': Room(name='Saal ZIGZAG Door', guid='62251a07-13e4-5a72-bb3c-8528416ee0f4'),
+    })
+    himmel2_schedule.export("himmel2")
 
     return himmel_schedule
 
