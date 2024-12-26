@@ -98,16 +98,19 @@ subconferences: List[GenericConference] = [
     PretalxConference(
         url="https://pretalx.c3voc.de/38c3-sendezentrum",
         data={
+            "name": "sendezentrum",
         },
     ),
     PretalxConference(
         url="https://pretalx.c3voc.de/38c3-haecksen-workshops-2024",
         data={
+            "name": "haecksen",
         },
     ),
     PretalxConference(
         url="https://fahrplan.alpaka.space/jugend-hackt-38c3-2024",
         data={
+            "name": "jugend",
         },
     ),
 ]
@@ -147,6 +150,24 @@ def create_himmel_schedule(fahrplan):
     return himmel_schedule
 
 
+def schedule_stats(schedule):
+    print(f"  system {schedule['base_url']}")
+    print(
+        f"  from {schedule['conference']['start']} to {schedule['conference']['end']}"
+    )
+    print(
+        "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(
+            **schedule.stats.__dict__
+        )
+    )  # noqa
+    print(
+        "    local person ids from {person_min_id} to {person_max_id}".format(
+            **schedule.stats.__dict__
+        )
+    )  # noqa
+    print(f"    rooms: {', '.join(schedule.rooms())}")
+
+
 def main():
     fahrplan = main_cfp.schedule()
     create_himmel_schedule(fahrplan)
@@ -154,6 +175,50 @@ def main():
     everything = hub.schedule()
     loaded_schedules = {}
 
+    print(f"\n== Main programme (= fahrplan) \n")
+    schedule_stats(fahrplan)
+
+    merge_schedules = False
+    if True:
+        # get events from subconferences
+        for entry in subconferences:
+            try:
+                print(f"\n== Source {entry['name']} \n")
+                schedule = entry.schedule(base_schedule)
+                loaded_schedules[entry["name"]] = schedule
+
+                if schedule.get("version"):
+                    if merge_schedules:
+                        full_schedule["version"] += f"; {entry['name']}"
+                else:
+                    log.warning(
+                        f'  WARNING: schedule of "{entry}" does not have a version number'
+                    )
+
+                try:
+                    schedule_stats(schedule)
+                except Exception:
+                    pass
+
+            except ScheduleException as e:
+                print(e)
+
+            except KeyboardInterrupt:
+                exit()
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 404:
+                    print("  not yet available (404)")
+                else:
+                    print("  HTTP ERROR: " + str(e))
+                    if options.exit_when_exception_occours:
+                        raise e
+            except Exception as e:
+                log.error(f"  UNEXPECTED ERROR: {type(e).__name__}: {sys.exc_info()[1]}")
+                if options.exit_when_exception_occours:
+                    raise e
+
+            if options.only_stats:
+                exit()
 
 
     # to get proper a state, we first have to remove all event files from the previous run
