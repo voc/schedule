@@ -300,6 +300,11 @@
           "type": "string",
           "format": "uri"
         },
+        "origin_url": {
+          "title": "URL of this event at the origin system",
+          "type": "string",
+          "format": "uri"
+        },
         "attachments": {
           "type": "array",
           "items": {
