@@ -190,7 +190,7 @@ def str2timedelta(s):
 
 def parse_json(text):
     # this more complex way is necessary
-    # to maintain the same order as in the input file
+    # to maintain the same order as in the input file in python2
     return json.JSONDecoder(object_pairs_hook=OrderedDict).decode(text)
 
 
