@@ -1,19 +1,18 @@
 import argparse
 from os import getenv, path
 import json
-import git
 
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 from gql.transport.exceptions import TransportQueryError
-
-from voc import logger
 
 try:
     from .schedule import Schedule
     from .event import Event
     from .room import Room
     from .tools import load_json, write
+    from . import logger
+
 
 except ImportError:
     import sys
@@ -22,6 +21,8 @@ except ImportError:
     from schedule import Schedule, Event
     from room import Room
     from tools import load_json, write
+    from voc import logger
+
 
 
 transport = AIOHTTPTransport(
@@ -171,7 +172,7 @@ class C3data:
         if not result['conference']:
             raise "Please create conference in target system using --create"
         self.conference_id = result['conference']['id']
-        
+
         self.room_ids = {x['name']: x['guid'] for x in result['conference']['rooms']['nodes']}
 
         # check for new/updated rooms
@@ -194,7 +195,7 @@ class C3data:
     def depublish_event(self, event_guid):
         remove_event(event_guid)
 
-    def process_changed_events(self, repo: git.Repo, options):
+    def process_changed_events(self, repo: 'Repo', options):
         changed_items = repo.index.diff('HEAD~1', 'events')
         for i in changed_items:
             write(i.change_type + ': ')
@@ -223,9 +224,9 @@ def upsert_schedule(schedule: Schedule, create=False):
 
 def test():
     # schedule = Schedule.from_url('https://fahrplan.events.ccc.de/camp/2019/Fahrplan/schedule.json')
-    schedule = Schedule.from_file('eh21/everything.schedule.json')
+    schedule = Schedule.from_file('38C3/everything.schedule.json')
 
-    upsert_schedule(schedule, create=False)
+    upsert_schedule(schedule, create=True)
 
 
 if __name__ == '__main__':

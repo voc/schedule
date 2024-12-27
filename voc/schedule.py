@@ -347,7 +347,11 @@ class Schedule(dict):
         else:
             target_day_rooms[target_room] = data
 
+
+    # TODO this method should work woth both room key and room guid,
+    #  but currently it only works with room name
     def remove_room(self, room_key: str):
+        # if room key is a name, remove it directly from the room list
         if room_key in self._room_ids:
             del self._room_ids[room_key]
 
@@ -393,6 +397,7 @@ class Schedule(dict):
                     result = func(event if isinstance(event, Event) else Event(event), *args)
                     if result:
                         out.append(result)
+        return out
 
     def foreach_event_raw(self, func, *args):
         out = []
