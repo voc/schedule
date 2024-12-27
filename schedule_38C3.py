@@ -82,20 +82,22 @@ sendezentrum = PretalxConference(
         "name": "sendezentrum",
     },
 )
+community_stages =PretalxConference(
+    url="https://cfp.cccv.de/38c3-community-stages",
+    data={
+        "name": "community-stages",
+    },
+)
+music = PretalxConference(
+    url="https://cfp.cccv.de/38c3-chaos-computer-music-club",
+    data={
+        "name": "music",
+    },
+)
 
 subconferences: List[GenericConference] = [
-    PretalxConference(
-        url="https://cfp.cccv.de/38c3-community-stages",
-        data={
-            "name": "community-stages",
-        },
-    ),
-    PretalxConference(
-        url="https://cfp.cccv.de/38c3-chaos-computer-music-club",
-        data={
-            "name": "music",
-        },
-    ),
+    community_stages,
+    music,
     # PretalxConference(
     #    url="https://cfp.cccv.de/38c3-lightningtalks/",
     #    data={
@@ -139,7 +141,7 @@ if len(sys.argv) == 2:
 
 local = ensure_folders_exist(output_dir, secondary_output_dir)
 
-def create_himmel_schedule(fahrplan):
+def create_himmel_evac_schedule(fahrplan):
     himmel_schedule = fahrplan.copy("Himmel Evac")
     himmel_schedule.rename_rooms({
         'Saal 1':      Room(name='Saal 1 Evac', guid='ba692ba3-421b-5371-8309-60acc34a3c06'),
@@ -148,15 +150,17 @@ def create_himmel_schedule(fahrplan):
     })
     himmel_schedule.export("himmel")
 
+def create_himmel_door_scheudle(fahrplan, community_stages):
     himmel2_schedule = fahrplan.copy("Himmel Door")
+    himmel2_schedule.add_events_from(community_stages)
     himmel2_schedule.rename_rooms({
         'Saal 1':      Room(name='Saal 1 Door', guid='ba692ba3-421b-5371-8309-60acc34a3c07'),
         'Saal GLITCH': Room(name='Saal GLITCH Door', guid='7202df07-050c-552f-8318-992f94e40ef2'),
         'Saal ZIGZAG': Room(name='Saal ZIGZAG Door', guid='62251a07-13e4-5a72-bb3c-8528416ee0f4'),
+        'Stage YELL':  Room(name='Stage YELL Door', guid='e58b284a-d3e6-42cc-be2b-7e02c791bf97'),
+        'Stage HUFF':  Room(name='Stage HUFF Door', guid='53f436a0-705b-40eb-974f-2bfce8857b1d'),
     })
     himmel2_schedule.export("himmel2")
-
-    return True
 
 def create_sendezentrum_schedule():
     himmel3_schedule = sendezentrum \
@@ -172,7 +176,7 @@ def create_sendezentrum_schedule():
 
     optouts = himmel3_schedule.foreach_event(lambda e: e['guid'] if e['do_not_record'] else None)
 
-    print(f"Removing {len(optouts)} recording optout events from engelsystem sendezentrum schedule")
+    print(f" Removing {len(optouts)} recording optout events from engelsystem sendezentrum schedule")
 
     for guid in optouts:
         himmel3_schedule.remove_event(guid=guid)
@@ -203,7 +207,8 @@ def schedule_stats(schedule):
 
 def main():
     fahrplan = main_cfp.schedule()
-    create_himmel_schedule(fahrplan)
+    create_himmel_evac_schedule(fahrplan)
+    create_himmel_door_scheudle(fahrplan, community_stages.schedule())
     create_sendezentrum_schedule()
 
     everything = hub.schedule()
