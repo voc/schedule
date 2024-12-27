@@ -76,6 +76,13 @@ base_schedule = Schedule(
     version=str(datetime.now().strftime("%Y-%m-%d %H:%M")),
 )
 
+sendezentrum = PretalxConference(
+    url="https://pretalx.c3voc.de/38c3-sendezentrum",
+    data={
+        "name": "sendezentrum",
+    },
+)
+
 subconferences: List[GenericConference] = [
     PretalxConference(
         url="https://cfp.cccv.de/38c3-community-stages",
@@ -95,12 +102,7 @@ subconferences: List[GenericConference] = [
     #        "name": "lightningtalks",
     #    },
     # ),
-    PretalxConference(
-        url="https://pretalx.c3voc.de/38c3-sendezentrum",
-        data={
-            "name": "sendezentrum",
-        },
-    ),
+    sendezentrum,
     PretalxConference(
         url="https://pretalx.c3voc.de/38c3-haecksen-workshops-2024",
         data={
@@ -138,7 +140,7 @@ if len(sys.argv) == 2:
 local = ensure_folders_exist(output_dir, secondary_output_dir)
 
 def create_himmel_schedule(fahrplan):
-    himmel_schedule = fahrplan.copy("himmel")
+    himmel_schedule = fahrplan.copy("Himmel Evac")
     himmel_schedule.rename_rooms({
         'Saal 1':      Room(name='Saal 1 Evac', guid='ba692ba3-421b-5371-8309-60acc34a3c06'),
         'Saal GLITCH': Room(name='Saal GLITCH Evac', guid='7202df07-050c-552f-8318-992f94e40ef1'),
@@ -146,7 +148,7 @@ def create_himmel_schedule(fahrplan):
     })
     himmel_schedule.export("himmel")
 
-    himmel2_schedule = fahrplan.copy("himmel")
+    himmel2_schedule = fahrplan.copy("Himmel Door")
     himmel2_schedule.rename_rooms({
         'Saal 1':      Room(name='Saal 1 Door', guid='ba692ba3-421b-5371-8309-60acc34a3c07'),
         'Saal GLITCH': Room(name='Saal GLITCH Door', guid='7202df07-050c-552f-8318-992f94e40ef2'),
@@ -154,7 +156,31 @@ def create_himmel_schedule(fahrplan):
     })
     himmel2_schedule.export("himmel2")
 
-    return himmel_schedule
+    return True
+
+def create_sendezentrum_schedule():
+    himmel3_schedule = sendezentrum \
+        .schedule(base_schedule) \
+        .filter('Himmel3', rooms=[
+            Room(name='Saal X 07', guid='f3483ff0-d680-5aed-8f8b-8fc9e191893f')
+        ])
+
+    # give Saal X 07 a new guid due to a bug in the engelsystem, as requested by jwacalex
+    himmel3_schedule.rename_rooms({
+        'Saal X 07': Room(name='Saal X 07', guid='f3483ff0-d680-5aed-8f8b-8fc9e1918940')
+    })
+
+    optouts = himmel3_schedule.foreach_event(lambda e: e['guid'] if e['do_not_record'] else None)
+
+    print(f"Removing {len(optouts)} recording optout events from engelsystem sendezentrum schedule")
+
+    for guid in optouts:
+        himmel3_schedule.remove_event(guid=guid)
+
+    himmel3_schedule.export("himmel3")
+    return True
+
+
 
 
 def schedule_stats(schedule):
@@ -178,8 +204,10 @@ def schedule_stats(schedule):
 def main():
     fahrplan = main_cfp.schedule()
     create_himmel_schedule(fahrplan)
+    create_sendezentrum_schedule()
 
     everything = hub.schedule()
+
     loaded_schedules = {}
 
     print(f"\n== Main programme (= fahrplan) \n")
