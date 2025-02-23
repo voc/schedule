@@ -448,8 +448,9 @@
           "type": ["string", "null"]
         },
         "description": {
-          "type": ["string", "null"],
-          "description": "might also be set as description_de, description_en etc."
+          "type": ["string", "null", "object"],
+          "description": "might also be an object { en: '…', de: '…' } etc.",
+          "$todo": "define translation object as TranslationDict"
         },
         "capacity": {
           "type": ["number", "null"]
@@ -467,7 +468,9 @@
       },
       "patternProperties": {
         "description_.+": {
-          "type": ["string", "null"]
+          "type": ["string", "null"],
+          "deprecated": true,
+          "$comment": "use translation object"
         }
       },
       "required": ["name", "guid"]
