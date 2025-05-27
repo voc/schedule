@@ -232,8 +232,15 @@
           "deprecated": true,
           "$comment": "use date instead"
         },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "examples": ["2020-12-14T10:00:00+01:00"]
+        },
         "duration": {
-          "$ref": "#/definitions/Duration"
+          "$ref": "#/definitions/Duration",
+          "deprecated": true,
+          "$comment": "use end instead"
         },
         "room": {
           "$ref": "#/definitions/RoomName"
