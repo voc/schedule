@@ -232,18 +232,18 @@
         ],
         "links": [
           {
-            "url": "https://domain.tld/",
+            "url": "https://example.net/",
             "title": "foo bar"
           },
           {
             "type": "activitypub",
-            "url": "https://domain.tld/"
+            "url": "https://example.net/@handle"
           }
         ],
         "attachments": [
           {
             "type": "slides",
-            "url": "https://domain.tld/foo/bar/1235.pdf"
+            "url": "https://example.net/foo/bar/1235.pdf"
           }
         ],
         "feedback": {
