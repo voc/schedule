@@ -115,6 +115,13 @@
           "type": "string",
           "format": "uri"
         },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "$ref": "#/definitions/Language"
+          }
+        },
         "tracks": {
           "type": "array",
           "items": {
@@ -253,7 +260,7 @@
         },
         "language": {
           "type": ["string", "null"],
-          "examples": ["en", "de", "cs", "ab"]
+          "$ref": "#/definitions/Language"
         },
         "abstract": {
           "type": ["string", "null", "object"]
@@ -417,6 +424,13 @@
       "type": "string",
       "examples": ["00:30", "01:30"],
       "pattern": "^[0-9]+:[0-9]{2}$"
+    },
+    "Language": {
+      "title": " ISO 639-1 language code",
+      "type": "string",
+      "examples": ["en", "de"],
+      "pattern": "^[a-z]{2}$",
+      "$TODO": "Should we add a enum list of lang codes here?"
     },
     "Reference": {
       "title": "Link or Attachment",

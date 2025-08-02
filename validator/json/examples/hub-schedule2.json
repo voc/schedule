@@ -10,6 +10,7 @@
       "end": "2024-12-30T17:45:00+00:00",
       "time_zone_name": "Europe/Berlin",
       "url": "https://events.ccc.de/congress/2024/",
+      "languages": ["en", "de"],
       "tracks": [
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e1",
