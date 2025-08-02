@@ -309,7 +309,16 @@
           "type": "string"
         },
         "role": {
-          "type": "string"
+          "title": "Main role of this person at the event",
+          "type": "string",
+          "default": "speaker",
+          "enum": [
+            "speaker",
+            "moderator",
+            "contributor",
+            "host",
+            "guest"
+          ]
         },
         "guid": {
           "type": "string",
