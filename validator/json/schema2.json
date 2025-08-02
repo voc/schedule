@@ -131,8 +131,7 @@
                 "type": "string"
               },
               "slug": {
-                "type": "string",
-                "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+                "$ref": "#/definitions/Slug"
               },
               "color": {
                 "type": "string",
@@ -230,8 +229,7 @@
           "$ref": "#/definitions/RoomReference"
         },
         "slug": {
-          "type": "string",
-          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+          "$ref": "#/definitions/Slug"
         },
         "url": {
           "type": "string",
@@ -350,8 +348,7 @@
           "type": "string"
         },
         "slug": {
-          "type": "string",
-          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+          "$ref": "#/definitions/Slug"
         },
         "guid": {
           "type": "string",
@@ -372,8 +369,7 @@
           "type": "string"
         },
         "slug": {
-          "type": "string",
-          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+          "$ref": "#/definitions/Slug"
         },
         "type": {
           "type": "string",
@@ -413,8 +409,7 @@
           "type": "string"
         },
         "slug": {
-          "type": "string",
-          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+          "$ref": "#/definitions/Slug"
         },
         "guid": {
           "type": "string",
@@ -479,12 +474,15 @@
         "url"
       ]
     },
+    "Slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+    },
     "TrackReference": {
       "type": "object",
       "properties": {
         "slug": {
-          "type": "string",
-          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+          "$ref": "#/definitions/Slug"
         }
       },
       "required": ["slug"]
