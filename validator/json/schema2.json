@@ -41,7 +41,10 @@
         "events": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Event"
+            "oneOf": [
+              { "$ref": "#/definitions/Event" },
+              { "$ref": "#/definitions/MetaEvent" }
+            ]
           }
         }
       },
@@ -328,6 +331,46 @@
         }
       },
       "required": ["guid", "name"]
+    },
+    "MetaEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "title", "type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "break",
+            "meta"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "guid": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2020-12-14T09:00:00+01:00"
+          ]
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2020-12-14T10:00:00+01:00"
+          ]
+        },
+        "room": {
+          "$ref": "#/definitions/RoomReference"
+        }
       }
     },
     "Person": {
