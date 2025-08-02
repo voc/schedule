@@ -227,7 +227,7 @@
           "$comment": "use end instead"
         },
         "room": {
-          "$ref": "#/definitions/RoomName"
+          "$ref": "#/definitions/RoomReference"
         },
         "slug": {
           "type": "string",
@@ -406,8 +406,22 @@
       },
       "required": ["name", "guid"]
     },
-    "RoomName": {
-      "type": "string"
+    "RoomReference": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+        },
+        "guid": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": ["guid"]
     },
     "RoomFeatures": {
       "type": "object",

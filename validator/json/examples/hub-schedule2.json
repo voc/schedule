@@ -204,7 +204,11 @@
         "guid": "270fa44c-821a-577f-8ca3-33e8d4a8c2a7",
         "start": "2024-12-27T10:30:00+01:00",
         "end": "2024-12-27T11:00:00+01:00",
-        "room": "Saal 1",
+        "room": {
+          "name": "Saal 1",
+          "slug": "saal-1",
+          "guid": "ba692ba3-421b-5371-8309-60acc34a3c05"
+        },
         "slug": "38c3-38c3-opening-ceremony",
         "title": "38C3: Opening Ceremony",
         "subtitle": null,
@@ -256,7 +260,10 @@
         "guid": "b1740c2f-0c44-5f1b-89ed-456a9eecf0b8",
         "start": "2024-12-28T00:15:00+01:00",
         "end": "2024-12-28T00:55:00+01:00",
-        "room": "Saal ZIGZAG",
+        "room": {
+          "name": "Saal ZIGZAG",
+          "guid": "62251a07-13e4-5a72-bb3c-8528416ee0f2"
+        },
         "slug": "38c3-a-competitive-time-trial-ai-for-need-for-speed-most-wanted-using-deep-reinforcement-learning",
         "url": "https://events.ccc.de/congress/2024/hub/event/a-competitive-time-trial-ai-for-need-for-speed-most-wanted-using-deep-reinforcement-learning/",
         "title": "A Competitive Time-Trial AI for Need for Speed:",
