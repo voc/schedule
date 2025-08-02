@@ -87,7 +87,6 @@
           "pattern": "^([A-Z][a-z]+/[A-Z][a-z]+)|UTC$"
         },
         "logo": {
-          "type": ["object", "null"],
           "$ref": "#/definitions/Image"
         },
         "colors": {
@@ -207,8 +206,10 @@
           "pattern": "^[A-Z0-9]+$"
         },
         "logo": {
-          "type": ["object", "null"],
-          "$ref": "#/definitions/Image"
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/definitions/Image" }
+          ]
         },
         "start": {
           "type": "string",
@@ -284,7 +285,7 @@
             "$ref": "#/definitions/Reference"
           }
         }
-     },
+      },
       "required": [
         "abstract",
         "guid",
@@ -325,6 +326,8 @@
           "format": "uuid",
           "description": "Person UUID generated from email address via uuid5(NS_URL, 'acct:user@domain.tld') or random uuid4() if email not available"
         }
+      },
+      "required": ["guid", "name"]
       }
     },
     "Person": {
@@ -402,7 +405,7 @@
           "type": "string",
           "format": "uri"
         },
-        "features" :{
+        "features": {
           "$ref": "#/definitions/RoomFeatures"
         },
         "assembly": {
@@ -479,9 +482,7 @@
           "$TODO": true
         }
       },
-      "required": [
-        "url"
-      ]
+      "required": ["url"]
     },
     "Slug": {
       "type": "string",
@@ -505,9 +506,7 @@
           "format": "uri"
         }
       },
-      "required": [
-        "url"
-      ]
+      "required": ["url"]
     }
   }
 }
