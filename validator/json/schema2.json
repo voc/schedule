@@ -244,7 +244,7 @@
           "type": ["string", "null"]
         },
         "track": {
-          "type":  ["string", "null"]
+          "$ref": "#/definitions/TrackReference"
         },
         "type": {
           "type": "string",
@@ -478,6 +478,16 @@
       "required": [
         "url"
       ]
+    },
+    "TrackReference": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+        }
+      },
+      "required": ["slug"]
     },
     "Image": {
       "type": "object",
