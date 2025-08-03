@@ -522,7 +522,11 @@
           "type": "string"
         },
         "service": {
-          "$TODO": true
+          "oneOf": [
+            { "$ref": "#/definitions/ResourceHostingService" },
+            { "$ref": "#/definitions/SocialMediaService" },
+            { "$ref": "#/definitions/VideoMediaService" }
+          ]
         }
       },
       "required": ["url"]
@@ -530,6 +534,18 @@
     "Slug": {
       "type": "string",
       "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+    },
+    "SocialMediaService": {
+      "type": "string",
+      "enum": ["MASTODON", "BLUESKY", "FACEBOOK", "THREADS", "TWITTER", "INSTAGRAM", "TIKTOK", "SPOTIFY"]
+    },
+    "ResourceHostingService": {
+      "type": "string",
+      "enum": ["FORGEJO", "GITHUB", "GITLAB"]
+    },
+    "VideoMediaService": {
+      "type": "string",
+      "enum": ["MEDIACCCDE", "PEERTUBE", "YOUTUBE", "VIMEO"]
     },
     "TrackReference": {
       "type": "object",
