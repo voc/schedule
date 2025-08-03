@@ -243,7 +243,8 @@
           },
           {
             "type": "activitypub",
-            "url": "https://example.net/@handle"
+            "url": "https://example.net/@handle/123456",
+            "service": "MASTODON"
           }
         ],
         "attachments": [
