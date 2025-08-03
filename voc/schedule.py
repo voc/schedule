@@ -808,20 +808,37 @@ class Schedule(dict):
         schedule['version'] = self.version().split(';')[0]
         return schedule
 
-    def export(self, prefix):
-        with open("{}.schedule.json".format(prefix), "w") as fp:
-            json.dump(self.json(), fp, indent=2, cls=ScheduleEncoder)
+    def export(self, prefix_or_target):
+        """Export schedule to json and xml files, validate xml"""
 
-        with open("{}.schedule.xml".format(prefix), "w") as fp:
-            fp.write(self.xml())
+        target_json = None
+        target_xml = None
 
-        # TODO use python XML validator instead of shell call
-        # validate xml
-        result = os.system(
-            f'/bin/bash -c "{validator} {prefix}.schedule.xml 2>&1 {validator_filter}; exit \\${{PIPESTATUS[0]}}"'
-        )
-        if result != 0 and validator_filter:
-            log.warning("  (validation errors might be hidden by validator_filter)")
+        if prefix_or_target.endswith(".json"):
+            target_json = prefix_or_target
+        elif prefix_or_target.endswith(".xml"):
+            target_xml = prefix_or_target
+        else:
+            target_json = f"{prefix_or_target}.schedule.json"
+            target_xml = f"{prefix_or_target}.schedule.xml"
+
+        if target_json:
+            with open(target_json, "w") as fp:
+                json.dump(self.json(), fp, indent=2, cls=ScheduleEncoder)
+
+            # TODO we should also validate the json file here
+
+        if target_xml:
+            with open(target_xml, "w") as fp:
+                fp.write(self.xml())
+
+            # TODO use python XML validator instead of shell call
+            # validate xml
+            result = os.system(
+                f'/bin/bash -c "{validator} {target_xml} 2>&1 {validator_filter}; exit \\${{PIPESTATUS[0]}}"'
+            )
+            if result != 0 and validator_filter:
+                log.warning("  (validation errors might be hidden by validator_filter)")
 
     def __str__(self):
         return json.dumps(self, indent=2, cls=ScheduleEncoder)
