@@ -1,8 +1,26 @@
 [tool.poetry]
-name = "schedule"
+name = "c3voc-schedule-tools"
 version = "1.0.0"
-description = ""
-authors = ["Andreas Hubel <andi@muc.ccc.de>"]
+description = "Library to generate, convert and validate [schedule files](https://c3voc.de/wiki/schedule) for events which use the [pretalx](https://github.com/pretalx/pretalx), [frab][frab-website] or every other system able to generate schedule.json or CSV files in the correct format."
+authors = [
+  "Andi Hubel <andi@muc.ccc.de>"
+]
+license = "EUPL-1.2"
+homepage = "https://c3voc.de/wiki/schedule"
+repository = "https://github.com/voc/schedule"
+readme = "voc/README.md"
+packages = [
+  { include = "voc" }
+]
+keywords = ["c3voc", "schedule", "event", "conference", "pretalx", "frab", "c3hub"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -16,10 +34,9 @@ aiohttp = ">=3.7.4.post0"
 GitPython = "^3.1.41"
 beautifulsoup4 = "^4.12.3"
 html5lib = "^1.1"
-ics = "^0.7.2"
 icalendar = "^5.0.12"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
 Flake8-pyproject = "^1.2.2"
 
