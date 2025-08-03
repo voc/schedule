@@ -511,6 +511,8 @@
             "article",
             "media",
             "related",
+            "feedback",
+            "origin",
             "activitypub"
           ]
         },
