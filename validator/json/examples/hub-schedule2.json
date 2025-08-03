@@ -245,6 +245,10 @@
             "type": "activitypub",
             "url": "https://example.net/@handle/123456",
             "service": "MASTODON"
+          },
+          {
+            "type": "feedback",
+            "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/HQCCYH/feedback/"
           }
         ],
         "attachments": [
@@ -253,9 +257,6 @@
             "url": "https://example.net/foo/bar/1235.pdf"
           }
         ],
-        "feedback": {
-          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/HQCCYH/feedback/"
-        },
         "url": "https://events.ccc.de/congress/2024/hub/event/38c3-opening-ceremony/"
       },
       {
@@ -287,9 +288,10 @@
             "role": "speaker"
           }
         ],
-        "links": [],
-        "origin_url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/",
-        "feedback_url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/feedback/"
+        "links": [
+          { "type": "origin", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/"},
+          { "type": "feedback", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/feedback/"}
+        ]
       }
     ],
     "persons": [
