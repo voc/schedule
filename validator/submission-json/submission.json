@@ -140,7 +140,7 @@
     },
     "tags": {
       "type": "array",
-      "description": "The tags attached to the current submission, as a list of strings.",
+      "description": "The keywords attached to the current submission, as a list of strings.",
       "additionalItems": false,
       "items": {
         "examples": ["science"],

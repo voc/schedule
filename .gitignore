@@ -34,3 +34,5 @@ archive/*
 .idea
 tmp
 process_rC3.sh
+.DS_Store
+/dist
