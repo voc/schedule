@@ -93,7 +93,8 @@
       <xs:element type="start" name="start"/>
       <xs:element type="duration" name="duration"/>
       <xs:element type="xs:string" name="abstract"/>
-      <xs:element type="voc-slug-new" name="slug"/>
+      <!-- oly expose slug if is not generated 1:1 via title slugify, otherwise we will generated it ourselves-->
+      <xs:element type="voc-slug-new" name="slug" minOccurs="0"/>
       <xs:element type="xs:string" name="track"/>
       <!-- logo is the path or URL to an image, we use httpURI as type here as apps prefer full URLs now -->
       <xs:element type="emptyOrURI" name="logo" minOccurs="0" />

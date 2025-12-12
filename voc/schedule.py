@@ -413,10 +413,11 @@ class Schedule(dict):
     def add_event(self, event: Event, options=None):
         day = self.get_day_from_time(event.start)
         if event.get("slug") is None:
-            event["slug"] = "{acronym}-{id}-{name}".format(
+            slug_name = tools.normalise_string(event["title"])
+            event["slug"] = ("{acronym}-{id}-{name}" if False else "{acronym}-{name}").format(
                 acronym=self.conference()["acronym"],
                 id=event["id"],
-                name=tools.normalise_string(event["title"]),
+                name=slug_name,
             )
 
         if not self.room_exists(day, event["room"]):
