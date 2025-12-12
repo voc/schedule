@@ -677,6 +677,9 @@ class Schedule(dict):
                         count -= 1
                     elif k == "title" and parent in ["link", "attachment"]:
                         node.text = v
+                    elif parent in ["link", "attachment"]:
+                        _set_attrib(node, k, v)
+                        count -= 1
                     elif count == 1 and isinstance(v, str):
                         node.text = v
                     else:
