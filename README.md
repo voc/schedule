@@ -15,12 +15,23 @@ pip3 install --pre gql[aiohttp]
 ### macOS
 
 ```bash
-brew install python3
-STATIC_DEPS=true pip3 install -r requirements.txt
-pip3 install --pre gql[aiohttp]
+brew install python3 poetry
+poetry install
+poetry env activate
 ```
 
-or see https://stackoverflow.com/a/26544099/521791 on how to install lxml
+If you have problems with `lxml` see https://stackoverflow.com/a/26544099/521791 
+
+
+## Local usage for 39C3
+
+https://c3voc.de/wiki/events:39c3:schedule
+
+
+```bash
+mkdir 39c3
+python3 schedule_39C3.py
+```
 
 ## History
 

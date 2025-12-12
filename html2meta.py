@@ -16,12 +16,12 @@ locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 tz = pytz.timezone("Europe/Amsterdam")
 
 parser = argparse.ArgumentParser()
-# parser.add_argument('acronym', action="store", help="Series acronym, e.g. jev22")
+parser.add_argument('acronym', action="store", help="Series acronym, e.g. jev22")
 parser.add_argument('--url', action="store", help="Source url, e.g. https://events.ccc.de/2022/11/28/dezentral-2022/", default='https://events.ccc.de/2022/11/28/dezentral-2022/')
 parser.add_argument('-o', action="store", dest="output", help="output filename, e.g. current", default='current')
 args = parser.parse_args()
 
-acronym = 'jev22'  # args.acronym.lower()
+acronym = args.acronym.lower()
 
 @dataclass
 class Location:

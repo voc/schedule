@@ -215,36 +215,36 @@ def process(acronym, base_id, source_csv_url):
         if args.split_persons:
             event[persons] = event[persons].split(',')
 
-        event_n = OrderedDict([
-            ('id', id),
-            ('guid', guid),
-            # ('logo', None),
-            ('date', event['start_time'].isoformat()),
-            ('start', event['start_time'].strftime('%H:%M')),
-            ('duration', '%d:%02d' % divmod(duration_m, 60)),
-            ('room', event['meta'].get(room, 'Room')),
-            ('slug', '-'.join([acronym, id, normalise_string(event['meta'][title])])),
-            ('title', event['meta'][title]),
-            ('subtitle', event['meta'].get('Untertitel', '')),
-            ('track', event['meta'].get('Track', '')),
-            ('type', event['meta'].get('Event Type', '')),
-            ('language', event['meta'].get('Sprache', args.default_language)),
-            ('abstract', event['meta'].get(abstract, '')),
-            ('description', event['meta'].get(description, '')),
-            ('do_not_record', event['meta'].get('Aufzeichnung?', '') == 'nein'),
-            ('video_download_url', event['meta'].get('video_download_url')),
-            ('persons', [OrderedDict([
-                ('id', get_id(gen_uuid(p.strip().split('\n')[0]))),
-                ('public_name', p.strip()),
-                # ('#text', p),
-            ]) for p in event[persons].values()]),
-            ('links', [])
-        ])
+        event = Event({
+            'id': id,
+            'guid': guid,
+            # 'logo': None,
+            'date': event['start_time'].isoformat(),
+            'start': event['start_time'].strftime('%H:%M'),
+            'duration': '%d:%02d' % divmod(duration_m, 60),
+            'room': event['meta'].get(room, 'Room'),
+            'slug': '-'.join([acronym, id, normalise_string(event['meta'][title])]),
+            'title': event['meta'][title],
+            'subtitle': event['meta'].get('Untertitel', ''),
+            'track': event['meta'].get('Track', ''),
+            'type': event['meta'].get('Event Type', ''),
+            'language': event['meta'].get('Sprache', args.default_language),
+            'abstract': event['meta'].get(abstract, ''),
+            'description': event['meta'].get(description, ''),
+            'do_not_record': event['meta'].get('Aufzeichnung?', '') == 'nein',
+            'video_download_url': event['meta'].get('video_download_url'),
+            'persons': [{
+                'id': get_id(gen_uuid(p.strip().split('\n')[0])),
+                'public_name': p.strip(),
+                # '#text': p,
+            } for p in event[persons].values()],
+            'links': []
+        })
 
         if args.verbose:
-            print(event_n['title'])
+            print(event['title'])
         try:
-            schedule.add_event(Event(event_n))
+            schedule.add_event(event)
         except Warning as e:
             print(e)
 

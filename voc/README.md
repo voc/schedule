@@ -4,7 +4,7 @@
 [![License: EUPL-1.2](https://img.shields.io/badge/License-EUPL--1.2-blue.svg)](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-A Python library for generating, converting, and validating [schedule files](https://c3voc.de/wiki/schedule) for conferences and events. 
+A Python library for generating, converting, and validating [schedule files](https://c3voc.de/wiki/schedule) for conferences and events.
 
 Originally developed for the Chaos Computer Club events (C3), this library supports multiple schedule formats and conference management systems including [pretalx](https://github.com/pretalx/pretalx), [frab](https://frab.github.io/frab/).
 ## Features
@@ -31,7 +31,7 @@ from voc import Schedule, Event, Room
 schedule = Schedule.from_template(
     name="My Conference 2024",
     conference_title="My Conference",
-    conference_acronym="MC24",
+    conference_acronym="mc24",
     start_day=25,
     days_count=3,
     timezone="Europe/Berlin"
@@ -75,6 +75,9 @@ conference = PretalxConference(
 
 # Get the schedule
 schedule = conference.schedule()
+
+# Modify / Filter / etc
+…
 
 # Export to different formats
 schedule.export('schedule.json')
