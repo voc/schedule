@@ -624,8 +624,8 @@ class Schedule(dict):
                 tag.set(k, v)
             elif isinstance(v, int):
                 tag.set(k, str(v))
-            else:
-                log.error("  error: unknown attribute type %s=%s" % (k, v))
+            elif v is not None:
+                log.error(f"  schedule.xml serialization error: unknown attribute type {k}={v}")
 
         def _to_etree(d, node, parent=""):
             if not d:
@@ -665,6 +665,7 @@ class Schedule(dict):
                     if (
                         k == "id"
                         or k == "guid"
+                        or k == "code"
                         or (parent == "day" and isinstance(v, (str, int)))
                         or parent == "generator"
                         or parent == "track"
