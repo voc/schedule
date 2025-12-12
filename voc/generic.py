@@ -7,6 +7,7 @@ class GenericConference(dict, EventSourceInterface):
     schedule_url = None
     options = {}
     timeout = 10
+    headers = {'Content-Type': 'application/json'}
 
     def __init__(self, url, data, options={}):
         self.origin_system = urlparse(url).netloc
@@ -22,4 +23,4 @@ class GenericConference(dict, EventSourceInterface):
         if not self.schedule_url or self.schedule_url == 'TBD':
             raise ScheduleException('  has no schedule url yet – ignoring')
 
-        return Schedule.from_url(self.schedule_url, self.timeout)
+        return Schedule.from_url(self.schedule_url, timeout=self.timeout, headers=self.headers)
