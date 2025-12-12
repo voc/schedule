@@ -56,7 +56,7 @@ class ScheduleDay(dict):
                 "index": i + 1,
                 "date": dt.strftime("%Y-%m-%d"),
                 "day_start": self.start.isoformat(),
-                "day_end": self.start.isoformat(),
+                "day_end": self.end.isoformat(),
                 "rooms": {},
             })
             return
@@ -176,12 +176,6 @@ class Schedule(dict):
                 "time_zone_name": tz,
             },
         )
-        tzinfo = pytz.timezone(tz)
-        days = schedule["conference"]["days"]
-        for i in range(days_count):
-            d = ScheduleDay(i, year, month, day + i, tz=tzinfo)
-            days.append(d)
-
         return schedule
 
     @classmethod
