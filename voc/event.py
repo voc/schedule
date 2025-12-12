@@ -5,7 +5,7 @@ from collections import OrderedDict
 import dateutil.parser
 from datetime import datetime, timedelta
 
-from voc.tools import str2timedelta
+from voc.tools import str2timedelta, format_duration
 
 class EventSourceInterface:
     origin_system = None
@@ -21,7 +21,14 @@ class Event(collections.abc.Mapping):
     start: datetime = None
     duration: timedelta = None
 
-    def __init__(self, data, start_time: datetime = None, origin: EventSourceInterface = None):
+    def __init__(self, data, start: datetime = None,
+                 origin: EventSourceInterface = None, 
+                 guid: str = None, 
+                 end: datetime = None, 
+                 title: str = None,
+                 room: 'Room' = None, # pyright: ignore[reportUndefinedVariable]
+        ):
+        
         # when being restored from single event file, we have to specially process the origin attribute
         if 'origin' in data:
             self.origin = EventSourceInterface()
@@ -33,12 +40,45 @@ class Event(collections.abc.Mapping):
             if field in data and not (data[field]):
                 del data[field]
 
+        if guid:
+            data['guid'] = guid
         assert 'id' in data or data.get('guid'), "guid (or id) is required"
-        assert 'title' in data
-        assert 'date' in data
 
-        self.start = start_time or dateutil.parser.parse(data["date"])
-        self.duration = str2timedelta(data["duration"])
+        if title:
+            data['title'] = title
+        assert 'title' in data
+
+        # schedule1 input dict
+        if start or 'date' in data:
+            self.start = start or dateutil.parser.parse(data["date"])
+            if 'date' not in data:
+                data['date'] = self.start.isoformat()
+
+        # schedule2 input dict
+        elif 'start' in data:
+            self.start = dateutil.parser.parse(data["start"])
+            # overwrite date + start in data to have a consistent date field for schedule1 export
+            data['date'] = data['start']
+            data['start'] = self.start.strftime('%H:%M')
+
+        else:
+            raise AssertionError("either date or start is required")
+        
+        if 'duration' in data:
+            self.duration = str2timedelta(data["duration"])
+        
+        # also allow end as part of schedule2 input dict
+        elif end or 'end' in data:
+            if 'end' in data:
+                end = dateutil.parser.parse(data["end"])
+                del data['end']
+
+            self.duration = end - self.start
+            assert self.duration.total_seconds() > 0, "end must be after start"
+            # bring data in form for schedule1 exports
+            data['duration'] = format_duration(self.duration)
+        else:
+            raise AssertionError("either duration or end is required")
 
         if 'start' not in data:
             data['start'] = self.start.strftime('%H:%M')

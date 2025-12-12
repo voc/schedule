@@ -89,6 +89,8 @@ class Schedule(dict):
     origin_system = None
     stats = None
     generator = None
+    start: datetime = None
+    end: datetime = None
 
     def __init__(self, name: str = None, json=None, version: str = None, conference=None, start_hour=9):
         if json:
@@ -101,11 +103,36 @@ class Schedule(dict):
 
         if "days" in self["conference"]:
             self._generate_stats("start" not in self["conference"])
+        else:
+            self["conference"]["days"] = []
 
+        # when conference start is not set, use first event start
         if "start" not in self["conference"]:
-            self["conference"]["start"] = self.stats.first_event.start.isoformat()
+            self.start = self.stats.first_event.start
+            self["conference"]["start"] = self.start.strftime("%Y-%m-%d")
+        # when it's a string parse to datetime
+        elif isinstance(self["conference"]["start"], str):
+            self.start = dateutil.parser.parse(self["conference"]["start"])
+        # when it's already a datetime use it directly, but convert it string for backward compatibility
+        elif isinstance(self["conference"]["start"], datetime):
+            self.start = self["conference"]["start"]
+            self["conference"]["start"] = self.start.strftime("%Y-%m-%d")
+
+        # when conference end is not set, use last event end
         if "end" not in self["conference"]:
-            self["conference"]["end"] = self.stats.last_event.end.isoformat()
+            self.end = self.stats.last_event.end
+            self["conference"]["end"] = self.end.strftime("%Y-%m-%d")
+        # when it's a string parse to datetime
+        elif isinstance(self["conference"]["end"], str):
+            self.end = dateutil.parser.parse(self["conference"]["end"])
+        # when it's already a datetime use it directly, but convert it string for backward compatibility
+        elif isinstance(self["conference"]["end"], datetime):
+            self.end = self["conference"]["end"]
+            self["conference"]["end"] = self.end.strftime("%Y-%m-%d")
+
+        # when conference daysCount is not set, calculate it from conference start and end
+        if "daysCount" not in self["conference"]:
+            self["conference"]["daysCount"] = (self.end - self.start).days + 1
 
         if "rooms" not in self["conference"]:
             # looks like we have an old style schedule json,
@@ -236,6 +263,11 @@ class Schedule(dict):
         if not self._tz:
             self._tz = pytz.timezone(self.conference("time_zone_name"))
         return self._tz
+    
+    def localize(self, dt):
+        if not self._tz:
+            self.tz()
+        return self._tz.localize(dt)
 
     def conference(self, key=None, filter: Callable = None, fallback=None):
         if key:
@@ -246,7 +278,9 @@ class Schedule(dict):
         else:
             return self["conference"]
 
+    """returns the conference start day as datetime object"""
     def conference_start(self):
+        # TODO: why do we do we split on T here? 
         return dateutil.parser.parse(self.conference("start").split("T")[0])
 
     def days(self):
@@ -304,13 +338,20 @@ class Schedule(dict):
                     for event in events:
                         event['room'] = new_name
 
-    def add_room(self, room: Union[str, dict], context: EventSourceInterface = {}):
+    def add_room(self, room: Union[str, dict, Room], context: EventSourceInterface = {}):
         # if rooms is str, use the old behaviour – for backwords compability
         if type(room) is str:
             for day in self.days():
                 if room not in day["rooms"]:
                     day["rooms"][room] = list()
-        # otherwise add new room dict to confernce
+        elif isinstance(room, Room):
+            if room.name in self._room_ids and self._room_ids[room.name] == room.guid:
+                # we know this room already, so return early
+                return
+            self.conference("rooms").append(room.json())
+            self._room_ids[room.name] = room.guid
+            self.add_room(room.name)
+        # otherwise add new room dict to conference
         elif "name" in room:
             if room["name"] in self._room_ids and self._room_ids[room["name"]] == room.get('guid'):
                 # we know this room already, so return early

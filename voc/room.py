@@ -11,6 +11,7 @@ except:
 class Room:
     guid: str = None
     name: str = None
+    char: str = None
     stream: str = None
     description: str = None
     capacity: int = None
@@ -26,6 +27,9 @@ class Room:
         filteredData = {k: v for k, v in data.items() if k in fieldSet}
 
         return cls(**filteredData)
+
+    def json(self):
+        return self.graphql()
 
     def graphql(self):
         return {
