@@ -92,7 +92,7 @@ class Event(collections.abc.Mapping):
         # generate id from guid, when not set so old apps can still process this event
         if 'id' not in data and 'guid' in data:
             from voc.tools import get_id
-            self._event['id'] = get_id(self['guid'], length=4)
+            self._event['id'] = get_id(self['guid'], length=6)
         self.origin = origin
 
     @property
