@@ -83,9 +83,18 @@ class Event(collections.abc.Mapping):
         if 'start' not in data:
             data['start'] = self.start.strftime('%H:%M')
 
+        if 'abstract' not in data:
+            data['abstract'] = ''
+
         # empty description for pretalx importer (temporary workaround)
         if 'description' not in data:
             data['description'] = ''
+
+        if room:
+            data['room'] = room.name
+
+        if 'track' not in data:
+            data['track'] = None
 
         self._event = OrderedDict(data)
 
