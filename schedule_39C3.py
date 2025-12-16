@@ -60,10 +60,12 @@ def create_block_schedule(fahrplan):
         Room(name='Saal G', guid='7202df07-050c-552f-8318-992f94e40ef3', char='G'),
         Room(name='Saal Z', guid='62251a07-13e4-5a72-bb3c-8528416ee0f5', char='Z'),
         Room(name='Saal F', guid='e58b284a-d3e6-42cc-be2b-7e02c791bf98', char='F'),
-        Room(name='Club',   guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e20', char='C'),
-        Room(name='Saal X 07', guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e20', char='X'),
-        Room(name='Raum 315', description='C3VOC Hel(l|p)desk', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76b', char='VHD'),        
-        Room(name='Raum 314', description='C3VOC Office',       guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76c', char='VO'),        
+        Room(name='Saal X 07',  guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e20', char='X'),
+        Room(name='Stage H',    guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e42', char='H'),
+        Room(name='Club',       guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e21', char='C'),
+        Room(name='Raum 315',   description='C3VOC Hel(l|p)desk', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76b', char='VHD'),        
+        Room(name='Raum 314',   description='C3VOC Office',       guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76c', char='VO'),        
+        Room(name='Everywhere', guid='7abcfbfd-4b2f-4fc4-8e6c-6ff854d4936f', char='∀'),
     ]
     block_schedule.add_rooms(rooms)
     
