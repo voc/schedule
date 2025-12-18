@@ -21,13 +21,15 @@ class Event(collections.abc.Mapping):
     start: datetime = None
     duration: timedelta = None
 
-    def __init__(self, data, start: datetime = None,
-                 origin: EventSourceInterface = None, 
+    def __init__(self, data: dict[str, any] = {}, start: datetime = None, origin: EventSourceInterface = None, *,
                  guid: str = None, 
                  end: datetime = None, 
-                 title: str = None,
                  room: 'Room' = None, # pyright: ignore[reportUndefinedVariable]
+                 title: str = None,
+                 **kwargs
         ):
+
+        data |= kwargs
         
         # when being restored from single event file, we have to specially process the origin attribute
         if 'origin' in data:
