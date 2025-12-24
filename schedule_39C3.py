@@ -62,10 +62,115 @@ xc3 = "39c3"
 year = 2025
 
 
-def create_block_schedule(fahrplan=None, *, only_if_not_exists=False):
+def create_buildupteardown_schedule():
+    buildupteardown_schedule = Schedule.from_template(f"{xc3} C3VOC BuildUp & Teardown", xc3, year, 12, 25, days_count=6)
+    rooms = [
+        Room(name='Saal 1', guid='ba692ba3-421b-5371-8309-60acc34a3c08', char='O'),
+        Room(name='Saal G', guid='7202df07-050c-552f-8318-992f94e40ef3', char='G'),
+        Room(name='Saal Z', guid='62251a07-13e4-5a72-bb3c-8528416ee0f5', char='Z'),
+        Room(name='Saal F', guid='e58b284a-d3e6-42cc-be2b-7e02c791bf98', char='F'),
+        Room(name='Saal X 07', guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e20', char='X'),
+        Room(name='Raum 315', description='C3VOC Hel(l|p)desk', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76b', char='VHD'),
+        Room(name='Raum 314', description='C3VOC Office', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76c', char='VO'),
+        Room(name='Raum 315', description='C3VOC Coworking', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76d', char='VC'),
+        Room(name='Everywhere', guid='7abcfbfd-4b2f-4fc4-8e6c-6ff854d4936f', char='∀'),
+    ]
+    buildupteardown_schedule.add_rooms(rooms)
+
+    config = {
+        "2025-12-19": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-20": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-21": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-22": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-23": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-24": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-25": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-26": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-30": [
+            {"start": "17:30:00", "end": "19:00:00", "title": "Afternoon"},
+            {"start": "19:30:00", "end": "24:00:00", "title": "Evening"},
+            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+        ],
+        "2025-12-31": [
+            {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
+            {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
+        ],
+    }
+
+    i = -1
+    # for each day
+    for day in config:
+        i += 1
+        j = 0
+        # for each block
+        for b in config[day]:
+            j += 1
+            # for each room
+            for r in rooms:
+                start = dateutil.parser.parse(f"{day}T{b['start']}+01:00")
+                end = dateutil.parser.parse(f"{day}T{b['end']}+01:00")
+                # fix end, if after midnight
+                if (end - start).total_seconds() <= 0:
+                    end += dateutil.relativedelta.relativedelta(days=1)
+
+                buildupteardown_schedule.add_event(Event(
+                    title=f"{i if i else ''} {b['title']} {r.char}".strip(),
+                    start=start,
+                    end=end,
+                    guid=gen_uuid(f"{xc3}-{i}{j}{r.char}"),
+                    room=r,
+                    type="buildupteardown",
+                    # TODO why do we need an empty dict here? Otherwise no new instances are created
+                    data={}
+                ))
+
+    buildupteardown_schedule.export("block")
+
+def create_block_schedule():
     block_schedule = Schedule.from_template(
         f"{xc3} Saal Blöcke", xc3, year, 12, 26, days_count=5
     )
+    block_schedule = Schedule.from_template(f"{xc3} Saal Blockschichten", xc3, year, 12, 26, days_count=5)
     rooms = [
         Room(name='Saal 1',      guid='ba692ba3-421b-5371-8309-60acc34a3c08', char='O'),
         Room(name='Saal G',      guid='7202df07-050c-552f-8318-992f94e40ef3', char='G'),
@@ -77,6 +182,7 @@ def create_block_schedule(fahrplan=None, *, only_if_not_exists=False):
         Room(name='Raum 315',    description='C3VOC Hel(l|p)desk', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76b', char='VHD'),        
         Room(name='Raum 314',    description='C3VOC Office',       guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76c', char='VO'),        
         Room(name='Raum 315',    description='C3VOC Coworking',    guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76d', char='VC'),        
+        Room(name="Saal 10",     guid="9001b61b-b1f1-5bcd-89fd-135ed5e43e10", char="SH"),
         Room(name='Everywhere',  guid='7abcfbfd-4b2f-4fc4-8e6c-6ff854d4936f', char='∀'),
     ]
     block_schedule.add_rooms(rooms)
@@ -140,11 +246,12 @@ def create_block_schedule(fahrplan=None, *, only_if_not_exists=False):
                         guid=gen_uuid(f"{xc3}-{i}{j}{r.char}"),
                         room=r,
                         type="block",
+                        # TODO why do we need an empty dict here? Otherwise no new instances are created
                         data=dict()
                     )
                 )
 
-    block_schedule.print_stats()
+    #block_schedule.print_stats()
     block_schedule.export("block")
 
 
@@ -378,7 +485,8 @@ def main():
     fahrplan = conference.main_cfp.schedule()
 
     # TODO: only update block schedule if output file does not exists or changed
-    create_block_schedule(fahrplan, only_if_not_exists=True)
+    create_block_schedule()
+    create_buildupteardown_schedule()
     create_himmel_evac_schedule(fahrplan)
     create_himmel_door_schedule(fahrplan)
     create_sendezentrum_schedule(conference.sendezentrum, conference.base_schedule)
