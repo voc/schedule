@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import sys
 import os
 import re
@@ -76,6 +77,15 @@ class ScheduleDay(dict):
     def json(self):
         return self
 
+@dataclass
+class ScheduleStats:
+    min_id: int|None = None
+    max_id: int|None = None
+    person_min_id: int|None = None
+    person_max_id: int|None = None
+    events_count = 0
+    first_event: Event|None = None
+    last_event: Event|None = None
 
 class Schedule(dict):
     """Schedule class with import and export methods"""
@@ -455,14 +465,6 @@ class Schedule(dict):
         return out
 
     def _generate_stats(self, enable_time_stats=False, verbose=False):
-        class ScheduleStats:
-            min_id = None
-            max_id = None
-            person_min_id = None
-            person_max_id = None
-            events_count = 0
-            first_event: Event = None
-            last_event: Event = None
 
         self.stats = ScheduleStats()
 
@@ -480,27 +482,59 @@ class Schedule(dict):
             if self.stats.last_event is None or event.start < self.stats.last_event.start:
                 self.stats.last_event = event
 
-            for person in event.get("persons", []):
-                if "id" in person and (isinstance(person["id"], int) or person["id"].isnumeric()):
-                    if (
-                        self.stats.person_min_id is None
-                        or int(person["id"]) < self.stats.person_min_id
-                    ):
-                        self.stats.person_min_id = int(person["id"])
-                    if (
-                        self.stats.person_max_id is None
-                        or int(person["id"]) > self.stats.person_max_id
-                    ):
-                        self.stats.person_max_id = int(person["id"])
+            for person in event.persons():
+                try:
+                    if "id" in person and (isinstance(person["id"], int) or person["id"].isnumeric()):
+                        if (
+                            self.stats.person_min_id is None
+                            or int(person["id"]) < self.stats.person_min_id
+                        ):
+                            self.stats.person_min_id = int(person["id"])
+                        if (
+                            self.stats.person_max_id is None
+                            or int(person["id"]) > self.stats.person_max_id
+                        ):
+                            self.stats.person_max_id = int(person["id"])
+                except Exception:
+                    pass
 
         self.foreach_event(calc_stats)
 
         if verbose:
-            print(f"  from {self['conference']['start']} to {self['conference']['end']}")
-            print( "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(**self.stats.__dict__))  # noqa
-            print( "    local person ids from {person_min_id} to {person_max_id}".format(**self.stats.__dict__)) # noqa
+            try:
+                print(f"  from {self['conference']['start']} to {self['conference']['end']}")
+                print( "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(**self.stats.__dict__))  # noqa
+                print( "    local person ids from {person_min_id} to {person_max_id}".format(**self.stats.__dict__)) # noqa
+            except Exception:
+                pass
             print(f"    rooms: {', '.join(self.rooms())}")
 
+    def print_stats(self):
+        if 'base_url' in self:
+            print(f"  system {self['base_url']}")
+        
+        self._generate_stats(verbose=True)
+
+        '''
+        print(
+            f"  from {self['conference']['start']} to {self['conference']['end']}"
+        )
+        print(
+            "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(
+                **self.stats.__dict__
+            )
+        )  # noqa
+        try:
+            print(
+                "    local person ids from {person_min_id} to {person_max_id}".format(
+                    **self.stats.__dict__
+                )
+            )  # noqa
+        except Exception:
+            pass
+
+        print(f"    rooms: {', '.join(self  .rooms())}")
+        '''
 
     def get_day_from_time(self, start_time):
         for i in range(self.conference("daysCount")):
