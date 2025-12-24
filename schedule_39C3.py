@@ -31,14 +31,21 @@ from voc.tools import (
     git,
     write,
     ensure_folders_exist,
-    gen_uuid
+    gen_uuid,
 )
 
 tz = pytz.timezone("Europe/Amsterdam")
 local = False
 
 parser = optparse.OptionParser()
-parser.add_option("--task", "-t", action="append", dest="tasks", default=[], help="Task(s) to perform, defaults to all")
+parser.add_option(
+    "--task",
+    "-t",
+    action="append",
+    dest="tasks",
+    default=[],
+    help="Task(s) to perform, defaults to all",
+)
 parser.add_option("--online", action="store_true", dest="online", default=False)
 parser.add_option(
     "--fail", action="store_true", dest="exit_when_exception_occours", default=local
@@ -56,7 +63,9 @@ year = 2025
 
 
 def create_block_schedule(fahrplan=None, *, only_if_not_exists=False):
-    block_schedule = Schedule.from_template(f"{xc3} Saal Blöcke", xc3, year, 12, 26, days_count=5)
+    block_schedule = Schedule.from_template(
+        f"{xc3} Saal Blöcke", xc3, year, 12, 26, days_count=5
+    )
     rooms = [
         Room(name='Saal 1',      guid='ba692ba3-421b-5371-8309-60acc34a3c08', char='O'),
         Room(name='Saal G',      guid='7202df07-050c-552f-8318-992f94e40ef3', char='G'),
@@ -123,216 +132,195 @@ def create_block_schedule(fahrplan=None, *, only_if_not_exists=False):
                 if (end - start).total_seconds() <= 0:
                     end += dateutil.relativedelta.relativedelta(days=1)
 
-                block_schedule.add_event(Event(
-                    title=f"{i if i else ''} {b['title']} {r.char}".strip(),
-                    start=start, 
-                    end=end, 
-                    guid=gen_uuid(f"{xc3}-{i}{j}{r.char}"),
-                    room=r,
-                    type="block",
-                    # TODO why do we need an empty dict here? Otherwise no new instances are created
-                    data={}
-                ))
+                block_schedule.add_event(
+                    Event(
+                        title=f"{i if i else ''} {b['title']} {r.char}".strip(),
+                        start=start,
+                        end=end,
+                        guid=gen_uuid(f"{xc3}-{i}{j}{r.char}"),
+                        room=r,
+                        type="block",
+                        data=dict()
+                    )
+                )
 
+    block_schedule.print_stats()
     block_schedule.export("block")
+
 
 def create_himmel_evac_schedule(fahrplan):
     himmel_schedule = fahrplan.copy("Himmel Evac")
     himmel_schedule.rename_rooms({
-        'One':    Room(name='One Evac',    guid='ba692ba3-421b-5371-8309-60acc34a3c06'),
-        'Ground': Room(name='Ground Evac', guid='7202df07-050c-552f-8318-992f94e40ef1'),
-        'Zero':   Room(name='Zero Evac',   guid='62251a07-13e4-5a72-bb3c-8528416ee0f3'),
+        "One":    Room(name="One Evac", guid="ba692ba3-421b-5371-8309-60acc34a3c06"),
+        "Ground": Room(name="Ground Evac", guid="7202df07-050c-552f-8318-992f94e40ef1"),
+        "Zero":   Room(name="Zero Evac", guid="62251a07-13e4-5a72-bb3c-8528416ee0f3"),
+        "Fuse":   Room(name="Fuse Evac",   guid="e58b284a-d3e6-42cc-be2b-7e02c791bff4"),
     })
+    #himmel_schedule.remove_room("Fuse")
+    himmel_schedule.print_stats()
     himmel_schedule.export("himmel")
 
-def create_himmel_door_scheudle(fahrplan):
+
+def create_himmel_door_schedule(fahrplan):
     himmel2_schedule = fahrplan.copy("Himmel Door")
-    himmel2_schedule.rename_rooms({
-        'One':    Room(name='One Door',    guid='ba692ba3-421b-5371-8309-60acc34a3c07'),
-        'Ground': Room(name='Ground Door', guid='7202df07-050c-552f-8318-992f94e40ef2'),
-        'Zero':   Room(name='Zero Door',   guid='62251a07-13e4-5a72-bb3c-8528416ee0f4'),
-        'Fuse':   Room(name='Fuse Door',   guid='e58b284a-d3e6-42cc-be2b-7e02c791bf97'),
-    })
+    himmel2_schedule.rename_rooms(
+        {
+            "One":    Room(name="One Door", guid="ba692ba3-421b-5371-8309-60acc34a3c07"),
+            "Ground": Room(name="Ground Door", guid="7202df07-050c-552f-8318-992f94e40ef2"),
+            "Zero":   Room(name="Zero Door", guid="62251a07-13e4-5a72-bb3c-8528416ee0f4"),
+            "Fuse":   Room(name="Fuse Door", guid="e58b284a-d3e6-42cc-be2b-7e02c791bf97"),
+        }
+    )
+    himmel2_schedule.print_stats()
     himmel2_schedule.export("himmel2")
 
 
-def create_sendezentrum_schedule():
-    himmel3_schedule = sendezentrum \
-        .schedule(base_schedule) \
-        .filter('Himmel3', rooms=[
-            Room(name='Saal X 07', guid='f3483ff0-d680-5aed-8f8b-8fc9e191893f')
-        ])
-    # give Saal X 07 a new guid due to a bug in the engelsystem, as requested by jwacalex
-    himmel3_schedule.rename_rooms({
-        'Saal X 07': Room(name='Saal X 07', guid='f3483ff0-d680-5aed-8f8b-8fc9e1918940')
-    })
+def create_sendezentrum_schedule(sendezentrum, base_schedule):
+    himmel3_schedule = sendezentrum.schedule(base_schedule).filter(
+        "Himmel3",
+        rooms=[
+            Room(name="Saal X 07", guid="f3483ff0-d680-5aed-8f8b-8fc9e191893f")
+        ],
+    )
 
-    optouts = himmel3_schedule.foreach_event(lambda e: e['guid'] if e['do_not_record'] else None)
-    print(f" Removing {len(optouts)} recording optout events from engelsystem sendezentrum schedule")
+    # give Saal X 07 a new guid due to a bug in the engelsystem, as requested by jwacalex
+    himmel3_schedule.rename_rooms(
+        {
+            "Saal X 07": Room(
+                name="Saal X 07", guid="f3483ff0-d680-5aed-8f8b-8fc9e1918940"
+            )
+        }
+    )
+
+    optouts = himmel3_schedule.foreach_event(
+        lambda e: e["guid"] if e["do_not_record"] else None
+    )
+
+    print(
+        f" Removing {len(optouts)} recording optout events from engelsystem sendezentrum schedule"
+    )
 
     for guid in optouts:
         himmel3_schedule.remove_event(guid=guid)
 
+    himmel3_schedule.print_stats()
     himmel3_schedule.export("himmel3")
     return True
 
 
-
-
-
-
-main_cfp = PretalxConference(
-    url=f"https://cfp.cccv.de/{xc3}",
-    data={
-        "name": "fahrplan",
-    },
-    use_token=True,
-)
-hub = GenericConference(
-    url=f"https://api.events.ccc.de/congress/{year}/schedule.json",
-    data={
-        "name": "hub",
-    },
-)
-
-base_schedule = Schedule(
-    conference={
-        "url": f"https://events.ccc.de/congress/{year}/",
-        "acronym": xc3,
-        "title": f"{x}th Chaos Communication Congres",
-        "start": f"{year}-12-27T09:30:00+00:00",
-        "end": f"{year}-12-30T17:30:00+00:00",
-        "daysCount": 4,
-        "timeslot_duration": "00:10",
-        "time_zone_name": "Europe/Berlin",
-    },
-    version=str(datetime.now().strftime("%Y-%m-%d %H:%M")),
-)
-
-sendezentrum = PretalxConference(
-    url=f"https://pretalx.c3voc.de/{xc3}-sendezentrum",
-    data={
-        "name": "sendezentrum",
-    },
-)
-music = PretalxConference(
-    url=f"https://cfp.cccv.de/{xc3}-chaos-computer-music-club",
-    data={
-        "name": "music",
-    },
-    use_token=True,
-)
-punk = PretalxConference(
-    url=f"https://cfp.cccv.de/{xc3}-call-for-punk",
-    data={
-        "name": "punk",
-    },
-    use_token=True,
-)
-
-
-subconferences: List[GenericConference] = [
-    music,
-    punk,
-    # PretalxConference(
-    #    url=f"https://cfp.cccv.de/{xc3}-lightningtalks/",
-    #    data={
-    #        "name": "lightningtalks",
-    #    },
-    # ),
-    sendezentrum,
-    PretalxConference(
-        url=f"https://pretalx.c3voc.de/{xc3}-haecksen-workshops-{year}",
-        data={
-            "name": "haecksen",
-        },
-    ),
-    PretalxConference(
-        url=f"https://pretalx.wikimedia.de/{xc3}-{year}",
-        data={
-            "name": "free-knowledge",
-        },
-    ),
-    PretalxConference(
-        url=f"https://pretalx.chaos.jetzt/jugend",
-        data={
-            "name": "jugend",
-        },
-    ),
-]
-
-targets = [
-    "filesystem",
-    "c3data",
-    # "voctoimport",
-    # "rc3hub"
-]
-
-id_offsets = {}
-
-# this list/map is required to sort the events in the schedule.xml in the correct way
-# other rooms/assemblies are added at the end on demand.
-rooms = {}
-
-channels = {}
-
-output_dir = "/srv/www/" + xc3
-secondary_output_dir = "./" + xc3
-if len(sys.argv) == 2:
-    output_dir = sys.argv[1]
-
-local = ensure_folders_exist(output_dir, secondary_output_dir)
-
-
-
-def schedule_stats(schedule):
-    print(f"  system {schedule['base_url']}")
-    print(
-        f"  from {schedule['conference']['start']} to {schedule['conference']['end']}"
-    )
-    print(
-        "  contains {events_count} events, with local ids from {min_id} to {max_id}".format(
-            **schedule.stats.__dict__
+class Congress:
+    def __init__(self, nr, xc3, year) -> None:
+        self.main_cfp = PretalxConference(
+            url=f"https://cfp.cccv.de/{xc3}",
+            data={
+                "name": "fahrplan",
+            },
+            use_token=True,
         )
-    )  # noqa
-    try:
-        print(
-            "    local person ids from {person_min_id} to {person_max_id}".format(
-                **schedule.stats.__dict__
-            )
-        )  # noqa
-    except Exception:
-        pass
+        self.hub = GenericConference(
+            url=f"https://api.events.ccc.de/congress/{year}/schedule.json",
+            data={
+                "name": "hub",
+            },
+        )
 
-    print(f"    rooms: {', '.join(schedule.rooms())}")
+        self.base_schedule = Schedule(
+            conference={
+                "url": f"https://events.ccc.de/congress/{year}/",
+                "acronym": xc3,
+                "title": f"{x}th Chaos Communication Congres",
+                "start": f"{year}-12-27T09:30:00+00:00",
+                "end": f"{year}-12-30T17:30:00+00:00",
+                "daysCount": 4,
+                "timeslot_duration": "00:10",
+                "time_zone_name": "Europe/Berlin",
+            },
+            version=str(datetime.now().strftime("%Y-%m-%d %H:%M")),
+        )
 
-def main():
-    fahrplan = main_cfp.schedule()
+        self.sendezentrum = PretalxConference(
+            url=f"https://pretalx.c3voc.de/{xc3}-sendezentrum",
+            data={
+                "name": "sendezentrum",
+            },
+        )
+        self.music = PretalxConference(
+            url=f"https://cfp.cccv.de/{xc3}-chaos-computer-music-club",
+            data={
+                "name": "music",
+            },
+            use_token=True,
+        )
+        self.punk = PretalxConference(
+            url=f"https://cfp.cccv.de/{xc3}-call-for-punk",
+            data={
+                "name": "punk",
+            },
+            use_token=True,
+        )
 
-    # TODO: only update block schedule if output file does not exists or changed
-    create_block_schedule(fahrplan, only_if_not_exists=True)
-    create_himmel_evac_schedule(fahrplan)
-    create_himmel_door_scheudle(fahrplan)
-    create_sendezentrum_schedule()
+        self.subconferences: List[GenericConference] = [
+            self.music,
+            self.punk,
+            # PretalxConference(
+            #    url=f"https://cfp.cccv.de/{xc3}-lightningtalks/",
+            #    data={
+            #        "name": "lightningtalks",
+            #    },
+            # ),
+            self.sendezentrum,
+            PretalxConference(
+                url=f"https://pretalx.c3voc.de/{xc3}-haecksen-workshops-{year}",
+                data={
+                    "name": "haecksen",
+                },
+            ),
+            PretalxConference(
+                url=f"https://pretalx.wikimedia.de/{xc3}-{year}",
+                data={
+                    "name": "free-knowledge",
+                },
+            ),
+            PretalxConference(
+                url=f"https://pretalx.chaos.jetzt/jugend",
+                data={
+                    "name": "jugend",
+                },
+            ),
+        ]
 
-    everything = hub.schedule()
+        self.loaded_schedules = {}
 
-    loaded_schedules = {}
+        self.targets = [
+            "filesystem",
+            "c3data",
+            # "voctoimport",
+            # "rc3hub"
+        ]
 
-    print(f"\n== Main programme (= fahrplan) \n")
-    schedule_stats(fahrplan)
+        # this list/map is required to sort the events in the schedule.xml in the correct way
+        # other rooms/assemblies are added at the end on demand.
+        self.rooms = {}
+        self.channels = {}
 
-    merge_schedules = False
-    if False:
+        global output_dir, secondary_output_dir, local
+        output_dir = "/srv/www/" + xc3
+        secondary_output_dir = "./" + xc3
+        if len(sys.argv) == 2:
+            output_dir = sys.argv[1]
+
+        local = ensure_folders_exist(output_dir, secondary_output_dir)
+
+    def merge_schedules(self, merge=True):
         # get events from subconferences
-        for entry in subconferences:
+        for entry in self.subconferences:
             try:
                 print(f"\n== Source {entry['name']} \n")
-                schedule = entry.schedule(base_schedule)
-                loaded_schedules[entry["name"]] = schedule
+                schedule = entry.schedule(self.base_schedule)
+                self.loaded_schedules[entry["name"]] = schedule
 
                 if schedule.get("version"):
-                    if merge_schedules:
+                    if merge:
                         full_schedule["version"] += f"; {entry['name']}"
                 else:
                     log.warning(
@@ -344,20 +332,21 @@ def main():
                 except Exception:
                     pass
 
-                if merge_schedules:
-                    if full_schedule.add_events_from(
-                        schedule,
-                        id_offset=entry.get("id_offset") or id_offsets.get(entry["name"]) or 0,
-                        options={
-                            # "randomize_small_ids": False,
-                            # "overwrite_slug": True,
-                            # "remove_title_additions": True,
-                            **(entry.options or {}),
-                            # "prefix_person_ids": entry.get("prefix"),
-                        },
-                        context=entry,
-                    ):
-                        print("  success")
+                if full_schedule.add_events_from(
+                    schedule,
+                    id_offset=entry.get("id_offset")
+                    or id_offsets.get(entry["name"])
+                    or 0,
+                    options={
+                        # "randomize_small_ids": False,
+                        # "overwrite_slug": True,
+                        # "remove_title_additions": True,
+                        **(entry.options or {}),
+                        # "prefix_person_ids": entry.get("prefix"),
+                    },
+                    context=entry,
+                ):
+                    print("  success")
 
             except ScheduleException as e:
                 print(e)
@@ -372,14 +361,35 @@ def main():
                     if options.exit_when_exception_occours:
                         raise e
             except Exception as e:
-                log.error(f"  UNEXPECTED ERROR: {type(e).__name__}: {sys.exc_info()[1]}")
+                log.error(
+                    f"  UNEXPECTED ERROR: {type(e).__name__}: {sys.exc_info()[1]}"
+                )
                 if options.exit_when_exception_occours:
                     raise e
 
             if options.only_stats:
                 exit()
 
-            #full_schedule.foreach_event(harmonize_event_type, options)
+            # full_schedule.foreach_event(harmonize_event_type, options)
+
+
+def main():
+    conference = Congress(x, xc3, year)
+    fahrplan = conference.main_cfp.schedule()
+
+    # TODO: only update block schedule if output file does not exists or changed
+    create_block_schedule(fahrplan, only_if_not_exists=True)
+    create_himmel_evac_schedule(fahrplan)
+    create_himmel_door_schedule(fahrplan)
+    create_sendezentrum_schedule(conference.sendezentrum, conference.base_schedule)
+
+
+    return
+
+    everything = conference.hub.schedule()
+
+    print(f"\n== Main programme (= fahrplan) \n")
+    conference.schedule_stats(fahrplan)
 
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
@@ -388,14 +398,9 @@ def main():
 
     fahrplan.foreach_event(lambda e: e.export("events/", "-origin"))
     everything.foreach_event(lambda e: e.export("events/", "-hub"))
-    #for schedule in loaded_schedules:
-    #   schedule.foreach_event(lambda e: e.export("events/", "-origin"))
 
-    # remove overlapping 'Lötworkshop mit Lötchallenge'
-    # full_schedule.remove_event(guid='bd75d959-dad1-43b4-81fb-33dfb43c10ec')
-
-    # write all events to one big schedule.json/xml
     write("\nExporting... ")
+
     # set_validator_filter('strange')
     everything.export("everything")
 
@@ -405,18 +410,18 @@ def main():
             {
                 "data": {
                     "version": fahrplan.version(),
-                    "source_urls": list(loaded_schedules.keys()),
+                    "source_urls": list(conference.loaded_schedules.keys()),
                     "rooms": [
                         {
                             **room,
                             "schedule_name": room["name"],
-                            "stream": channels.get(
+                            "stream": conference.channels.get(
                                 room.get("guid", room["name"]), Room()
                             ).stream,
                         }
                         for room in everything.rooms(mode="v2")
                     ],
-                    "conferences": subconferences,
+                    "conferences": conference.subconferences,
                 },
             },
             fp,
@@ -428,15 +433,9 @@ def main():
     print("  fahrplan version: " + fahrplan.version())
     print("  hub      version: " + everything.version())
 
-
     if options.debug:
         print("\n  rooms: ")
         for room in full_schedule.rooms():
-            print("   - " + room)
-        print()
-
-        print("\n  channels: ")
-        for room in streams_schedule.rooms():
             print("   - " + room)
         print()
 
