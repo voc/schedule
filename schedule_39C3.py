@@ -484,9 +484,10 @@ def main():
     conference = Congress(x, xc3, year)
     fahrplan = conference.main_cfp.schedule()
 
-    # TODO: only update block schedule if output file does not exists or changed
-    create_block_schedule()
-    create_buildupteardown_schedule()
+    # if you want to create block and buildupteardown schedules, 
+    # use -t create_block_schedule and/or -t create_buildupteardown_schedule CLI options
+    # create_block_schedule()
+    # create_buildupteardown_schedule()
     create_himmel_evac_schedule(fahrplan)
     create_himmel_door_schedule(fahrplan)
     create_sendezentrum_schedule(conference.sendezentrum, conference.base_schedule)
