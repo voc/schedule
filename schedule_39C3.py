@@ -63,7 +63,7 @@ year = 2025
 
 
 def create_buildupteardown_schedule():
-    buildupteardown_schedule = Schedule.from_template(f"{xc3} C3VOC BuildUp & Teardown", xc3, year, 12, 25, days_count=6)
+    buildupteardown_schedule = Schedule.from_template(f"{xc3} C3VOC BuildUp & Teardown", xc3, year, 12, 18, days_count=14)
     rooms = [
         Room(name='Saal 1', guid='ba692ba3-421b-5371-8309-60acc34a3c08', char='O'),
         Room(name='Saal G', guid='7202df07-050c-552f-8318-992f94e40ef3', char='G'),
@@ -81,55 +81,55 @@ def create_buildupteardown_schedule():
         "2025-12-19": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-20": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-21": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-22": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-23": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-24": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-25": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-26": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
             {"start": "13:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "20:00:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "20:00:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-30": [
             {"start": "17:30:00", "end": "19:00:00", "title": "Afternoon"},
-            {"start": "19:30:00", "end": "24:00:00", "title": "Evening"},
-            {"start": "24:00:00", "end": "03:00:00", "title": "Night"}
+            {"start": "19:30:00", "end": "00:00:00", "title": "Evening"},
+            {"start": "00:00:00", "end": "03:00:00", "title": "Night"}
         ],
         "2025-12-31": [
             {"start": "09:00:00", "end": "13:00:00", "title": "Morning"},
@@ -157,14 +157,14 @@ def create_buildupteardown_schedule():
                     title=f"{i if i else ''} {b['title']} {r.char}".strip(),
                     start=start,
                     end=end,
-                    guid=gen_uuid(f"{xc3}-{i}{j}{r.char}"),
+                    guid=gen_uuid(f"{xc3}-btd_{i}{j}{r.char}"),
                     room=r,
                     type="buildupteardown",
                     # TODO why do we need an empty dict here? Otherwise no new instances are created
                     data={}
                 ))
 
-    buildupteardown_schedule.export("block")
+    buildupteardown_schedule.export("buildupteardown")
 
 def create_block_schedule():
     block_schedule = Schedule.from_template(
