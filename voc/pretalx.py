@@ -28,8 +28,8 @@ class PretalxConference(GenericConference):
                     raise Exception("PretalxConference: use_token is True but PRETALX_TOKEN environment variable is not set")
                 self.headers = headers
                 # cfp.cccv.de uses /api/events/{slug}/schedule/export/schedule.json when using API Token
-                # e.g. https://cfp.cccv.de/api/events/39c3/schedule/export/schedule.json
-                self.schedule_url = self.api_url + "/schedule/export/schedule.json"
+                # e.g. https://cfp.cccv.de/api/events/39c3/schedules/latest/exporters/schedule.json
+                self.schedule_url = self.api_url + "/schedules/latest/exporters/schedule.json"
             else:
                 self.schedule_url = path.join(url, "schedule/export/schedule.json")
 
