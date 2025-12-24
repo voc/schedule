@@ -42,15 +42,12 @@ class ScheduleException(Exception):
 
 
 class ScheduleDay(dict):
-    start: datetime = None
-    end: datetime = None
-
     def __init__(
         self, i=None, year=None, month=12, day=None, tz=None, dt=None, json=None
     ):
         if i is not None and dt:
-            self.start = dt
-            self.end = dt + timedelta(hours=23)  # conference day lasts 23 hours
+            self.start: datetime = dt
+            self.end: datetime = dt + timedelta(hours=23)  # conference day lasts 23 hours
 
             dict.__init__(self, {
                 "index": i + 1,
@@ -73,8 +70,8 @@ class ScheduleDay(dict):
         else:
             raise Exception("Either give JSON xor i, year, month, day")
 
-        self.start = dateutil.parser.parse(self["day_start"])
-        self.end = dateutil.parser.parse(self["day_end"])
+        self.start: datetime = dateutil.parser.parse(self["day_start"])
+        self.end: datetime = dateutil.parser.parse(self["day_end"])
 
     def json(self):
         return self
@@ -82,17 +79,16 @@ class ScheduleDay(dict):
 
 class Schedule(dict):
     """Schedule class with import and export methods"""
-    _tz = None
-    _days: list[ScheduleDay] = []
-    _room_ids = {}
-    origin_url = None
-    origin_system = None
-    stats = None
-    generator = None
-    start: datetime = None
-    end: datetime = None
 
-    def __init__(self, name: str = None, json=None, version: str = None, conference=None, start_hour=9):
+    def __init__(self, name: str|None = None, json=None, version: str|None = None, conference: dict|None = None, start_hour=9):
+        self._tz = None
+        self._days: list[ScheduleDay] = []
+        self._room_ids = {}
+        self.origin_url = None
+        self.origin_system = None
+        self.stats: ScheduleStats
+        self.generator = None
+
         if json:
             dict.__init__(self, json["schedule"])
         elif conference:
@@ -144,8 +140,7 @@ class Schedule(dict):
             self["conference"]["rooms"] = [{"name": name} for name in room_names]
 
         if "days" not in self["conference"] or len(self["conference"]["days"]) == 0:
-            tz = self.tz()
-            date = tz.localize(self.conference_start()).replace(hour=start_hour)
+            date = self.localize(self.conference_start()).replace(hour=start_hour)
             days = []
             for i in range(self.conference("daysCount")):
                 days.append(ScheduleDay(i, dt=date))
@@ -269,7 +264,7 @@ class Schedule(dict):
             self.tz()
         return self._tz.localize(dt)
 
-    def conference(self, key=None, filter: Callable = None, fallback=None):
+    def conference(self, key=None, filter: Callable|None = None, fallback=None):
         if key:
             if filter:
                 return next((item for item in self["conference"][key] if filter(item)), fallback)
@@ -420,6 +415,9 @@ class Schedule(dict):
                 name=slug_name,
             )
 
+        if event.get("room") is None:
+            raise ScheduleException("Event has no room assigned: " + event["title"])
+        
         if not self.room_exists(day, event["room"]):
             self.add_room_on_day(day, event["room"])
 

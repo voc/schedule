@@ -1,12 +1,14 @@
+from dataclasses import dataclass
 import re
 import json
-import collections
-from collections import OrderedDict
+from collections.abc import Mapping
+from typing import Any
 import dateutil.parser
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from voc.tools import str2timedelta, format_duration
 
+@dataclass
 class EventSourceInterface:
     origin_system = None
 
@@ -15,19 +17,37 @@ class Schedule(EventSourceInterface):
     pass
 
 
-class Event(collections.abc.Mapping):
-    _event = None
-    origin: EventSourceInterface = None
-    start: datetime = None
-    duration: timedelta = None
-
-    def __init__(self, data: dict[str, any] = {}, start: datetime = None, origin: EventSourceInterface = None, *,
-                 guid: str = None, 
-                 end: datetime = None, 
-                 room: 'Room' = None, # pyright: ignore[reportUndefinedVariable]
-                 title: str = None,
+class Event(Mapping):
+    def __init__(self, data: dict[str, Any] = dict(), start: datetime|None = None, origin: EventSourceInterface|None = None, *,
+                 guid: str|None = None, 
+                 end: datetime|None = None, 
+                 room: 'Room|None' = None, # noqa F821
+                 title: str|None = None,
                  **kwargs
         ):
+        '''
+        Initialize Event from data dict or parameters. Should Backwards compatible, therefore data, start and origin are the .
+        '''
+
+        self._event: dict[str, Any] = {}
+        self.start: datetime
+
+        # schedule1 input dict
+        if start or 'date' in data:
+            self.start = start or dateutil.parser.parse(data["date"])
+            if 'date' not in data:
+                data['date'] = self.start.isoformat()
+
+        # schedule2 input dict
+        elif 'start' in data:
+            self.start = dateutil.parser.parse(data["start"])
+            # overwrite date + start in data to have a consistent date field for schedule1 export
+            data['date'] = data['start']
+            data['start'] = self.start.strftime('%H:%M')
+
+        else:
+            raise AssertionError("either date or start is required")
+        
 
         data |= kwargs
         
@@ -50,22 +70,6 @@ class Event(collections.abc.Mapping):
             data['title'] = title
         assert 'title' in data
 
-        # schedule1 input dict
-        if start or 'date' in data:
-            self.start = start or dateutil.parser.parse(data["date"])
-            if 'date' not in data:
-                data['date'] = self.start.isoformat()
-
-        # schedule2 input dict
-        elif 'start' in data:
-            self.start = dateutil.parser.parse(data["start"])
-            # overwrite date + start in data to have a consistent date field for schedule1 export
-            data['date'] = data['start']
-            data['start'] = self.start.strftime('%H:%M')
-
-        else:
-            raise AssertionError("either date or start is required")
-        
         if 'duration' in data:
             self.duration = str2timedelta(data["duration"])
         
@@ -98,7 +102,7 @@ class Event(collections.abc.Mapping):
         if 'track' not in data:
             data['track'] = None
 
-        self._event = OrderedDict(data)
+        self._event = data
 
         # generate id from guid, when not set so old apps can still process this event
         if 'id' not in data and 'guid' in data:
@@ -125,8 +129,8 @@ class Event(collections.abc.Mapping):
     def items(self):
         return self._event.items()
 
-    def persons(self):
-        return [p.get("name", p.get("public_name")) for p in self._event["persons"]]
+    def persons(self) -> list[str]:
+        return [p.get("name", p.get("public_name")) for p in self._event.get("persons", [])]
 
     def json(self):
         return self._event
@@ -187,7 +191,7 @@ class Event(collections.abc.Mapping):
 
     # export all attributes which are not part of rC3 core event model
     def meta(self):
-        r = OrderedDict(self._event.items())
+        r = dict(self._event.items())
         # r['local_id'] = self._event['id']
         # del r["id"]
         del r["guid"]

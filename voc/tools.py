@@ -136,7 +136,7 @@ def normalise_string(string):
     string = string.replace(u'ö', 'oe')
     string = string.replace(u'ü', 'ue')
     string = string.replace(u'ß', 'ss')
-    string = re.sub('\W+', '\_', string.strip())  # replace whitespace with _
+    string = re.sub('\\W+', '\\_', string.strip())  # replace whitespace with _
     # string = filter(unicode.isalnum, string)
     string = re.sub('[^a-z0-9_]+', '', string) # TODO: is this not already done with \W+  line above?
     string = string.strip('_')  # remove trailing _
@@ -166,7 +166,7 @@ def format_duration(value: Union[int, timedelta]) -> str:
 # from https://git.cccv.de/hub/hub/-/blob/develop/src/core/utils.py
 _RE_STR2TIMEDELTA = re.compile(r'((?P<hours>\d+?)hr?\s*)?((?P<minutes>\d+?)m(ins?)?\s*)?((?P<seconds>\d+?)s)?')
 
-def str2timedelta(s):
+def str2timedelta(s) -> timedelta:
     if ':' in s:
         parts = s.split(':')
         kwargs = {'seconds': int(parts.pop())}
@@ -180,7 +180,8 @@ def str2timedelta(s):
 
     parts = _RE_STR2TIMEDELTA.match(s)
     if not parts:
-        return
+        raise ValueError(f'Could not parse time duration string: {s}')
+
     parts = parts.groupdict()
     time_params = {}
     for name, param in parts.items():
