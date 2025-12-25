@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import os
-from typing import List
+from typing import List, TypedDict
 import dateutil
 import requests
 import json
@@ -11,6 +11,9 @@ import sys
 import optparse
 from datetime import datetime
 
+from pydantic import ConfigDict, BaseModel
+
+from schedule_39c3_shared import room_list, Rooms
 from voc import (
     GenericConference,
     PretalxConference,
@@ -64,17 +67,8 @@ year = 2025
 
 def create_buildupteardown_schedule():
     buildupteardown_schedule = Schedule.from_template(f"{xc3} C3VOC BuildUp & Teardown", xc3, year, 12, 18, days_count=14)
-    rooms = [
-        Room(name='Saal 1', guid='ba692ba3-421b-5371-8309-60acc34a3c08', char='O'),
-        Room(name='Saal G', guid='7202df07-050c-552f-8318-992f94e40ef3', char='G'),
-        Room(name='Saal Z', guid='62251a07-13e4-5a72-bb3c-8528416ee0f5', char='Z'),
-        Room(name='Saal F', guid='e58b284a-d3e6-42cc-be2b-7e02c791bf98', char='F'),
-        Room(name='Saal X 07', guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e20', char='X'),
-        Room(name='Raum 315', description='C3VOC Hel(l|p)desk', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76b', char='VHD'),
-        Room(name='Raum 314', description='C3VOC Office', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76c', char='VO'),
-        Room(name='Raum 315', description='C3VOC Coworking', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76d', char='VC'),
-        Room(name='Everywhere', guid='7abcfbfd-4b2f-4fc4-8e6c-6ff854d4936f', char='∀'),
-    ]
+    rooms = [room_list[Rooms.S1], room_list[Rooms.SG], room_list[Rooms.SZ],room_list[Rooms.SF],room_list[Rooms.SX07],
+             room_list[Rooms.R313], room_list[Rooms.R314], room_list[Rooms.R315]]
     buildupteardown_schedule.add_rooms(rooms)
 
     config = {
@@ -171,20 +165,11 @@ def create_block_schedule():
         f"{xc3} Saal Blöcke", xc3, year, 12, 26, days_count=5
     )
     block_schedule = Schedule.from_template(f"{xc3} Saal Blockschichten", xc3, year, 12, 26, days_count=5)
-    rooms = [
-        Room(name='Saal 1',      guid='ba692ba3-421b-5371-8309-60acc34a3c08', char='O'),
-        Room(name='Saal G',      guid='7202df07-050c-552f-8318-992f94e40ef3', char='G'),
-        Room(name='Saal Z',      guid='62251a07-13e4-5a72-bb3c-8528416ee0f5', char='Z'),
-        Room(name='Saal F',      guid='e58b284a-d3e6-42cc-be2b-7e02c791bf98', char='F'),
-        Room(name='Saal X 07',   guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e20', char='X'),
-        Room(name='SoS Stage H', guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e42', char='H'),
-        Room(name='Club',        guid='9001b61b-b1f1-5bcd-89fd-135ed5e43e21', char='C'),
-        Room(name='Raum 315',    description='C3VOC Hel(l|p)desk', guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76b', char='VHD'),        
-        Room(name='Raum 314',    description='C3VOC Office',       guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76c', char='VO'),        
-        Room(name='Raum 315',    description='C3VOC Coworking',    guid='a5b0b1c5-2872-48ee-a7ef-80252af0f76d', char='VC'),        
-        Room(name="Saal 10",     guid="9001b61b-b1f1-5bcd-89fd-135ed5e43e10", char="SH"),
-        Room(name='Everywhere',  guid='7abcfbfd-4b2f-4fc4-8e6c-6ff854d4936f', char='∀'),
-    ]
+    rooms = [room_list[Rooms.S1], room_list[Rooms.SG], room_list[Rooms.SZ],room_list[Rooms.SF],room_list[Rooms.SX07],
+             room_list[Rooms.STH], room_list[Rooms.CLUB],
+             room_list[Rooms.S10], room_list[Rooms.R313], room_list[Rooms.R314], room_list[Rooms.R315],
+             room_list[Rooms.E]]
+
     block_schedule.add_rooms(rooms)
     
     config = {
