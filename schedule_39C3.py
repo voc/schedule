@@ -14,6 +14,7 @@ from datetime import datetime
 from pydantic import ConfigDict, BaseModel
 
 from schedule_39c3_shared import room_list, Rooms
+
 from voc import (
     GenericConference,
     PretalxConference,
@@ -61,9 +62,8 @@ log = Logger(__name__)
 options, args = parser.parse_args()
 
 x = 39
-xc3 = "39c3"
+xc3 = "39C3"
 year = 2025
-
 
 def create_buildupteardown_schedule():
     buildupteardown_schedule = Schedule.from_template(f"{xc3} C3VOC BuildUp & Teardown", xc3, year, 12, 18, days_count=14)
@@ -140,7 +140,7 @@ def create_buildupteardown_schedule():
         for b in config[day]:
             j += 1
             # for each room
-            for r in rooms:
+            for r in shift_rooms:
                 start = dateutil.parser.parse(f"{day}T{b['start']}+01:00")
                 end = dateutil.parser.parse(f"{day}T{b['end']}+01:00")
                 # fix end, if after midnight
@@ -216,7 +216,7 @@ def create_block_schedule():
         for b in config[day]:
             j += 1
             # for each room
-            for r in rooms:
+            for r in shift_rooms:
                 start = dateutil.parser.parse(f"{day}T{b['start']}+01:00")
                 end = dateutil.parser.parse(f"{day}T{b['end']}+01:00")
                 # fix end, if after midnight
