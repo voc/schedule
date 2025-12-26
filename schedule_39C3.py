@@ -284,39 +284,6 @@ def create_himmel_door_schedule(fahrplan):
     himmel2_schedule.export("himmel2")
 
 
-def create_sendezentrum_schedule(sendezentrum, base_schedule):
-    himmel3_schedule = sendezentrum.schedule(base_schedule).filter(
-        "Himmel3",
-        rooms=[
-            Room(name="Saal X 07", guid="f3483ff0-d680-5aed-8f8b-8fc9e191893f")
-        ],
-    )
-
-    # give Saal X 07 a new guid due to a bug in the engelsystem, as requested by jwacalex
-    himmel3_schedule.rename_rooms(
-        {
-            "Saal X 07": Room(
-                name="Saal X 07", guid="f3483ff0-d680-5aed-8f8b-8fc9e1918940"
-            )
-        }
-    )
-
-    optouts = himmel3_schedule.foreach_event(
-        lambda e: e["guid"] if e["do_not_record"] else None
-    )
-
-    print(
-        f" Removing {len(optouts)} recording optout events from engelsystem sendezentrum schedule"
-    )
-
-    for guid in optouts:
-        himmel3_schedule.remove_event(guid=guid)
-
-    himmel3_schedule.print_stats()
-    himmel3_schedule.export("himmel3")
-    return True
-
-
 class Congress:
     def __init__(self, nr, xc3, year) -> None:
         self.main_cfp = PretalxConference(
@@ -325,6 +292,12 @@ class Congress:
                 "name": "fahrplan",
             },
             use_token=True,
+        )
+        self.voc = GenericConference(
+            url=f"https://api.events.ccc.de/congress/{year}/schedule.json?room.tags=voc",
+            data={
+                "name": "fahrplan + Sendezentrum Bühne",
+            },
         )
         self.hub = GenericConference(
             url=f"https://api.events.ccc.de/congress/{year}/schedule.json",
@@ -484,16 +457,15 @@ class Congress:
 
 def main():
     conference = Congress(x, xc3, year)
-    fahrplan = conference.main_cfp.schedule()
+    #fahrplan = conference.main_cfp.schedule()
+    voc = conference.voc.schedule()
 
     # if you want to create block and buildupteardown schedules, 
     # use -t create_block_schedule and/or -t create_buildupteardown_schedule CLI options
     # create_block_schedule()
     # create_buildupteardown_schedule()
-    create_himmel_evac_schedule(fahrplan)
-    create_himmel_door_schedule(fahrplan)
-    create_sendezentrum_schedule(conference.sendezentrum, conference.base_schedule)
-
+    create_himmel_evac_schedule(voc)
+    create_himmel_door_schedule(voc)
 
     return
 

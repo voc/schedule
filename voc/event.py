@@ -102,6 +102,11 @@ class Event(Mapping):
         if 'track' not in data:
             data['track'] = None
 
+        # drop empty fields, which are optional
+        for field in ["feedback_url"]:
+            if field in data and not data[field]:
+                del data[field]
+
         self._event = data
 
         # generate id from guid, when not set so old apps can still process this event
