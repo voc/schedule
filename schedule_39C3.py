@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import os
-from typing import List, TypedDict
+from typing import List
 import dateutil
 import requests
 import json
@@ -11,9 +11,8 @@ import sys
 import optparse
 from datetime import datetime
 
-from pydantic import ConfigDict, BaseModel
-
-from schedule_39c3_shared import room_list, Rooms
+from locations.cch import CCH
+Rooms = CCH.Rooms
 
 from voc import (
     GenericConference,
@@ -67,8 +66,11 @@ year = 2025
 
 def create_buildupteardown_schedule():
     buildupteardown_schedule = Schedule.from_template(f"{xc3} C3VOC BuildUp & Teardown", xc3, year, 12, 18, days_count=14)
-    rooms = [room_list[Rooms.S1], room_list[Rooms.SG], room_list[Rooms.SZ],room_list[Rooms.SF],room_list[Rooms.SX07],
-             room_list[Rooms.R313], room_list[Rooms.R314], room_list[Rooms.R315]]
+    rooms = [
+        Rooms.S1, Rooms.SG, Rooms.SZ, Rooms.SF,
+        Rooms.SX07,
+        Rooms.R313, Rooms.R314, Rooms.R315
+    ]
     buildupteardown_schedule.add_rooms(rooms)
 
     config = {
@@ -140,7 +142,7 @@ def create_buildupteardown_schedule():
         for b in config[day]:
             j += 1
             # for each room
-            for r in shift_rooms:
+            for r in rooms:
                 start = dateutil.parser.parse(f"{day}T{b['start']}+01:00")
                 end = dateutil.parser.parse(f"{day}T{b['end']}+01:00")
                 # fix end, if after midnight
@@ -165,10 +167,13 @@ def create_block_schedule():
         f"{xc3} Saal Blöcke", xc3, year, 12, 26, days_count=5
     )
     block_schedule = Schedule.from_template(f"{xc3} Saal Blockschichten", xc3, year, 12, 26, days_count=5)
-    rooms = [room_list[Rooms.S1], room_list[Rooms.SG], room_list[Rooms.SZ],room_list[Rooms.SF],room_list[Rooms.SX07],
-             room_list[Rooms.STH], room_list[Rooms.CLUB],
-             room_list[Rooms.S10], room_list[Rooms.R313], room_list[Rooms.R314], room_list[Rooms.R315],
-             room_list[Rooms.E]]
+    rooms = [
+        Rooms.S1, Rooms.SG, Rooms.SZ, Rooms.SF, 
+        Rooms.SX07, Rooms.STH, Rooms.CLUB,
+        Rooms.S10, 
+        Rooms.R313, Rooms.R314, Rooms.R315,
+        Rooms.E
+    ]
 
     block_schedule.add_rooms(rooms)
     
@@ -216,7 +221,7 @@ def create_block_schedule():
         for b in config[day]:
             j += 1
             # for each room
-            for r in shift_rooms:
+            for r in rooms:
                 start = dateutil.parser.parse(f"{day}T{b['start']}+01:00")
                 end = dateutil.parser.parse(f"{day}T{b['end']}+01:00")
                 # fix end, if after midnight
