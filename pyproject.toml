@@ -36,6 +36,7 @@ beautifulsoup4 = "^4.12.3"
 html5lib = "^1.1"
 icalendar = "^5.0.12"
 pydantic = "^2.12.5"
+ics = "^0.7.2"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"

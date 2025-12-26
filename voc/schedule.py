@@ -312,7 +312,7 @@ class Schedule(dict):
         else:
             return self.conference('rooms')
 
-    def add_rooms(self, rooms: list, context: EventSourceInterface = {}):
+    def add_rooms(self, rooms: list[str | dict | Room], context: EventSourceInterface | None = None):
         if rooms:
             for x in rooms:
                 self.add_room(x, context)
@@ -344,7 +344,7 @@ class Schedule(dict):
                     for event in events:
                         event['room'] = new_name
 
-    def add_room(self, room: Union[str, dict, Room], context: EventSourceInterface = {}):
+    def add_room(self, room: str | dict | Room, context: EventSourceInterface | None = None):
         # if rooms is str, use the old behaviour – for backwords compability
         if type(room) is str:
             for day in self.days():
