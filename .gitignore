@@ -34,5 +34,14 @@ archive/*
 .idea
 tmp
 process_rC3.sh
+/node_modules
+/37C3
+/38C3
+/ab23
+/ardbarcamp
+/godotcon2023
 .DS_Store
+subscribe11
 /dist
+/39c3
+/fediday2025

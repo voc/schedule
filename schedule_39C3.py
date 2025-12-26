@@ -253,6 +253,12 @@ def create_himmel_evac_schedule(fahrplan):
         "Zero":   Rooms.SZ,
         "Fuse":   Rooms.SF,
     })
+
+    def update_guid(e):
+        e['guid'] = gen_uuid(f"{xc3}-himmel-evac-{e['guid']}")
+        return e
+    himmel_schedule.foreach_event(update_guid)
+
     #himmel_schedule.remove_room("Fuse")
     himmel_schedule.print_stats()
     himmel_schedule.export("himmel")
@@ -268,6 +274,12 @@ def create_himmel_door_schedule(fahrplan):
             "Fuse":   Rooms.SF,
         }
     )
+
+    def update_guid(e):
+        e['guid'] = gen_uuid(f"{xc3}-himmel-door-{e['guid']}")
+        return e
+    himmel2_schedule.foreach_event(update_guid)
+
     himmel2_schedule.print_stats()
     himmel2_schedule.export("himmel2")
 
