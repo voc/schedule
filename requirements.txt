@@ -12,4 +12,4 @@ ics
 dataclasses
 beautifulsoup4
 icalendar
-optparse
+pydantic
