@@ -248,10 +248,10 @@ def create_block_schedule():
 def create_himmel_evac_schedule(fahrplan):
     himmel_schedule = fahrplan.copy("Himmel Evac")
     himmel_schedule.rename_rooms({
-        "One":    Room(name="One Evac", guid="ba692ba3-421b-5371-8309-60acc34a3c06"),
-        "Ground": Room(name="Ground Evac", guid="7202df07-050c-552f-8318-992f94e40ef1"),
-        "Zero":   Room(name="Zero Evac", guid="62251a07-13e4-5a72-bb3c-8528416ee0f3"),
-        "Fuse":   Room(name="Fuse Evac",   guid="e58b284a-d3e6-42cc-be2b-7e02c791bff4"),
+        "One":    Rooms.S1,
+        "Ground": Rooms.SG,
+        "Zero":   Rooms.SZ,
+        "Fuse":   Rooms.SF,
     })
     #himmel_schedule.remove_room("Fuse")
     himmel_schedule.print_stats()
@@ -262,10 +262,10 @@ def create_himmel_door_schedule(fahrplan):
     himmel2_schedule = fahrplan.copy("Himmel Door")
     himmel2_schedule.rename_rooms(
         {
-            "One":    Room(name="One Door", guid="ba692ba3-421b-5371-8309-60acc34a3c07"),
-            "Ground": Room(name="Ground Door", guid="7202df07-050c-552f-8318-992f94e40ef2"),
-            "Zero":   Room(name="Zero Door", guid="62251a07-13e4-5a72-bb3c-8528416ee0f4"),
-            "Fuse":   Room(name="Fuse Door", guid="e58b284a-d3e6-42cc-be2b-7e02c791bf97"),
+            "One":    Rooms.S1,
+            "Ground": Rooms.SG,
+            "Zero":   Rooms.SZ,
+            "Fuse":   Rooms.SF,
         }
     )
     himmel2_schedule.print_stats()
