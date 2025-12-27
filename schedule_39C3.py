@@ -473,19 +473,19 @@ def main():
     create_himmel_schedule(voc)
     create_himmel_door_schedule(voc)
 
-    return
-
     everything = conference.hub.schedule()
 
+    '''
     print(f"\n== Main programme (= fahrplan) \n")
     conference.schedule_stats(fahrplan)
+    '''
 
     # to get proper a state, we first have to remove all event files from the previous run
     if not local or options.git:
         git("rm events/*  >/dev/null")
     os.makedirs("events", exist_ok=True)
 
-    fahrplan.foreach_event(lambda e: e.export("events/", "-origin"))
+    #fahrplan.foreach_event(lambda e: e.export("events/", "-origin"))
     everything.foreach_event(lambda e: e.export("events/", "-hub"))
 
     write("\nExporting... ")
@@ -493,39 +493,13 @@ def main():
     # set_validator_filter('strange')
     everything.export("everything")
 
-    # expose metadata to own file
-    with open("meta.json", "w") as fp:
-        json.dump(
-            {
-                "data": {
-                    "version": fahrplan.version(),
-                    "source_urls": list(conference.loaded_schedules.keys()),
-                    "rooms": [
-                        {
-                            **room,
-                            "schedule_name": room["name"],
-                            "stream": conference.channels.get(
-                                room.get("guid", room["name"]), Room()
-                            ).stream,
-                        }
-                        for room in everything.rooms(mode="v2")
-                    ],
-                    "conferences": conference.subconferences,
-                },
-            },
-            fp,
-            indent=2,
-            cls=ScheduleEncoder,
-        )
-
     print("\nDone")
-    print("  fahrplan version: " + fahrplan.version())
     print("  hub      version: " + everything.version())
 
     if options.debug:
         print("\n  rooms: ")
-        for room in full_schedule.rooms():
-            print("   - " + room)
+        for room in everything.rooms(mode='name'):
+            print(f"   - {room}")
         print()
 
     if not local or options.git:
@@ -533,7 +507,7 @@ def main():
         # Attention: This method exits the script, if nothing relevant changed
         # TOOD: make this fact more obvious or refactor code
 
-    if not local and "c3data" in targets:
+    if not local and "c3data" in conference.targets:
         print("\n== Updating c3data via API…")
 
         c3data = C3data(everything)
