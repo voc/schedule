@@ -245,8 +245,8 @@ def create_block_schedule():
     block_schedule.export("block")
 
 
-def create_himmel_evac_schedule(fahrplan):
-    himmel_schedule = fahrplan.copy("Himmel Evac")
+def create_himmel_schedule(fahrplan):
+    himmel_schedule = fahrplan.copy("Himmel")
     himmel_schedule.rename_rooms({
         "One":    Rooms.S1,
         "Ground": Rooms.SG,
@@ -258,6 +258,12 @@ def create_himmel_evac_schedule(fahrplan):
         e['guid'] = gen_uuid(f"{xc3}-himmel-evac-{e['guid']}")
         return e
     himmel_schedule.foreach_event(update_guid)
+
+    # Remove events in Sendezentrum Bühne, that have do_not_record set
+    optouts = himmel_schedule.foreach_event(lambda e: e['guid'] if e['do_not_record'] and e['room'] == Rooms.SZ.name else None)
+    print(f" Removing {len(optouts)} recording optout events from engelsystem sendezentrum schedule")
+    for guid in optouts:
+        himmel_schedule.remove_event(guid=guid)
 
     #himmel_schedule.remove_room("Fuse")
     himmel_schedule.print_stats()
@@ -464,7 +470,7 @@ def main():
     # use -t create_block_schedule and/or -t create_buildupteardown_schedule CLI options
     # create_block_schedule()
     # create_buildupteardown_schedule()
-    create_himmel_evac_schedule(voc)
+    create_himmel_schedule(voc)
     create_himmel_door_schedule(voc)
 
     return
