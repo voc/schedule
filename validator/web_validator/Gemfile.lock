@@ -4,14 +4,14 @@ GEM
     haml (5.0.4)
       temple (>= 0.8.0)
       tilt
-    mini_portile2 (2.8.6)
+    mini_portile2 (2.8.9)
     multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
-    nokogiri (1.16.5)
+    nokogiri (1.18.9)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    racc (1.7.3)
+    racc (1.8.1)
     rack (2.2.9)
     rack-protection (3.0.5)
       rack
