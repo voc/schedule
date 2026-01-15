@@ -4,11 +4,11 @@ on:
   push:
     branches-ignore:
       - 'dependabot/*'
-  delete:
-    branches-ignore:
-      - 'dependabot/*'
+
 jobs:
   to_git-c3voc-de:
+    # only run on github, but not on our forgeio instance
+    if: github.server_url == 'https://github.com'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
