@@ -8,7 +8,7 @@ on:
 jobs:
   to_git-c3voc-de:
     # only run on github, but not on our forgeio instance
-    if: github.server_url == 'https://github.com'
+    if: github.server_url == 'https://github.com' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
