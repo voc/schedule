@@ -16,7 +16,6 @@ jobs:
           fetch-depth: 0
     - uses: pixta-dev/repository-mirroring-action@v1
       with:
-        target_repo_url:
-          forgejo@forgejo.c3voc.de:voc/schedule.git
-        ssh_private_key:
-          ${{ secrets.SSH_PRIVATE_KEY }}
+        target_repo_url: ssh://forgejo@forgejo.c3voc.de/voc/schedule.git
+        ssh_username: forgejo
+        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
