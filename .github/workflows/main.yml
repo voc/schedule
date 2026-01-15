@@ -3,7 +3,7 @@ name: Mirroring
 on: 
   push:
     branches-ignore:
-      - 'dependabot/*'
+      - dependabot/*
 
 jobs:
   to_git-c3voc-de:
