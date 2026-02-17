@@ -12,7 +12,7 @@ GEM
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     racc (1.8.1)
-    rack (2.2.9)
+    rack (2.2.22)
     rack-protection (3.0.5)
       rack
     ruby2_keywords (0.0.5)
