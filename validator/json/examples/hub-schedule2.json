@@ -1,0 +1,336 @@
+{
+  "$schema": "../schema2.json",
+  "schedule": {
+    "version": "2024-12-26 20:23",
+    "base_url": "https://events.ccc.de/congress/2024/hub/",
+    "conference": {
+      "acronym": "38c3",
+      "title": "38C3",
+      "start": "2024-12-27T09:30:00+00:00",
+      "end": "2024-12-30T17:45:00+00:00",
+      "time_zone_name": "Europe/Berlin",
+      "url": "https://events.ccc.de/congress/2024/",
+      "languages": ["en", "de"],
+      "tracks": [
+        {
+          "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e1",
+          "name": "Art & Beauty",
+          "colors": {
+            "light": "#F9B000",
+            "dark": "#F9B000"
+          },
+          "slug": "art-beauty"
+        },
+        {
+          "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e2",
+          "name": "Ethics, Society & Politics",
+          "colors": {
+            "light": "#E40429",
+            "dark": "#E40429"
+          },
+          "slug": "ethics-society-politics"
+        },
+        {
+          "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e3",
+          "name": "Hardware & Making",
+          "colors": {
+            "light": "#685B9D",
+            "dark": "#685B9D"
+          },
+          "slug": "hardware-making"
+        },
+        {
+          "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e4",
+          "name": "Science",
+          "colors": {
+            "light": "#00A356",
+            "dark": "#00A356"
+          },
+          "slug": "science"
+        },
+        {
+          "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e5",
+          "name": "Security",
+          "colors": {
+            "light": "#0347B4",
+            "dark": "#0347B4"
+          },
+          "slug": "security"
+        },
+        {
+          "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e6",
+          "name": "Entertainment",
+          "colors": {
+            "light": "#4D4D4C",
+            "dark": "#4D4D4C"
+          },
+          "slug": "entertainment"
+        },
+        {
+          "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d4ccc",
+          "name": "CCC",
+          "colors": {
+            "light": "#F2F006",
+            "dark": "#F2F006"
+          },
+          "slug": "ccc"
+        }
+      ],
+      "rooms": [
+        {
+          "name": "Saal 1",
+          "slug": "saal-1",
+          "guid": "ba692ba3-421b-5371-8309-60acc34a3c05",
+          "type": "lecturehall",
+          "stream_id": "s1",
+          "capacity": 3025,
+          "description": {
+            "en": "Lecture hall in CCH central, Level +2 to +4"
+          },
+          "features": {
+            "recording": "record_by_default"
+          },
+          "assembly": {
+            "name": "CCC",
+            "slug": "ccc",
+            "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
+          }
+        },
+        {
+          "name": "Saal GLITCH",
+          "slug": "saal-glitch",
+          "guid": "7202df07-050c-552f-8318-992f94e40ef0",
+          "type": "lecturehall",
+          "stream_id": "s2",
+          "capacity": 1160,
+          "description": "Lecture hall G in CCH West, Level +2",
+          "features": {
+            "recording": "record_by_default"
+          },
+          "assembly": {
+            "name": "CCC",
+            "slug": "ccc",
+            "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
+          }
+        },
+        {
+          "name": "Saal ZIGZAG",
+          "slug": "saal-zigzag",
+          "guid": "62251a07-13e4-5a72-bb3c-8528416ee0f2",
+          "type": "lecturehall",
+          "stream_id": "s3",
+          "capacity": 965,
+          "description": "Lecture hall Z in CCH East, Level +3",
+          "features": {
+            "recording": "record_by_default"
+          },
+          "assembly": {
+            "name": "CCC",
+            "slug": "ccc",
+            "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
+          }
+        },
+        {
+          "name": "Stage HUFF",
+          "slug": "stage-huff",
+          "guid": "53f436a0-705b-40eb-974f-2bfce8857b1b",
+          "type": "stage",
+          "stream_id": "s4",
+          "capacity": null,
+          "description": {
+            "en": "Community-Stage in hall H, Level 0",
+            "de": "Community-Bühne in Halle H, EG"
+          },
+          "features": {
+            "recording": "record_by_default"
+          },
+          "assembly": {
+            "name": "CCC",
+            "slug": "ccc",
+            "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
+          }
+        },
+        {
+          "name": "Stage YELL",
+          "slug": "stage-yell",
+          "guid": "e58b284a-d3e6-42cc-be2b-7e02c791bf95",
+          "type": "stage",
+          "stream_id": "s5",
+          "capacity": null,
+          "description": {
+            "en": null,
+            "de": "Community-Stage in Saal Y in CCH Ost, Level +2"
+          },
+          "features": {
+            "recording": "record_by_default"
+          },
+          "assembly": {
+            "name": "CCC",
+            "slug": "ccc",
+            "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
+          }
+        }
+      ],
+      "days": [
+        {
+          "index": 1,
+          "date": "2024-12-27",
+          "start": "2024-12-27T09:30:00+00:00",
+          "end": "2024-12-28T06:00:00+01:00"
+        },
+        {
+          "index": 2,
+          "date": "2024-12-28",
+          "start": "2024-12-28T06:00:00+01:00",
+          "end": "2024-12-29T06:00:00+01:00"
+        },
+        {
+          "index": 3,
+          "date": "2024-12-29",
+          "start": "2024-12-29T06:00:00+01:00",
+          "end": "2024-12-30T06:00:00+01:00"
+        },
+        {
+          "index": 4,
+          "date": "2024-12-30",
+          "start": "2024-12-30T06:00:00+01:00",
+          "end": "2024-12-30T17:45:00+00:00"
+        }
+      ]
+    },
+    "events": [
+      {
+        "type": "other",
+        "guid": "270fa44c-821a-577f-8ca3-33e8d4a8c2a7",
+        "start": "2024-12-27T10:30:00+01:00",
+        "end": "2024-12-27T11:00:00+01:00",
+        "room": {
+          "name": "Saal 1",
+          "slug": "saal-1",
+          "guid": "ba692ba3-421b-5371-8309-60acc34a3c05"
+        },
+        "slug": "38c3-38c3-opening-ceremony",
+        "title": "38C3: Opening Ceremony",
+        "subtitle": null,
+        "language": "en",
+        "track": {
+          "slug": "ccc"
+        },
+        "abstract": "Glad you could make it! Take a seat and buckle up for a ride through four days of chaotic adventures.",
+        "description": "This ceremony will prepare you for the 38C3 in all its glory, underground and above, hacks and trolls, art and radical ideas. Let's kick this thing off together!",
+        "logo": null,
+        "participants": [
+          {
+            "guid": "0c16ffaa-709d-599f-959f-9a38b911361a",
+            "name": "Gabriela Bogk",
+            "role": "speaker"
+          },
+          {
+            "guid": "4cee1e72-681f-5c8b-8dcd-8e58c8f4a445",
+            "name": "Senficon",
+            "role": "speaker"
+          },
+          {
+            "guid": "721a267b-b09d-5422-8221-4f9a71cfc727",
+            "name": "Aline Blankertz",
+            "role": "speaker"
+          }
+        ],
+        "links": [
+          {
+            "url": "https://example.net/",
+            "title": "foo bar"
+          },
+          {
+            "type": "activitypub",
+            "url": "https://example.net/@handle/123456",
+            "service": "MASTODON"
+          },
+          {
+            "type": "feedback",
+            "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/HQCCYH/feedback/"
+          }
+        ],
+        "attachments": [
+          {
+            "type": "slides",
+            "url": "https://example.net/foo/bar/1235.pdf"
+          }
+        ],
+        "url": "https://events.ccc.de/congress/2024/hub/event/38c3-opening-ceremony/"
+      },
+      {
+        "type": "talk",
+        "guid": "b1740c2f-0c44-5f1b-89ed-456a9eecf0b8",
+        "start": "2024-12-28T00:15:00+01:00",
+        "end": "2024-12-28T00:55:00+01:00",
+        "room": {
+          "name": "Saal ZIGZAG",
+          "guid": "62251a07-13e4-5a72-bb3c-8528416ee0f2"
+        },
+        "slug": "38c3-a-competitive-time-trial-ai-for-need-for-speed-most-wanted-using-deep-reinforcement-learning",
+        "url": "https://events.ccc.de/congress/2024/hub/event/a-competitive-time-trial-ai-for-need-for-speed-most-wanted-using-deep-reinforcement-learning/",
+        "title": "A Competitive Time-Trial AI for Need for Speed:",
+        "subtitle": "Most Wanted Using Deep Reinforcement Learning",
+        "language": "en",
+        "track": {
+          "slug": "hardware-making"
+        },
+        "abstract": "All challenges and achievements in creating a competitive time-trial AI in NFS:MW.",
+        "description": "15 years ago, at the height of my eSports career, I uploaded an (unofficial) ESL record at Need for Speed: Most Wanted (2005) (NFS:MW) to Youtube. In the meantime Deep Reinforcement Learning became popular and ever since I have dreamt of creating a competitive AI for my favorite racing game of all time: NFS:MW. Now finally the time was right: The hardware is fast enough, good software is available, and Sony's AI research has proven the task is actually doable. Hence I thought: \"How hard can it possibly be?\".\r\n\r\nThis talk will present in detail all challenges and achievements in creating a competitive time-trial AI in NFS:MW from scratch - including but not limited to - hacking of the game to create a custom API, building a custom (real-time) OpenAI gym environment, steering the game using a virtual controller, and finally successfully training an AI using the Soft-Actor-Critic algorithm. All code including the API is written in Python and is open source.",
+        "logo": {
+          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/38c3/submissions/TPGRNN/Screenshot_from_2024-10-19_17-05-41_OmPkGCO.png"
+        },
+        "participants": [
+          {
+            "guid": "51766dc0-326b-554c-993b-0b1ffa9e6a1e",
+            "name": "Sebastian Schwarz",
+            "role": "speaker"
+          }
+        ],
+        "links": [
+          { "type": "origin", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/"},
+          { "type": "feedback", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/feedback/"}
+        ]
+      }
+    ],
+    "persons": [
+      {
+        "guid": "0c16ffaa-709d-599f-959f-9a38b911361a",
+        "name": "Gabriela Bogk",
+        "biography": "Gabriela, the hacker formerly known as Andreas, has been doing things with computers for quite a while now. Nobody could ever prove she did anything illegal, so she's now successfully making a living pretending to be a good girl.",
+        "avatar": {
+          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/SB9MER_Hwgr1fW.jpg"
+        },
+        "url": "https://events.ccc.de/congress/2024/hub/user/speaker_0c16ffaa-709d-599f-959f-9a38b911361a/"
+      },
+      {
+        "guid": "4cee1e72-681f-5c8b-8dcd-8e58c8f4a445",
+        "name": "Senficon",
+        "biography": "Felix Reda (he/they). Obnoxious twink who thinks he knows everybody. Former Member of the European Parliament.",
+        "avatar": {
+          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/felix_2024_quadrat_g2i2mMI.png"
+        },
+        "url": "https://events.ccc.de/congress/2024/hub/user/speaker_4cee1e72-681f-5c8b-8dcd-8e58c8f4a445/"
+      },
+      {
+        "guid": "721a267b-b09d-5422-8221-4f9a71cfc727",
+        "name": "Aline Blankertz",
+        "biography": "Aline Blankertz ist angewandte \u00d6konomin. Sie setzt sich aktuell als Referentin bei Wikimedia Deutschland f\u00fcr politische Rahmenbedingungen f\u00fcr Freies Wissen ein, u.a. in der Datenpolitik und Plattformregulierung. Zudem ist sie Mitgr\u00fcnderin des digitalpolitischen Kollektivs Strukturelle Integrit\u00e4t.",
+        "avatar": {
+          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/Screenshot_2024-08-05_at_20-49-51_Aline_Blankertz_B_20240802_L1005569_3.jpg_JPEG_TPmBrZZ.png"
+        },
+        "url": "https://events.ccc.de/congress/2024/hub/user/speaker_721a267b-b09d-5422-8221-4f9a71cfc727/"
+      },
+      {
+        "guid": "51766dc0-326b-554c-993b-0b1ffa9e6a1e",
+        "name": "Sebastian Schwarz",
+        "biography": "Almost 20 years ago Sebastian was a professional player for Team Alternate aTTaX for Need for Speed. In the meantime he has completed his studies in economics and statistics and started a career in data science and machine learning and is currently heading a Data & AI team at E.ON.\r\n\r\nEver since reinforcement learning has come up, he wanted to build an AI to build his records! And he started that journey in 2023...",
+        "avatar": {
+          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/CTUZKV_q240tlm.png"
+        },
+        "url": "https://events.ccc.de/congress/2024/hub/user/speaker_51766dc0-326b-554c-993b-0b1ffa9e6a1e/"
+      }
+    ]
+  }
+}
