@@ -824,11 +824,11 @@ class Schedule(dict):
 
         assert isinstance(self, dict)
 
-        root_node = ET.Element("schedule")
-        root_node.set("{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation", "https://c3voc.de/schedule/schema.xsd")
+        root_node = ET.Element("schedule", attrib={"{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation": "https://c3voc.de/schedule/schema.xsd"})
+        ET.SubElement(root_node, "generator", self.generator or tools.generator_info())
         _to_etree(self, root_node, "schedule")
 
-        if method == 'xml':
+        if method == 'xml' or method == 'etree':
             return root_node
         elif method == 'bytes':
             return ET.tostring(root_node, pretty_print=True, xml_declaration=True)

@@ -12,7 +12,6 @@ import sys
 from typing import Dict, Union
 from collections import OrderedDict
 from bs4 import Tag
-from git import Repo
 
 import __main__
 
@@ -137,6 +136,7 @@ def normalise_string(string):
     string = string.replace(u'ü', 'ue')
     string = string.replace(u'ß', 'ss')
     string = re.sub('\\W+', '\\_', string.strip())  # replace whitespace with _
+    string = string.replace('_-_', '-')
     # string = filter(unicode.isalnum, string)
     string = re.sub('[^a-z0-9_]+', '', string) # TODO: is this not already done with \W+  line above?
     string = string.strip('_')  # remove trailing _

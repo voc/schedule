@@ -2,11 +2,14 @@ from dataclasses import dataclass
 import re
 import json
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, TypeVar
 import dateutil.parser
 from datetime import datetime
 
-from voc.tools import str2timedelta, format_duration
+try:
+    from voc.tools import str2timedelta, format_duration
+except ImportError:
+    from tools import str2timedelta, format_duration
 
 @dataclass
 class EventSourceInterface:
@@ -16,8 +19,9 @@ class EventSourceInterface:
 class Schedule(EventSourceInterface):
     pass
 
+T = TypeVar("T")
 
-class Event(Mapping):
+class Event[T = dict[str, Any]](Mapping):
     def __init__(self, data: dict[str, Any] = dict(), start: datetime|None = None, origin: EventSourceInterface|None = None, *,
                  guid: str|None = None, 
                  end: datetime|None = None, 
@@ -29,7 +33,7 @@ class Event(Mapping):
         Initialize Event from data dict or parameters. Should Backwards compatible, therefore data, start and origin are the .
         '''
 
-        self._event: dict[str, Any] = {}
+        self._event: T = {}
         self.start: datetime
 
         # schedule1 input dict
@@ -102,7 +106,7 @@ class Event(Mapping):
         if 'track' not in data:
             data['track'] = None
 
-        # drop empty fields, which are optional
+        # drop optinal empty fields, so we don;t get
         for field in ["feedback_url"]:
             if field in data and not data[field]:
                 del data[field]
@@ -112,7 +116,7 @@ class Event(Mapping):
         # generate id from guid, when not set so old apps can still process this event
         if 'id' not in data and 'guid' in data:
             from voc.tools import get_id
-            self._event['id'] = get_id(self['guid'], length=6)
+            self['id'] = get_id(self['guid'], length=6)
         self.origin = origin
 
     @property
@@ -136,6 +140,9 @@ class Event(Mapping):
 
     def persons(self) -> list[str]:
         return [p.get("name", p.get("public_name")) for p in self._event.get("persons", [])]
+    
+    def url(self):
+        return self['url']
 
     def json(self):
         return self._event
@@ -145,15 +152,15 @@ class Event(Mapping):
             (re.sub(r"_([a-z])", lambda m: (m.group(1).upper()), k), v)
             for k, v in self._event.items()
         )
-        r["localId"] = self._event["id"]
+        r["localId"] = self["id"]
         del r["id"]
-        r["eventType"] = self._event["type"]
+        r["eventType"] = self["type"]
         del r["type"]
         del r["room"]
         del r["start"]
-        r["startDate"] = self._event["date"]
+        r["startDate"] = self["date"]
         del r["date"]
-        duration = self._event["duration"].split(":")
+        duration = self["duration"].split(":")
         r["duration"] = {"hours": int(duration[0]), "minutes": int(duration[1])}
         del r["persons"]
         if "recording" in r:
@@ -171,13 +178,17 @@ class Event(Mapping):
 
     def voctoimport(self):
         r = dict(self._event.items())
-        r["talkid"] = self._event["id"]
+        r["talkid"] = int(self["id"])
         del r["id"]
-        del r["type"]
-        del r["start"]
-        del r["persons"]
-        del r["logo"]
-        del r["subtitle"]
+        if 'type' in r:
+            del r["type"]
+        if 'start' in r:
+            del r["start"]
+        #del r["persons"]
+        if 'logo' in r:
+            del r["logo"]
+        if 'subtitle' in r:
+            del r["subtitle"]
         if "recording_license" in r:
             del r["recording_license"]
         if "recording" in r:
@@ -197,7 +208,7 @@ class Event(Mapping):
     # export all attributes which are not part of rC3 core event model
     def meta(self):
         r = dict(self._event.items())
-        # r['local_id'] = self._event['id']
+        # r['local_id'] = self['id']
         # del r["id"]
         del r["guid"]
         del r["slug"]
@@ -219,5 +230,5 @@ class Event(Mapping):
         return json.dumps(self._event, indent=2)
 
     def export(self, prefix, suffix=""):
-        with open("{}{}{}.json".format(prefix, self._event["guid"], suffix), "w") as fp:
+        with open("{}{}{}.json".format(prefix, self["guid"], suffix), "w") as fp:
             json.dump(self._event, fp, indent=2)
