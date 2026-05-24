@@ -421,6 +421,12 @@ class Schedule(dict):
                         else:
                             return Event(event)
 
+    def events(self):
+        for day in self["conference"]["days"]:
+            for room in day["rooms"]:
+                for event in day["rooms"][room]:
+                    yield event if isinstance(event, Event) else Event(event)
+
     def add_event(self, event: Event, options=None):
         day = self.get_day_from_time(event.start)
         if event.get("slug") is None:
