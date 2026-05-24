@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from os import getenv
 from sys import stdout
 import json
@@ -9,9 +11,16 @@ from gql.transport.aiohttp import AIOHTTPTransport
 # from gql.transport.exceptions import TransportQueryError
 
 try:
-    from .schedule import Schedule, Event
+    from .schedule import Schedule
+    from .schedulexml import ScheduleXML
+    from .tools import gen_uuid, normalise_string
+
+
 except ImportError:
-    from schedule import Schedule, Event
+    from schedule import Schedule
+    from schedulexml import ScheduleXML
+    from tools import gen_uuid, normalise_string
+
 
 transport = AIOHTTPTransport(
     url=getenv('IMPORT_URL', 'https://import.c3voc.de/graphql'),

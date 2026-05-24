@@ -2,7 +2,8 @@
 import argparse
 import json
 import os
-from git import Repo
+import importlib.util
+
 from voc.c3data import C3data
 from voc.event import Event
 from voc.schedule import Schedule, ScheduleEncoder
@@ -10,6 +11,12 @@ from voc.tools import (
     commit_changes_if_something_relevant_changed,
     git,
 )
+
+# Import GitPython's git module explicitly to avoid conflict with this file
+spec = importlib.util.find_spec("git")
+git_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(git_module)
+Repo = git_module.Repo
 
 def export_event_files(schedule: Schedule, options: argparse.Namespace, local = False):
     # to get proper a state, we first have to remove all event files from the previous run

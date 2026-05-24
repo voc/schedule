@@ -12,13 +12,18 @@ from collections import OrderedDict
 from typing import Callable, Dict, List, Union
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
-from lxml import etree as ET
+
+# if lxml is available, try to use it, otherwise fall back to the built in xml parser
+try:
+    from lxml import etree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
 
 try:
     import voc.tools as tools
-    from voc.event import Event, EventSourceInterface
-    from voc.room import Room
-    from voc.logger import Logger
+    from .event import Event, EventSourceInterface
+    from .room import Room
+    from .logger import Logger
 except ImportError:
     import tools
     from event import Event, EventSourceInterface

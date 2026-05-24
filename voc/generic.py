@@ -1,5 +1,10 @@
 from voc.event import EventSourceInterface
-from .schedule import Schedule, ScheduleException
+
+try:
+    from voc.schedule import Schedule, ScheduleException
+except ImportError:
+    from schedule import Schedule, ScheduleException
+
 from urllib.parse import urlparse
 
 
