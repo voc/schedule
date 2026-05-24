@@ -28,7 +28,28 @@ transport = AIOHTTPTransport(
 )
 # Disable schema fetching to avoid frozen dataclass issue with Python 3.13+
 client = Client(transport=transport, fetch_schema_from_transport=False)
+
+DEFAULT_LANGUAGE = 'de'
+
 args = None
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--conference', '-c', required=True, help='the confence slug in import.c3voc.de')
+
+    # choose one of these
+    parser.add_argument('--url', action='store', help='url to schedule.json/xml')
+    parser.add_argument('--file', action='store', help='path to schedule.json/schedule.xml')
+    parser.add_argument('--acronym', '-a', help='the conference acronym in pretalx.c3voc.de')
+
+    # other
+    parser.add_argument('--room', '-r', action='append', help='optional: filter rooms (multiple possible)', default=[])
+    parser.add_argument('--year', '-y', help='the year of the conference')
+    parser.add_argument('--id', action='append', help='filter to a specific event ID')
+    parser.add_argument('--guid', action='append', help='filter to a specific event GUID')
+
+
+    args = parser.parse_args()
 
 
 def get_conference(acronym):
@@ -36,20 +57,62 @@ def get_conference(acronym):
       query getConference($acronym: String!) {
         conference: conferenceBySlug(slug: $acronym) {
           id
+          slug
           title
         }
       }'''), variable_values={'acronym': acronym})['conference']
 
 
-def add_event(conference_id, event):
+'''
+CREATE TABLE event_event (
+    guid uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    talkid integer NOT NULL UNIQUE,
+    slug character varying(140) NOT NULL,
+    title character varying(200) NOT NULL,
+    subtitle character varying(200),
+    abstract text NOT NULL,
+    description text NOT NULL,
+    date timestamp with time zone NOT NULL,
+    duration character varying(5) NOT NULL,
+    language character varying(10) NOT NULL,
+    persons text NOT NULL,
+    room character varying(100) NOT NULL,
+    track character varying(100),
+    url character varying(200) NOT NULL,
+    published boolean NOT NULL DEFAULT false,
+    conference_id integer NOT NULL REFERENCES event_conference(id) DEFERRABLE INITIALLY DEFERRED,
+    videofile character varying(1000),
+    remotevideofile character varying(200)
+);
+'''
+
+def add_event(conference, event):
+
+    # TODO: use voc.tools or make this configurable e.g. based on conference year
+    voc_slug = f"{conference['slug']}-{event['id']}-{event['slug'] if event.get('slug', None) else normalise_string(event['title'])[:50]}"
+    #voc_slug = f"fossgis{event['slug']}"
+    #assert event['slug'], "slug required"
+
     data = {
         "event": {
-            'talkid': event['id'],
-            'persons': ', '.join([p for p in event.persons()]),
-            **(event.voctoimport()),
+            'guid': event['guid'] or gen_uuid(voc_slug),
+            'talkid': int(event['id']),
+            'slug': voc_slug,
+            'title': event['title'],
+            'subtitle': (event.get('subtitle') or '')[:200] or None,
             'abstract': event.get('abstract') or '',
-            'published': False,
-            'conferenceId': conference_id
+            'description': event.get('description') or '',
+            'date': event['date'],
+            'duration': event['duration'],
+            'language': event['language'] or DEFAULT_LANGUAGE,
+            'room': event['room'],
+            'track': event.get('track', None),
+            #'url': event.get('url') or f"https://fossgis-konferenz.de/2016/programm/event{event['id']}.html",
+            #'url': f"https://fossgis-konferenz.de/{args.year}/programm/events/{event['id']}.de.html",
+            'url': event.url(),
+            'persons': ', '.join([p for p in event.persons()]),
+            # 'published': False, -> defaults to false
+            'conferenceId': conference['id'],
         }
     }
 
@@ -62,7 +125,7 @@ def add_event(conference_id, event):
     ''')
 
     try:
-        client.execute(query, {'input': data})
+        client.execute(query, variable_values={'input': data})
         stdout.write('.')
         stdout.flush()
     except Exception as e:
@@ -93,7 +156,9 @@ class VoctoImport:
         global args
 
         self.schedule = schedule
-        acronym = args.conference or getattr(args, 'acronym', None) or schedule.conference('acronym')
+        acronym = (args.conference if args else None) \
+            or getattr(args, 'acronym', None) \
+            or schedule.conference('acronym')
         self.conference = get_conference(acronym)
         if not self.conference:
             raise Exception(f'Unknown conference {acronym}')
@@ -112,6 +177,8 @@ def push_schedule(schedule: Schedule, create=False):
 
 
 def run(args):
+    schedule: Schedule|ScheduleXML
+
     if args.url or args.acronym:
         url =  args.url or f'https://pretalx.c3voc.de/{args.acronym}/schedule/export/schedule.json'
         schedule = ScheduleXML.from_url(url) if url.endswith('.xml') else Schedule.from_file(url)
@@ -143,23 +210,4 @@ def run(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--conference', '-c', required=True, help='the confence slug in import.c3voc.de')
-
-    # choose one of these
-    parser.add_argument('--url', action='store', help='url to schedule.json/xml')
-    parser.add_argument('--file', action='store', help='path to schedule.json/schedule.xml')
-    parser.add_argument('--acronym', '-a', help='the conference acronym in pretalx.c3voc.de')
-
-    # other
-    parser.add_argument('--room', '-r', action='append', help='optional: filter rooms (multiple possible)', default=[])
-    parser.add_argument('--year', '-y', help='the year of the conference')
-    parser.add_argument('--id', action='append', help='filter to a specific event ID')
-    parser.add_argument('--guid', action='append', help='filter to a specific event GUID')
-
-
-    args = parser.parse_args()
-
-    print(args)
-
     run(args)
