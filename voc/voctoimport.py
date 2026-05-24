@@ -26,7 +26,8 @@ transport = AIOHTTPTransport(
     url=getenv('IMPORT_URL', 'https://import.c3voc.de/graphql'),
     headers={'Authorization': getenv('IMPORT_TOKEN', 'Basic|Bearer|Token XXXX')}
 )
-client = Client(transport=transport, fetch_schema_from_transport=True)
+# Disable schema fetching to avoid frozen dataclass issue with Python 3.13+
+client = Client(transport=transport, fetch_schema_from_transport=False)
 args = None
 
 
@@ -78,7 +79,7 @@ def remove_event(event_guid):
           mutation deleteEvent($guid: UUID!) {
             deleteEvent(input: {guid: $guid}) { deletedEventNodeId }
           }
-        '''), {'input': {'guid': event_guid}})
+        '''), variable_values={'guid': event_guid})
     except Exception as e:
         print(e)
         print()
@@ -88,18 +89,18 @@ class VoctoImport:
     schedule = None
     conference = None
 
-    def __init__(self, schedule: Schedule, create=False):
+    def __init__(self, schedule: Schedule|ScheduleXML, create=False):
         global args
 
         self.schedule = schedule
-        acronym = args.conference or args.acronym or schedule.conference('acronym')
+        acronym = args.conference or getattr(args, 'acronym', None) or schedule.conference('acronym')
         self.conference = get_conference(acronym)
         if not self.conference:
             raise Exception(f'Unknown conference {acronym}')
         pass
 
     def upsert_event(self, event):
-        add_event(self.conference['id'], Event(event))
+        add_event(self.conference, event)
 
     def depublish_event(self, event_guid):
         remove_event(event_guid)
@@ -112,11 +113,11 @@ def push_schedule(schedule: Schedule, create=False):
 
 def run(args):
     if args.url or args.acronym:
-        schedule = Schedule.from_url(
-            args.url or f'https://pretalx.c3voc.de/{args.acronym}/schedule/export/schedule.json'
-        )
+        url =  args.url or f'https://pretalx.c3voc.de/{args.acronym}/schedule/export/schedule.json'
+        schedule = ScheduleXML.from_url(url) if url.endswith('.xml') else Schedule.from_file(url)
     else:
-        schedule = Schedule.from_file('jev22/channels.schedule.json')
+        path = args.file
+        schedule = ScheduleXML.from_file(path) if path.endswith('.xml') else Schedule.from_file(path)
 
     instace = VoctoImport(schedule)
 
@@ -125,21 +126,40 @@ def run(args):
             instace.upsert_event(event)
 
     try:
-        schedule.foreach_event(upsert_event)
+
+        if args.id or args.guid:
+            for event in schedule.events():
+                if (args.id and event['id'] in args.id) or (args.guid and event['guid'] in args.guid):
+                    upsert_event(event)
+        
+        else:
+            schedule.foreach_event(upsert_event)
+
+        print('\nimport done')
+
     except KeyboardInterrupt:
+        print('\nimport aborted by user')
         pass
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--url', action='store', help='url to schedule.json')
+    parser.add_argument('--conference', '-c', required=True, help='the confence slug in import.c3voc.de')
+
+    # choose one of these
+    parser.add_argument('--url', action='store', help='url to schedule.json/xml')
+    parser.add_argument('--file', action='store', help='path to schedule.json/schedule.xml')
     parser.add_argument('--acronym', '-a', help='the conference acronym in pretalx.c3voc.de')
-    parser.add_argument('--conference', '-c', help='the confence slug in import.c3voc.de')
-    parser.add_argument('--room', '-r', action='append', help='filter rooms (multiple possible)')
+
+    # other
+    parser.add_argument('--room', '-r', action='append', help='optional: filter rooms (multiple possible)', default=[])
+    parser.add_argument('--year', '-y', help='the year of the conference')
+    parser.add_argument('--id', action='append', help='filter to a specific event ID')
+    parser.add_argument('--guid', action='append', help='filter to a specific event GUID')
+
 
     args = parser.parse_args()
 
     print(args)
 
     run(args)
-    print('\nimport done')
