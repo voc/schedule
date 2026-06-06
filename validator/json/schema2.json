@@ -124,6 +124,20 @@
             "$ref": "#/definitions/Language"
           }
         },
+        "defaults": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "theme": {
+              "type": "string",
+              "enum": ["light", "dark"]
+            },
+            "language": {
+              "type": "string",
+              "$ref": "#/definitions/Language"
+            }
+          }
+        },
         "tracks": {
           "type": "array",
           "items": {
