@@ -12,7 +12,7 @@ pip3 install -r requirements.txt
 pip3 install --pre gql[aiohttp]
 ```
 
-### macOS
+### brew + poetry
 
 ```bash
 brew install python3 poetry
@@ -22,6 +22,25 @@ poetry env activate
 
 If you have problems with `lxml` see https://stackoverflow.com/a/26544099/521791 
 
+### brew + uv
+
+```bash
+brew install python uv
+uv sync
+source .venv/bin/activate
+```
+
+Install dev dependencies as well:
+
+```bash
+uv sync --group dev
+```
+
+Run scripts with uv without activating the environment:
+
+```bash
+uv run python schedule_39C3.py
+```
 
 ## Local usage for 39C3
 
@@ -35,10 +54,14 @@ python3 schedule_39C3.py
 
 ## History
 
+### 39C3
+
+- https://c3voc.de/wiki/events:39c3:schedule
+
 ### 38C3
 
 - https://c3voc.de/wiki/events:38c3:schedule
-  ![Data flow @ 38C3](https://c3voc.de/wiki/lib/exe/fetch.php?media=events:38c3:schedule.png)
+  ![Data flow @ 38C3](docs/data_flow_38C3.png)
 
 ### 37C3
 
@@ -70,6 +93,6 @@ see also:
 
 ### 34C3
 
-see https://github.com/voc/schedule/blob/34C3/docs/data_flow_34C3_v0.7.pdf to get an overview and talk to @saerdnaer aka Andi if you have questions.
+see [docs/data_flow_34C3_v0.7.pdf](docs/data_flow_34C3_v0.7.pdf) to get an overview and talk to @saerdnaer aka Andi if you have questions.
 
 [frab-website]: http://frab.github.io/frab/
