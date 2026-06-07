@@ -31,26 +31,7 @@ client = Client(transport=transport, fetch_schema_from_transport=False)
 
 DEFAULT_LANGUAGE = 'de'
 
-args = None
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--conference', '-c', required=True, help='the confence slug in import.c3voc.de')
-
-    # choose one of these
-    parser.add_argument('--url', action='store', help='url to schedule.json/xml')
-    parser.add_argument('--file', action='store', help='path to schedule.json/schedule.xml')
-    parser.add_argument('--acronym', '-a', help='the conference acronym in pretalx.c3voc.de')
-
-    # other
-    parser.add_argument('--room', '-r', action='append', help='optional: filter rooms (multiple possible)', default=[])
-    parser.add_argument('--year', '-y', help='the year of the conference')
-    parser.add_argument('--id', action='append', help='filter to a specific event ID')
-    parser.add_argument('--guid', action='append', help='filter to a specific event GUID')
-
-
-    args = parser.parse_args()
-
+args: argparse.Namespace
 
 def get_conference(acronym):
     return client.execute(gql('''
@@ -176,15 +157,15 @@ def push_schedule(schedule: Schedule, create=False):
     schedule.foreach_event(instace.upsert_event)
 
 
-def run(args):
+def run(args: argparse.Namespace):
     schedule: Schedule|ScheduleXML
-
-    if args.url or args.acronym:
-        url =  args.url or f'https://pretalx.c3voc.de/{args.acronym}/schedule/export/schedule.json'
-        schedule = ScheduleXML.from_url(url) if url.endswith('.xml') else Schedule.from_file(url)
-    else:
+    
+    if args.file is not None:
         path = args.file
         schedule = ScheduleXML.from_file(path) if path.endswith('.xml') else Schedule.from_file(path)
+    else:
+        url =  args.url or f'https://pretalx.c3voc.de/{args.acronym or args.conference}/schedule/export/schedule.json'
+        schedule = ScheduleXML.from_url(url) if url.endswith('.xml') else Schedule.from_url(url)
 
     instace = VoctoImport(schedule)
 
@@ -210,4 +191,24 @@ def run(args):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--conference', '-c', required=True, help='the confence slug in import.c3voc.de')
+
+    # choose one of these
+    parser.add_argument('--url', action='store', help='url to schedule.json/xml')
+    parser.add_argument('--file', action='store', help='path to schedule.json/schedule.xml')
+    parser.add_argument('--acronym', '-a', help='the conference acronym in pretalx.c3voc.de')
+
+    # other
+    parser.add_argument('--room', '-r', action='append', help='optional: filter rooms (multiple possible)', default=[])
+    parser.add_argument('--year', '-y', help='the year of the conference')
+    parser.add_argument('--id', action='append', help='filter to a specific event ID')
+    parser.add_argument('--guid', action='append', help='filter to a specific event GUID')
+
+
+    if getenv('IMPORT_TOKEN') is None:
+        print('WARNING: no IMPORT_TOKEN environment variable set, but required for write access')
+        print('Set IMPORT_TOKEN to a valid token to avoid this warning')
+
+    args = parser.parse_args()
     run(args)
