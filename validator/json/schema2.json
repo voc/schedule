@@ -265,13 +265,13 @@
         "type": {
           "type": "string",
           "enum": [
-            "talk",
-            "workshop",
-            "hands-on",
-            "meeting",
-            "discussion",
-            "game",
-            "other"
+            "TALK",
+            "WORKSHOP",
+            "HANDS-ON",
+            "MEETING",
+            "DISCUSSION",
+            "GAME",
+            "OTHER"
           ]
         },
         "language": {
@@ -329,13 +329,13 @@
         "role": {
           "title": "Main role of this person at the event",
           "type": "string",
-          "default": "speaker",
+          "default": "SPEAKER",
           "enum": [
-            "speaker",
-            "moderator",
-            "contributor",
-            "host",
-            "guest"
+            "SPEAKER",
+            "MODERATOR",
+            "CONTRIBUTOR",
+            "HOST",
+            "GUEST"
           ]
         },
         "guid": {
@@ -354,8 +354,8 @@
         "type": {
           "type": "string",
           "enum": [
-            "break",
-            "meta"
+            "BREAK",
+            "META"
           ]
         },
         "title": {
@@ -442,7 +442,7 @@
         },
         "type": {
           "type": "string",
-          "enum": ["lecturehall", "stage", "workshop", "outside", "online", "project", "bbb", "hangar", "other"]
+          "enum": ["LECTURE_HALL", "STAGE", "WORKSHOP", "OUTSIDE", "VIRTUAL", "PROJECT", "HANGAR", "OTHER"]
         },
         "guid": {
           "type": "string",
@@ -493,7 +493,13 @@
       "properties": {
         "recording": {
           "type": "string",
-          "enum": ["record_by_default", "not_recorded_by_default", "recording_forbidden", "recording_not_possible", "unknown"]
+          "enum": [
+            "RECORD_BY_DEFAULT", 
+            "NOT_RECORDED_BY_DEFAULT", 
+            "RECORDING_FORBIDDEN", 
+            "RECORDING_NOT_POSSIBLE", 
+            "UNKNOWN"
+          ]
         }
       }
     },
@@ -518,16 +524,16 @@
         "type": {
           "type": "string",
           "enum": [
-            "slides",
-            "paper",
-            "web",
-            "blog",
-            "article",
-            "media",
-            "related",
-            "feedback",
-            "origin",
-            "activitypub"
+            "SLIDES",
+            "PAPER",
+            "WEB",
+            "BLOG",
+            "ARTICLE",
+            "MEDIA",
+            "RELATED",
+            "FEEDBACK",
+            "ORIGIN",
+            "ACTIVITYPUB"
           ]
         },
         "url": {

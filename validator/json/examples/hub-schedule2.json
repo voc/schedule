@@ -82,17 +82,17 @@
       ],
       "rooms": [
         {
+          "type": "LECTURE_HALL",
           "name": "Saal 1",
           "slug": "saal-1",
           "guid": "ba692ba3-421b-5371-8309-60acc34a3c05",
-          "type": "lecturehall",
           "stream_id": "s1",
           "capacity": 3025,
           "description": {
             "en": "Lecture hall in CCH central, Level +2 to +4"
           },
           "features": {
-            "recording": "record_by_default"
+            "recording": "RECORD_BY_DEFAULT"
           },
           "assembly": {
             "name": "CCC",
@@ -101,15 +101,15 @@
           }
         },
         {
+          "type": "LECTURE_HALL",
           "name": "Saal GLITCH",
           "slug": "saal-glitch",
           "guid": "7202df07-050c-552f-8318-992f94e40ef0",
-          "type": "lecturehall",
           "stream_id": "s2",
           "capacity": 1160,
           "description": "Lecture hall G in CCH West, Level +2",
           "features": {
-            "recording": "record_by_default"
+            "recording": "RECORD_BY_DEFAULT"
           },
           "assembly": {
             "name": "CCC",
@@ -118,15 +118,15 @@
           }
         },
         {
+          "type": "LECTURE_HALL",
           "name": "Saal ZIGZAG",
           "slug": "saal-zigzag",
           "guid": "62251a07-13e4-5a72-bb3c-8528416ee0f2",
-          "type": "lecturehall",
           "stream_id": "s3",
           "capacity": 965,
           "description": "Lecture hall Z in CCH East, Level +3",
           "features": {
-            "recording": "record_by_default"
+            "recording": "RECORD_BY_DEFAULT"
           },
           "assembly": {
             "name": "CCC",
@@ -135,10 +135,10 @@
           }
         },
         {
+          "type": "STAGE",
           "name": "Stage HUFF",
           "slug": "stage-huff",
           "guid": "53f436a0-705b-40eb-974f-2bfce8857b1b",
-          "type": "stage",
           "stream_id": "s4",
           "capacity": null,
           "description": {
@@ -146,7 +146,7 @@
             "de": "Community-Bühne in Halle H, EG"
           },
           "features": {
-            "recording": "record_by_default"
+            "recording": "RECORD_BY_DEFAULT"
           },
           "assembly": {
             "name": "CCC",
@@ -155,10 +155,10 @@
           }
         },
         {
+          "type": "STAGE",
           "name": "Stage YELL",
           "slug": "stage-yell",
           "guid": "e58b284a-d3e6-42cc-be2b-7e02c791bf95",
-          "type": "stage",
           "stream_id": "s5",
           "capacity": null,
           "description": {
@@ -166,7 +166,7 @@
             "de": "Community-Stage in Saal Y in CCH Ost, Level +2"
           },
           "features": {
-            "recording": "record_by_default"
+            "recording": "RECORD_BY_DEFAULT"
           },
           "assembly": {
             "name": "CCC",
@@ -204,7 +204,7 @@
     },
     "events": [
       {
-        "type": "other",
+        "type": "OTHER",
         "guid": "270fa44c-821a-577f-8ca3-33e8d4a8c2a7",
         "start": "2024-12-27T10:30:00+01:00",
         "end": "2024-12-27T11:00:00+01:00",
@@ -227,17 +227,17 @@
           {
             "guid": "0c16ffaa-709d-599f-959f-9a38b911361a",
             "name": "Gabriela Bogk",
-            "role": "speaker"
+            "role": "SPEAKER"
           },
           {
             "guid": "4cee1e72-681f-5c8b-8dcd-8e58c8f4a445",
             "name": "Senficon",
-            "role": "speaker"
+            "role": "SPEAKER"
           },
           {
             "guid": "721a267b-b09d-5422-8221-4f9a71cfc727",
             "name": "Aline Blankertz",
-            "role": "speaker"
+            "role": "SPEAKER"
           }
         ],
         "links": [
@@ -246,25 +246,25 @@
             "title": "foo bar"
           },
           {
-            "type": "activitypub",
+            "type": "ACTIVITYPUB",
             "url": "https://example.net/@handle/123456",
             "service": "MASTODON"
           },
           {
-            "type": "feedback",
+            "type": "FEEDBACK",
             "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/HQCCYH/feedback/"
           }
         ],
         "attachments": [
           {
-            "type": "slides",
+            "type": "SLIDES",
             "url": "https://example.net/foo/bar/1235.pdf"
           }
         ],
         "url": "https://events.ccc.de/congress/2024/hub/event/38c3-opening-ceremony/"
       },
       {
-        "type": "talk",
+        "type": "TALK",
         "guid": "b1740c2f-0c44-5f1b-89ed-456a9eecf0b8",
         "start": "2024-12-28T00:15:00+01:00",
         "end": "2024-12-28T00:55:00+01:00",
@@ -289,12 +289,12 @@
           {
             "guid": "51766dc0-326b-554c-993b-0b1ffa9e6a1e",
             "name": "Sebastian Schwarz",
-            "role": "speaker"
+            "role": "SPEAKER"
           }
         ],
         "links": [
-          { "type": "origin", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/"},
-          { "type": "feedback", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/feedback/"}
+          { "type": "ORIGIN", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/"},
+          { "type": "FEEDBACK", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/TPGRNN/feedback/"}
         ]
       }
     ],
