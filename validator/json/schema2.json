@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "https://c3voc.de/schema/schedule2",
+  "version": "alpha-2",
   "type": "object",
   "additionalProperties": false,
   "properties": {
