@@ -383,6 +383,7 @@
           ]
         },
         "room": {
+          "$TODO": "should we allow multiple rooms for meta events?",  
           "$ref": "#/definitions/RoomReference"
         }
       }
@@ -410,9 +411,13 @@
         }
       }
     },
-    "HubAssembly": {
+    "RoomGrouping": {
       "type": "object",
       "properties": {
+        "type": {
+          "type": "string",
+          "examples": ["Assembly", "Village", "Cluster", "Habitat", "Building", "Floor", "Area", "Other"]
+        },
         "name": {
           "type": "string"
         },
@@ -465,8 +470,11 @@
         "features": {
           "$ref": "#/definitions/RoomFeatures"
         },
-        "assembly": {
-          "$ref": "#/definitions/HubAssembly"
+        "parent": {
+          "$oneOf": [
+            { "$ref": "#/definitions/RoomReference" },
+            { "$ref": "#/definitions/RoomGrouping" }
+          ]
         }
       },
       "required": ["name", "guid"]

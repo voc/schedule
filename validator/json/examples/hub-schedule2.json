@@ -94,7 +94,7 @@
           "features": {
             "recording": "RECORD_BY_DEFAULT"
           },
-          "assembly": {
+          "parent": {
             "name": "CCC",
             "slug": "ccc",
             "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
@@ -111,7 +111,7 @@
           "features": {
             "recording": "RECORD_BY_DEFAULT"
           },
-          "assembly": {
+          "parent": {
             "name": "CCC",
             "slug": "ccc",
             "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
@@ -128,7 +128,7 @@
           "features": {
             "recording": "RECORD_BY_DEFAULT"
           },
-          "assembly": {
+          "parent": {
             "name": "CCC",
             "slug": "ccc",
             "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
@@ -148,7 +148,7 @@
           "features": {
             "recording": "RECORD_BY_DEFAULT"
           },
-          "assembly": {
+          "parent": {
             "name": "CCC",
             "slug": "ccc",
             "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
@@ -168,7 +168,7 @@
           "features": {
             "recording": "RECORD_BY_DEFAULT"
           },
-          "assembly": {
+          "parent": {
             "name": "CCC",
             "slug": "ccc",
             "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
