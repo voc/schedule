@@ -143,6 +143,10 @@
           "items": {
             "type": "object",
             "properties": {
+              "type": {
+                "type": "string",
+                "$TODO": "Maintrack, DevRoom, Exams, BoF/SoS, etc. ?"
+              },
               "name": {
                 "type": "string"
               },
@@ -590,6 +594,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "type": {
+          "type": "string",
+          "value": "Image"
+        },
         "url": {
           "type": "string",
           "format": "uri"
