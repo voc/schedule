@@ -275,7 +275,10 @@
             "HANDS-ON",
             "MEETING",
             "DISCUSSION",
+            "PERFORMANCE",
+            "CONCERT",
             "GAME",
+            "LIGHTNING_TALK",
             "OTHER"
           ]
         },
