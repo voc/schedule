@@ -161,10 +161,7 @@
           "guid": "e58b284a-d3e6-42cc-be2b-7e02c791bf95",
           "stream_id": "s5",
           "capacity": null,
-          "description": {
-            "en": null,
-            "de": "Community-Stage in Saal Y in CCH Ost, Level +2"
-          },
+          "description": "Community-Stage in Saal Y in CCH Ost, Level +2",
           "features": {
             "recording": "RECORD_BY_DEFAULT"
           },
