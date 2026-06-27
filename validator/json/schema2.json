@@ -83,7 +83,7 @@
           "format": "date-time"
         },
         "timeslot_duration": {
-          "type": "string"
+          "$ref": "#/definitions/Duration"
         },
         "time_zone_name": {
           "type": "string",
@@ -246,7 +246,7 @@
         "duration": {
           "$ref": "#/definitions/Duration",
           "deprecated": true,
-          "$comment": "use end instead"
+          "$comment": "For scheduled events, use end instead"
         },
         "room": {
           "$ref": "#/definitions/RoomReference"
@@ -536,10 +536,10 @@
       }
     },
     "Duration": {
-      "title": "Duration (hh:mm)",
+      "title": "Duration (ISO8601)",
       "type": "string",
-      "examples": ["00:30", "01:30"],
-      "pattern": "^[0-9]+:[0-9]{2}$"
+      "examples": ["PT15M", "PT1H30M"],
+      "pattern": "^P(?!$)(?:\\d+Y)?(?:\\d+M)?(?:\\d+W)?(?:\\d+D)?(?:T(?=\\d)(?:\\d+H)?(?:\\d+M)?(?:\\d+(?:\\.\\d+)?S)?)?$"
     },
     "Language": {
       "title": "ISO 639-1 language code",
