@@ -5,6 +5,9 @@ from sys import stdout
 import json
 import time
 import argparse
+import requests
+import base64
+import uuid
 
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
@@ -67,16 +70,47 @@ CREATE TABLE event_event (
 );
 '''
 
-def add_event(conference, event):
+def add_event(conference, event, args):
 
     # TODO: use voc.tools or make this configurable e.g. based on conference year
-    voc_slug = f"{conference['slug']}-{event['id']}-{event['slug'] if event.get('slug', None) else normalise_string(event['title'])[:50]}"
+    voc_slug = f"{conference['slug']}-{event['id']}-{event['slug'] \
+        if (not(args.overwrite_slug) and event.get('slug', None)) else normalise_string(event['title'])[:50]}"
     #voc_slug = f"fossgis{event['slug']}"
     #assert event['slug'], "slug required"
 
+    url = event.url()
+    # Check if url returns 200
+    try:
+        response = requests.head(url, timeout=5)
+        if response.status_code != 200:
+            print(f"\n Warning: URL {url} returned status code {response.status_code}")
+    except Exception as e:
+        print(f"\n Warning: Could not verify URL {url}: {e}")
+
+    guid = event['guid']
+    if not guid:
+        guid = gen_uuid(voc_slug)
+    else:
+        # Check if guid is a valid UUID
+        try:
+            uuid.UUID(guid)
+        except ValueError:
+            print(f"\n Warning: GUID {guid} is not a UUID in standard serialisation")
+
+            # Try to decoded an compact Base64 UUID format (22 chars, URL-safe)
+            # we have to add some padding because Python's base64 decoder
+            padded = guid + "=" * (-len(guid) % 4)
+            raw = base64.urlsafe_b64decode(padded)
+
+            if len(raw) == 16:
+                guid = str(uuid.UUID(bytes=raw))
+                print(f"Converted input GUID to UUID: {guid}")
+            else:
+                raise ValueError("Decoded value is not 16 bytes")
+
     data = {
         "event": {
-            'guid': event['guid'] or gen_uuid(voc_slug),
+            'guid': guid,
             'talkid': int(event['id']),
             'slug': voc_slug,
             'title': event['title'],
@@ -88,10 +122,8 @@ def add_event(conference, event):
             'language': event['language'] or DEFAULT_LANGUAGE,
             'room': event['room'],
             'track': event.get('track', None),
-            #'url': event.get('url') or f"https://fossgis-konferenz.de/2016/programm/event{event['id']}.html",
-            #'url': f"https://fossgis-konferenz.de/{args.year}/programm/events/{event['id']}.de.html",
-            'url': event.url(),
-            'persons': ', '.join([p for p in event.persons()]),
+            'url': url,
+            'persons': '\n'.join([p for p in event.persons()]),
             # 'published': False, -> defaults to false
             'conferenceId': conference['id'],
         }
@@ -145,8 +177,8 @@ class VoctoImport:
             raise Exception(f'Unknown conference {acronym}')
         pass
 
-    def upsert_event(self, event):
-        add_event(self.conference, event)
+    def upsert_event(self, event, args):
+        add_event(self.conference, event, args)
 
     def depublish_event(self, event_guid):
         remove_event(event_guid)
@@ -154,7 +186,7 @@ class VoctoImport:
 
 def push_schedule(schedule: Schedule, create=False):
     instace = VoctoImport(schedule, create)
-    schedule.foreach_event(instace.upsert_event)
+    schedule.foreach_event(lambda event: instace.upsert_event(event, args))
 
 
 def run(args: argparse.Namespace):
@@ -171,7 +203,7 @@ def run(args: argparse.Namespace):
 
     def upsert_event(event):
         if (len(args.room) == 0 or event['room'] in args.room) and event['do_not_record'] is not True:
-            instace.upsert_event(event)
+            instace.upsert_event(event, args)
 
     try:
 
@@ -205,6 +237,8 @@ if __name__ == '__main__':
     parser.add_argument('--id', action='append', help='filter to a specific event ID')
     parser.add_argument('--guid', action='append', help='filter to a specific event GUID')
 
+    # optional flags
+    parser.add_argument('--overwrite-slug', help='rebuild slug form title', action='store_true', default=False)
 
     if getenv('IMPORT_TOKEN') is None:
         print('WARNING: no IMPORT_TOKEN environment variable set, but required for write access')

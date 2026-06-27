@@ -34,6 +34,8 @@ class ScheduleXML:
         if r.ok is False:
             raise Exception(f'Request failed, HTTP {r.status_code}.')
 
+        # TODO: with lxml we could use the remove_blank_text option to avoid whitespace-only text nodes
+        #etree = ET.fromstring(r.text, parser=ET.XMLParser(encoding='utf-8', remove_blank_text=True))
         etree = ET.fromstring(r.text)
 
         # Close the raw file handle if it's still open
@@ -57,6 +59,10 @@ class ScheduleXML:
     def version(self):
         v = self._schedule.find('version')
         return v.text if v is not None else None
+    
+    def base_url(self):
+        b = self._schedule.find('base_url') or self._schedule.find('conference/base_url')
+        return b.text if b is not None else None
 
     def conference(self, key=None, filter: Callable|None = None, fallback=None):
         c = self._schedule.find('conference')
@@ -149,15 +155,15 @@ class EventXML(Event[ElementTree]):
 
     def persons(self) -> list[str]:
         persons = self._event.findall('persons/person')
-        return [p.text for p in persons]
+        return [p.text or '' for p in persons]
 
     def url(self):
         url_node = self._event.find('url')
         if url_node is not None and url_node.text:
             return url_node.text
         
-        if self['id'] and self.conference() and self.conference().base_url():
-            return self.conference().base_url().format(id=self['id'])
+        if self['id'] and self._conference and self._conference.base_url():
+            return self._conference.base_url().format(id=self['id'])
 
         return None
 
@@ -170,7 +176,9 @@ class EventXML(Event[ElementTree]):
 
         # Otherwise, try to find the value in the XML tree
         item = self._event.find(key)
-        return item.text if item is not None else None
+
+        # cleanup whitespace from xml values, e.g. for description
+        return "".join(item.itertext()).strip() if item is not None else None
 
     def __setitem__(self, key, value):
         self._values[key] = value
