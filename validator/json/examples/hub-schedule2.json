@@ -206,6 +206,7 @@
       {
         "type": "OTHER",
         "guid": "270fa44c-821a-577f-8ca3-33e8d4a8c2a7",
+        "code": "HQCCYH",
         "start": "2024-12-27T10:30:00+01:00",
         "end": "2024-12-27T11:00:00+01:00",
         "room": {
@@ -213,7 +214,8 @@
           "slug": "saal-1",
           "guid": "ba692ba3-421b-5371-8309-60acc34a3c05"
         },
-        "slug": "38c3-38c3-opening-ceremony",
+        "url": "https://events.ccc.de/congress/2024/hub/event/38c3-opening-ceremony/",
+        "slug": "38c3-opening-ceremony",
         "title": "38C3: Opening Ceremony",
         "subtitle": null,
         "language": "en",
@@ -224,56 +226,31 @@
         "description": "This ceremony will prepare you for the 38C3 in all its glory, underground and above, hacks and trolls, art and radical ideas. Let's kick this thing off together!",
         "logo": null,
         "participants": [
-          {
-            "guid": "0c16ffaa-709d-599f-959f-9a38b911361a",
-            "name": "Gabriela Bogk",
-            "role": "SPEAKER"
-          },
-          {
-            "guid": "4cee1e72-681f-5c8b-8dcd-8e58c8f4a445",
-            "name": "Senficon",
-            "role": "SPEAKER"
-          },
-          {
-            "guid": "721a267b-b09d-5422-8221-4f9a71cfc727",
-            "name": "Aline Blankertz",
-            "role": "SPEAKER"
-          }
+          { "guid": "0c16ffaa-709d-599f-959f-9a38b911361a", "name": "Gabriela Bogk", "role": "SPEAKER"},
+          { "guid": "721a267b-b09d-5422-8221-4f9a71cfc727", "name": "Aline Blankertz", "role": "SPEAKER"},
+          { "guid": "4cee1e72-681f-5c8b-8dcd-8e58c8f4a445", "name": "Senficon", "role": "CONTRIBUTOR"}
         ],
         "links": [
-          {
-            "url": "https://example.net/",
-            "title": "foo bar"
-          },
-          {
-            "type": "ACTIVITYPUB",
-            "url": "https://example.net/@handle/123456",
-            "service": "MASTODON"
-          },
-          {
-            "type": "FEEDBACK",
-            "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/HQCCYH/feedback/"
-          }
+          { "url": "https://example.net/", "title": "foo bar" },
+          { "type": "ORIGIN", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/HQCCYH/"},
+          { "type": "FEEDBACK", "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/talk/HQCCYH/feedback/" }
         ],
         "attachments": [
-          {
-            "type": "SLIDES",
-            "url": "https://example.net/foo/bar/1235.pdf"
-          }
-        ],
-        "url": "https://events.ccc.de/congress/2024/hub/event/38c3-opening-ceremony/"
+          { "type": "SLIDES", "url": "https://example.net/foo/bar/1235.pdf" }
+        ]
       },
       {
         "type": "TALK",
         "guid": "b1740c2f-0c44-5f1b-89ed-456a9eecf0b8",
+        "code": "TPGRNN",
         "start": "2024-12-28T00:15:00+01:00",
         "end": "2024-12-28T00:55:00+01:00",
         "room": {
           "name": "Saal ZIGZAG",
           "guid": "62251a07-13e4-5a72-bb3c-8528416ee0f2"
         },
-        "slug": "38c3-a-competitive-time-trial-ai-for-need-for-speed-most-wanted-using-deep-reinforcement-learning",
         "url": "https://events.ccc.de/congress/2024/hub/event/a-competitive-time-trial-ai-for-need-for-speed-most-wanted-using-deep-reinforcement-learning/",
+        "slug": "38c3-a-competitive-time-trial-ai-for-need-for-speed",
         "title": "A Competitive Time-Trial AI for Need for Speed:",
         "subtitle": "Most Wanted Using Deep Reinforcement Learning",
         "language": "en",
@@ -306,16 +283,10 @@
         "avatar": {
           "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/SB9MER_Hwgr1fW.jpg"
         },
+        "links": [
+          { "type": "ACTIVITYPUB", "url": "https://example.net/@handle/123456", "service": "MASTODON" }
+        ],
         "url": "https://events.ccc.de/congress/2024/hub/user/speaker_0c16ffaa-709d-599f-959f-9a38b911361a/"
-      },
-      {
-        "guid": "4cee1e72-681f-5c8b-8dcd-8e58c8f4a445",
-        "name": "Senficon",
-        "biography": "Felix Reda (he/they). Obnoxious twink who thinks he knows everybody. Former Member of the European Parliament.",
-        "avatar": {
-          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/felix_2024_quadrat_g2i2mMI.png"
-        },
-        "url": "https://events.ccc.de/congress/2024/hub/user/speaker_4cee1e72-681f-5c8b-8dcd-8e58c8f4a445/"
       },
       {
         "guid": "721a267b-b09d-5422-8221-4f9a71cfc727",
@@ -327,12 +298,24 @@
         "url": "https://events.ccc.de/congress/2024/hub/user/speaker_721a267b-b09d-5422-8221-4f9a71cfc727/"
       },
       {
+        "guid": "4cee1e72-681f-5c8b-8dcd-8e58c8f4a445",
+        "name": "Senficon",
+        "biography": "Felix Reda (he/they). Obnoxious twink who thinks he knows everybody. Former Member of the European Parliament.",
+        "avatar": {
+          "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/felix_2024_quadrat_g2i2mMI.png"
+        },
+        "url": "https://events.ccc.de/congress/2024/hub/user/speaker_4cee1e72-681f-5c8b-8dcd-8e58c8f4a445/"
+      },
+      {
         "guid": "51766dc0-326b-554c-993b-0b1ffa9e6a1e",
         "name": "Sebastian Schwarz",
         "biography": "Almost 20 years ago Sebastian was a professional player for Team Alternate aTTaX for Need for Speed. In the meantime he has completed his studies in economics and statistics and started a career in data science and machine learning and is currently heading a Data & AI team at E.ON.\r\n\r\nEver since reinforcement learning has come up, he wanted to build an AI to build his records! And he started that journey in 2023...",
         "avatar": {
           "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/CTUZKV_q240tlm.png"
         },
+        "links": [
+          { "url": "https://example.net/@handle/123456", "service": "BLUESKY" }
+        ],
         "url": "https://events.ccc.de/congress/2024/hub/user/speaker_51766dc0-326b-554c-993b-0b1ffa9e6a1e/"
       }
     ]
