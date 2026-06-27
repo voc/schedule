@@ -306,6 +306,22 @@
           "items": {
             "$ref": "#/definitions/Reference"
           }
+        },
+        "state": {
+          "type": "string",
+          "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when the it got canceled or delayed.",
+          "default": "CONFIRMED",
+          "enum": [
+            "DRAFT",
+            "SUBMITTED",
+            "ACCEPTED",
+            "REJECTED",
+            "CONFIRMED",
+            "DELAYED",
+            "CANCELED",
+            "WITHDRAWN",
+            "DELETED"
+          ]
         }
       },
       "required": [
