@@ -1,0 +1,6 @@
+repos:
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.31.2
+  hooks:
+    - id: check-metaschema
+      files: ^validator/json/.*\.json$
