@@ -72,7 +72,7 @@
           "type": "string"
         },
         "description": {
-          "type": "string"
+          "$ref": "#/definitions/LocalizableString"
         },
         "start": {
           "type": "string",
@@ -283,14 +283,13 @@
           ]
         },
         "language": {
-          "type": ["string", "null"],
           "$ref": "#/definitions/Language"
         },
         "abstract": {
-          "type": ["string", "null", "object"]
+          "$ref": "#/definitions/LocalizableString"
         },
         "description": {
-          "type": ["string", "null", "object"]
+          "$ref": "#/definitions/LocalizableString"
         },
         "participants": {
           "type": "array",
@@ -481,8 +480,7 @@
           "type": ["string", "null"]
         },
         "description": {
-          "type": ["string", "null", "object"],
-          "description": "might also be an object { en: '', de: '…' } etc."
+          "$ref": "#/definitions/LocalizableString"
         },
         "capacity": {
           "type": ["number", "null"]
@@ -625,6 +623,26 @@
         }
       },
       "required": ["url"]
+    },
+    "LocalizableString": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string" },
+        { "$ref": "#/definitions/LocalizationMap" }
+      ]
+    },
+    "LocalizationMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "examples": [{
+        "de": "Das Opening gibt euch die wichtigsten Infos für den Congress…", 
+        "en": "The Opening covers everything you need to know about the Congress…"
+      }],
+      "patternProperties": {
+        "^[a-z]{2}$": {
+          "type": "string"
+        }
+      }
     }
   }
 }
