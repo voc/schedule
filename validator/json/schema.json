@@ -216,9 +216,11 @@
           "$comment": "use guid instead"
         },
         "logo": {
-          "type": ["string", "null"],
-          "format": "uri",
-          "description": "absolute URL, or relative to base_url"
+          "$oneOf": [
+            { "type": "null" },
+            { "const": "" },
+            { "type": "string", "format": "uri", "$comment": "absolute URL, or relative to base_url" }
+          ]
         },
         "date": {
           "type": "string",

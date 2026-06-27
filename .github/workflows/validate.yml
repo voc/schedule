@@ -28,3 +28,8 @@ jobs:
       run: |
         check-jsonschema --schemafile validator/json/schema2.json \
           validator/json/examples/*-schedule2.json
+
+    - name: Validate schedule1-json examples against schema1
+      run: |
+        check-jsonschema --schemafile validator/json/schema.json \
+          validator/json/examples/pretalx-democon.json
