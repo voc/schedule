@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "https://c3voc.de/schema/schedule2",
-  "version": "alpha-3",
+  "version": "alpha-4",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -227,7 +227,7 @@
           "type": "string",
           "pattern": "^[A-Z0-9]+$"
         },
-        "logo": {
+        "image": {
           "oneOf": [
             { "type": "null" },
             { "$ref": "#/definitions/Image" }
