@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "$id": "https://c3voc.de/schema/schedule2",
-  "version": "alpha-3",
+  "version": "alpha-4",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -114,7 +114,7 @@
           }
         },
         "url": {
-          "description": "URL to the conference schedule or public website",
+          "description": "URL to the conference public website",
           "type": "string",
           "format": "uri"
         },
@@ -124,6 +124,28 @@
             "type": "string",
             "$ref": "#/definitions/Language"
           }
+        },
+        "sameAs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Alternate URIs identifying this conference.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
+        },
+        "partOf": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "URIs identifying the parent conference/series/etc.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
         },
         "defaults": {
           "type": "object",
@@ -146,7 +168,7 @@
             "properties": {
               "type": {
                 "type": "string",
-                "$TODO": "Maintrack, DevRoom, Exams, BoF/SoS, etc. ?"
+                "examples": ["MAIN", "DEVROOM", "EXAMS", "BOF", "SELF_ORGANIZED", "OTHER"]
               },
               "name": {
                 "type": "string"
@@ -154,9 +176,17 @@
               "slug": {
                 "$ref": "#/definitions/Slug"
               },
-              "color": {
-                "type": "string",
-                "format": "color"
+              "sameAs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "URIs specifiying the semantics of this track.",
+                "examples": [
+                  "https://content.events.ccc.de/#ethics-society-and-politics",
+                  "https://www.wikidata.org/wiki/Q141455289"
+                ]
               },
               "colors": {
                 "type": "object",
@@ -172,7 +202,8 @@
                   }
                 }
               }
-            }
+            },
+            "required": ["name", "slug"]
           }
         },
         "rooms": {
@@ -227,7 +258,7 @@
           "type": "string",
           "pattern": "^[A-Z0-9]+$"
         },
-        "logo": {
+        "image": {
           "oneOf": [
             { "type": "null" },
             { "$ref": "#/definitions/Image" }
@@ -333,12 +364,10 @@
         "links",
         "participants",
         "room",
-        "slug",
         "start",
         "end",
         "subtitle",
         "title",
-        "track",
         "type",
         "url"
       ]
@@ -350,7 +379,7 @@
           "type": "string"
         },
         "role": {
-          "title": "Main role of this person at the event",
+          "description": "Main role of this person at the event",
           "type": "string",
           "default": "SPEAKER",
           "enum": [
@@ -564,7 +593,8 @@
             "RELATED",
             "FEEDBACK",
             "ORIGIN",
-            "ACTIVITYPUB"
+            "ACTIVITYPUB",
+            "ATPROTO"
           ]
         },
         "url": {
@@ -585,6 +615,7 @@
       "required": ["url"]
     },
     "Slug": {
+      "description": "A permanent, URL-friendly identifier for an object in the context of this conference.",
       "type": "string",
       "pattern": "^[a-z0-9_-]+[a-z0-9]$"
     },

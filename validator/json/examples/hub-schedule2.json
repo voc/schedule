@@ -221,7 +221,7 @@
         },
         "abstract": "Glad you could make it! Take a seat and buckle up for a ride through four days of chaotic adventures.",
         "description": "This ceremony will prepare you for the 38C3 in all its glory, underground and above, hacks and trolls, art and radical ideas. Let's kick this thing off together!",
-        "logo": null,
+        "image": null,
         "participants": [
           { "guid": "0c16ffaa-709d-599f-959f-9a38b911361a", "name": "Gabriela Bogk", "role": "SPEAKER"},
           { "guid": "721a267b-b09d-5422-8221-4f9a71cfc727", "name": "Aline Blankertz", "role": "SPEAKER"},
@@ -256,7 +256,7 @@
         },
         "abstract": "All challenges and achievements in creating a competitive time-trial AI in NFS:MW.",
         "description": "15 years ago, at the height of my eSports career, I uploaded an (unofficial) ESL record at Need for Speed: Most Wanted (2005) (NFS:MW) to Youtube. In the meantime Deep Reinforcement Learning became popular and ever since I have dreamt of creating a competitive AI for my favorite racing game of all time: NFS:MW. Now finally the time was right: The hardware is fast enough, good software is available, and Sony's AI research has proven the task is actually doable. Hence I thought: \"How hard can it possibly be?\".\r\n\r\nThis talk will present in detail all challenges and achievements in creating a competitive time-trial AI in NFS:MW from scratch - including but not limited to - hacking of the game to create a custom API, building a custom (real-time) OpenAI gym environment, steering the game using a virtual controller, and finally successfully training an AI using the Soft-Actor-Critic algorithm. All code including the API is written in Python and is open source.",
-        "logo": {
+        "image": {
           "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/38c3/submissions/TPGRNN/Screenshot_from_2024-10-19_17-05-41_OmPkGCO.png"
         },
         "participants": [
