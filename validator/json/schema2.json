@@ -168,7 +168,7 @@
             "properties": {
               "type": {
                 "type": "string",
-                "$TODO": "Maintrack, DevRoom, Exams, BoF/SoS, etc. ?"
+                "examples": ["MAIN", "DEVROOM", "EXAMS", "BOF", "SELF_ORGANIZED", "OTHER"]
               },
               "name": {
                 "type": "string"
