@@ -146,6 +146,54 @@
             "$ref": "#/definitions/Language"
           }
         },
+        "organizer": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Short name or acronym of the organisation hosting the conference",
+              "examples": [
+                "CCC"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "description": "Full name of the organisation hosting the conference",
+              "examples": [
+                "Chaos Computer Club e.V."
+              ]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "examples": [
+                "https://ccc.de"
+              ]
+            } 
+          }
+        },
+        "sameAs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Alternate URIs identifying this conference.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
+        },
+        "partOf": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "URIs identifying the parent conference/series/etc.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
+        },
         "defaults": {
           "type": "object",
           "additionalProperties": true,

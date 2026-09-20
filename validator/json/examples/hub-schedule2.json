@@ -26,6 +26,11 @@
         ]
       },
       "languages": ["en", "de"],
+      "organizer": {
+        "name": "CCC",
+        "title": "Chaos Computer Club e.V.",
+        "url": "https://ccc.de/"
+      },
       "defaults": {
         "theme": "dark",
         "language": "en"
