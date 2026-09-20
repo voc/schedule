@@ -160,10 +160,6 @@
               "slug": {
                 "$ref": "#/definitions/Slug"
               },
-              "color": {
-                "type": "string",
-                "format": "color"
-              },
               "colors": {
                 "type": "object",
                 "additionalProperties": true,
@@ -178,7 +174,8 @@
                   }
                 }
               }
-            }
+            },
+            "required": ["name", "slug"]
           }
         },
         "rooms": {
