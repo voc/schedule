@@ -12,6 +12,7 @@
       "type": "string"
     },
     "generator": {
+      "description": "Software which generated this schedule",
       "type": "object",
       "properties": {
         "name": {
@@ -21,6 +22,7 @@
           "type": "string"
         },
         "url": {
+          "description": "URL to the primary git repository of the software/script which generated this schedule",
           "type": "string",
           "format": "uri"
         }
@@ -120,7 +122,7 @@
           }
         },
         "url": {
-          "description": "URL to the conference schedule or public website",
+          "description": "URL to the conference public website",
           "type": "string",
           "format": "uri"
         },
@@ -351,7 +353,7 @@
           "type": "string"
         },
         "role": {
-          "title": "Main role of this person at the event",
+          "description": "Main role of this person at the event",
           "type": "string",
           "default": "SPEAKER",
           "enum": [
@@ -482,6 +484,7 @@
           "enum": ["LECTURE_HALL", "STAGE", "WORKSHOP", "OUTSIDE", "VIRTUAL", "PROJECT", "HANGAR", "OTHER"]
         },
         "guid": {
+          "description": "Globally unique identifier for the room, should be stable across different instances of this conference",
           "type": "string",
           "format": "uuid"
         },
@@ -555,6 +558,11 @@
       "pattern": "^[a-z]{2}$",
       "$TODO": "Should we add an enum list of language codes here?"
     },
+    "Slug": {
+      "description": "A permanent, URL-friendly identifier for an object in the context of this conference.",
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+    },
     "Reference": {
       "title": "Link or Attachment",
       "type": "object",
@@ -592,10 +600,6 @@
         }
       },
       "required": ["url"]
-    },
-    "Slug": {
-      "type": "string",
-      "pattern": "^[a-z0-9_-]+[a-z0-9]$"
     },
     "SocialMediaService": {
       "type": "string",
