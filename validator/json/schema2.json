@@ -175,6 +175,18 @@
               "slug": {
                 "$ref": "#/definitions/Slug"
               },
+              "sameAs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "URIs specifiying the semantics of this track.",
+                "examples": [
+                  "https://content.events.ccc.de/#ethics-society-and-politics",
+                  "https://www.wikidata.org/wiki/Q141455289"
+                ]
+              },
               "colors": {
                 "type": "object",
                 "additionalProperties": true,
@@ -527,6 +539,13 @@
         "geolocation": {
           "$ref": "#/definitions/GeoJSON"
         },
+        "sameAs":{
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
         "parent": {
           "$oneOf": [
             { "$ref": "#/definitions/RoomReference" },
@@ -704,6 +723,16 @@
         "geolocation": {
           "$ref": "#/definitions/GeoJSON"
         },
+        "sameAs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "examples": [
+            ["https://www.openstreetmap.org/relation/2554571#v6", "https://www.wikidata.org/wiki/Q896114"]
+          ]
+        }
       },
       "required": ["name"]
     }

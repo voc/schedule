@@ -20,6 +20,10 @@
           "type": "Point",
           "coordinates": [9.993568, 53.552556]
         },
+        "sameAs": [
+          "https://www.openstreetmap.org/relation/2554571#v6",
+          "https://www.wikidata.org/wiki/Q896114"
+        ]
       },
       "languages": ["en", "de"],
       "defaults": {
@@ -34,7 +38,10 @@
             "light": "#F9B000",
             "dark": "#F9B000"
           },
-          "slug": "art-beauty"
+          "slug": "art-beauty",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455286"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e2",
@@ -43,7 +50,10 @@
             "light": "#E40429",
             "dark": "#E40429"
           },
-          "slug": "ethics-society-politics"
+          "slug": "ethics-society-politics",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455289"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e3",
@@ -52,7 +62,10 @@
             "light": "#685B9D",
             "dark": "#685B9D"
           },
-          "slug": "hardware-making"
+          "slug": "hardware-making",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455290"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e4",
@@ -61,7 +74,10 @@
             "light": "#00A356",
             "dark": "#00A356"
           },
-          "slug": "science"
+          "slug": "science",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455291"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e5",
@@ -70,7 +86,10 @@
             "light": "#0347B4",
             "dark": "#0347B4"
           },
-          "slug": "security"
+          "slug": "security",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455293"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e6",
@@ -79,7 +98,10 @@
             "light": "#4D4D4C",
             "dark": "#4D4D4C"
           },
-          "slug": "entertainment"
+          "slug": "entertainment",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455288"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d4ccc",
