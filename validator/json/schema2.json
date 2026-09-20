@@ -581,7 +581,8 @@
             "RELATED",
             "FEEDBACK",
             "ORIGIN",
-            "ACTIVITYPUB"
+            "ACTIVITYPUB",
+            "ATPROTO"
           ]
         },
         "url": {

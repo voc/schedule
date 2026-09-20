@@ -312,7 +312,7 @@
           "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/CTUZKV_q240tlm.png"
         },
         "links": [
-          { "url": "https://example.net/@handle/123456", "service": "BLUESKY" }
+          { "url": "https://example.net/@handle/123456", "type": "ATPROTO" }
         ],
         "url": "https://events.ccc.de/congress/2024/hub/user/speaker_51766dc0-326b-554c-993b-0b1ffa9e6a1e/"
       }
