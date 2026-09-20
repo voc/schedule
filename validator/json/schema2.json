@@ -125,6 +125,28 @@
             "$ref": "#/definitions/Language"
           }
         },
+        "sameAs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Alternate URIs identifying this conference.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
+        },
+        "partOf": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "URIs identifying the parent conference/series/etc.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
+        },
         "defaults": {
           "type": "object",
           "additionalProperties": true,
@@ -157,6 +179,17 @@
               "color": {
                 "type": "string",
                 "format": "color"
+              "sameAs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "URIs specifiying the semantics of this track.",
+                "examples": [
+                  "https://content.events.ccc.de/#ethics-society-and-politics",
+                  "https://www.wikidata.org/wiki/Q141455289"
+                ]
               },
               "colors": {
                 "type": "object",
