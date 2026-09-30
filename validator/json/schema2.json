@@ -95,9 +95,6 @@
           "type": "string",
           "format": "date-time"
         },
-        "timeslot": {
-          "$ref": "#/definitions/Duration"
-        },
         "timeZone": {
           "type": "object",
           "properties": {
