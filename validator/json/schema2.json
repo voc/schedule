@@ -31,7 +31,7 @@
   "definitions": {
     "Schedule": {
       "type": "object",
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "version": {
           "type": "string"
@@ -47,9 +47,15 @@
               { "$ref": "#/definitions/MetaEvent" }
             ]
           }
+        },
+        "persons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Person"
+          }
         }
       },
-      "required": ["conference", "version"]
+      "required": ["conference", "events", "persons", "version"]
     },
     "Conference": {
       "type": "object",
@@ -411,6 +417,7 @@
     },
     "Person": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string"
@@ -424,13 +431,20 @@
           "type": "string",
           "format": "uri"
         },
+        "biography": {
+          "type": "string"
+        },
+        "avatar": {
+          "$ref": "#/definitions/Image"
+        },
         "links": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Reference"
           }
         }
-      }
+      },
+      "required": ["name", "guid"]
     },
     "RoomGrouping": {
       "type": "object",
