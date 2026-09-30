@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://c3voc.de/schema/schedule2",
   "version": "alpha-4",
   "type": "object",
@@ -323,8 +323,7 @@
         },
         "duration": {
           "$ref": "#/definitions/Duration",
-          "deprecated": true,
-          "$comment": "For scheduled events, use end instead"
+          "description": "For some use cases like Halfnarp or an initial public (self-organized) events submission phase, we want to be able to expose the planned duration of unscheduled events. These events are typically in status `DRAFT` till `ACCEPTED`. When start and end times are eventually set, the duration field should not exist."
         },
         "room": {
           "$ref": "#/definitions/RoomReference"
@@ -389,7 +388,7 @@
         },
         "state": {
           "type": "string",
-          "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when it got canceled or delayed.",
+          "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when it got canceled or delayed. Missing, empty or null means CONFIRMED.",
           "default": "CONFIRMED",
           "enum": [
             "DRAFT",
@@ -411,12 +410,30 @@
         "links",
         "participants",
         "room",
-        "start",
-        "end",
         "subtitle",
         "title",
         "type",
         "url"
+      ],
+      "allOf": [
+        {
+          "$comment": "An event not fully scheduled (it has a duration, or a start without an end) needs an explicit pre-schedule state.",
+          "if": {
+            "anyOf": [
+              { "required": ["duration"] },
+              { "required": ["start"], "not": { "required": ["end"] } }
+            ]
+          },
+          "then": {
+            "required": ["state"],
+            "properties": { "state": { "enum": ["DRAFT", "SUBMITTED", "ACCEPTED", "REJECTED"] } }
+          }
+        },
+        {
+          "$comment": "Event duration is redundant once start AND end are set.",
+          "if": { "required": ["start", "end"] },
+          "then": { "properties": { "duration": false } }
+        }
       ]
     },
     "EventParticipant": {
