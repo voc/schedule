@@ -12,6 +12,15 @@
       "timeZone": {
         "name": "Europe/Berlin"
       },
+      "location": {
+        "name": "CCH",
+        "address": "CCH - Congress Center Hamburg, Messeplatz 1, 20357 Hamburg, Germany",
+        "url": "https://cch.de",
+        "geolocation": {
+          "type": "Point",
+          "coordinates": [9.993568, 53.552556]
+        },
+      },
       "languages": ["en", "de"],
       "defaults": {
         "theme": "dark",

@@ -111,6 +111,9 @@
         "logo": {
           "$ref": "#/definitions/Image"
         },
+        "location": {
+          "$ref": "#/definitions/Location"
+        },
         "colors": {
           "type": "object",
           "additionalProperties": true,
@@ -521,6 +524,9 @@
         "features": {
           "$ref": "#/definitions/RoomFeatures"
         },
+        "geolocation": {
+          "$ref": "#/definitions/GeoJSON"
+        },
         "parent": {
           "$oneOf": [
             { "$ref": "#/definitions/RoomReference" },
@@ -579,6 +585,11 @@
       "description": "A permanent, URL-friendly identifier for an object in the context of this conference.",
       "type": "string",
       "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+    },
+    "GeoJSON": {
+      "title": "GeoJSON",
+      "description": "A GeoJSON geometry, feature, or feature collection, see https://geojson.org.",
+      "$ref": "https://geojson.org/schema/GeoJSON.json"
     },
     "Reference": {
       "title": "Link or Attachment",
@@ -675,6 +686,26 @@
           "type": "string"
         }
       }
+    },
+    "Location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "geolocation": {
+          "$ref": "#/definitions/GeoJSON"
+        },
+      },
+      "required": ["name"]
     }
   }
 }
