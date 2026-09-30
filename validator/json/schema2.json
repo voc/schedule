@@ -38,6 +38,11 @@
         "version": {
           "type": "string"
         },
+        "baseUrl": {
+          "description": "Base URL for the conference schedule system",
+          "type": "string",
+          "format": "uri"
+        },
         "conference": {
           "$ref": "#/definitions/Conference"
         },
@@ -90,13 +95,18 @@
           "type": "string",
           "format": "date-time"
         },
-        "timeslot_duration": {
+        "timeslot": {
           "$ref": "#/definitions/Duration"
         },
-        "time_zone_name": {
-          "type": "string",
-          "examples": ["Europe/Amsterdam", "Europe/Berlin", "UTC"],
-          "pattern": "^([A-Z][a-z]+/[A-Z][a-z]+)|UTC$"
+        "timeZone": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "examples": ["Europe/Amsterdam", "Europe/Berlin", "UTC"],
+              "pattern": "^([A-Z][a-z]+/[A-Z][a-z]+)|UTC$"
+            }
+          }
         },
         "logo": {
           "$ref": "#/definitions/Image"
@@ -488,8 +498,15 @@
           "type": "string",
           "format": "uuid"
         },
-        "stream_id": {
-          "type": ["string", "null"]
+        "stream": {
+          "type": ["object", "null"],
+          "properties": {
+            "id": {
+              "description": "Identifier of a C3VOC livestream channel associated with this room",
+              "examples": ["s1", "s2", "muc1"],
+              "type": ["string"]
+            }
+          }
         },
         "description": {
           "$ref": "#/definitions/LocalizableString"
