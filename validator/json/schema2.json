@@ -326,7 +326,8 @@
           "$ref": "#/definitions/RoomReference"
         },
         "slug": {
-          "$ref": "#/definitions/Slug"
+          "$ref": "#/definitions/Slug",
+          "description": "An optional URL-friendly identifier for the event, typically derived from the title – should ideally never change once set."
         },
         "url": {
           "type": "string",
