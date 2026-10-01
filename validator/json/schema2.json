@@ -703,26 +703,11 @@
         },
         "service": {
           "description": "Only needed when the URL alone doesn't unambiguously identify the software, e.g. a self-hosted instance.",
-          "oneOf": [
-            { "$ref": "#/definitions/ResourceHostingService" },
-            { "$ref": "#/definitions/FediverseSoftware" },
-            { "$ref": "#/definitions/VideoMediaService" }
-          ]
+          "type": "string",
+          "enum": ["MASTODON", "VOCTOWEB", "PEERTUBE", "FORGEJO", "GITLAB"]
         }
       },
       "required": ["url"]
-    },
-    "FediverseSoftware": {
-      "type": "string",
-      "enum": ["MASTODON"]
-    },
-    "ResourceHostingService": {
-      "type": "string",
-      "enum": ["FORGEJO", "GITLAB"]
-    },
-    "VideoMediaService": {
-      "type": "string",
-      "enum": ["VOCTOWEB", "PEERTUBE"]
     },
     "TrackReference": {
       "type": "object",
