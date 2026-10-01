@@ -325,6 +325,10 @@
         "room": {
           "$ref": "#/definitions/RoomReference"
         },
+        "location": {
+          "$ref": "#/definitions/Location",
+          "description": "When room is not specified, the location of the event can be provided here e.g. for outdoor events, meetups at the bar, or offsite locations."
+        },
         "slug": {
           "$ref": "#/definitions/Slug",
           "description": "An optional URL-friendly identifier for the event, typically derived from the title – should ideally never change once set."
@@ -407,13 +411,20 @@
         "language",
         "links",
         "participants",
-        "room",
         "subtitle",
         "title",
         "type",
         "url"
       ],
       "allOf": [
+        {
+          "$comment": "An event takes place either in a room or at a location, never both. Only DRAFT events may have neither.",
+          "not": { "required": ["room", "location"] },
+          "if": {
+            "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
+          },
+          "then": { "anyOf": [{ "required": ["room"] }, { "required": ["location"] }] }
+        },
         {
           "$comment": "An event not fully scheduled (it has a duration, or a start without an end) needs an explicit pre-schedule state.",
           "if": {
