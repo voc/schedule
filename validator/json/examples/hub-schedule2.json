@@ -2,15 +2,35 @@
   "$schema": "../schema2.json",
   "schedule": {
     "version": "2024-12-26 20:23",
-    "base_url": "https://events.ccc.de/congress/2024/hub/",
+    "baseUrl": "https://events.ccc.de/congress/2024/hub/",
     "conference": {
       "acronym": "38c3",
       "title": "38C3",
       "start": "2024-12-27T09:30:00+00:00",
       "end": "2024-12-30T17:45:00+00:00",
-      "time_zone_name": "Europe/Berlin",
       "url": "https://events.ccc.de/congress/2024/",
+      "timeZone": {
+        "name": "Europe/Berlin"
+      },
+      "location": {
+        "name": "CCH",
+        "address": "CCH - Congress Center Hamburg, Messeplatz 1, 20357 Hamburg, Germany",
+        "url": "https://cch.de",
+        "geolocation": {
+          "type": "Point",
+          "coordinates": [9.993568, 53.552556]
+        },
+        "sameAs": [
+          "https://www.openstreetmap.org/relation/2554571#v6",
+          "https://www.wikidata.org/wiki/Q896114"
+        ]
+      },
       "languages": ["en", "de"],
+      "organizer": {
+        "name": "CCC",
+        "title": "Chaos Computer Club e.V.",
+        "url": "https://ccc.de/"
+      },
       "defaults": {
         "theme": "dark",
         "language": "en"
@@ -23,7 +43,10 @@
             "light": "#F9B000",
             "dark": "#F9B000"
           },
-          "slug": "art-beauty"
+          "slug": "art-beauty",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455286"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e2",
@@ -32,7 +55,10 @@
             "light": "#E40429",
             "dark": "#E40429"
           },
-          "slug": "ethics-society-politics"
+          "slug": "ethics-society-politics",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455289"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e3",
@@ -41,7 +67,10 @@
             "light": "#685B9D",
             "dark": "#685B9D"
           },
-          "slug": "hardware-making"
+          "slug": "hardware-making",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455290"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e4",
@@ -50,7 +79,10 @@
             "light": "#00A356",
             "dark": "#00A356"
           },
-          "slug": "science"
+          "slug": "science",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455291"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e5",
@@ -59,7 +91,10 @@
             "light": "#0347B4",
             "dark": "#0347B4"
           },
-          "slug": "security"
+          "slug": "security",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455293"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d40e6",
@@ -68,7 +103,10 @@
             "light": "#4D4D4C",
             "dark": "#4D4D4C"
           },
-          "slug": "entertainment"
+          "slug": "entertainment",
+          "sameAs": [
+            "https://www.wikidata.org/wiki/Q141455288"
+          ]
         },
         {
           "guid": "3dc5daf5-ba21-4577-97e4-fb6e4b5d4ccc",
@@ -86,7 +124,9 @@
           "name": "Saal 1",
           "slug": "saal-1",
           "guid": "ba692ba3-421b-5371-8309-60acc34a3c05",
-          "stream_id": "s1",
+          "stream": {
+            "id": "s1"
+          },
           "capacity": 3025,
           "description": {
             "en": "Lecture hall in CCH central, Level +2 to +4"
@@ -95,6 +135,7 @@
             "recording": "RECORD_BY_DEFAULT"
           },
           "parent": {
+            "type": "ASSEMBLY",
             "name": "CCC",
             "slug": "ccc",
             "guid": "6840c453-af5c-413c-8127-adcbdcd98e9e"
@@ -105,7 +146,9 @@
           "name": "Saal GLITCH",
           "slug": "saal-glitch",
           "guid": "7202df07-050c-552f-8318-992f94e40ef0",
-          "stream_id": "s2",
+          "stream": {
+            "id": "s2"
+          },
           "capacity": 1160,
           "description": "Lecture hall G in CCH West, Level +2",
           "features": {
@@ -122,7 +165,9 @@
           "name": "Saal ZIGZAG",
           "slug": "saal-zigzag",
           "guid": "62251a07-13e4-5a72-bb3c-8528416ee0f2",
-          "stream_id": "s3",
+          "stream": {
+            "id": "s3"
+          },
           "capacity": 965,
           "description": "Lecture hall Z in CCH East, Level +3",
           "features": {
@@ -139,7 +184,9 @@
           "name": "Stage HUFF",
           "slug": "stage-huff",
           "guid": "53f436a0-705b-40eb-974f-2bfce8857b1b",
-          "stream_id": "s4",
+          "stream": {
+            "id": "s4"
+          },
           "capacity": null,
           "description": {
             "en": "Community-Stage in hall H, Level 0",
@@ -159,7 +206,9 @@
           "name": "Stage YELL",
           "slug": "stage-yell",
           "guid": "e58b284a-d3e6-42cc-be2b-7e02c791bf95",
-          "stream_id": "s5",
+          "stream": {
+            "id": "s5"
+          },
           "capacity": null,
           "description": "Community-Stage in Saal Y in CCH Ost, Level +2",
           "features": {
@@ -221,7 +270,7 @@
         },
         "abstract": "Glad you could make it! Take a seat and buckle up for a ride through four days of chaotic adventures.",
         "description": "This ceremony will prepare you for the 38C3 in all its glory, underground and above, hacks and trolls, art and radical ideas. Let's kick this thing off together!",
-        "logo": null,
+        "image": null,
         "participants": [
           { "guid": "0c16ffaa-709d-599f-959f-9a38b911361a", "name": "Gabriela Bogk", "role": "SPEAKER"},
           { "guid": "721a267b-b09d-5422-8221-4f9a71cfc727", "name": "Aline Blankertz", "role": "SPEAKER"},
@@ -256,7 +305,7 @@
         },
         "abstract": "All challenges and achievements in creating a competitive time-trial AI in NFS:MW.",
         "description": "15 years ago, at the height of my eSports career, I uploaded an (unofficial) ESL record at Need for Speed: Most Wanted (2005) (NFS:MW) to Youtube. In the meantime Deep Reinforcement Learning became popular and ever since I have dreamt of creating a competitive AI for my favorite racing game of all time: NFS:MW. Now finally the time was right: The hardware is fast enough, good software is available, and Sony's AI research has proven the task is actually doable. Hence I thought: \"How hard can it possibly be?\".\r\n\r\nThis talk will present in detail all challenges and achievements in creating a competitive time-trial AI in NFS:MW from scratch - including but not limited to - hacking of the game to create a custom API, building a custom (real-time) OpenAI gym environment, steering the game using a virtual controller, and finally successfully training an AI using the Soft-Actor-Critic algorithm. All code including the API is written in Python and is open source.",
-        "logo": {
+        "image": {
           "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/38c3/submissions/TPGRNN/Screenshot_from_2024-10-19_17-05-41_OmPkGCO.png"
         },
         "participants": [
@@ -311,7 +360,7 @@
           "url": "https://fahrplan.events.ccc.de/congress/2024/fahrplan/media/avatars/CTUZKV_q240tlm.png"
         },
         "links": [
-          { "url": "https://example.net/@handle/123456", "service": "BLUESKY" }
+          { "url": "https://example.net/@handle/123456", "type": "ATPROTO" }
         ],
         "url": "https://events.ccc.de/congress/2024/hub/user/speaker_51766dc0-326b-554c-993b-0b1ffa9e6a1e/"
       }

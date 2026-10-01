@@ -1,7 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://c3voc.de/schema/schedule2",
-  "version": "alpha-3",
+  "version": "beta-1",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -12,6 +12,7 @@
       "type": "string"
     },
     "generator": {
+      "description": "Software which generated this schedule",
       "type": "object",
       "properties": {
         "name": {
@@ -21,6 +22,7 @@
           "type": "string"
         },
         "url": {
+          "description": "URL to the primary git repository of the software/script which generated this schedule",
           "type": "string",
           "format": "uri"
         }
@@ -31,10 +33,15 @@
   "definitions": {
     "Schedule": {
       "type": "object",
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "version": {
           "type": "string"
+        },
+        "baseUrl": {
+          "description": "Base URL for the conference schedule system",
+          "type": "string",
+          "format": "uri"
         },
         "conference": {
           "$ref": "#/definitions/Conference"
@@ -47,9 +54,15 @@
               { "$ref": "#/definitions/MetaEvent" }
             ]
           }
+        },
+        "persons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Person"
+          }
         }
       },
-      "required": ["conference", "version"]
+      "required": ["conference", "events", "persons", "version"]
     },
     "Conference": {
       "type": "object",
@@ -82,16 +95,21 @@
           "type": "string",
           "format": "date-time"
         },
-        "timeslot_duration": {
-          "$ref": "#/definitions/Duration"
-        },
-        "time_zone_name": {
-          "type": "string",
-          "examples": ["Europe/Amsterdam", "Europe/Berlin", "UTC"],
-          "pattern": "^([A-Z][a-z]+/[A-Z][a-z]+)|UTC$"
+        "timeZone": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "examples": ["Europe/Amsterdam", "Europe/Berlin", "UTC"],
+              "pattern": "^([A-Z][a-z]+/[A-Z][a-z]+)|UTC$"
+            }
+          }
         },
         "logo": {
           "$ref": "#/definitions/Image"
+        },
+        "location": {
+          "$ref": "#/definitions/Location"
         },
         "colors": {
           "type": "object",
@@ -114,7 +132,7 @@
           }
         },
         "url": {
-          "description": "URL to the conference schedule or public website",
+          "description": "URL to the conference public website",
           "type": "string",
           "format": "uri"
         },
@@ -124,6 +142,54 @@
             "type": "string",
             "$ref": "#/definitions/Language"
           }
+        },
+        "organizer": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Short name or acronym of the organisation hosting the conference",
+              "examples": [
+                "CCC"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "description": "Full name of the organisation hosting the conference",
+              "examples": [
+                "Chaos Computer Club e.V."
+              ]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "examples": [
+                "https://ccc.de"
+              ]
+            } 
+          }
+        },
+        "sameAs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Alternate URIs identifying this conference.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
+        },
+        "partOf": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "URIs identifying the parent conference/series/etc.",
+          "examples": [
+            "https://www.wikidata.org/wiki/Q141455450"
+          ]
         },
         "defaults": {
           "type": "object",
@@ -146,7 +212,7 @@
             "properties": {
               "type": {
                 "type": "string",
-                "$TODO": "Maintrack, DevRoom, Exams, BoF/SoS, etc. ?"
+                "examples": ["MAIN", "DEVROOM", "EXAMS", "BOF", "SELF_ORGANIZED", "OTHER"]
               },
               "name": {
                 "type": "string"
@@ -154,9 +220,17 @@
               "slug": {
                 "$ref": "#/definitions/Slug"
               },
-              "color": {
-                "type": "string",
-                "format": "color"
+              "sameAs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "URIs specifiying the semantics of this track.",
+                "examples": [
+                  "https://content.events.ccc.de/#ethics-society-and-politics",
+                  "https://www.wikidata.org/wiki/Q141455289"
+                ]
               },
               "colors": {
                 "type": "object",
@@ -172,7 +246,8 @@
                   }
                 }
               }
-            }
+            },
+            "required": ["name", "slug"]
           }
         },
         "rooms": {
@@ -227,7 +302,7 @@
           "type": "string",
           "pattern": "^[A-Z0-9]+$"
         },
-        "logo": {
+        "image": {
           "oneOf": [
             { "type": "null" },
             { "$ref": "#/definitions/Image" }
@@ -245,14 +320,18 @@
         },
         "duration": {
           "$ref": "#/definitions/Duration",
-          "deprecated": true,
-          "$comment": "For scheduled events, use end instead"
+          "description": "For some use cases like Halfnarp or an initial public (self-organized) events submission phase, we want to be able to expose the planned duration of unscheduled events. These events are typically in status `DRAFT` till `ACCEPTED`. When start and end times are eventually set, the duration field should not exist."
         },
         "room": {
           "$ref": "#/definitions/RoomReference"
         },
+        "location": {
+          "$ref": "#/definitions/Location",
+          "description": "When room is not specified, the location of the event can be provided here e.g. for outdoor events, meetups at the bar, or offsite locations."
+        },
         "slug": {
-          "$ref": "#/definitions/Slug"
+          "$ref": "#/definitions/Slug",
+          "description": "An optional URL-friendly identifier for the event, typically derived from the title – should ideally never change once set."
         },
         "url": {
           "type": "string",
@@ -311,7 +390,7 @@
         },
         "state": {
           "type": "string",
-          "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when it got canceled or delayed.",
+          "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when it got canceled or delayed. Missing, empty or null means CONFIRMED.",
           "default": "CONFIRMED",
           "enum": [
             "DRAFT",
@@ -332,15 +411,38 @@
         "language",
         "links",
         "participants",
-        "room",
-        "slug",
-        "start",
-        "end",
         "subtitle",
         "title",
-        "track",
         "type",
         "url"
+      ],
+      "allOf": [
+        {
+          "$comment": "An event takes place either in a room or at a location, never both. Only DRAFT events may have neither.",
+          "not": { "required": ["room", "location"] },
+          "if": {
+            "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
+          },
+          "then": { "anyOf": [{ "required": ["room"] }, { "required": ["location"] }] }
+        },
+        {
+          "$comment": "An event not fully scheduled (it has a duration, or a start without an end) needs an explicit pre-schedule state.",
+          "if": {
+            "anyOf": [
+              { "required": ["duration"] },
+              { "required": ["start"], "not": { "required": ["end"] } }
+            ]
+          },
+          "then": {
+            "required": ["state"],
+            "properties": { "state": { "enum": ["DRAFT", "SUBMITTED", "ACCEPTED", "REJECTED"] } }
+          }
+        },
+        {
+          "$comment": "Event duration is redundant once start AND end are set.",
+          "if": { "required": ["start", "end"] },
+          "then": { "properties": { "duration": false } }
+        }
       ]
     },
     "EventParticipant": {
@@ -350,7 +452,7 @@
           "type": "string"
         },
         "role": {
-          "title": "Main role of this person at the event",
+          "description": "Main role of this person at the event",
           "type": "string",
           "default": "SPEAKER",
           "enum": [
@@ -413,6 +515,7 @@
     },
     "Person": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string"
@@ -426,13 +529,20 @@
           "type": "string",
           "format": "uri"
         },
+        "biography": {
+          "type": "string"
+        },
+        "avatar": {
+          "$ref": "#/definitions/Image"
+        },
         "links": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Reference"
           }
         }
-      }
+      },
+      "required": ["name", "guid"]
     },
     "RoomGrouping": {
       "type": "object",
@@ -473,11 +583,19 @@
           "enum": ["LECTURE_HALL", "STAGE", "WORKSHOP", "OUTSIDE", "VIRTUAL", "PROJECT", "HANGAR", "OTHER"]
         },
         "guid": {
+          "description": "Globally unique identifier for the room, should be stable across different instances of this conference",
           "type": "string",
           "format": "uuid"
         },
-        "stream_id": {
-          "type": ["string", "null"]
+        "stream": {
+          "type": ["object", "null"],
+          "properties": {
+            "id": {
+              "description": "Identifier of a C3VOC livestream channel associated with this room",
+              "examples": ["s1", "s2", "muc1"],
+              "type": ["string"]
+            }
+          }
         },
         "description": {
           "$ref": "#/definitions/LocalizableString"
@@ -491,6 +609,16 @@
         },
         "features": {
           "$ref": "#/definitions/RoomFeatures"
+        },
+        "geolocation": {
+          "$ref": "#/definitions/GeoJSON"
+        },
+        "sameAs":{
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
         },
         "parent": {
           "$oneOf": [
@@ -546,6 +674,16 @@
       "pattern": "^[a-z]{2}$",
       "$TODO": "Should we add an enum list of language codes here?"
     },
+    "Slug": {
+      "description": "A permanent, URL-friendly identifier for an object in the context of this conference.",
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+[a-z0-9]$"
+    },
+    "GeoJSON": {
+      "title": "GeoJSON",
+      "description": "A GeoJSON geometry, feature, or feature collection, see https://geojson.org.",
+      "$ref": "https://geojson.org/schema/GeoJSON.json"
+    },
     "Reference": {
       "title": "Link or Attachment",
       "type": "object",
@@ -564,7 +702,8 @@
             "RELATED",
             "FEEDBACK",
             "ORIGIN",
-            "ACTIVITYPUB"
+            "ACTIVITYPUB",
+            "ATPROTO"
           ]
         },
         "url": {
@@ -575,30 +714,12 @@
           "type": "string"
         },
         "service": {
-          "oneOf": [
-            { "$ref": "#/definitions/ResourceHostingService" },
-            { "$ref": "#/definitions/SocialMediaService" },
-            { "$ref": "#/definitions/VideoMediaService" }
-          ]
+          "description": "Only needed when the URL alone doesn't unambiguously identify the software, e.g. a self-hosted instance.",
+          "type": "string",
+          "enum": ["MASTODON", "VOCTOWEB", "PEERTUBE", "FORGEJO", "GITLAB"]
         }
       },
       "required": ["url"]
-    },
-    "Slug": {
-      "type": "string",
-      "pattern": "^[a-z0-9_-]+[a-z0-9]$"
-    },
-    "SocialMediaService": {
-      "type": "string",
-      "enum": ["MASTODON", "BLUESKY", "INSTAGRAM", "THREADS", "TWITTER"]
-    },
-    "ResourceHostingService": {
-      "type": "string",
-      "enum": ["FORGEJO", "GITHUB", "GITLAB"]
-    },
-    "VideoMediaService": {
-      "type": "string",
-      "enum": ["MEDIACCCDE", "PEERTUBE"]
     },
     "TrackReference": {
       "type": "object",
@@ -643,6 +764,36 @@
           "type": "string"
         }
       }
+    },
+    "Location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "geolocation": {
+          "$ref": "#/definitions/GeoJSON"
+        },
+        "sameAs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "examples": [
+            ["https://www.openstreetmap.org/relation/2554571#v6", "https://www.wikidata.org/wiki/Q896114"]
+          ]
+        }
+      },
+      "required": ["name"]
     }
   }
 }
