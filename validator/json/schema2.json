@@ -362,7 +362,10 @@
           ]
         },
         "language": {
-          "$ref": "#/definitions/Language"
+          "oneOf": [
+            { "$ref": "#/definitions/Language" },
+            { "type": "null" }
+          ]
         },
         "abstract": {
           "$ref": "#/definitions/LocalizableString"
@@ -767,7 +770,7 @@
     },
     "Location": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "name": {
           "type": "string"
