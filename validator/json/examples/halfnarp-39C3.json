@@ -1,0 +1,1505 @@
+[
+    {
+        "title": "Code to Craft: Procedural Generation for the Physical World",
+        "duration": 2400,
+        "event_id": "37CQQE",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "bleeptrack",
+        "abstract": "<p>Join bleeptrack for a deep dive into the fascinating world of procedural generation beyond the screen. From stickers and paper lanterns to PCBs, furniture, and even physical procedural generators, this talk explores the challenges and creative possibilities of bringing generative projects into tangible form.</p>"
+    },
+    {
+        "title": "Suing spyware in Europe: news from the front!",
+        "duration": 3600,
+        "event_id": "37HY7V",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Lori Roussey, Celia/Ir\u00eddia",
+        "abstract": "<p>In 2022, CitizenLab contacted a member of the Spanish non-profit Ir\u00eddia to tell them that one of their members had likely been hacked with Pegasus spyware. The target, a lawyer, had been spied on by the Spanish government in 2020 because he represented a Catalan politician who was in prison. His phone was infected with Pegasus during the COVID-19 lockdown, on the same day he was having an online meeting with other lawyers working on the case.</p> <p>Ir\u00eddia and the lawyer (Andreu) decided to take the case to court. A few years later, he met with Data Rights and invited them to join forces and bring in partners from across Europe to increase the impact. This collaboration led to the creation of the PEGA coalition in May 2025.</p> <p>This talk goes over the status of the case and work we have done across Europe to bring spyware use in court.</p>"
+    },
+    {
+        "title": "Von Groschen und SpurLos - GNU Taler auch auf eurem Event!",
+        "duration": 2400,
+        "event_id": "38XZPY",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Mikolai G\u00fctschow, signum",
+        "abstract": "<p>Willkommen in der Zukunft: Beim LUG Camp in Wipperf\u00fcrth und bei den Datenspuren in Dresden wurde digital bezahlt - mit GNU Taler als Event-Bezahlsystem. Noch einfacher als Bargeld, billiger als Kartenzahlung und ohne Eingriff in die Privatsph\u00e4re der Besucher*innen. Wir zeigen euch, wie auch ihr das bei eurer n\u00e4chsten (Chaos-)Veranstaltung anbieten k\u00f6nnt!</p>"
+    },
+    {
+        "title": "Agentic ProbLLMs: Exploiting AI Computer-Use and Coding Agents",
+        "duration": 3600,
+        "event_id": "3AFPCB",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Johann Rehberger",
+        "abstract": "<p>This talk demonstrates end-to-end prompt injection exploits that compromise agentic systems. Specifically, we will discuss exploits that target computer-use and coding agents, such as Anthropic's Claude Code, GitHub Copilot, Google Jules, Devin AI, ChatGPT Operator, Amazon Q, AWS Kiro, and others. </p> <p>Exploits will impact confidentiality, system integrity, and the future of AI-driven automation, including remote code execution, exfiltration of sensitive information such as access tokens, and even joining Agents to traditional command and control infrastructure. Which are known as \"ZombAIs\", a term first coined by the presenter as well as long-term prompt injection persistence in AI coding agents.</p> <p>Additionally, we will explore how nation state TTPs such as ClickFix apply to Computer-Use systems and how they can trick AI systems and lead to full system compromise (AI ClickFix). </p> <p>Finally, we will cover current mitigation strategies and forward-looking recommendations and strategic thoughts.</p>"
+    },
+    {
+        "title": "Xous: A Pure-Rust Rethink of the Embedded Operating System",
+        "duration": 2400,
+        "event_id": "3CCTFB",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "bunnie, Sean \"xobs\" Cross",
+        "abstract": "<p>Xous is a message-passing microkernel implemented in pure Rust, targeting secure embedded applications. This talk covers three novel aspects of the OS: hardware MMU support (and why we had to make our own chip to get this feature), how and why we implemented the Rust standard library in Rust (instead of calling the C standard library, like most other Rust platforms), and how we combine the power of Rust semantics with virtual memory to create safe yet efficient asynchronous messaging primitives. We conclude with a short demo of the OS running on a new chip, the \"Baochip-1x\", which is an affordable, mostly-open RTL SoC built in 22nm TSMC, configured expressly for running Xous.</p>"
+    },
+    {
+        "title": "Not To Be Trusted - A Fiasco in Android TEEs",
+        "duration": 3600,
+        "event_id": "3G3L3C",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "gannimo, 0ddc0de, Philipp",
+        "abstract": "<p>Trusted Execution Environments (TEEs) based on ARM TrustZone form the backbone of modern Android devices' security architecture. The word \"Trusted\" in this context means that <strong>you</strong>, as in \"the owner of the device\", don't get to execute code in this execution environment. Even when you unlock the bootloader and Magisk-root your device, only vendor-signed code will be accepted by the TEE. This unfortunate setup limits third-party security research to the observation of input/output behavior and static manual reverse engineering of TEE components.</p> <p>In this talk, we take you with us on our journey to regain power over the highest privilege level on Xiaomi devices. Specifically, we are targeting the Xiaomi Redmi 11s and will walk through the steps necessary to escalate our privileges from a rooted user space (N-EL0) to the highest privilege level in the Secure World (S-EL3). We will revisit old friends like Trusted Application rollback attacks and GlobalPlatform's design flaw, and introduce novel findings like the literal fiasco you can achieve when you're introducing micro kernels without knowing what you're doing. In detail, we will elaborate on the precise exploitation steps taken and mitigations overcome at each stage of our exploit chain, and finally demo our exploits on stage.</p> <p>Regaining full control over our devices is the first step to deeply understand popular TEE-protected use cases including, but not limited to, mobile payment, mobile DRM solutions, and the mechanisms protecting your biometric authentication data.</p>"
+    },
+    {
+        "title": "Verlorene Domains, offene T\u00fcren - Was alte Beh\u00f6rdendomains verraten",
+        "duration": 2400,
+        "event_id": "3GESDB",
+        "language": "de",
+        "track_id": 31,
+        "speaker_names": "Tim Philipp Sch\u00e4fers (TPS)",
+        "abstract": "<p>Was passiert, wenn staatliche Domains auslaufen - und pl\u00f6tzlich jemand anderes sie besitzt? In diesem Vortrag wird berichtet, wie mehrere ehemals offizielle, aber unregistrierte Domains deutscher Bundesministerien und Beh\u00f6rden erworben werden konnten - und welche Datenstr\u00f6me dadurch sichtbar wurden. \u00dcber Monate hinweg konnten so DNS-Anfragen aus Netzen des Bundes empfangen werden - ein erhebliches Sicherheitsrisiko. Unter anderem da es so m\u00f6glich war Accounts zu \u00fcbernehmen, Validierungen von E-Mailsignaturen zu manipulieren, Anfrage umzuleiten und im Extremfall Code auf Systemen auszuf\u00fchren. (Keine sensiblen Daten werden ver\u00f6ffentlicht; der Fokus liegt auf Forschung, Aufkl\u00e4rung und verantwortungsvollem Umgang mit den Ergebnissen.)</p>"
+    },
+    {
+        "title": "Rowhammer in the Wild: Large-Scale Insights from FlippyR.AM",
+        "duration": 2400,
+        "event_id": "3JXAJJ",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Martin Heckel, Florian Adamsky, Daniel Gruss",
+        "abstract": "<p>Last year at 38c3, we gave a talk titled \"Ten Years of Rowhammer: A Retrospect (and Path to the Future).\" In this talk, we summarized 10 years of Rowhammer research and highlighted gaps in our understanding. For instance, although nearly all DRAM generations from DDR3 to DDR5 are vulnerable to the Rowhammer effect, we still do not know its real-world prevalence. For that reason, we invited everyone at 38c3 last year to participate in our large-scale Rowhammer prevalence study. In this year's talk, we will first provide an update on Rowhammer research and present our results from that study. </p> <p>A lot has happened in Rowhammer research in 2025. We have evidence that DDR5 is as vulnerable to Rowhammer as previous generations. Other research shows that not only can adversaries target rows, but columns can also be addressed and used for bit flips. Browser-based Rowhammer attacks are back on the table with Posthammer and with ECC. fail, we can mount Rowhammer attacks on DDR4 with ECC memory.</p> <p>In our large-scale study, we measure Rowhammer prevalence in a fully automated cross-platform framework, FlippyR.AM, using the available state-of-the-art software-based DRAM and Rowhammer tools. Our framework automatically gathers information about the DRAM and uses 5 tools to reverse-engineer the DRAM addressing functions, and based on the reverse-engineered functions, uses 7 tools to mount Rowhammer. We distributed the framework online and via USB thumb drives to thousands of participants from December 30, 2024, to June 30, 2025. Overall, we collected 1006 datasets from 822 systems with various CPUs, DRAM generations, and vendors. Our study reveals that out of 1006 datasets, 453 (371 of the 822 unique systems) succeeded in the first stage of reverse-engineering the DRAM addressing functions, indicating that successfully and reliably recovering DRAM addressing functions remains a significant open problem. In the second stage, 126 (12.5 % of all datasets) exhibited bit flips in our fully automated Rowhammer attacks. Our results show that fully automated, i.e., weaponizable, Rowhammer attacks work on a lower share of systems than FPGA-based and lab experiments indicated, but at 12.5%, are still a practical vector for threat actors. Furthermore, our results highlight that the two most pressing research challenges around Rowhammer exploitability are more reliable reverse-engineering tools for DRAM addressing functions, as 50 % of datasets without bit flips failed in the DRAM reverse-engineering stage, and reliable Rowhammer attacks across diverse processor microarchitectures, as only 12.5 % of datasets contained bit flips. Addressing each of these challenges could double the number of systems susceptible to Rowhammer and make Rowhammer a more pressing threat in real-world scenarios.</p>"
+    },
+    {
+        "title": "Blackbox Palantir",
+        "duration": 3600,
+        "event_id": "3SNDCP",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Franziska G\u00f6rlitz, Constanze Kurz",
+        "abstract": "<p>Wer nutzt in Deutschland Software von Palantir und wer hat das in naher Zukunft vor? Was sind die rechtlichen Voraussetzungen f\u00fcr den Einsatz solcher Analysewerkzeuge? Und was plant Innenminister Alexander Dobrindt in Sachen Palantir f\u00fcr die Polizeien des Bundes?</p>"
+    },
+    {
+        "title": "Fossile Industrie liebt KI!",
+        "duration": 2400,
+        "event_id": "3TA9HW",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Rike, Moritz Leiner",
+        "abstract": "<p>Der Hype um generative KI und die Gasindustrie bilden in Zeiten der Klimakrise eine bedrohliche Allianz f\u00fcr die Zukunft des Planeten.</p>"
+    },
+    {
+        "title": "Building hardware - easier than ever - harder than it should be",
+        "duration": 2400,
+        "event_id": "77GPKJ",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Kliment",
+        "abstract": "<p>Building electronics has never been easier, cheaper, or more accessible than the last few years. It's also becoming a precious skill in a world where commercially made electronics are the latest victim of enshittification and vibe coding. And yet, while removing technical and financial barriers to building things, we've not come as far as we should have in removing social barriers. The electronics and engineering industry and the cultures around them are hostile to newcomers and self-taught practitioners, for no good reason at all. I've been teaching advanced electronics manufacturing skills to absolute beginners for a decade now, and they've consistently succeeded at acquiring them. I'm here to tell you why it's not as hard as it seems, how to get into it, and why more people who think they can't should try.</p>"
+    },
+    {
+        "title": "Protecting the network data of one billion people: Breaking network crypto in popular Chinese mobile apps",
+        "duration": 3600,
+        "event_id": "78KFYJ",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Mona",
+        "abstract": "<p>In this talk, I will describe how my team and I systematically exploited around a dozen home-rolled network encryption protocols used by popular mobile apps like RedNote, Alipay, and some of the most popular mobile browsers in China to encrypt sensitive information. I'll demonstrate how network eavesdroppers could access users' browsing history and mobile activity.</p> <p>This is a systemic issue; despite our work on the above protocols and the resulting vulnerability disclosures, this plague of home-rolled and proprietary encryption is still at large. I will end by discussing how we got here, re-affirm the age-old adage, \u201cDon\u2019t roll your own crypto!\u201d, and call on hackers around the world to help us move towards HTTPS everywhere.</p>"
+    },
+    {
+        "title": "CCC-Jahresr\u00fcckblick",
+        "duration": 7200,
+        "event_id": "7AA9FV",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "khaleesi, Constanze Kurz, Linus Neumann, erdgeist, Matthias Marx",
+        "abstract": "<p>Das war nicht das Jahr 2025, das wir bestellt hatten.</p>"
+    },
+    {
+        "title": "When 8 Bits is Overkill: Making Blinkenlights with a 1-bit CPU",
+        "duration": 2400,
+        "event_id": "7GDZTJ",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "girst (Tobi)",
+        "abstract": "<p>Over the last half year I have explored the Motorola mc14500 - a CPU with a true one-bit architecture - and made it simulate Conway's Game of Life. This talk gives a look into how implementing a design for such a simplistic CPU can work, and how it's possible to address 256 LEDs and half a kiloword of memory with just four bits of address space.</p>"
+    },
+    {
+        "title": "Set-top box Hacking: freeing the 'Freebox'",
+        "duration": 3600,
+        "event_id": "7GSZAD",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Fr\u00e9d\u00e9ric Hoguin",
+        "abstract": "<p>The French ISP 'Free' was the first to introduce a set-top box in France in 2002, named the Freebox. Four years later, the fifth version of the Freebox was released and distributed to customers. It comprises two devices: a router, and a PVR called the Freebox HD, both running Linux. The Freebox HD had innovative features at the time, such as live television control and HD capabilities.</p> <p>Such a device has a lot of potential for running homebrew, so I decided to hack it. I present how I got arbitrary code execution on the Freebox HD and then root privileges, using a chain of two 0-day exploits, one of which is in the Linux kernel. I then analyze the device, run homebrew software, and explain the structure of the ISP's private network that I uncovered while exploring the device.</p>"
+    },
+    {
+        "title": "Handy weg bis zur Ausreise \u2013 Wie Cellebrite ins Ausl\u00e4nderamt kam",
+        "duration": 3600,
+        "event_id": "7LCNLY",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Chris K\u00f6ver",
+        "abstract": "<p>Seit Anfang 2024 d\u00fcrfen Ausl\u00e4nderbeh\u00f6rden Smartphones von ausreisepflichtigen Menschen nicht nur durchsuchen, sondern gleich ganz behalten \u2013 \u201ebis zur Ausreise\u201c. </p> <p>Was als geringf\u00fcgige \u00c4nderung im Aufenthaltsgesetz daherkommt, erweist sich als massiver Eingriff in Grundrechte: Menschen verlieren nicht nur die Kontrolle \u00fcber ihre Daten, sondern auch ihr wichtigstes Kommunikationsmittel \u2013 auf unbestimmte Zeit. </p> <p>Hier h\u00f6rt ihr, welche absurden Bl\u00fcten das treibt. Von Bayern bis NRW haben Bundesl\u00e4nder inzwischen eigene IT-forensische Tools f\u00fcr ihre Beh\u00f6rden angeschafft, um auf den Ger\u00e4ten nach \u201cIndizien\u201d f\u00fcr die Herkunft zu suchen. Sie setzen Methoden ein, wie wir sie sonst aus Ermittlungsverfahren oder von Geheimdiensten kennen \u2013 um die Ger\u00e4te von Menschen zu durchsuchen, die nichts verbrochen haben.</p>"
+    },
+    {
+        "title": "10 years of Dieselgate",
+        "duration": 3600,
+        "event_id": "7MSRA7",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Felix Domke, Karsten Burger",
+        "abstract": "<p>Let's have a (hopefully) final look at Diesel emission cheating. This technical talk summarizes what I learned by reverse-engineering dozens of engine ECU software, how I found and characterized \"interesting logic\" which, more often than not, ended up being a court-approved \"defeat device\".</p> <p>What started as a \"curious investigation\" in 2015 to obtain a ground truth to widespread media reports of \"VW being caught for cheating\" ended up as a full-blown journey through the then-current state of the Diesel car industry.</p> <p>In this talk, Karsten and Felix will walk through the different implementation of defeat devices, their impact on emissions, and the challenges in documenting seemingly black boxes in court-proven expert reports.</p>"
+    },
+    {
+        "title": "Doomsday-Porn, Sch\u00e4ferhunde und die \u201eniedliche Abschiebung\u201c von nebenan: Wie autorit\u00e4re Akteure KI-generierte Inhalte f\u00fcr Social Media nutzen",
+        "duration": 3600,
+        "event_id": "7SWYYC",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Katharina Nocun",
+        "abstract": "<p>Der amtierende US-Pr\u00e4sident postet ein Video, in dem er Demonstrierende aus einem Kampfjet heraus mit F\u00e4kalien bewirft und das Wei\u00dfe Haus zelebriert den \u201eStar Wars Day\u201c mit einem pomp\u00f6sen Trump-Bild mit Lichtschwert. Accounts von AfD-Sympathisanten posten KI-Kitsch einer vermeintlich heilen Welt voller blonder Kinder und Frauen im Dirndl. Ist das lediglich eine geschmackliche Entgleisung oder steckt da mehr dahinter?</p>"
+    },
+    {
+        "title": "Junghacker:innentag Einf\u00fchrung",
+        "duration": 2400,
+        "event_id": "7UZMPL",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "",
+        "abstract": "<p>Zu unserer Freude haben sich in den letzten Jahren immer mehr Junghacker:innen auf dem Congress eingefunden. Daher bieten wir auch diesmal, wie schon in den Vorjahren, einen speziell auf Kinder und Jugendliche zugeschnittenen Junghacker:innentag an. Am zweiten Congresstag, dem 28. Dezember 2024, organisieren Freiwillige aus vielen Assemblies von etwa 10 bis 17 Uhr ein vielseitiges Workshop-Programm f\u00fcr angehende Hacker:innen.</p>"
+    },
+    {
+        "title": "What You Hack Is What You Mean: 35 Years of Wiring Sense into Text",
+        "duration": 2400,
+        "event_id": "8CVJUN",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Torsten Roeder",
+        "abstract": "<p>Encoding isn\u2019t just for machines \u2014 it\u2019s how humans shape meaning. This talk traces 35 years of hacking text through the Text Encoding Initiative (TEI), a community-driven, open-source standard for describing the deep structure of texts. We\u2019ll explore how TEI turns literature, research, and even hacker lore into machine-readable, remixable data \u2014 and how it enables minimal, sustainable self-publishing without gatekeepers. From alphabets to XML and the Hacker Bible, we\u2019ll look at text as a living system: something we can read, write, and hack together.</p>"
+    },
+    {
+        "title": "Supplements und Social Media \u2013 wenn der Online-Hype zur realen Gesundheitsgefahr wird",
+        "duration": 3600,
+        "event_id": "8MPJXK",
+        "language": "de",
+        "track_id": 29,
+        "speaker_names": "Christoph Wiedmer",
+        "abstract": "<p>Nicht zuletzt durch die Werbung in den sozialen Medien werden in Deutschland immer mehr Nahrungserg\u00e4nzungsmittel verkauft. Einige Influencer bringen sogar ihre eigenen Pr\u00e4parate auf den Markt. Gleichzeitig h\u00e4ufen sich F\u00e4lle, in denen die Einnahme von vermeintlich harmlosen \u201eSupplements\u201c zu Gesundheitssch\u00e4den gef\u00fchrt hat. Der Vortrag will daher die Mechanismen hinter dem Supplement-Hype aufzeigen, zudem erkl\u00e4ren, warum aktuell ein ausreichender Verbraucherschutz insbesondere im Internet nicht gew\u00e4hrleistet werden kann, wo Handlungsbedarf f\u00fcr die Politik besteht und wie man sich selbst vor fragw\u00fcrdigen Produkten sch\u00fctzen kann.</p>"
+    },
+    {
+        "title": "Infrastructure Review",
+        "duration": 3600,
+        "event_id": "8NECSP",
+        "language": "en",
+        "track_id": 30,
+        "speaker_names": "nicoduck",
+        "abstract": "<p>Infrastructure teams present what they did for this years congress and why they did it that way.</p>"
+    },
+    {
+        "title": "And so it begins - Wie unser Rechtsstaat auf dem Highway Richtung Trumpismus rast \u2013 und warum afghanische Kl\u00e4ger*innen f\u00fcr uns die Notbremse ziehen",
+        "duration": 3600,
+        "event_id": "8TLLST",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Eva, Elaha",
+        "abstract": "<p>Wenn die Regierung sich nicht mehr an das eigene Recht gebunden f\u00fchlt, markiert das nicht nur einen politischen Spurwechsel, sondern die Auffahrt auf den Highway to Trumpism. Zeit die Notbremse zu ziehen! Normalerweise trifft es in solchen Situationen immer zuerst diejenigen, die sich am wenigsten wehren k\u00f6nnen. Doch was passiert, wenn genau diese Menschen mit juristischen Werkzeugen bewaffnet werden, um zur\u00fcckzuschlagen? Anhand von \u00fcber 100 Klagen afghanischer Schutzsuchender zeigen wir, wie Ministerien das Bundesaufnahmeprogramm sabotieren, Gerichte sie zur\u00fcckpfeifen \u2013 und die Zivilgesellschaft zum letzten Schutzwall des Rechtsstaats wird. Und wir verraten, warum sich Beamte im BAMF vielleicht lieber krankmelden sollten und welche anderen M\u00f6glichkeiten sie haben, um nicht straff\u00e4llig zu werden.</p>"
+    },
+    {
+        "title": "\u00dcber europ\u00e4ische Grenzen hinweg auf klinischen Daten rechnen - aber sicher!",
+        "duration": 2400,
+        "event_id": "8WYX73",
+        "language": "de",
+        "track_id": 29,
+        "speaker_names": "Hendrik Ballhausen",
+        "abstract": "<p>Der Trend geht dahin, aus Gesundheitsdaten gro\u00dfe zentralisierte Datenbanken aufzubauen. Eine datensparsame Alternative dazu ist, in einem verschl\u00fcsseltem Netzwerk gemeinsam auf verteilten privaten Daten zu rechnen, ohne sie miteinander teilen zu m\u00fcssen. Perspektivisch k\u00f6nnen so demokratischere Datenstr\u00f6me geschaffen werden, die Patient:innen als aktiv Teilhabende statt als passive Datenquellen einbinden. Kommt mit auf eine Reise, die vor sechs Jahren in Deutschland gestartet ist und jetzt die erste europ\u00e4ische klinische Studie mit Secure Multiparty Computation (SMPC) realisiert hat.</p>"
+    },
+    {
+        "title": "CUII: Wie Konzerne heimlich Webseiten in Deutschland sperren",
+        "duration": 2400,
+        "event_id": "9AEJAR",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Lina Lastname, Northernside",
+        "abstract": "<p>Stellt euch vor, eine private Organisation aus milliardenschweren Konzernen entscheidet, welche Webseiten ihr nicht besuchen d\u00fcrft - ohne Richter, ohne \u00f6ffentliche Kontrolle oder Transparenz. Genau das macht die CUII in Deutschland seit Jahren.</p>"
+    },
+    {
+        "title": "Lessons from Building an Open-Architecture Secure Element",
+        "duration": 2400,
+        "event_id": "9DYZXG",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Jan Pleskac",
+        "abstract": "<p>The talk will be about our experience from building an open-architecture secure element from the ground up. It explains why openness became part of the security model, how it reshaped design and development workflows, and where reality pushed back \u2014 through legal constraints, third-party IP, or export controls. It walks through the secure boot chain, attestation model, firmware update flow, integration APIs, and the testing framework built for external inspection. Real examples of security evaluations by independent researchers are presented, showing what was learned from their findings and how those exchanges raised the overall security bar. The goal is to provoke discussion on how open collaboration can make hardware more verifiable, adaptable, auditable and while keeping secure.</p>"
+    },
+    {
+        "title": "Design for 3D-Printing",
+        "duration": 2400,
+        "event_id": "9KVMHY",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "rahix",
+        "abstract": "<p>3D-Printers have given us all the unprecedented ability to manufacture mechanical parts with a very low barrier to entry. The only thing between your idea and its physical manifestation is the process of designing the parts. However, this is actually a topic of incredible depth: Design engineering is a whole discipline to itself, built on top of tons and tons of heuristics to produce shapes that are functional, strong, and importantly: well-manufacturable</p> <p>In this talk, I will present the rules for designing well-printable parts and touch on other areas of design considerations so you can learn to create parts that work first try and can be reproduced by others on their 3d-printers easily.</p>"
+    },
+    {
+        "title": "AI-generated content in Wikipedia - a tale of caution",
+        "duration": 2400,
+        "event_id": "9KWKDP",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Mathias Schindler",
+        "abstract": "<p>I successfully failed with a literature related project and accidentally built a ChatGPT detector. Then I spoke to the people who uploaded ChatGPT generated content on Wikipedia.</p>"
+    },
+    {
+        "title": "Wie wir alte Flipperautomaten am Leben erhalten",
+        "duration": 2400,
+        "event_id": "9M7DLC",
+        "language": "de",
+        "track_id": 32,
+        "speaker_names": "Axel B\u00f6ttcher",
+        "abstract": "<p>Der Vortrag beschreibt, wie eine Gruppe von Begeisterten eine Sammlung von ca. 100 Flipperautomaten (Pinball Machines) am Leben und in spielbereitem Zustand erh\u00e4lt.</p>"
+    },
+    {
+        "title": "A Quick Stop at the HostileShop",
+        "duration": 2400,
+        "event_id": "9MALHD",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Mike Perry",
+        "abstract": "<p>HostileShop is a python-based tool for generating prompt injections and jailbreaks against LLM agents. I created HostileShop to see if I could use LLMs to write a framework that generates prompt injections against LLMs, by having LLMs attack other LLMs. It's LLMs all the way down. HostileShop generated prompt injections for a winning submission in OpenAI's GPT-OSS-20B RedTeam Contest. Since then, I have expanded HostileShop to generate injections for the entire LLM frontier, as well as to mutate jailbreaks to bypass prompt filters, adapt to LLM updates, and to give advice on performing injections against other agent systems. In this talk, I will give you an overview of LLM Agent hacking. I will cover LLM context window formats, LLM agents, agent vulnerability surface, and the prompting and efficiency insights that led to the success of HostileShop.</p>"
+    },
+    {
+        "title": "Security of Cardiac Implantable Electronic Devices",
+        "duration": 2400,
+        "event_id": "9P8YNR",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "dilucide",
+        "abstract": "<p>Cardiac Implantable Electronic Devices (CIED), such as cardiac pacemakers and defibrillators, are a fairly niche target for security researchers, in part due to a lack of manufacturer cooperation and device accessibility. This talk aims to provide insights into the challenges in device development and methods with which to research device security. Data accessibility to patients will be touched upon.</p>"
+    },
+    {
+        "title": "Teckids \u2013 eine verstehbare (digitale) Welt",
+        "duration": 2400,
+        "event_id": "9YBCSL",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Keno, Darius Auding",
+        "abstract": "<p>Die Teckids-Gemeinschaft bringt Kinder, Jugendliche und Erwachsene zusammen, um gemeinsam aktiv f\u00fcr eine verstehbare (digitale) Welt zu sein.</p>"
+    },
+    {
+        "title": "Human microservices at the Dutch Railways: modern architecture, ancient hardware?",
+        "duration": 3600,
+        "event_id": "AAHZK8",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Maarten W",
+        "abstract": "<p>The Dutch railways have been operating an increasingly complicated network of trains for over 80 years. The task of overseeing it is far too complex for a single human. As such, a network of specifically scoped humans has been connected. Over time, computers and software have been introduced into the system, but today there is still a significant role for humans.</p> <p>This talk describes the network of \"human microservices\" that is involved in the Dutch Railways' day to day operation from the eyes of a software developer.</p>"
+    },
+    {
+        "title": "The Last of Us -  Fighting the EU Surveillance Law Apocalypse",
+        "duration": 3600,
+        "event_id": "AD7RSU",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Svea Windwehr, Chlo\u00e9 Berth\u00e9l\u00e9my",
+        "abstract": "<p>The virus of surveillance is spreading across the European Union. In the form of its \"ProtectEU\" Internal Security Strategy, the European Commission is planning to attack encryption, re-introduce mandatory data retention and strengthen Europol and Frontex, the main agents of its oppressive law enforcement infrastructure. In this talk, we will journey the wastelands of the EU surveillance apocalypse together: We will take a close look at what politicians are planning to undermine our fundamental rights, the technology involved, and the real harms we must fight. From there, we will chart pathways to resistance and collective immunity against a surveillance agenda that requires us to form new alliances and re-think mobilization.</p>"
+    },
+    {
+        "title": "Auf die Dauer hilft nur Power:  Herausforderungen f\u00fcr dezentrale Netzwerke aus Sicht der Soziologie",
+        "duration": 2400,
+        "event_id": "AEHLZT",
+        "language": "de",
+        "track_id": 29,
+        "speaker_names": "Marco W\u00e4hner",
+        "abstract": "<p>Der Vortrag diskutiert Herausforderungen dezentraler Netzwerke aus soziologischer Perspektive. Als dezentrale Netzwerke werden technische Infrastrukturen verstanden, die nicht von einer zentralen Autorit\u00e4t, sondern verteilt \u00fcber Instanzen zur Verf\u00fcgung gestellt werden. Nutzer:innen profitieren von dieser Infrastruktur, nutzen beispielsweise das Fediverse oder das Tor-Netzwerk, ohne zur Infrastruktur beizutragen. Zugleich k\u00f6nnen dezentrale Netzwerke nur dann bestehen, wenn hinreichende Ressourcen von Personen oder Organisationen mobilisiert werden, um das Netzwerk \u00fcberhaupt zur Verf\u00fcgung zu stellen. Dies f\u00fchrt zur origin\u00e4ren Instabilit\u00e4t dezentraler Netzwerke, wenn nicht der Weg der Kommodifizierung des Nutzer:innenverhaltens eingeschlagen wird. Aufbauend auf dieser Zustandsbeschreibung, werden Bedingungen er\u00f6rtert, um Kollektivg\u00fcter wie dezentrale Netzwerke organisatorisch (und nicht technisch) herzustellen. Hierzu z\u00e4hlen Partizipation oder die Idee einer \u00f6ffentlichen Grundfinanzierung. Der Vortrag wird neben soziologischen Ideen und harten Zahlen auch durch eine ordentliche Portion Idealismus zu Fragen der Souver\u00e4nit\u00e4t und Autonomit\u00e4t in der Digitalisierung motiviert.</p>"
+    },
+    {
+        "title": "Shit for Future: turning human shit into a climate solution",
+        "duration": 2400,
+        "event_id": "AFTZCD",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Elena",
+        "abstract": "<p>Humanity has already crossed the point where simply reducing emissions will no longer be enough to keep global warming below 2\u00b0C. According to the IPCC (AR6, WGIII), it is now essential to actively remove greenhouse gases from the atmosphere in order to meet global climate targets, maintain net-zero (or even net-negative emissions), and address the burden of historical emissions. At the same time, degraded soils and the climate crisis are a threat to global food security. Two years ago, I presented an overview of different methods available for carbon dioxide removal. Today, I want to show you an example of how CO2 can be removed from the atmosphere while simultaneously improving the lives of local communities:</p> <p>Human shit.</p> <p>Human shit is a high abundant biomass, contains critical nutrients for global food security, and causes serious health and environmental issues from poor or non-existent treatment outside industrial countries. Converting shit into biochar presents a powerful solution: the process eliminates contaminants, stabilizes and locks away carbon, and can be used to improve agricultural soils. The challenge is that most nutrients in this biochar are not accessible to plants. To overcome this, I mixed human and chicken shit and produced a \u201cSuperchar\u201d that releases far more nutrients. It\u2019s not magic, it\u2019s just some chemistry and putting aside your prejudices and disgust. I\u2019ll show you how I did some shit experiments in Hamburg and Guatemala and how you can do it too.</p>"
+    },
+    {
+        "title": "Watch Your Kids: Inside a Children's Smartwatch",
+        "duration": 2400,
+        "event_id": "AHCWCJ",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Nils Rollshausen",
+        "abstract": "<p>Join us as we hack at a popular children's smartwatch and expose the secrets of every fifth child in Norway, their parents, and millions more.</p>"
+    },
+    {
+        "title": "Escaping Containment: A Security Analysis of FreeBSD Jails",
+        "duration": 3600,
+        "event_id": "ARLX3M",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "ilja, Michael Smith",
+        "abstract": "<p>FreeBSD\u2019s jail mechanism promises strong isolation\u2014but how strong is it really? In this talk, we explore what it takes to escape a compromised FreeBSD jail by auditing the kernel\u2019s attack surface, identifying dozens of vulnerabilities across exposed subsystems, and developing practical proof-of-concept exploits. We\u2019ll share our findings, demo some real escapes, and discuss what they reveal about the challenges of maintaining robust OS isolation.</p>"
+    },
+    {
+        "title": "Cracking open what makes Apple's Low-Latency WiFi so fast",
+        "duration": 2400,
+        "event_id": "ASKJYB",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Henri J\u00e4ger",
+        "abstract": "<p>This talk presents Apple's link-layer protocol Low-Latency WiFi and how it achieves its real-time capabilities to enable Continuity features like Sidecar Display and Continuity Camera. We make more kernel logging available on iOS and build a log aggregator that combines and aligns system- and network-level log sources from iOS and macOS.</p>"
+    },
+    {
+        "title": "Burn Gatekeepers, not Books!",
+        "duration": 2400,
+        "event_id": "ATEWP7",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "tomate, jinxx",
+        "abstract": "<p><em>Der deutsche Buchmarkt gegen den Rest der Welt oder auch: Enshittification des Buchmarkts und keine API f\u00fcr ein Halleluja</em></p> <p>Es gibt unz\u00e4hlige wundervolle Geschichten und das Internet hat \u00fcber die letzten Jahrzehnte viele gro\u00dfartige Autor*innen hervorgbracht. Doch Verlage haben begrenzte Kapazit\u00e4ten und sind au\u00dferdem zumeist sehr konservativ in ihren Programmen. Die L\u00f6sung f\u00fcr beides: Selfpublishing. Neue und gewitzte, genre-\u00fcbergreifende B\u00fccher an neugierige Lesende zu bringen, k\u00f6nnte so einfach sein; w\u00e4ren da nicht Barsortimente, fehlende APIs und ein insgesamt schreckliches \u00d6kosystem, die Indie-Autor:innen (und alle, die versuchen, auf dem deutschpsprachigen Buchmarkt irgend etwas Innovatives f\u00fcr Indies zu machen) das Leben schwer machen.</p>"
+    },
+    {
+        "title": "Spectre in the real world: Leaking your private data from the cloud with CPU vulnerabilities",
+        "duration": 2400,
+        "event_id": "ATYLN9",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Thijs Raymakers",
+        "abstract": "<p>Transient execution CPU vulnerabilities, like Spectre, have been making headlines since 2018. However, their most common critique is that these types of vulnerabilities are not really practical. Even though it is cool to leak /etc/shadow with a CPU bug, it has limited real-world impact. In this talk, we take Spectre out for a walk and let it see the clouds, by leaking memory across virtual machine boundaries at a public cloud provider, bypassing mitigations against these types of attacks. Our report was awarded with a $151,515 bug bounty, Google Cloud's highest bounty yet.</p>"
+    },
+    {
+        "title": "Opening pAMDora's box and unleashing a thousand paths on the journey to play Beatsaber custom songs",
+        "duration": 3600,
+        "event_id": "AYYYH9",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "tihmstar",
+        "abstract": "<p>While trying to apply fault injection to the AMD Platform Security Processor with unusual (self-imposed) requirements/restrictions, it were software bugs which stopped initial glitching attempts. Once discovered, the software bug was used as an entry to explore the target, which in turn lead to uncovering (and exploiting) more and more bugs, ending up in EL3 of the most secure core on the chip. This talk is about the story of trying to glitch the AMD Platform Security Processor, then accidentally discovering several bugs and getting a good look inside the target, before returning to trying to hammer it with novel physical strategies.</p>"
+    },
+    {
+        "title": "Pwn2Roll: Who Needs a 595\u20ac Remote When You Have wheelchair.py?",
+        "duration": 3600,
+        "event_id": "BWHWPG",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "elfy",
+        "abstract": "<p>A 595\u20ac wheelchair remote that sends a handful of Bluetooth commands. A 99.99\u20ac app feature that does exactly what the 595\u20ac hardware does. A speed upgrade from 6 to 8.5 km/h locked behind a 99.99\u20ac paywall - because apparently catching the bus is a premium feature.</p> <p>Welcome to the wonderful world of DRM in assistive devices, where already expensive basic mobility costs extra and comes with in-app purchases! And because hackers gonna hack, this just could not be left alone.</p>"
+    },
+    {
+        "title": "Wer liegt hier wem auf der Tasche? Genug mit dem B\u00fcrgergeld-Fetisch. St\u00fcrmt die Pal\u00e4ste!",
+        "duration": 3600,
+        "event_id": "BX3NXQ",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Helena Steinhaus",
+        "abstract": "<p>Das B\u00fcrgergeld ist Geschichte. An seine Stelle tritt eine Grundsicherung, die auf kalkulierten Verfassungsbruch setzt. Totalsanktionen, Vermittlungsvorrang, Quadratmeterdeckel, jeder Move bedeutet umfassendere staatliche \u00dcberwachung. Die Bezahlkarte soll in Hamburg perspektivisch zun\u00e4chst auf Sozialhilfe\u2010 und Jugendhilfebeziehende ausgeweitet werden. Sind B\u00fcrgergeldbeziehende als n\u00e4chstes dran?</p>"
+    },
+    {
+        "title": "OpenAutoLab: photographic film processing machine. Fully automatic and DIY-friendly.",
+        "duration": 2400,
+        "event_id": "CASXCP",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Kauz",
+        "abstract": "<p>OpenAutoLab, an open source machine, that is capable of processing contemporary color and black-and-white films for analogue photography, is being presented here. It made its first public appearance at 37C3 and was already seen there in action, but had no organized talk or proper presentation. Now it is better documented, waits to be built by more people and to be further developed by the community. This talk is about motivation behind developing OpenAutoLab and about the technical decisions made during it. It is argued that any dedicated film photographer is able to get one built.</p>"
+    },
+    {
+        "title": "Don\u2019t look up: There are sensitive internal links in the clear on GEO satellites",
+        "duration": 2400,
+        "event_id": "CBZFN3",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Nadia Heninger, Annie Dai",
+        "abstract": "<p>We pointed a commercial-off-the-shelf satellite dish at the sky and examined all of the geostationary satellite communications visible from our vantage point. A shockingly large amount of sensitive traffic is being broadcast unencrypted, including critical infrastructure, internal corporate and government communications, private citizens\u2019 voice calls and SMS, and consumer Internet traffic from in-flight wifi and mobile networks.</p>"
+    },
+    {
+        "title": "The Spectrum - Hackspace Beyond Hacking",
+        "duration": 2400,
+        "event_id": "CTZNNK",
+        "language": "en",
+        "track_id": 30,
+        "speaker_names": "sjaelv, MultisampledNight",
+        "abstract": "<p>The Spectrum is a newly founded queer-feminist, intersectional hackspace centering FLINTA+, disabled, and marginalized beings. We see hacking as playful exploration\u2014of technology, art, and ideas\u2014to reimagine what inclusion and collaboration can be. At 39C3, we share how awareness, accessibility, and transdisciplinary creation can transform community and hack the norm.</p>"
+    },
+    {
+        "title": "From Silicon to Darude Sand-storm: breaking famous synthesizer DSPs",
+        "duration": 2400,
+        "event_id": "D77XG8",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "giulioz",
+        "abstract": "<p>Have you ever wondered how the chips and algorithms that made all those electronic music hits work? Us too!</p> <p>At The Usual Suspects we create open source emulations of famous music hardware, synthesizers and effect units. After releasing some emulations of devices around the Motorola 563xx DSP chip, we made further steps into reverse engineering custom silicon chips to achieve what no one has done before: a real low-level emulation of the JP-8000. This famous synthesizer featured a special \"SuperSaw\" oscillator algorithm, which defined an entire generation of electronic and trance music. The main obstacle was emulating the 4 custom DSP chips the device used, which ran software written with a completely undocumented instruction set. In this talk I will go through the story of how we overcame that obstacle, using a mixture of automated silicon reverse engineering, probing the chip with an Arduino, statistical analysis of the opcodes and fuzzing. Finally, I will talk about how we made the emulator run in real-time using JIT, and what we found by looking at the SuperSaw code.</p>"
+    },
+    {
+        "title": "Who runs the www? WSIS+20 and the future of Internet governance",
+        "duration": 2400,
+        "event_id": "DBWBG8",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Sophia Longwe",
+        "abstract": "<p>Abbreviations such as WSIS+20, IGF, IETF, DIEM, ICANN, PDP, ITU or W3C regularly appear in discussions about the Internet, yet often remain vague. This talk provides an update on the current state of Internet governance and explains why decisions made in United Nations processes have direct implications for technical standards, digital infrastructure, and power asymmetries.</p>"
+    },
+    {
+        "title": "Skynet Starter Kit: From Embodied AI Jailbreak to Remote Takeover of Humanoid Robots",
+        "duration": 3600,
+        "event_id": "DD3S7F",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Shipei Qu, Zikai Xu, Xuangan Xiao",
+        "abstract": "<p>We present a comprehensive security assessment of Unitree's robotic ecosystem. We identified and exploited multiple security flaws across multiple communication channels, including Bluetooth, LoRa radio, WebRTC, and cloud management services. Besides pwning multiple traditional binary or web vulnerabilities, we also exploit the embodied AI agent in the robots, performing prompt injection and achieve root-level remote code execution. Furthermore, we leverage a flaw in cloud management services to take over any Unitree G1 robot connected to the Internet. By deobfuscating and patching the customized, VM-based obfuscated binaries, we successfully unlocked forbidden robotic movements restricted by the vendor firmware on consumer models such as the G1 AIR. We hope our findings could offer a roadmap for manufacturers to strengthen robotic designs, while arming researchers and consumers with critical knowledge to assess security in next-generation robotic systems.</p>"
+    },
+    {
+        "title": "FeTAp 611 unplugged: Taking a rotary dial phone to the mobile age",
+        "duration": 2400,
+        "event_id": "DE97UE",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Michael Weiner",
+        "abstract": "<p>This project transforms a classic rotary phone into a mobile device. Previous talks have analyzed various aspects of analogue phone technology, such as rotary pulse detection or ringing voltage generation. Now this project helps you get rid of the cable: it equips the classic German FeTAp 611 with battery power and a flyback SMPS based ringing voltage generator - but still maintains the classical look and feel. The talk demonstrates the journey of bridging analog and digital worlds, explaining how careful design connects a vintage phone to today\u2019s mobile environment - in a way that will make your grandparents happy.</p>"
+    },
+    {
+        "title": "selbstverst\u00e4ndlich antifaschistisch! Aktuelle Informationen zu den Verfahren im Budapest-Komplex - von family & friends Hamburg",
+        "duration": 3600,
+        "event_id": "DFFJ7G",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Andreas family & friends Hamburg, Birgit family & friends Hamburg",
+        "abstract": "<p>Mit den Prozessen im Budapest-Komplex wird ein Exempel statuiert - nicht nur gegen Einzelne, sondern gegen antifaschistische Praxis insgesamt. Die Behauptung einer kriminellen Vereinigung mit Mordabsichten stellt eine absurde juristische Eskalation des staatlichen Vorgehens gegen Antifaschist<em>innen dar und steht in keinem Verh\u00e4ltnis zu den verhandelten Vorkommnissen. Die Verfahren in dieser Weise zu verfolgen, l\u00e4sst vor allem auf ein hohes Ausforschungs- und Einsch\u00fcchterungsinteresse schlie\u00dfen. Mit dieser Prozesswelle und den Repressionen gegen Freund</em>innen und Angeh\u00f6rige wird antifaschistisches Engagement massiv kriminalisiert und ein verzerrtes Bild von politischem Widerstand gezeichnet - w\u00e4hrend gleichzeitig rechte Gewalt europaweit zunimmt und faschistische Parteien erstarken. Wir sehen, dass Angriffe auf Rechtsstaatlichkeit und Zivilgesellschaft immer weiter zunehmen. Die Art und Weise, wie gegen die Antifas im Budapest-Komplex und im Antifa-Ost Verfahren vorgegangen wird ist ein Vorgeschmack darauf, wie politische Opposition in einer autorit\u00e4ren Zukunft behandelt werden k\u00f6nnte. Wir sind alle von der rechtsautorit\u00e4ren Entwicklung, von Faschisierung betroffen. Die Kriminalisierung von Antifas als \"terroristische Vereinigung\" ist Teil einer (weltweiten) Entdemokratisierung und Zersetzung von Rechtsstaatlichkeit.</p>"
+    },
+    {
+        "title": "Zentrum f\u00fcr Politische Sch\u00f6nheit: Ein Jahr Adenauer SRP+ und der Walter L\u00fcbcke Memorial Park",
+        "duration": 2400,
+        "event_id": "DLDUDB",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Stefan Pelzer, Philipp Ruch",
+        "abstract": "<p>Es ist genau ein Jahr her, dass der Adenauer SRP+ in der Halle des 38C3 stand. Damals war er noch eine Baustelle, aber schon bald machte er sich auf den Weg, um Geschichte zu schreiben. Wir nehmen euch mit auf eine Reise: von Blockade \u00fcber Protest, von Sommerinterviews bis zu Polizeischikanen lassen wir ein Jahr Adenauer SRP+ Revue passieren. Das k\u00f6nnte lustig werden. Au\u00dferdem: alles zum Walter L\u00fcbcke-Memorial-Park, den wir gerade direkt vor die CDU-Zentrale gebaut haben.</p> <p>Owei owei: Das wird viel f\u00fcr 40 Minuten.</p>"
+    },
+    {
+        "title": "Battling Obsolescence \u2013 Keeping an 80s laser tag system alive",
+        "duration": 2400,
+        "event_id": "DRLEUN",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Trikkitt",
+        "abstract": "<p>Keeping old projects working can be an uphill battle. This talk explores how the laser tag system Q-Zar (Quasar in the UK) has been kept alive since the company behind it failed in the 90s. The challenges encountered, the lessons learnt, and how those can be applied to our own future projects to maximise the project lifetime.</p>"
+    },
+    {
+        "title": "Celestial navigation with very little math",
+        "duration": 2400,
+        "event_id": "DVKRSC",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Trammell Hudson",
+        "abstract": "<p>Learn how to find your position using a sextant and a custom slide rule, almost no math required!</p>"
+    },
+    {
+        "title": "Live, Die, Repeat: The fight against data retention and boundless access to data",
+        "duration": 2400,
+        "event_id": "DXEGJL",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Klaus Landefeld",
+        "abstract": "<p>Both within the EU as well as nationally in Germany, there exists a renewed drive to implement data retention, a practice struck down by the ECJ and discontinued in many national legislations. In parallel, cross-border access to stored data has been mandated within the EU as \u201ce-evidence\u201d, and will soon be extended to 90+ countries under the umbrella of the EU cybercrime convention. In principle, all data stored by service providers will be available to law enforcement as part of a criminal investigation. The timing of both initiatives is not coincidental, as access to data naturally relies on the availability of data. The talk will address the state of play on data retention in various legislations, and introduce the practice of cross border access to stored data by law enforcement as well as its shortcomings and threats to privacy and confidentiality.</p>"
+    },
+    {
+        "title": "The Maybe Talent Show",
+        "duration": 5400,
+        "event_id": "DXSRB7",
+        "language": "en",
+        "track_id": 27,
+        "speaker_names": "Norman M\u00fcller-Schmitz, lukas-schmukas, James Bonne d'age",
+        "abstract": "<p>Come on stage and present things you are very bad in. Or just mediocre. Get raging applause and love from the audience! Hosted by the drag-quings Norman M\u00fcller-Schmitz and James Bonne d'age this open stage celebrates trying, failing and the beauty of discovering hidden Talents together when the most beautiful cuties from the audience enter the stage to try something they have absolutely no experience in.</p>"
+    },
+    {
+        "title": "Textiles 101: Fast Fiber Transform",
+        "duration": 2400,
+        "event_id": "E8XTX7",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "octoprog",
+        "abstract": "<p>Textiles are everywhere, yet few of us know how they\u2019re made. </p> <p>This talk aims to give you an overview over the complete transformation from fiber to finished textile. We'll be exploring fiber properties, spinning, and techniques like weaving, knitting, crochet, braiding, and knotting, followed by finishing methods such as dyeing, printing, and embroidery.</p> <p>You\u2019ll learn why not only fiber but also structure matters, and how to make or hack textiles on your own without relying on fast fashion or industrial tools.</p>"
+    },
+    {
+        "title": "Life on Hold: What Does True Solidarity Look Like Beyond Duldung, Camps, Deportation, and Payment Cards?",
+        "duration": 3600,
+        "event_id": "EMFYMG",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "H-Shaaib, Eric Noel Mbiakeu",
+        "abstract": "<p>Lager, Duldung, Bezahlkarte, Essensscheine \u2013 Criminalization, Radicalization, Reality for Many People in East Germany This talk sheds light on how these terms shape everyday life. We dive into an existence marked by uncertainty, isolation, and psychological strain, both in anonymous big cities and rural areas of East Germany. We ask: What does \u201csolidarity\u201d really mean in this context?</p>"
+    },
+    {
+        "title": "The Heartbreak Machine: Nazis in the Echo Chamber",
+        "duration": 3600,
+        "event_id": "ENKEKW",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Eva Hoffmann, Martha Root, Christian Fuchs",
+        "abstract": "<p>WhiteDate ist eine Plattform wei\u00dfer Suprematist:innen, die sich an Rassist:innen und Antisemit:innen richtet \u2013 und auf veralteter Infrastruktur basiert. Was die 8000 Mitglieder nicht wussten: Einige der Nazis flirteten dieses Jahr mit realistisch wirkenden Chatbots - und verliebten sich sogar in sie. Mit einer Kombination aus automatisierter Konversationsanalyse, Web-Scraping und klassischen OSINT-Methoden verfolgten wir \u00f6ffentliche Spuren und identifizierten die Personen hinter der Seite. Dieser Vortrag zeigt, wie KI-Personas und investigatives Denken extremistische Netzwerke aufdecken und wie Algorithmen gegen Extremismus eingesetzt werden k\u00f6nnen.</p>"
+    },
+    {
+        "title": "To sign or not to sign: Practical vulnerabilities in GPG & friends",
+        "duration": 3600,
+        "event_id": "EYDWBE",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Liam, 49016",
+        "abstract": "<p>Might contain zerodays. https://gpg.fail/</p> <p>From secure communications to software updates: PGP implementations such as <em>GnuPG</em> ubiquitously relied on to provide cryptographic assurances. Many applications from secure communications to software updates fundamentally rely on these utilities. Since these have been developed for decades, one might expect mature codebases, a multitude of code audit reports, and extensive continuous testing. When looking into various PGP-related codebases for some personal use cases, we found these expectations not met, and discovered multiple vulnerabilities in cryptographic utilities, namely in <em>GnuPG</em>, <em>Sequoia PGP</em>, <em>age</em>, and <em>minisign</em>. The vulnerabilities have implementation bugs at their core, for example in parsing code, rather than bugs in the mathematics of the cryptography itself. A vulnerability in a parser could for example lead to a confusion about what data was actually signed, allowing attackers without the private key of the signer to swap the plain text. As we initially did not start with the intent of conducting security research, but rather were looking into understanding some internals of key management and signatures for personal use, we also discuss the process of uncovering these bugs. Furthermore, we touch on the role of the OpenPGP specification, and the disclosure process.</p>"
+    },
+    {
+        "title": "Neue Chaos Events - InselChaos und H\u00e5ck ma\u2019s Castle plaudern aus dem N\u00e4hk\u00e4stchen",
+        "duration": 3600,
+        "event_id": "F3LF7R",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "lasii, Erwin Ernst \"eest9\" Steinhammer, Daniel, Niklas",
+        "abstract": "<p>Auf der Insel R\u00fcgen und in \u00d6sterreich tut sich was - und zwar neue Chaos Events. Wir m\u00f6chten \u00fcber Anforderungen, Herausforderungen, H\u00fcrden, Erfahrungen und Gl\u00fccksmomente aus unserer Sicht der Orga erz\u00e4hlen. Das InselChaos fand im LaGrange e.V. im September 2025 statt und bildet den Auftakt f\u00fcr weitere kreative, informative und chaotische Events auf der Insel R\u00fcgen. Das H\u00e5ck ma\u2019s Castle wird mit etwas Humor auch \u00fcber Herausforderungen sprechen, welche unter anderem durch dezentrale Teams aus diversen Hackspaces entstehen.</p>"
+    },
+    {
+        "title": "GPTDash \u2013 Der Reverse-Turing-Test",
+        "duration": 5400,
+        "event_id": "F3NXNE",
+        "language": "de",
+        "track_id": 27,
+        "speaker_names": "Benny, KI-lian, BratscherBen",
+        "abstract": "<p>KIs (bzw. LLMs) wirken immer menschlicher. Schon l\u00e4ngst ist es schwer bis unm\u00f6glich zu erkennen, ob ein Text von einer KI oder einem Menschen geschrieben wurde. Maschinen dringen immer mehr in den menschlichen Diskurs ein. Wir wollen das nicht l\u00e4nger hinnehmen und drehen den Spie\u00df um.</p>"
+    },
+    {
+        "title": "Die gro\u00dfe Datenschutz-, Datenpannen- und DS-GVO-Show",
+        "duration": 5400,
+        "event_id": "FJWMWQ",
+        "language": "de",
+        "track_id": 27,
+        "speaker_names": "Alvar C.H. Freude",
+        "abstract": "<p>Datenschutz darf auch Spa\u00df machen, und alle k\u00f6nnen dabei etwas lernen, egal ob Einsteiger oder Profi-Hacker: Bei dem Datenschutz- und Datenpannen-Quiz k\u00e4mpfen vier Kandidat:innen aus dem Publikum zusammen mit dem Publikum um den Sieg. Nicht nur Wissen rund um IT-Sicherheit und Datenschutz sondern auch eine schnelle Reaktion und das n\u00f6tige Qu\u00e4ntchen Gl\u00fcck entscheiden \u00fcber Sieg und Niederlage. Die Unterhaltsame Datenschutz-Quiz-Show mit Bildungsauftrag!</p>"
+    },
+    {
+        "title": "The Angry Path to Zen: AMD Zen Microcode Tools and Insights",
+        "duration": 2400,
+        "event_id": "FM7XDD",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Benjamin Kollenda",
+        "abstract": "<p>EntrySign opened the door to custom microcode on AMD Zen CPUs earlier this year. Using a weakness in the signature verification we can load custom microcode updates and modify behavior of stock AMD Zen 1-5 CPUs. While AMD has released patches to address this weakness on some CPUs, we can still use unpatched systems for our analysis.</p> <p>In this talk we cover what we found out about microcode, what we saw in the microcode ROM, the tooling we build, how we worked to find out more and how you can write &amp; test your own microcode on your own AMD Zen systems. We have our tools up on https://github.com/AngryUEFI for everyone to play around with and hopefully help us understand microcode more than we currently do.</p>"
+    },
+    {
+        "title": "I Hated All The Cross-Stitch Software So I Made My Own: My Deranged Outsider Software Suite For Making Deranged Outsider Art",
+        "duration": 2400,
+        "event_id": "FNCLLE",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "yomimono",
+        "abstract": "<p>I wanted to design beautiful header diagrams and ASCII tables suitable for stitching on throw pillows, but found existing tools for cross-stitch design to be all wrong. I made my own set of command-line tools for building this chunky, pixelated visual art. If you've never seen a cross-stitch sampler that had bitrot, this talk will fix it.</p>"
+    },
+    {
+        "title": "A Tale of Two Leaks: How Hackers Breached the Great Firewall of China",
+        "duration": 2400,
+        "event_id": "FT3MEL",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Jade Sheffey",
+        "abstract": "<p>The Great Firewall of China (GFW) is one of, if not arguably the most advanced Internet censorship systems in the world. Because repressive governments generally do not simply publish their censorship rules, the task of determining exactly what is and isn\u2019t allowed falls upon the censorship measurement community, who run experiments over censored networks. In this talk, we\u2019ll discuss two ways censorship measurement has evolved from passive experimentation to active attacks against the Great Firewall.</p>"
+    },
+    {
+        "title": "Greenhouse Gas Emission Data: Public, difficult to access, and not always correct",
+        "duration": 2400,
+        "event_id": "FUKKM3",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Hanno B\u00f6ck",
+        "abstract": "<p>Data about greenhouse gas emissions, both from countries and individual factories, is often publicly available. However, the data sources are often not as accessible and reliable as they should be. EU emission databases contain obvious flaws, and nobody wants to be responsible.</p>"
+    },
+    {
+        "title": "Chaospager - How to construct an Open Pager System for c3",
+        "duration": 2400,
+        "event_id": "FWPGUZ",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Max, Julian",
+        "abstract": "<p>In this talk, we will give an introduction into the project (i.e. how it all started at 38c3 and why we are here now), provide an in-depth review of how the development process of our pager worked and what our future goals are.</p> <p>In our introduction, we will talk about the origin and exploration phase of the inital pager idea (i.e. how we went from the idea of bringing POCSAG Pager transmitter to 38c3, over a cable-bound prototype, to a first working pager on a proper PCB). We will also present our plans of connecting our POCSAG transmitter infrastructure to THOT (CERTs own dispatch software).</p> <p>For our in-depth review about the project, we explain how we encountered major reception problems, how we analyzed them at easterhegg22 and conducted experiments there, and why we are opting for a custom HF frontend design instead of an already-made one from chinese vendors. Moreover, we provide an overview of our transmitter devices and give some advice on how to replicate those.</p> <p>Lastly, we will discuss further challenges and what our next goals are.</p> <p>If we are reaching our milestone until 39c3, we will also give a live demo of the system.</p>"
+    },
+    {
+        "title": "PR\u00dcF",
+        "duration": 2400,
+        "event_id": "FZDXVY",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Nico Semsrott",
+        "abstract": "<p>PR\u00dcF! Pr\u00fcfung Rettet \u00fcbrigens Freiheit! Alles wird in Deutschland gepr\u00fcft. Warum nicht auch mutma\u00dflich verfassungswidrige Parteien? Hier stelle ich vor, was PR\u00dcF! anders machen will als bisherige Kampagnen.</p>"
+    },
+    {
+        "title": "Throwing your rights under the Omnibus - how the EU's reform agenda threatens to erase a decade of digital rights",
+        "duration": 3600,
+        "event_id": "GAXEDZ",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Thomas Lohninger, Ralf Bendrath",
+        "abstract": "<p>A spectre is haunting Europe\u2014the spectre of bureaucracy. All the Powers of old Europe have entered into an unholy alliance to exorcise this spectre: The EU Commission, Member States, industry, even J.D. Vance. This threatens the digital rights and rules built up in the last decade.</p>"
+    },
+    {
+        "title": "BE Modded: Exploring and hacking the Vital Bracelet ecosystem",
+        "duration": 2400,
+        "event_id": "GMWAPR",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "cyanic",
+        "abstract": "<p>The Vital Bracelet series is an ecosystem of interactive fitness toys, content on memory chips, and apps that talk via NFC. In this talk, we'll explore the hardware and software of the series, from its obscure CPU architecture, to how it interacts with the outside world, from dumping OTP ROMs and breaking security, to making custom firmware.</p>"
+    },
+    {
+        "title": "Amateurfunk im All \u2013 Kontakt mit Fram2",
+        "duration": 2400,
+        "event_id": "GQESGN",
+        "language": "de",
+        "track_id": 32,
+        "speaker_names": "akira25, flx, Gato",
+        "abstract": "<p>Wir geben Einblicke in zwei intensive Wochen Planung, Koordination und Aufbau, den Betrieb einer (improvisierten) Bodenstation, sprechen \u00fcber technische H\u00fcrden, Antennendesign und Organisation \u2013 und wie wir schlie\u00dflich mit Astronautin Rabea Rogge im Weltraum gefunkt haben.</p>"
+    },
+    {
+        "title": "Hacking washing machines",
+        "duration": 3600,
+        "event_id": "H37JAG",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Hajo Noerenberg, Severin von Wnuck-Lipinski",
+        "abstract": "<p>Almost everyone has a household appliance at home, whether it's a washing machine, dishwasher, or dryer. Despite their ubiquity, little is publicly documented about how these devices actually work or how their internal components communicate. This talk takes a closer look at proprietary bus systems, hidden diagnostic interfaces, and approaches to cloud-less integration of appliances from two well-known manufacturers into modern home automation systems.</p>"
+    },
+    {
+        "title": "BitUnlocker: Leveraging Windows Recovery to Extract BitLocker Secrets",
+        "duration": 3600,
+        "event_id": "HGXNMU",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Alon Leviev",
+        "abstract": "<p>This talk reveals our in-depth vulnerability research on the Windows Recovery Environment (WinRE) and its implications for BitLocker, Windows\u2019 cornerstone for data protection. We will walk through the research methodology, uncover new 0-day vulnerabilities, and showcase full-chain exploitations that enabled us to bypass BitLocker and extract all the protected data in several different ways. This talk goes beyond theory - as each vulnerability will be accompanied by a demo video showcasing the complete exploitation chain. To conclude the talk, we will share Microsoft\u2019s key takeaways from this research and outline our approach to hardening WinRE and BitLocker.</p>"
+    },
+    {
+        "title": "Aber hier Leben? Nein danke! \u2026oder doch? Wie wir der autorit\u00e4ren Zuspitzung begegnen k\u00f6nnen.",
+        "duration": 3600,
+        "event_id": "HNUX3N",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Ja\u0161a Hiergeblieben, Polylux, Lisa Zugezogen",
+        "abstract": "<p>Im Osten stehen n\u00e4chstes Jahr schon wieder Wahlen an und schon wieder sieht alles danach aus, als ob die AfD eine Regierungsbeteiligung bekommen k\u00f6nnte. Ganz konkret: In Sachsen-Anhalt und Mecklenburg-Vorpommern. Nicht nur diese \"rosigen\" Aussichten, sondern auch aktuelle Bev\u00f6lkerungsprognosen werfen gar kein g\u00fcnstiges Licht auf die Regionen. Linke Akteur:innen vor Ort k\u00e4mpfen t\u00e4glich dagegen an und sie brauchen unsere Solidarit\u00e4t. Wir m\u00fcssen dem etwas entgegensetzen. Egal ob als Hacker:innen auf dem Congress oder Westdeutsche in (noch) Gr\u00fcnen Gemeinden. </p> <p>Wo kommt das alles her? Wer macht aktuell etwas dagegen und wie k\u00f6nnen wir dem rechten Sog begegnen?</p>"
+    },
+    {
+        "title": "CSS Clicker Training: Making games in a \"styling\" language",
+        "duration": 2400,
+        "event_id": "J7MRSC",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Lyra Rebane",
+        "abstract": "<p>CSS is a programming language, and you can make games in it. Let's install NoScript and make some together!</p>"
+    },
+    {
+        "title": "Gegenmacht - Best of Informationsfreiheit",
+        "duration": 3600,
+        "event_id": "J88RFE",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Arne Semsrott",
+        "abstract": "<p>Sind mehr Infos wirklich die L\u00f6sung? Ob Jens Spahn, Philipp Amthor oder Friedrich Merz - sie alle sagen offen, was sie vorhaben und machen keinen Hehl aus ihren Verbindungen zur Trump-Regierung, zu Milliard\u00e4ren und der fossilen Lobby. Was bringt Transparenz in Zeiten der autorit\u00e4ren Wende?</p>"
+    },
+    {
+        "title": "Wer hat Angst vor dem Neutralit\u00e4tsgebot?",
+        "duration": 2400,
+        "event_id": "JBPZLJ",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Hannah Vos, Vivian Kube",
+        "abstract": "<p>Wer \u00fcberhaupt \u201eneutral\u201c sein muss, was das bedeutet, und wer sich jetzt wehren muss.</p>"
+    },
+    {
+        "title": "Persist, resist, stitch",
+        "duration": 2400,
+        "event_id": "JEHZPU",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Philo",
+        "abstract": "<p>What does knitting have to do with espionage? Can embroidery help your mental health? This talk shows how the skills to create textile art have enabled people to resist and to persist under oppressive regimes for centuries. And it offers ways to keep doing so.</p>"
+    },
+    {
+        "title": "Lightning Talks - Tag 3",
+        "duration": 7200,
+        "event_id": "JQUCQ7",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Bonnie, keldo, Andi Br\u00e4u",
+        "abstract": "<p>Lightning Talks - Tag 3</p>"
+    },
+    {
+        "title": "Breaking architecture barriers: Running x86 games and apps on ARM",
+        "duration": 2400,
+        "event_id": "JVGQEN",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Tony Wasserka",
+        "abstract": "<p>Presenting FEX, a translation layer to run x86 apps and games on ARM devices: Learn why x86 is such a pain to emulate, what tricks and techniques make your games fly with minimal translation overhead, and how we are seamless enough that you'll forget what CPU you're using in the first place!</p>"
+    },
+    {
+        "title": "All my Deutschlandtickets gone: Fraud at an industrial scale",
+        "duration": 3600,
+        "event_id": "JZ9A3E",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Q Misell, 551724 / maya boeckh",
+        "abstract": "<p>The Deutschlandticket was the flagship transport policy of the last government, rolled out in an impressive timescale for a political project; but this speed came with a cost - a system ripe for fraud at an industrial scale.</p> <p>German public transport is famously decentralised, with thousands of individual companies involved in ticketing and operations. Unifying all of these under one national, secure, system has proven a challenge too far for politicians. The end result: losses in the hundreds of millions of Euros, compensated to the transport companies from state and federal budgets to keep the system afloat, and nobody willing to take responsibility.</p> <p>This talk will cover the political, policy, and technical mistakes that lead to this mess; how we can learn from these mistakes; and what we can do to ensure the Deutschlandticket has a viable future.</p>"
+    },
+    {
+        "title": "How To Minimize Bugs in Cryptography Code",
+        "duration": 2400,
+        "event_id": "KJH3UQ",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Jade",
+        "abstract": "<p>\"Don't roll your own crypto\" is an often-repeated aphorism. It's good advice -- but then how does any cryptography get made? Writers of cryptography code like myself write code with bugs just like anyone else, so how do we take precautions against our own mistakes? In this talk, I will give a peek into the cryptographer's toolbox of advanced techniques to avoid bugs: targeted testing, model checking, mathematical proof assistants, information-flow analysis, and more. None of these techniques is a magic silver bullet, but they can help find flaws in reasoning about tricky corner cases in low-level code or prove that higher-level designs are sound, given a defined set of assumptions. We'll go over some examples and try to give a high-level feel for different workflows that create \"high-assurance\" code. Whether you know it or not, you use this type of cryptography code every day: in your browser, your messaging apps, and your favorite programming language standard libraries.</p>"
+    },
+    {
+        "title": "Chaos macht K\u00fcche",
+        "duration": 2400,
+        "event_id": "KL73KP",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Ingwer Andersen",
+        "abstract": "<p>Ihr macht eine Veranstaltung f\u00fcr viele Menschen? Dann haben viele Menschen auch viel Hunger. Jetzt wird euch gezeigt wie man f\u00fcr viele (mehr als 75) Menschen Essen zubereitet. Es braucht nur etwas Vorbereitung und Motivation!</p>"
+    },
+    {
+        "title": "Von wegen Eisblumen! Wie man mit Code, Satelliten und Schiffsexpeditionen die bunte Welt des arktischen Phytoplanktons sichtbar macht",
+        "duration": 3600,
+        "event_id": "KXGMHG",
+        "language": "de",
+        "track_id": 29,
+        "speaker_names": "Moritz Zeising (er/he)",
+        "abstract": "<p>Die Arktis ist eine Region, in der die Sonne monatelang weg ist, dickes Meereis den Weg versperrt und deshalb Forschungsdaten ziemlich rar sind. Kompliziert also, herauszufinden was im Wasser bl\u00fcht! Mit einer Kombination aus Satellitenbildern, Expeditionen und Modellsimulationen auf Hochleistungsrechnern versuche ich, das Verborgene sichtbar zu machen: die faszinierende, farbenfrohe Welt des arktischen Phytoplanktons.</p>"
+    },
+    {
+        "title": "51 Ways to Spell the Image Giraffe: The Hidden Politics of Token Languages in Generative AI",
+        "duration": 2400,
+        "event_id": "L7BUAN",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Leon-Etienne K\u00fchr, Ting-Chun Liu",
+        "abstract": "<p>Generative AI models don't operate on human languages \u2013 they speak in <strong>tokens</strong>. Tokens are computational fragments that deconstruct language into subword units, stored in large dictionaries. These tokens encode not only language but also political ideologies, corporate interests, and cultural biases even before model training begins. Social media handles like <em>realdonaldtrump</em>, brand names like <em>louisvuitton</em>, or even <em>!!!!!!!!!!!!!!!!</em> exist as single tokens, while other words remain fragmented. Through various artistic and adversarial experiments, we demonstrate that tokenization is a political act that determines what can be represented and how images become computable through language.</p>"
+    },
+    {
+        "title": "APT Down and the mystery of the burning data centers",
+        "duration": 3600,
+        "event_id": "L8REGS",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Sylvester, Christopher Kunz",
+        "abstract": "<p>In August 2025 Phrack published the dump of an APT member's workstation. It was full of exploits and loot from government networks, cell carriers and telcos. The dump sparked a government investigation, and corpos like LG and Korea Telecom were asked to explain themselves. Hours before an onsite audit, the data center mysteriously caught fire, destroying almost a hundred servers. Then another data center burned - and unfortunately, there was even one death. The talk aims to revisit this mysterious sequence of tragic incidents. [TW: Suicide, self-harm]</p>"
+    },
+    {
+        "title": "What Makes Bike-Sharing Work? Insights from 43 Million Kilometers of European Cycling Data",
+        "duration": 2400,
+        "event_id": "L98WRF",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Martin Lellep, Georg Balke, Felix Waldner",
+        "abstract": "<p>Bike- and e-bike-sharing promise sustainable, equitable mobility - but what makes these systems successful? Despite hundreds of cities operating thousands of shared bikes, trip data is rarely public. To address this, we built a geospatial analysis pipeline that reconstructs trip data from publicly accessible system status feeds. Using this method, we gathered <strong>43 million km</strong> of bike-sharing trips across <strong>268 European cities</strong>. Combined with over <strong>100 urban indicators</strong> per city, our analyses reveal how infrastructure, climate, demographics, operations, and politics shape system performance. We uncover surprising insights - such as why some e-bike systems underperform despite strong demand - and highlight how cities can design smarter, fairer mobility. All data and code are open-source, with an interactive demo at bikesharingflowmap.de.</p>"
+    },
+    {
+        "title": "ISDN + POTS Telephony at Congress and Camp",
+        "duration": 2400,
+        "event_id": "LHG99W",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Harald \"LaF0rge\" Welte",
+        "abstract": "<p>Like 39C3, the last CCC camp (2023) and congress (38C3) have seen volunteer-driven deployments of legacy ISDN and POTS networks using a mixture of actual legacy telephon tech and custom open source software. This talk explains how this is achieved, and why this work plays an important role in preserving parts of our digital communications heritage.</p>"
+    },
+    {
+        "title": "Build a Fake Phone, Find Real Bugs: Qualcomm GPU Emulation and Fuzzing with LibAFL QEMU",
+        "duration": 2400,
+        "event_id": "LUK8DG",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Romain Malmain",
+        "abstract": "<p>Mobile phones are central to everyday life: we communicate, entertain ourselves, and keep vast swaths of our digital lives on them. That ubiquity makes high-risk groups such as journalists, activists, and dissidents prime targets for sophisticated spyware that exploits device vulnerabilities.</p> <p>On Android devices, GPU drivers have repeatedly served as the final escalation vector into the kernel. To study and mitigate that risk, we undertook a research project to virtualize the Qualcomm Android kernel and the KGSL graphics driver from scratch in QEMU. This new environment enables deep debugging, efficient coverage collection, and large-scale fuzzing across server farms, instead of relying on a handful of preproduction devices.</p> <p>This talk will highlight the technical aspects of our research, starting with the steps required to boot the Qualcomm mobile kernel in QEMU, all the way up to the partial emulation of the GPU. Then, we will present how we moved from our emulation prototype to a full-fledged fuzzer based on LibAFL QEMU.</p>"
+    },
+    {
+        "title": "A space odyssey #2: How to study moon rocks from the Soviet sample return mission Luna 24",
+        "duration": 3600,
+        "event_id": "LWYNKY",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Paul Koetter",
+        "abstract": "<p>It is 1976 and the USA long stopped going to the Moon when a Soviet automatic landing station called Luna 24 descends to the Lunar surface. It touches down on 3.3 Billion year old rock formations at a place no mission has ever gone before. What exactly happened remains a mystery to this day, but the space probe managed to take a 2.3 m long drill core from the Lunar regolith, packaged the sample in a genius way and launched it for its voyage to Earth. Some days later the sample entered earths atmosphere and landed in remote Siberia and ended up in our hands more than 50 Years later. We tell the story of the sample, the people that brought it to Earth and how we analyzed it with the newest methods including \u03bcm sized high intensity X-ray beams, 30kV electron beams and LN2 cooled infrared spectrometers.</p>"
+    },
+    {
+        "title": "Bluetooth Headphone Jacking: A Key to Your Phone",
+        "duration": 3600,
+        "event_id": "LYE33R",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Dennis Heinze, Frieder Steinmetz",
+        "abstract": "<p>Bluetooth headphones and earbuds are everywhere, and we were wondering what attackers could abuse them for. Sure, they can probably do things like finding out what the person is currently listening to. But what else? During our research we discovered three vulnerabilities (CVE-2025-20700, CVE-2025-20701, CVE-2025-20702) in popular Bluetooth audio chips developed by Airoha. These chips are used by many popular device manufacturers in numerous Bluetooth headphones and earbuds.</p> <p>The identified vulnerabilities may allow a complete device compromise. We demonstrate the immediate impact using a pair of current-generation headphones. We also demonstrate how a compromised Bluetooth peripheral can be abused to attack paired devices, like smartphones, due to their trust relationship with the peripheral.</p> <p>This presentation will give an overview over the vulnerabilities and a demonstration and discussion of their impact. We also generalize these findings and discuss the impact of compromised Bluetooth peripherals in general. At the end, we briefly discuss the difficulties in the disclosure and patching process. Along with the talk, we will release tooling for users to check whether their devices are affected and for other researchers to continue looking into Airoha-based devices.</p> <p>Examples of affected vendors and devices are Sony (e.g., WH1000-XM5, WH1000-XM6, WF-1000XM5), Marshall (e.g. Major V, Minor IV), Beyerdynamic (e.g. AMIRON 300), or Jabra (e.g. Elite 8 Active).</p>"
+    },
+    {
+        "title": "There is NO WAY we ended up getting arrested for this (Malta edition)",
+        "duration": 3600,
+        "event_id": "MESA3X",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "mixy1, Luke Bjorn Scerri, girogio",
+        "abstract": "<p>3 years ago, 3 Maltese students were arrested and charged with computer misuse after disclosing a vulnerability to a local company that developed a mobile app for students. Through persistent media pressure, the students managed to obtain a presidential pardon to drop the case and funding for their lawyers. However, through this journey, there were mentions of punishment for retaliating through media disclosure. The story has not concluded, and there will be no amendments to the Maltese computer misuse law for the foreseeable future.</p>"
+    },
+    {
+        "title": "Verschl\u00fcsselung brechen durch physischen Zugriff - Smartphone Beschlagnahme durch Polizei",
+        "duration": 2400,
+        "event_id": "MFKMWA",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Davy Wang, Viktor Schl\u00fcter",
+        "abstract": "<p>Eine zwar profane Methode der \u00dcberwachung, die Polizeibeh\u00f6rden in Deutschland jedoch hunderttausendfach anwenden, ist das Auslesen von Daten beschlagnahmter Smartphones und Computer. Dazu nutzt die Polizei Sicherheitsl\u00fccken der Ger\u00e4te mithilfe forensischer Software von Herstellern wie Cellebrite oder Magnet aus. Die Verfassungsm\u00e4\u00dfigkeit der Rechtsgrundlagen ist zweifelhaft. Im Vortrag werden anhand aktueller F\u00e4lle technische und juristische Hintergr\u00fcnde er\u00f6rtert.</p>"
+    },
+    {
+        "title": "Variable Fonts \u2014 It Was Never About File Size",
+        "duration": 2400,
+        "event_id": "MLZFLU",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Bernd",
+        "abstract": "<p>A brief history of typographic misbehavior or intended and unintended uses of variable fonts.</p> <p>Nine years after the introduction of variable fonts, their most exciting uses have little to do with what variable fonts originally were intended for and their original promise of smaller file sizes. The talk looks at how designers turned a pragmatic font format into a field for experimentation \u2014 from animated typography and uniwidth button text to pattern fonts and typographic side effects with unintended aesthetics. Using examples from projects such as TypoLabs, Marjoree, Kario (the variable font that\u2019s used as part of the 39C3 visual identity), and Bronco, we\u2019ll explore how variable fonts evolved from efficiency tools into creative systems \u2014 and why the most interesting ideas often emerge when technology is used in unintended ways.</p>"
+    },
+    {
+        "title": "freiheit.exe - Utopien als Malware",
+        "duration": 2400,
+        "event_id": "MNXRET",
+        "language": "de",
+        "track_id": 33,
+        "speaker_names": "Christiane Mudra",
+        "abstract": "<p>\"freiheit.exe\u201c ist eine Lecture \u00fcber die ideologischen Rootkits des Silicon Valley. Sie schl\u00e4gt den Bogen von den italienischen Futuristen zu den heutigen Tech-Feudalisten, vom Akzelerationismus zur Demokratieskepsis der Libert\u00e4ren, von Tolkien zur PayPal-Mafia. Basierend auf den Recherchen zu meinem Theaterst\u00fcck \"freiheit.exe. Utopien als Malware\", in dem journalistische Analyse auf performative Darstellung trifft.</p>"
+    },
+    {
+        "title": "\u201cEnd Of 10\u201d: How the FOSS Community is Combatting Software-Driven Resource and Energy Consumption",
+        "duration": 2400,
+        "event_id": "N7CZSV",
+        "language": "en",
+        "track_id": 30,
+        "speaker_names": "Joseph P. De Veaugh-Geiss, Carolina Silva Rode, Bettina Louis",
+        "abstract": "<p>The end of free support for Windows 10 was 14 October 2025. Well, sort of. Microsoft moved the date to 2026, one more year the FOSS community can introduce users to sustainable software. 14 October is also KDE's birthday, International E-Waste Day, with International Repair Day following on 18 October. The irony is deep, but what is not ironic is that millions of functioning computers will end up becoming security risks or discarded as e-waste. This means manufacturing and transporting new ones, the biggest waste of all: hardware production accounts for over 75% of a device's CO2 emissions over its lifespan.</p> <p>The FOSS community had an opportunity and we took it! In 2024, KDE Eco's Opt Green project began a global, unified campaign across FOSS and repair communities to upgrade unsupported Windows 10 computers to Linux. We held BoFs at SFSCon, CCC, and FOSDEM. We thought big and acted boldly. In this talk End Of 10 contributors will discuss the campaign, what has worked and what the challenges have been, and how FOSS provides a solution to software-driven resource and energy consumption.</p>"
+    },
+    {
+        "title": "1965 + 60 Years of Algorithmic Art with Computers",
+        "duration": 3600,
+        "event_id": "NB9YD3",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Enna Gerhard, Frieder Nake",
+        "abstract": "<p>What power structures are inherent to the field of computer-generated art? In the year 1965, so 60 years ago, the first three exhibitions of art created with the help of computers took place - in part independently of each other. We want to present the interesting aspects of developments since then and discuss them with Frieder Nake, one of the people who exhibited in those very beginnings and followed those developments with a critical attitude.</p>"
+    },
+    {
+        "title": "Breaking BOTS: Cheating at Blue Team CTFs with AI Speed-Runs",
+        "duration": 2400,
+        "event_id": "P8AHVT",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Leo Meyerovich, Sindre Breda",
+        "abstract": "<p>After we announced our results, CTFs like Splunk's Boss of the SOC (BOTS) started prohibiting AI agents. For science &amp; profit, we keep doing it anyways. In BOTS, the AIs solve most of it in under 10 minutes instead of taking the full day. Our recipe was surprisingly simple: Teach AI agents to self-plan their investigation steps, adapt their plans to new information, work with the SIEM DB, and reason about log dumps. No exotic models, no massive lab budgets - just publicly available LLMs mixed with a bit of science and perseverance. We'll walk through how that works, including videos of the many ways AI trips itself up that marketers would rather hide, and how to do it at home with free and open-source tools.</p> <p>CTF organizers can't detect this - the arms race is probably over before it really began. But the real question isn't \"can we cheat at CTFs?\" It's what happens when investigations evolve from analysts-who-investigate to analysts-who-manage-AI-investigators. We'll show you what that transition already looks like today and peek into some uncomfortable questions about what comes next.</p>"
+    },
+    {
+        "title": "DNGerousLINK: A Deep Dive into WhatsApp 0-Click Exploits on iOS and Samsung Devices",
+        "duration": 3600,
+        "event_id": "P9ZQZD",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Zhongrui Li, Yizhe Zhuang, Kira Chen",
+        "abstract": "<p>The spyware attack targeting WhatsApp, disclosed in August as an in-the-wild exploit, garnered significant attention. By simply knowing a victim's phone number, an attacker could launch a remote, zero-interaction attack against the WhatsApp application on Apple devices, including iPhones, iPads, and Macs. Subsequent reports indicated that WhatsApp on Samsung devices was also targeted by similar exploits. In this presentation, we will share our in-depth analysis of this attack, deconstructing the 0-click exploit chain built upon two core vulnerabilities: CVE-2025-55177 and CVE-2025-43300. We will demonstrate how attackers chained these vulnerabilities to remotely compromise WhatsApp and the underlying iOS system without any user interaction or awareness. Following our analysis, we successfully reproduced the exploit chain and constructed an effective PoC capable of simultaneously crashing the target application on iPhones, iPads, and Macs. Finally, we will present our analysis of related vulnerabilities affecting Samsung devices (such as CVE-2025-21043) and share how this investigation led us to discover additional, previously unknown 0-day vulnerabilities.</p>"
+    },
+    {
+        "title": "CCC&T - Cosmic ray, the Climate Catastrophe and Trains.",
+        "duration": 2400,
+        "event_id": "PM8ZHP",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "FantasticMisterFux",
+        "abstract": "<p>How can we predict soil moisture by measuring cosmic ray products and what have trains to do with it? Ever wondered how this D\u00fcrremonitor works, that you heared about in ther german news? These question and some more I will try to answer while I give an overview of some of the research that is done by the Helmholtz Centre for Environmental Research (UFZ).</p>"
+    },
+    {
+        "title": "Closing Ceremony",
+        "duration": 3600,
+        "event_id": "POWER0",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Stella, pajowu",
+        "abstract": "<p>Power off! Nach vier wunderbaren Tagen kommt der Congress nun langsam zum Ende. Lasst uns zur\u00fcckblicken, die Eindr\u00fccke sortieren und diese inspirierte Stimmung nach drau\u00dfen tragen.</p>"
+    },
+    {
+        "title": "Opening Ceremony",
+        "duration": 1800,
+        "event_id": "POWER1",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Stella, pajowu",
+        "abstract": "<p>Power On! Lasst uns gemeinsam an diesem magischen Ort ankommen und alles vorbereiten, um die n\u00e4chsten vier Tage in einer fr\u00f6hlich-kreativen, fantastischen Wunderwelt zu verbringen und Kraft zu tanken.</p>"
+    },
+    {
+        "title": "Unnecessarily Complicated Kitchen \u2013 Die Wissenschaft des guten Geschmacks",
+        "duration": 3600,
+        "event_id": "PSG7QA",
+        "language": "de",
+        "track_id": 27,
+        "speaker_names": "LukasQ",
+        "abstract": "<p>In unserer \u201eUnnecessarily Complicated Kitchen\u201c hacken wir die Gesetze der Kulinarik. Ich zeige live, wie Hitze, Chemie und Chaos zusammenwirken, wenn Molek\u00fcle tanzen, Dispersionen emulgieren und Geschmack zu Wissenschaft wird. Zwischen Pfanne und Physik entdecken wir, warum Kochen im Grunde angewandtes Debugging ist \u2013 und wie man Naturgesetze so w\u00fcrzt, dass sie schmecken.</p>"
+    },
+    {
+        "title": "When Vibe Scammers Met Vibe Hackers: Pwning PhaaS with Their Own Weapons",
+        "duration": 2400,
+        "event_id": "QCGR7L",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Chiao-Lin Yu (Steven Meow)",
+        "abstract": "<p>What happens when AI-powered criminals meet AI-powered hunters? A technical arms race where both sides are vibing their way through exploitation\u2014and the backdoors write themselves.</p> <p>In October 2025, we investigated Taiwan's fake delivery scam ecosystem targeting convenience store customers. What started as social engineering on social media became a deep dive into two distinct fraud platforms\u2014both bearing the unmistakable fingerprints of AI-generated code. Their developers left more than just bugs: authentication flaws, file management oversights, and database implementations that screamed \"I asked LLM and deployed without reading.\" We turned their sloppiness into weaponized OSINT. Through strategic reconnaissance, careful database analysis, and meticulous operational security, we achieved complete system access on multiple fraud infrastructures. By analyzing server artifacts and certificate patterns, we mapped 100+ active domains and extracted evidence linking thousands of victim transactions worth millions of euros in fraud. But here's the twist: we used the same AI tools they did, just with better prompts.</p> <p>The takeaway isn't just about hunting scammers\u2014it's about the collapse of the skill gap in both offense and defense. When vibe coding meets vibe hacking, the underground economy democratizes in ways we never anticipated. We'll share our methodology for fingerprinting AI-assisted crime infrastructure, discuss the ethical boundaries of counter-operations, and demonstrate how to build sustainable threat intelligence pipelines when your adversary can redeploy in 5 minutes. This talk proves that in 2025, the real exploit isn't zero-day\u2014it's zero-understanding.</p>"
+    },
+    {
+        "title": "Peep-Show f\u00fcr die Polizei. Staatliche \u00dcberwachung von Queers in Hamburger Toiletten bis 1980",
+        "duration": 3600,
+        "event_id": "QPKEKK",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Simon Schultz",
+        "abstract": "<p>Oder: Wie die Hamburger Polizei queere Menschen auf \u00f6ffentlichen Toiletten observierte, und wie ein anonymes Kollektiv im Juli 1980 dieses \u00dcberwachungsystem wortw\u00f6rtlich mit dem Hammer zerschlagen hat. Ein analoger \u00dcberwachungskrimi mit sauberen St\u00e4dten, lichtscheuen Elementen, queerem Aktivismus, und kollektiver Selbstorganisation; und mit einer Anleitung wie man Beamten Anfang der 80er das Handwerk legen konnte.</p>"
+    },
+    {
+        "title": "Who cares about the Baltic Jammer? \u2013 Terrestrial Navigation in the Baltic Sea Region",
+        "duration": 2400,
+        "event_id": "QPPQ3R",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Lars, Niklas Hehenkamp, Markus",
+        "abstract": "<p>Reports of GNSS interference in the Baltic Sea have become almost routine \u2014 airplanes losing GPS, ships drifting off course, and timing systems failing. But what happens when a group of engineers decides to build a navigation system that simply <em>doesn\u2019t care</em> about the jammer?</p> <p>Since 2017, we\u2019ve been developing <strong>R-Mode</strong>, a terrestrial navigation system that uses existing radio beacons and maritime infrastructure to provide independent positioning \u2014 no satellites needed. In this talk, we\u2019ll share our journey from an obscure research project that \u201cnobody needs\u201d to a system now seen as crucial for resilience and sovereignty. Expect technical insights, field stories from ships in the Baltic, and reflections on what it means when a civilian backup system suddenly attracts military interest.</p>"
+    },
+    {
+        "title": "Die K\u00e4nguru-Rebellion: Digital Independence Day",
+        "duration": 3600,
+        "event_id": "QRHPLE",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Linus Neumann, Marc-Uwe Kling",
+        "abstract": "<p>Marc-Uwe Kling liest neues vom K\u00e4nguru vor.</p>"
+    },
+    {
+        "title": "Machine Vision \u2013 Vom Algorithmus zum Baumpilz im digitalen Metabolismus",
+        "duration": 2400,
+        "event_id": "QWFPYT",
+        "language": "de",
+        "track_id": 33,
+        "speaker_names": "Thomas Kn\u00fcsel",
+        "abstract": "<p>Milliarden von Kameras produzieren t\u00e4glich Bilder, die zunehmend von Maschinen analysiert werden. In dieser Lecture Performance beleuchten wir die Entwicklung des maschinellen Sehens \u2013 von den fr\u00fchen algorithmischen Ans\u00e4tzen bis zu den heutigen Anwendungen \u2013 und schauen, wie verschiedene K\u00fcnstler:innen diese Technologien nutzen und reflektieren. Anhand der beiden Arbeiten \u201eThrowback Environment\u201d und \u201eFomes Fomentarius Digitalis\u201d betrachten wir die Nutzung des maschinellen Sehens in einem k\u00fcnstlerischen Feedback-Loop. Die Arbeiten machen sichtbar, was die eingesetzten Algorithmen sehen und in welchen Mustern sie operieren.</p>"
+    },
+    {
+        "title": "Hegemony Eroding: Excavating Diversity in Latent Space",
+        "duration": 2400,
+        "event_id": "RDABLB",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Karim Hamdi",
+        "abstract": "<p>Hegemony Eroding is an ongoing art project exploring how generative AI reflects and distorts cultural representation. Its name speaks to its core ambition: to bear witness to the slow erosion of Western cultural hegemony by exposing the cracks in which other cultures shine through.</p> <p>This talk will discuss the blurry boundary between legitimate cultural representation and prejudice in AI-generated media and how generative AI can be used as a tool to explore humanity's digital foot print. It is permeated by a critique of purely profit-driven AI development and it's tendency to blunt artistic exploration and expression.</p>"
+    },
+    {
+        "title": "Brennende W\u00e4lder und Kommentarspalten - Klimaupdate mit dem FragDenStaat Climate Helpdesk",
+        "duration": 2400,
+        "event_id": "RGKKJ9",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Joschi Wolf",
+        "abstract": "<p>Das Klima-Update vom FragDenStaat Climate Helpdesk.</p>"
+    },
+    {
+        "title": "Hacking Karlsruhe - 10 years later",
+        "duration": 2400,
+        "event_id": "S3FPQX",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "J\u00fcrgen Bering, Simone Ruf",
+        "abstract": "<p>\"Wir gehen nach Karlsruhe!\u201c \u2013 das klang vor zehn Jahren nach Aufbruch und juristischem Hack. Heute ist klar: Strategische Prozessf\u00fchrung ist kein Sprint, sondern ein z\u00e4hes, manchmal frustrierendes Dauerprojekt.</p> <p>In diesem Talk ziehen wir Bilanz: Was haben wir mit zivilgesellschaftlichen Verfassungsbeschwerden im Bereich Technologie erreicht \u2013 und wo sind wir gescheitert? Welche Fehler w\u00fcrden wir heute vermeiden, welche Wege waren richtig? Und was bedeutet es, wenn das h\u00f6chste deutsche Gericht zunehmend weniger Lust auf digitalpolitische Grundrechtsfragen zeigt?</p> <p>Ein realistischer Blick hinter die Kulissen strategischer Klagen \u2013 und die Frage: Wie hackt man das Rechtssystem im Jahr 2025?</p>"
+    },
+    {
+        "title": "Hatupangwingwi: The story how Kenyans fought back against intrusive digital identity systems",
+        "duration": 3600,
+        "event_id": "SBN89V",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Mustafa Mahmoud Yousif",
+        "abstract": "<p>The session title is fashioned after the Kenyan movement building rhetoric \u201cHatupangwingwi\u201d which is Kenyan slang meant as a call to action to counter anti-movement building techniques by the political class and resist infiltration and corruption. This is true for the organisation and movement building towards inclusive identity regimes in Kenya. The session seeks to explore the lessons from Kenya\u2019s journey to digitalization of public services and the uptake of Digital Public infrastructure. It digs deeper on the power of us and how civil society could stop a destructive surveillance driven digitalisation thus protecting millions of Kenyans.</p>"
+    },
+    {
+        "title": "Developing New Medicines in the Age of AI and Personalized Medicine",
+        "duration": 2400,
+        "event_id": "SMWCFE",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Dennis \u00d6zcelik",
+        "abstract": "<p>Did you ever wonder where all the drugs, which you can get at a pharmacy, come from? Who makes them, and how? Well, there is no easy answer, because the process of drug discovery and development is a very complex, expensive, and challenging journey, riddled with many risks and failures. This holds true for all types of drugs, from a simple pill to an mRNA vaccine or a gene therapy. Today, scientists support this process with a variety of AI applications, cutting-edge technologies, automation, and a huge amount of data. But can the race for new medicines and cures succeed only through more technology, or do we need to rethink the entire process? Let\u2019s take a look at how the drug discovery and development process has worked so far, and how this entire process is changing \u2013 for better or worse.</p>"
+    },
+    {
+        "title": "Building a NOC from scratch",
+        "duration": 2400,
+        "event_id": "SRCDYW",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "lilly",
+        "abstract": "<p>Learn from our mistakes during the first iteration of Network Operations for Europe's largest furry convention, Eurofurence. Dieses Jahr hat ein kleines Team aus dem Chaos, Furries und Chaos-Furries ein neues Netzwerk-OC gegr\u00fcndet, um die Eurofurence mit gutem premium \ud83d\udc4c Internetz auszustatten. Wir erz\u00e4hlen von unseren Erfahrungen und den sozialen sowie technischen Herausforderungen.</p>"
+    },
+    {
+        "title": "Prometheus: Reverse-Engineering Overwatch",
+        "duration": 2400,
+        "event_id": "SRRFPA",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "breakingbread",
+        "abstract": "<p>This talk explores the internals of Overwatch which make the game work under the hood. </p> <p>The end goal is to democratise development of Overwatch. Being able to host your own servers and modify the game client to your liking should not be up for discussion for a game many people have paid money for.</p>"
+    },
+    {
+        "title": "a media-almost-archaeology on data that is too dirty for \"AI\"",
+        "duration": 2400,
+        "event_id": "SSWHEP",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "jiawen uffline",
+        "abstract": "<p>when datasets are scaled up to the volume of (partial) internet, together with the idea that scale will average out the noise, large dataset builders came up with a human-not-in-the-loop, cheaper-than-cheap-labor method to clean the datasets: heuristic filtering. Heuristics in this context are basically a set of rules came up by the engineers with their imagination and estimation to work best for their perspective of \u201ccleaning\u201d. Most datasets use heuristics adopted from existing ones, then add some extra filtering rules for specific characteristics of the datasets. I would like to invite you to have a taste together of these silent, anonymous yet upheld estimations and not-guaranteed rationalities in current sociotechnical artifacts, and on for whom these estimations are good-enough, as it will soon be part our technological infrastructures.</p>"
+    },
+    {
+        "title": "Making the Magic Leap past NVIDIA's secure bootchain and breaking some Tesla Autopilots along the way",
+        "duration": 3600,
+        "event_id": "SVTNYA",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Elise Amber Katze",
+        "abstract": "<p>The Tegra X2 is an SoC used in devices such as the Magic Leap One, and Tesla's Autopilot 2 &amp; 2.5 promising a secure bootchain. But how secure really is the secure boot? In this talk I go over how I went from a secured Magic Leap One headset, to exploiting the bootloader over USB, to doing fault injection to dump the BootROM, to finding and exploiting an unpatchable vulnerability in the BootROM's USB recovery mode affecting all Tegra X2s.</p>"
+    },
+    {
+        "title": "Power Cycle B7 oder Warum kauft man eine Zeche?",
+        "duration": 2400,
+        "event_id": "SYAF7Y",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Kohlenpod, kater, Stephan",
+        "abstract": "<p>Aus einem Barwitz wurde ein Projekt!</p> <p>Blumenthal7 ist die letzte vollst\u00e4ndig erhaltene Schachtanlage des ehemaligen Steinkohlebergwerks General Blumenthal in Recklinghausen im n\u00f6rdlichen Ruhrgebiet. Nach diversen Startschwierigkeiten ist aus einer im Dornr\u00f6schenschlaf liegenden Industriebrache ein Projekt geworden, das bereits jetzt einer Vielzahl von Entit\u00e4ten und Gruppen eine Heimat und einen gro\u00dfen, nahezu grenzenlosen Spielplatz bietet.</p> <p>Begleitet uns gerne beim Power Cycle B7...!</p>"
+    },
+    {
+        "title": "How to render cloud FPGAs useless",
+        "duration": 2400,
+        "event_id": "THUEYF",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Dirk",
+        "abstract": "<p>While FPGA developers usually try to minimize the power consumption of their designs, we approached the problem from the opposite perspective: what is the maximum power consumption that can be achieved or wasted on an FPGA? Short answer: we found that it\u2019s easy to implement oscillators running at 6 GHz that can theoretically dissipate around 20 kW on a large cloud FPGA when driving the signal to all the available resources. It is interesting to note that this power density is not very far away from that of the surface of the sun. However, such power load jump is usually not a problem as it will trigger some protection circuitry. This led us to the next question: would a localized hotspot with such power density damage the chip if we remain within the typical power envelope of a cloud FPGA (~100 W)? While we could not \u201cfry\u201d the chip or induce permanent errors (and we tried several variants), we did observe that a few routing wires aged to become up to 70% slower in just a few days of stressing the chip. This basically means that such an FPGA cannot be rented out to cloud users without risking timing violations. In this talk, we will present how we optimized power wasting, how we measured wire latencies with ps accuracy, how we attacked 100 FPGA cloud instances and how we can protect FPGAs against such DOS attacks.</p>"
+    },
+    {
+        "title": "Neuroexploitation by Design: Wie Algorithmen in Gl\u00fccksspielprodukten sich Wirkweisen des Reinforcement Learning und dopaminergen Belohnungssystems zunutze machen",
+        "duration": 2400,
+        "event_id": "TK8TUQ",
+        "language": "de",
+        "track_id": 29,
+        "speaker_names": "Elke Smith",
+        "abstract": "<p>Die Legalisierung des Online-Gl\u00fccksspiels in Deutschland im Jahr 2021 und die zunehmende Normalisierung von Gl\u00fccksspiel und Sportwetten in den Medien haben ein Umfeld geschaffen, in welchem Gl\u00fccksspielprodukte leichter zug\u00e4nglich und gesellschaftlich st\u00e4rker akzeptiert sind als je zuvor. Diese weit verbreitete Exposition birgt erhebliche Risiken f\u00fcr vulnerable Personen, insbesondere da die Grenzen zwischen Spielen und Gl\u00fccksspiel zunehmend verwischen. Seit einiger Zeit ist beispielsweise ein deutlicher Anstieg von Spielen zu beobachten, die Gl\u00fccksspiel-\u00e4hnliche Items wie Loot-Boxen beinhalten. Komplexe Designmerkmale in elektronischen Gl\u00fccksspielprodukten, z.B. Gl\u00fccksspielautomaten und Online-Slots, sind gezielt darauf ausgerichtet, Individuen zu verl\u00e4ngerten Spielsitzungen zu motivieren, um den Umsatz zu maximieren. W\u00e4hrend Gl\u00fccksspiel f\u00fcr viele Menschen eine Form der Unterhaltung darstellt, kann das Spielverhalten bei manchen eskalieren und schwerwiegende Folgen f\u00fcr das Leben der Betroffenen haben. Dieser Vortrag wird Mechanismen in Gl\u00fccksspielprodukten und Loot Boxen beleuchten und aufzeigen, weshalb diese Merkmale das Suchtpotenzial f\u00f6rdern k\u00f6nnen. Hierbei spielen Mechanismen des sogenannten Verst\u00e4rkungslernens (engl. Reinforcement Learning) eine Rolle, die das menschliche Belohnungssystem aktivieren, also dopaminerge Bahnen, welche an der Vorhersage von Belohnungen beteiligt sind. Besonderes Augenmerk liegt auf dem Reinforcement-Learning, einem Framework zur Modellierung von Lernen durch belohnungsbasiertes Feedback, welches sowohl in der Psychologie zur Beschreibung menschlichen Lernens und Entscheidungsverhaltens als auch zur Optimierung von Machine-Learning-Algorithmen eingesetzt wird. Im Vortrag werden auch Ergebnisse aus eigener Forschung am Labor der Universit\u00e4t zu K\u00f6ln vorgestellt. Ziel ist es, Mechanismen des Gl\u00fccksspiels zu erkl\u00e4ren, sowie das Bewusstsein f\u00fcr potenzielle Sch\u00e4den f\u00fcr Individuen und die Gesellschaft zu sch\u00e4rfen und die Notwendigkeit von Regulation sowie verantwortungsbewussten Designpraktiken zu diskutieren.</p>"
+    },
+    {
+        "title": "KIM 1.5: Noch mehr Kaos In der Medizinischen Telematikinfrastruktur (TI)",
+        "duration": 3600,
+        "event_id": "TKSNNS",
+        "language": "de",
+        "track_id": 31,
+        "speaker_names": "Christoph Saatjohann",
+        "abstract": "<p>Zwei Jahre nach dem ersten KIM-Vortrag auf dem 37C3: Die gezeigten Schwachstellen wurden inzwischen geschlossen. Weiterhin k\u00f6nnen mit dem aktuellen KIM 1.5+ nun gro\u00dfe Dateien bis 500 MB \u00fcbertragen werden, das Signaturhandling wurde f\u00fcr die Nutzenden vereinfacht, indem die Detailinformationen der Signatur nicht mehr einsehbar sind. Aber ist das System jetzt sicher oder gibt es neue Probleme?</p>"
+    },
+    {
+        "title": "Transkultureller Hack auf die klassische Musikszene \u2013 Vortrag und Konzert",
+        "duration": 5400,
+        "event_id": "TPSDAQ",
+        "language": "de",
+        "track_id": 33,
+        "speaker_names": "Johanna-Leonore Dahlhoff, Peter Klohmann, Alireza Meghrazi Solouklou, Mirweis Neda, Maria Carolina Pardo Reyes, Eduardo Sabella, Sarah Luisa Wurmer, Berivan Canbolat",
+        "abstract": "<p>Das Bridges Kammerorchester hackt die klassische Musikszene, indem es die Regeln des traditionellen Konzertbetriebs aufbricht: Musiker*innen mit und ohne Flucht- und Migrationsbiografie bringen Instrumente wie Oud, Tar, Kamanche oder Daf in die europ\u00e4ische Orchestertradition. Statt \u00fcberwiegend Werke verstorbener m\u00e4nnlicher, europ\u00e4ischer Komponisten zu spielen, komponieren die Mitglieder ihre Musik selbst \u2013 ein radikaler Perspektivwechsel hin zu Vielfalt und Selbstbestimmung. Im Vortrag zeigen sie anhand von H\u00f6rbeispielen und pers\u00f6nlichen Geschichten, wie diese Hacks entstehen und machen im Anschluss in einem Konzert die musikalische Vielfalt live erlebbar.</p>"
+    },
+    {
+        "title": "Chaos all year round",
+        "duration": 3600,
+        "event_id": "TPZG8S",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Deanna",
+        "abstract": "<p>Neben dem Congress gibt es noch viele andere Chaos-Events, die \u00fcber das ganze Jahr verteilt stattfinden. Das Easterhegg, die GPN und die MRMCD kennen vermutlich die meisten Chaos-Wesen. Aber was ist eigentlich mit den ganzen kleineren Veranstaltungen?</p>"
+    },
+    {
+        "title": "Laser Beams & Light Streams: Letting Hackers Go Pew Pew, Building Affordable Light-Based Hardware Security Tooling",
+        "duration": 2400,
+        "event_id": "TRGCPS",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Patch, Sam. Beaumont (PANTH13R)",
+        "abstract": "<p>Stored memory in hardware has had a long history of being influenced by light, by design. For instance, as memory is represented by the series of transistors, and their physical state represents 1's and 0's, original EPROM memory could be erased via the utilization of UV light, in preparation for flashing new memory. Naturally, whilst useful, this has proven to be an avenue of opportunity to be leveraged by attackers, allowing them to selectively influence memory via a host of optical/light-based techniques. As chips became more advanced, the usage of opaque resin was used as a \"temporary\" measure to combat this flaw, by coating chips in a material that would reflect UV. Present day opinions are that laser (or light) based hardware attacks, are something that only nation state actors are capable of doing Currently, sophisticated hardware labs use expensive, high frequency IR beams to penetrate the resin. This project demonstrates that with a limited budget and hacker-and-maker mentality and by leveraging more inexpensive technology alternatives, we implement a tool that does laser fault injection, can detect hardware malware, detect supply chain chip replacements, and delve into the realm of laser logic state imaging.</p>"
+    },
+    {
+        "title": "Netzpolitik in der Schweiz: Zwischen Bodensee und Matterhorn",
+        "duration": 2400,
+        "event_id": "TRPMAN",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Kire, Rahel",
+        "abstract": "<p>Auch in der Schweizer Netzpolitik ging es im auslaufenden Jahr drunter und dr\u00fcber. Wir blicken mit gewohntem Schalk auf das netzpolitische Jahr 2025 zwischen Bodensee und Matterhorn zur\u00fcck - und diskutieren jene Themen, die relevant waren und relevant bleiben.</p>"
+    },
+    {
+        "title": "A post-American, enshittification-resistant internet",
+        "duration": 3600,
+        "event_id": "TTQVKM",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Cory Doctorow",
+        "abstract": "<p>Trump has staged an unscheduled, midair rapid disassembly of the global system of trade. Ironically, it is this system that prevented all of America's trading partners from disenshittifying their internet: the US trade representative threatened the world with tariffs unless they passed laws that criminalized reverse-engineering and modding. By banning \"adversarial interoperability,\" America handcuffed the world's technologists, banning them from creating the mods, hacks, alt clients, scrapers, and other tools needed to liberate their neighbours from the enshittificatory predations of the ketamine-addled zuckermuskian tyrants of US Big Tech.</p> <p>Well, when life gives you SARS, you make sarsaparilla. The Trump tariffs are here, and it's time to pick the locks on the those handcuffs and set the world's hackers loose on Big Tech. Happy Liberation Day, everyone!</p>"
+    },
+    {
+        "title": "All Sorted by Machines of Loving Grace? \"AI\", Cybernetics, and Fascism and how to Intervene",
+        "duration": 2400,
+        "event_id": "TWEDR3",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Katika K\u00fchnreich",
+        "abstract": "<p>While the extreme right is on the rise in many countries and climate change is unrolling, a promising future seems to be written: According to Elon Musk, Sam Altman, and some other \u201ctech bros\u201d it is to leave the dying planet to go to space. With the help of something called \u201cA(G)I\u201d. But what kind of future is the one that is promised? And what is the connection between power cycles of tech company owners and people who's believes can be called fascist? As we moved power through data in the hands of very view, it is important to examine what ideas these view have in their heads. This talk will explore the roots of today's tech fascism and its love for tech. From the early thoughts and movements in the US and Europe to Futurism and the Holocaust, organised with Hollerith punching cards. It will dive into the its blooming relationship with cybernetics, and take a look in the future the \u201ctech bros\u201d want to lure us in. This talk will address the often overlooked topic of how and when people get comfy with diving into movements of hate and how to stop a white supremacy future where we will be sorted by machines. And, in taking a look on past movements opposing authoritarianism and will examine mindsets and possibilities of resistance as well as the possibility of restarting everything. Because we have a planet and loved ones to lose. Wear your safety cat-ears, buckle up, it will be a wild, but entertaining ride.</p>"
+    },
+    {
+        "title": "Light in the Dark(net)",
+        "duration": 2400,
+        "event_id": "TWSULE",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Tobias H\u00f6ller",
+        "abstract": "<p>Science is hard and research into the usage of the Tor network is especially so. Since it was designed to counter suveillance, it gathering reliable information is difficult. As a consequence, the studies we do have, have yielded very different results.</p> <p>This talk investigates the root causes of contradicting studies by highlighting how slight changes in methodology or data selection completely change the results and thereby our understanding of what the Darknet is. Whether you consider it the last bastion of freedom or a haven of crime, this talk will tell you where to look and what to ignore in order to confirm your current opinion. And in case you are open to changing it, we have some food for thought for you.</p>"
+    },
+    {
+        "title": "Atoms in Space",
+        "duration": 2400,
+        "event_id": "TXYU83",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "manuel",
+        "abstract": "<p><em>What are atoms doing in space anyways?</em> This talk will provide a brief overview of applications of quantum technologies in space ranging from precise timing and inertial measurements to fundamental physics.</p>"
+    },
+    {
+        "title": "Digitale Inklusion: Wie wir digitale Barrierefreiheit f\u00fcr alle erreichen k\u00f6nnen",
+        "duration": 3600,
+        "event_id": "TYX9VG",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Jakob Sponholz, Kathrin Klapper, Lena Christina M\u00fcller",
+        "abstract": "<p>K\u00f6nntest du jetzt noch sagen, was du heute online gemacht hast? F\u00fcr viele ist das Internet so selbstverst\u00e4ndlich, dass sie es kaum noch merken, wenn sie es benutzen. Dennoch sind viele Menschen unfreiwillig aus der digitalen Welt ausgeschlossen. Wie k\u00f6nnte das Internet f\u00fcr alle nutzbar werden?</p>"
+    },
+    {
+        "title": "CPU Entwicklung in Factorio: Vom D-Flip-Flop bis zum eigenen Betriebssystem",
+        "duration": 2400,
+        "event_id": "U9UGN3",
+        "language": "de",
+        "track_id": 32,
+        "speaker_names": "PhD (Philipp)",
+        "abstract": "<p>Factorio ist ein Fabriksimulationsspiel mit integriertem Logiksystem. Dies erm\u00f6glichte mir den Bau einer CPU, die unter anderem aus einer 5-stufiger Pipeline, einer Forwarding Logikeinheit, Interrupt Handling sowie einem I/O Interface besteht. \u00dcber einen selbst geschriebenen Assembler konnte ich ein eigenes Betriebssystem und Programme wie Minesweeper oder Snake integrieren. Der Talk soll euch zeigen, wie sich klassische Computerarchitektur in einem v\u00f6llig anderen technischen Kontext umsetzen l\u00e4sst und wo dabei \u00fcberraschend echte Probleme der CPU-Entwicklung auftreten. Kommt mit auf die Reise: Vom Blick auf den gesamten Computer bis hinunter zu den einzelnen Logikgattern ist es nur eine Mausradbewegung entfernt!</p>"
+    },
+    {
+        "title": "Endlich maschinenlesbare Urteile! Open access f\u00fcr Juristen",
+        "duration": 2400,
+        "event_id": "UJA9AF",
+        "language": "de",
+        "track_id": 29,
+        "speaker_names": "Beata Hubrig, Nuri Khadem-Al-Charieh",
+        "abstract": "<p>Zur \u00dcberraschung Vieler sind Juristen Wissenschaftler, die nach wissenschaftlichen Ma\u00dfst\u00e4ben arbeiten sollten und ihre Schrifts\u00e4tze und Urteile auch nach stringenten wissenschaftlichen Kriterien gestalten und untereinander diskutieren sollten. Doch nur in einigen Rechtsgebieten funktioniert dies.</p> <p>Wie jede Wissenschaft ist auch die Rechtswissenschaft nur so gut wie das ihr zugrundeliegende Quellenmaterial \u2013 in diesem Fall sind das meist Urteile. Empirische Untersuchungen \u00fcber diese Daten sind nur m\u00f6glich, wenn sie der Forschung auch zur Verf\u00fcgung stehen. Doch wissenschaftliche Arbeit im juristischen Feld ist aktuell nicht wirklich m\u00f6glich, da die wenigsten Urteile ver\u00f6ffentlicht werden, da sich die Gerichte meist vor der dadurch anfallenden Arbeit scheuen. Wir betrachten, warum dies Grunds\u00e4tze der Rechtsstaatlichkeit infrage stellt und warum Player aus der Wirtschaft mehr \u00fcber deutsche Rechtsprechung wissen, als unsere Gerichte \u2013 und wie sie das zu Geld machen.</p>"
+    },
+    {
+        "title": "Von Fuzzern zu Agenten: Entwicklung eines Cyber Reasoning Systems f\u00fcr die AIxCC",
+        "duration": 3600,
+        "event_id": "UNNRYM",
+        "language": "de",
+        "track_id": 31,
+        "speaker_names": "Mischa Meier (mmisc), Annika Kuntze",
+        "abstract": "<p>Die AI Cyber Challenge (AIxCC) der DARPA hatte zum Ziel, die Grenzen der autonomen Cybersicherheit zu erweitern: K\u00f6nnen AI-Systeme Software-Schwachstellen unabh\u00e4ngig, in Echtzeit und ohne menschliche Hilfe identifizieren, verifizieren und beheben? Im Laufe von zwei Jahren entwickelten Teams aus aller Welt \u201eCyber Reasoning Systems\u201c (CRS), die in der Lage sind, komplexe Open-Source-Software zu analysieren, Code zu analysieren, reproducer zu generieren, um zu zeigen, dass ein gemeldeter Fehler kein Fehlalarm ist, und schlie\u00dflich Patches zu synthetisieren. Unser Team nahm an dieser Challenge teil und entwickelte von Grund auf ein eigenes CRS. In diesem Vortrag geben wir Einblicke in den Wettbewerb: Wie funktioniert die LLM-gesteuerte Schwachstellenerkennung tats\u00e4chlich, welche Designentscheidungen sind wichtig und wie sind die Finalisten-Teams an das Problem herangegangen?</p>"
+    },
+    {
+        "title": "Not an Impasse: Child Safety, Privacy, and Healing Together",
+        "duration": 3600,
+        "event_id": "UUUYHJ",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Kate Sim",
+        "abstract": "<p>From the EU\u2019s \u201cChat Control\u201d to the UK\u2019s age verification, there is a growing legislative momentum across jurisdictions to regulate the Internet in the name of protecting children. The monstrosity of child sexual abuse looms large in shaping how policymakers, advocates, and the public understand the problem area of and propose solutions for detecting, reporting, and removing harmful/illegal content. Children\u2019s safety and adults\u2019 privacy are thus pitted against each other, deadlocked into an impasse. As technologists deeply concerned with safety and privacy, where do we go from here?</p>"
+    },
+    {
+        "title": "RedScout42 \u2013 Zur digitalen Wohnungsfrage",
+        "duration": 2400,
+        "event_id": "UXDELZ",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Sandra, Leonard",
+        "abstract": "<p>Wer heutzutage eine Wohnung sucht, kommt kaum noch darum herum, sich einen Account bei Immoscout24 &amp; Co. zu erstellen. Diese \u201ePlatform Real Estate\u201c sind eine besondere Art der \u201eWalled Gardens\u201c, die ihr Gesch\u00e4ftsmodell auf die sich immer weiter versch\u00e4rfende Wohnungskrise ausgerichtet haben. Und das ist \u00e4u\u00dferst profitabel f\u00fcr die Besitzer dieser Strukturen der Daseinsvorsorge: Im September 2025 stieg Scout24 in den DAX auf und reiht sich damit in Unternehmen wie BMW, Rheinmetall und SAP ein.</p>"
+    },
+    {
+        "title": "In-house electronics manufacturing from scratch: How hard can it be?",
+        "duration": 2400,
+        "event_id": "V9PXC3",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Augustin Bielefeld, Alexander Willer",
+        "abstract": "<p>Why is electronics manufacturing hard? Can it ever be made easy and more accessible? What will it take to relocate industrial production to Europe?</p> <p>We share with you what we learned when we spent more than 1 year setting up our own production line in our office in Hamburg. Turns out a lot of the difficulties are rarely talked about or hidden behind \"manufacturing is high CAPEX\". </p> <p>Come and learn with us the nitty gritty details of batch reflow ovens, stencil printing at scale, and how OpenPnP is a key enabler in our process. While we are far from done with this work, we hope to see others replicate it and collectively reclaim the ownership of the means of electronics production.</p>"
+    },
+    {
+        "title": "The Museum of Care: Open-Source Survival Kit Collection",
+        "duration": 2400,
+        "event_id": "VLFQSQ",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Nika Dubrovsky",
+        "abstract": "<p>The talk is about the ideas behind setting up the David Graeber Institute and the Museum of Care. The Survival Kit Collection brings together collectives developing open source \"social technologies\" \u2014spirulina farms, self-replicating 3D printers, modular housing, low-cost water systems, and ... art and education. In 2019, together with David Graeber, we held the first workshop about the Museum of Care at CCC to reimagine the relation between freedom, technology and value. Over these 6 years, the Museum of Care and the David Graeber Institute have experimented with various projects: the survival collection, Visual Assembly, and creating an open space for horizontal knowledge production\u2014something we hope to develop into an actual University.</p>"
+    },
+    {
+        "title": "Recharge your batteries with us - an empowering journey through the energy transition",
+        "duration": 2400,
+        "event_id": "VN77T8",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Salacidre, JulianeB",
+        "abstract": "<p>Amidst gloomy headlines, extreme weather, and climate anxiety, the good stories often get lost. Yet they exist - inspiring people, clever engineering, real breakthroughs. And that's exactly what we bring you \u2013 the positive power cycles of the energy transition in action. And real energy on stage.</p>"
+    },
+    {
+        "title": "Trump government demands access to European police databases and biometrics",
+        "duration": 2400,
+        "event_id": "VQQYUT",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Matthias Monroy",
+        "abstract": "<p>The USA is demanding from all 43 countries in the \"Visa Waiver Programme\" (VWP), which enables visa-free travel, to conclude an \"Enhanced Border Security Partnership\" (EBSP). This is intended to grant US authorities direct access to police databases in these - mostly European - countries containing fingerprints, facial images and other personal data. Anyone who refuses this forced \"border partnership\" faces exclusion from the visa-free travel programme.</p>"
+    },
+    {
+        "title": "Excuse me, what precise time is It?",
+        "duration": 3600,
+        "event_id": "VRFMFJ",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Oliver Ettlin",
+        "abstract": "<p>With PTP 1588, AES67, and SMPTE 2110, we can transmit synchronous audio and video with sub-millisecond latency over the asynchronous medium Ethernet. But how do you make hundreds of devices agree on the exact same nanosecond on a medium that was never meant to care about time? Precision Time Protocol (IEEE 1588) tries to do just that. It's the invisible backbone of realtime media standards like AES67 and SMPTE 2110, proprietary technologies such as Dante, and even critical systems powering high-frequency trading, cellular networks, and electric grids.</p>"
+    },
+    {
+        "title": "Coding Dissent: Art, Technology, and Tactical Media",
+        "duration": 2400,
+        "event_id": "WDE9LR",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Helena Nikonole",
+        "abstract": "<p>This presentation examines artistic practices that engage with sociotechnical systems through tactical interventions. The talk proposes art as a form of infrastructural critique and counter-technology. It also introduces a forthcoming HackLab designed to foster collaborative development of open-source tools addressing digital authoritarianism, surveillance capitalism, propaganda infrastructures, and ideological warfare.</p>"
+    },
+    {
+        "title": "Learning from South Korean Telco Breaches",
+        "duration": 3600,
+        "event_id": "WHGYRX",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Shinjo \"peremen\" Park, Yonghyu \"perillamint\" Ban",
+        "abstract": "<p>2025 was a bad year for South Korean mobile network operators. All three operators (SK Telecom, KT, LG U+) were affected by breach in some part of their respective network: HSS of SK Telecom, femtocells of KT. Meanwhile, handling of the breach by each operators and post-mortem analysis of each breaches have stark differences. The technical details and implemented mitigations are often buried under the vague terms, and occasionally got lost in translation to English. In this talk, I will cover the technical aspects of SK Telecom and KT's breach, and how the operators are coping to the breach and what kind of measurements have been performed to secure their network.</p>"
+    },
+    {
+        "title": "The Small Packet of Bits That Can Save (or Destabilize) a City",
+        "duration": 2400,
+        "event_id": "WRWCKR",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Manuel R\u00e1bade",
+        "abstract": "<p>The Emergency Alert System (EAS) and its SAME (Specific Area Message Encoding) protocol are public alerting technologies that broadcast short digital bursts over VHF triggering emergency messages on millions of receivers across North America. In Mexico, this technology was integrated into the Seismic Alert System (SASMEX) which more than 30 million people in the central part of the country rely on to prepare for frequent earthquakes.</p> <p>While new alerting technologies have emerged, the EAS-SAME network continues to play an important role for public safety in the U.S., Mexico, and Canada. Yet, the same small packets of bits that can help protect a city could also, in the wrong hands, destabilize it. This talk examines how these systems operate and reveals a troubling truth: spoofing these alerts is far easier than most people expect.</p>"
+    },
+    {
+        "title": "\u201eKI\u201c, Digitalisierung und Longevity als Fix f\u00fcr ein kaputtes Gesundheitssystem?",
+        "duration": 3600,
+        "event_id": "WTKXJZ",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Manuel Hofmann",
+        "abstract": "<p>Gro\u00dfen Herausforderungen im Gesundheitswesen soll mittels Technik und Eigenverantwortung begegnet werden. Die Hoffnung: \u201eKI\u201c und Digitalisierung machen das System effizienter; Selbstoptimierung und mehr Eigenverantwortung halten die Menschen l\u00e4nger gesund. Der Vortrag analysiert aktuelle Diskurse rund um Digitalisierung und Gesundheit, und fragt kritisch, wie diese Entwicklung ohnehin bestehende soziale Ungleichheiten versch\u00e4rfen k\u00f6nnte. Am Ende bleibt die Frage: Wie k\u00f6nnten tragf\u00e4hige L\u00f6sungen f\u00fcrs Gesundheitssystem aussehen?</p>"
+    },
+    {
+        "title": "The Eyes of Photon Science: Imaging, Simulation and the Quest to Make the Invisible Visible",
+        "duration": 2400,
+        "event_id": "WULKYL",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "MarKuster",
+        "abstract": "<p>Science advances by extending our senses beyond the limits of human perception, pushing the boundaries of what we can observe. In photon science, imaging detectors serve as the eyes of science, translating invisible processes into measurable and analysable data. Behind every image lies a deep understanding of how detectors see, respond and perform.</p> <p>At facilities like the European XFEL, the world's most powerful X-ray free-electron laser located in the Hamburg metropolitan area, imaging detectors capture ultrashort X-ray flashes at MHz frame rates and with high dynamic range. Without these advanced detectors, even the brightest X-ray laser beam would remain invisible. They help to reveal what would otherwise stay hidden, such as the structure of biomolecules, the behaviour of novel materials, and matter under extreme conditions. But how do we know they will perform as expected? And how do we design systems capable of \u201cseeing\u201d the invisible?</p> <p>I will take a closer look how imaging technology in large-scale facilities is simulated and designed to make the invisible visible. From predicting detector performance to evaluating image quality, we look at how performance simulation helps scientists and engineers understand the \u201ceyes\u201d of modern science.</p>"
+    },
+    {
+        "title": "AI Agent, AI Spy",
+        "duration": 3600,
+        "event_id": "X3KPZN",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Udbhav Tiwari, Meredith Whittaker",
+        "abstract": "<p>Agentic AI is the catch-all term for AI-enabled systems that propose to complete more or less complex tasks on their own, without stopping to ask permission or consent. What could go wrong? These systems are being integrated directly into operating systems and applications, like web browsers. This move represents a fundamental paradigm shift, transforming them from relatively neutral resource managers into an active, goal-oriented infrastructure ultimately controlled by the companies that develop these systems, not by users or application developers. Systems like Microsoft's \"Recall,\" which create a comprehensive \"photographic memory\" of all user activity, are marketed as productivity enhancers, but they function as OS-level surveillance and create significant privacy vulnerabilities. In the case of Recall, we\u2019re talking about a centralized, high-value target for attackers that poses an existential threat to the privacy guarantees of meticulously engineered applications like Signal. This shift also fundamentally undermines personal agency, replacing individual choice and discovery with automated, opaque recommendations that can obscure commercial interests and erode individual autonomy.</p> <p>This talk will review the immediate and serious danger that the rush to shove agents into our devices and digital lives poses to our fundamental right to privacy and our capacity for genuine personal agency. Drawing from Signal's analysis, it moves beyond outlining the problem to also present a \"tourniquet\" solution: looking at what we need to do <em>now</em> to ensure that privacy at the application layer isn\u2019t eliminated, and what the hacker community can do to help. We will outline a path for ensuring developer agency, granular user control, radical transparency, and the role of adversarial research.</p>"
+    },
+    {
+        "title": "The art of text (rendering)",
+        "duration": 2400,
+        "event_id": "X8ZZBV",
+        "language": "en",
+        "track_id": 33,
+        "speaker_names": "Nicolas Rougier",
+        "abstract": "<p>Typography is the art of arranging type to make written language legible, readable, and appealing when displayed. However, for the neophyte, typography is mostly apprehended as the juxtaposition of characters displayed on the screen while for the expert, typography means typeface, scripts, unicode, glyphs, ascender, descender, tracking, hinting, kerning, shaping, weigth, slant, etc. Typography is actually much more than the mere rendering of glyphs and involves many different concepts. If glyph rendering is an important part of the rendering pipeline, it is nonetheless important to have a basic understanding of typography or there\u2019s a known risk at rendering garbage on screen, as it has been seen many times in games, software and operating systems.</p>"
+    },
+    {
+        "title": "Azubi-Tag Einf\u00fchrung",
+        "duration": 2400,
+        "event_id": "XFHQBY",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "",
+        "abstract": "<p>Jedes Jahr zwischen Weihnachten und Neujahr treffen sich tausende Hacker*innen zum Chaos Communication Congress in Hamburg. Der Azubi-Tag ist eine g\u00fcnstige Gelegenheit f\u00fcr Auszubildende, den Congress zu besuchen, den CCC kennenzulernen und viel \u00fcber IT-Security, Technik und Gesellschaft zu lernen. Wir freuen uns, diesen Tag nun zum dritten Mal anbieten zu k\u00f6nnen.</p>"
+    },
+    {
+        "title": "We, the EU, and 1064 Danes decided to look into YouTube: A story about how the EU gave us a law, 1064 Danes gave us their YouTube histories, and reality gave us a headache",
+        "duration": 2400,
+        "event_id": "XJ8G3Z",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "LK Seiling, David",
+        "abstract": "<p>We explore what happens when Europe\u2019s ambitious data access laws meet the messy realities of studying major digital platforms. Using YouTube as a central case, we show how the European Union\u2019s efforts to promote transparency through the GDPR, the Digital Services Act (DSA), and the Digital Markets Act (DMA) are reshaping the possibilities and limits of independent platform research.</p> <p>At the heart of the discussion is a paradox: while these laws promise unprecedented access to the data that shape our digital lives, the information researchers and citizens actually receive is often incomplete, inconsistent, and difficult to interpret. </p> <p>In this talk, we take a close look at data donations from over a thousand Danish YouTube users, which at first glance did not reveal neat insights but sprawling file structures filled with cryptic data points. Still, if the work is put in, these digital traces offer glimpses of engagement and attention, and help us understand what users truly encountered or how the platform influenced their experiences.</p> <p>The talk situates this challenge within a broader European context, showing how data access mechanisms are set up in ways that strengthen existing power imbalances. Application processes for research data vary widely, requests are rejected or delayed without clear justification, and the datasets that do arrive frequently lack the granularity required for meaningful analysis.</p> <p>Yet the picture is not purely bleak. Citizens, researchers, and civil society already have multiple legal levers to demand greater transparency and accountability. The fundamental question is no longer whether democratic oversight is possible, but how we can use the tools at hand to make it real.</p>"
+    },
+    {
+        "title": "Amtsgeheimnis raus, Datenhalde rein: was die Informationsfreiheit in \u00d6sterreich bringt",
+        "duration": 2400,
+        "event_id": "XN3U8L",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Erwin Ernst \"eest9\" Steinhammer, Markus (fin) Hametner",
+        "abstract": "<p>Jahrelang war die staatliche Intransparenz in \u00d6sterreich nur eine Punchline in den Congress-Talks von Frag Den Staat. Damit k\u00f6nnte jetzt Schluss sein: seit heuer haben B\u00fcrger:innen endlich ein Recht, Dokumente einzusehen und ein Informationsfreiheitsgesetz. Wir zeigen, was Deutschland aus der \u00fcber ein Jahrzehnt andauernden Kampagne f\u00fcr die Abschaffung des Amtsgeheimnisses lernen kann, wof\u00fcr uns die Nachbarl\u00e4nder beneiden werden und wof\u00fcr sich Bayern besonders sch\u00e4men sollte.</p>"
+    },
+    {
+        "title": "Chatkontrolle - Ctrl+Alt+Delete",
+        "duration": 3600,
+        "event_id": "Y9EJFV",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "khaleesi, Markus Reuter",
+        "abstract": "<p>Seit jetzt schon vier Jahren droht aus der EU die Chatkontrolle. In Deutschland ist das Thema nach den Protesten im Oktober aktueller denn je - und sogar Jens Spahn und Rainer Wendt sind pl\u00f6tzlich gegen diese Form der \u00dcberwachung. In diesem Vortrag schauen wir zur\u00fcck und erkl\u00e4ren was, vor allem im Hintergrund, passiert ist. Wir nehmen die Position der Bundesregierung genau unter die Lupe und werfen einen Blick auf die Schritte, die auf EU-Ebene vor uns liegen.</p>"
+    },
+    {
+        "title": "Lightning Talks - Tag 2",
+        "duration": 7200,
+        "event_id": "YB8VWS",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Bonnie, keldo, Andi Br\u00e4u",
+        "abstract": "<p>Lightning Talks - Tag 2</p>"
+    },
+    {
+        "title": "Demystifying Fuzzer Behaviour",
+        "duration": 2400,
+        "event_id": "YCMWLV",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Addison",
+        "abstract": "<p>Despite how it's often portrayed in blogs, scientific articles, or corporate test planning, fuzz testing isn't a magic bug printer; just saying \"we fuzz our code\" says nothing about how <em>effectively</em> it was tested. Yet, how fuzzers and programs interact is deeply mythologised and poorly misunderstood, even by seasoned professionals. This talk analyses a number of recent works and case studies that reveal the relationship between fuzzers, their inputs, and programs to explain <em>how</em> fuzzers work.</p>"
+    },
+    {
+        "title": "How to keep Open Source open without leaving our communities open to threats",
+        "duration": 2400,
+        "event_id": "YDKJDT",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Quintessence",
+        "abstract": "<p>The Four Freedoms (defined ~40 years ago) and the Four Opens (~15 years ago) for Open Source provided canonical definitions for what are the cornerstones of Open Source Software communities today. While the ethos still applies today, the cultural norms that blossomed to put it into practice are from an era with different challenges.</p> <p>To build a better world, we need to both keep and protect the value system of the Four Freedoms and Four Opens. To do that, we need to re-assess our risk and threat models to balance that allows beautiful minds to flourish as well as introduce responsible friction to prevent harm from coming to them.</p>"
+    },
+    {
+        "title": "Security Nightmares",
+        "duration": 3600,
+        "event_id": "YE7ZA9",
+        "language": "de",
+        "track_id": 30,
+        "speaker_names": "Constanze Kurz, Ron",
+        "abstract": "<p>Was hat sich im Jahr 2025 im Bereich IT-Sicherheit getan? Welche neuen Methoden, Buzzwords und Trends waren zu sehen? Was waren die fiesesten Angriffe und die teuersten Fehler?</p>"
+    },
+    {
+        "title": "Asahi Linux - Porting Linux to Apple Silicon",
+        "duration": 2400,
+        "event_id": "YGHB9K",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "sven",
+        "abstract": "<p>In this talk, you will learn how Apple Silicon hardware differs from regular laptops or desktops. We'll cover how we reverse engineered the hardware without staring at disassembly but by using a thin hypervisor that traces all MMIO access and then wrote Linux drivers. We'll also talk about how upstreaming to the Linux kernel works and how we've significantly decreased our downstream patches in the past year.</p> <p>As an example, we will use support for the Type-C ports and go into details why these are so complex and required changes across multi subsystems.</p> <p>In the end, we'll briefly talk about M3/M4/M5 and what challenges we will have to overcome to get these supported.</p>"
+    },
+    {
+        "title": "Chaos Communication Chemistry: DNA security systems based on molecular randomness",
+        "duration": 2400,
+        "event_id": "YVTT8U",
+        "language": "en",
+        "track_id": 29,
+        "speaker_names": "Anne L\u00fcscher",
+        "abstract": "<p><strong>Over the past few decades, nucleic acids have increasingly been investigated as alternative data storage media and platforms for molecular computing. This talk builds on past research and introduces another branch to the field: DNA cryptography based on random chemistry. This technology provides a platform for conceiving new security architectures that bridge the physical with the digital world.</strong></p>"
+    },
+    {
+        "title": "Current Drone Wars",
+        "duration": 2400,
+        "event_id": "YXGADP",
+        "language": "en",
+        "track_id": 28,
+        "speaker_names": "Leonard",
+        "abstract": "<p>The character of drone wars has changed. The large, cumbersome long-range drones have been complemented with small and low-budget drones. Moreover, more and more states are developing, deploying and selling them. Ten years ago at least 50 states were developing them. At the top are USA, Israel, Turkey, China, Iran and Russia.</p> <p>Russia's attack on Ukraine has unleashed a drone war unlike any seen before. In short time the Ukraine has build significant drone production capabilities and announcement that it will increase its own production of quadcopters and kamikaze drones to one million units per year.</p> <p>German defense companies and startups are now promoting a \u201cdrone wall on NATO's eastern flank.\u201d Moreover, despite their vulnerability to air defenses, large drones are also being further developed. They are intended to accompany next generation fighter jets in swarms.</p> <p>In this talk, past and current developments are discussed. What are the perspectives now?</p>"
+    },
+    {
+        "title": "Liberating Bluetooth on the ESP32",
+        "duration": 2400,
+        "event_id": "ZADHHE",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "Antonio V\u00e1zquez Blanco (Ant\u00f3n)",
+        "abstract": "<p>Despite how widely used the ESP32 is, its Bluetooth stack remains closed source. Let\u2019s dive into the low-level workings of a proprietary Bluetooth peripheral. Whether you are interested in reverse engineering, Bluetooth security, or just enjoy poking at undocumented hardware, this talk may inspire you to dig deeper.</p>"
+    },
+    {
+        "title": "Power Cycles statt Burnout \u2013 Wie Einflussnahme nicht verpufft",
+        "duration": 2400,
+        "event_id": "ZCN7PG",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Rahel Becker, Anna Kassautzki",
+        "abstract": "<p>Zwischen offenen Briefen, Massenmails, Petitionen und Kaffee trinken : Zwei Ex-Insiderinnen aus dem Digitalausschuss und Bundestag erz\u00e4hlen, wie politische Einflussnahme wirklich funktioniert. Ein ehrlicher Blick hinter die Kulissen parlamentarischer Entscheidungsfindung \u2013 mit praktischen Tipps, wie die Zivilgesellschaft ihre Energie dort einsetzt, wo sie wirklich Wirkung entfaltet.</p>"
+    },
+    {
+        "title": "Schlechte Karten - IT-Sicherheit im Jahr null der ePA f\u00fcr alle",
+        "duration": 3600,
+        "event_id": "ZG8SZ9",
+        "language": "de",
+        "track_id": 31,
+        "speaker_names": "Bianca Kastl",
+        "abstract": "<p>Seit Mitte 2025 steht die elektronische Patientenakte f\u00fcr alle zur Verf\u00fcgung \u2013 nach ein paar kleineren oder gr\u00f6\u00dferen Sicherheitsproblemen im Vorfeld, sei es vor einem Jahr auf dem 38C3 oder Ende April zum deutschlandweiten Start. Zeit ein Fazit zu ziehen: Ist die ePA jetzt sicher? Wurden nachhaltige Ver\u00e4nderungen durchgef\u00fchrt, die zu mehr Sicherheit f\u00fchren? Kann der Umgang mit der IT-Sicherheit \u00abeines der gr\u00f6\u00dften IT-Projekte der Bundesrepublik\u00bb f\u00fcr zuk\u00fcnftige Digitalprojekte hilfreich sein?</p> <p>Zeit, mit etwas Abstand auf das zu blicken, was war, was ist und was sich abzeichnet nicht nur bei der ePA, sondern auch beim Umgang mit IT-Sicherheit bei \u00e4hnlichen Vorhaben in Deutschland. Eine umfassende Analyse der Historie und der Ursachen einer der weitreichendsten Fehlentwicklungen im Bereich der IT-Sicherheit der letzten Jahre, die sich in weit mehr zeigt, als nur in schlechter Pr\u00fcfung der Anwesenheit von Gesundheitskarten im Gesundheitswesen.</p>"
+    },
+    {
+        "title": "Reverse engineering the Pixel TitanM2 firmware",
+        "duration": 2400,
+        "event_id": "ZH8KQV",
+        "language": "en",
+        "track_id": 32,
+        "speaker_names": "willem",
+        "abstract": "<p>The TitanM2 chip has been central to the security of the google pixel series since the Pixel 6. It is based on a modified RISC-V design with a bignum accelerator. Google added some non standard instructions to the RISC-V ISA. This talk investigates the reverse engineering using Ghidra, and simulation of the firmware in python.</p>"
+    },
+    {
+        "title": "Of Boot Vectors and Double Glitches: Bypassing RP2350's Secure Boot",
+        "duration": 3600,
+        "event_id": "ZLNZUS",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "stacksmashing, nsr",
+        "abstract": "<p>In August 2024, Raspberry Pi released their newest MCU: The RP2350. Alongside the chip, they also released the RP2350 Hacking Challenge: A public call to break the secure boot implementation of the RP2350. This challenge concluded in January 2025 and led to five exciting attacks discovered by different individuals.</p> <p>In this talk, we will provide a technical deep dive in the RP2350 security architecture and highlight the different attacks. Afterwards, we talk about two of the breaks in detail---each of them found by one of the speakers. In particular, we first discuss how fault injection can force an unverified vector boot, completely bypassing secure boot. Then, we showcase how double glitches enable direct readout of sensitive secrets stored in the one-time programmable memory of the RP2350.</p> <p>Last, we discuss the mitigation of the attacks implemented in the new revision of the chip and the lessons we learned while solving the RP2350 security challenge. Regardless of chip designer, manufacturer, hobbyist, tinkerer, or hacker: this talk will provide valuable insights for everyone and showcase why security through transparency is awesome.</p>"
+    },
+    {
+        "title": "Race conditions, transactions and free parking",
+        "duration": 2400,
+        "event_id": "ZUJZDY",
+        "language": "en",
+        "track_id": 31,
+        "speaker_names": "Benjamin W. Broersma",
+        "abstract": "<p>ORM's and/or developers don't understand databases, transactions, or concurrency.</p>"
+    },
+    {
+        "title": "Programmierte Kriegsverbrechen? \u00dcber KI-Systeme im Kriegseinsatz in Gaza und warum IT-Fachleute sich dazu \u00e4u\u00dfern m\u00fcssen",
+        "duration": 3600,
+        "event_id": "ZZZHYE",
+        "language": "de",
+        "track_id": 28,
+        "speaker_names": "Rainer Rehak",
+        "abstract": "<p>Die automatisierten Zielsysteme des israelischen Milit\u00e4rs zeigen gut, wie KI-baserte Kriegsautomatisierung aktuell aussieht, was daran falsch l\u00e4uft und warum wir Techies uns einmischen m\u00fcssen</p>
+        ,    }
+]
