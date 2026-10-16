@@ -33,7 +33,7 @@
       },
       "defaults": {
         "theme": "dark",
-        "language": "en"
+        "languages": ["en"]
       },
       "tracks": [
         {
@@ -264,7 +264,7 @@
         "slug": "38c3-opening-ceremony",
         "title": "38C3: Opening Ceremony",
         "subtitle": null,
-        "language": "en",
+        "languages": ["en"],
         "track": {
           "slug": "ccc"
         },
@@ -299,7 +299,7 @@
         "slug": "38c3-a-competitive-time-trial-ai-for-need-for-speed",
         "title": "A Competitive Time-Trial AI for Need for Speed:",
         "subtitle": "Most Wanted Using Deep Reinforcement Learning",
-        "language": "en",
+        "languages": ["en"],
         "track": {
           "slug": "hardware-making"
         },

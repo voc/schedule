@@ -395,11 +395,12 @@
             "OTHER"
           ]
         },
-        "language": {
-          "oneOf": [
-            { "$ref": "#/definitions/Language" },
-            { "type": "null" }
-          ]
+        "languages": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string",
+            "$ref": "#/definitions/Language"
+          }
         },
         "abstract": {
           "$ref": "#/definitions/LocalizableString"
@@ -445,7 +446,6 @@
       "required": [
         "abstract",
         "guid",
-        "language",
         "participants",
         "subtitle",
         "title",
@@ -510,7 +510,7 @@
     "PublishedEvent": {
       "$comment": "Additional constraints for events in a non-DRAFT schedule, applied from Schedule. DRAFT schedules (e.g. Halfnarp) may omit room/location, links and participant guids.",
       "type": "object",
-      "required": ["links"],
+      "required": ["links", "languages"],
       "properties": {
         "participants": {
           "items": { "required": ["guid"] }
