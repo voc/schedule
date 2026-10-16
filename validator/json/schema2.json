@@ -71,7 +71,16 @@
           }
         }
       },
-      "required": ["conference", "events", "persons", "version"]
+      "required": ["conference", "events", "version"],
+      "allOf": [
+        {
+          "$comment": "Only DRAFT schedules may omit the persons list.",
+          "if": {
+            "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
+          },
+          "then": { "required": ["persons"] }
+        }
+      ]
     },
     "Conference": {
       "type": "object",
