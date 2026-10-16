@@ -79,6 +79,22 @@
             "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
           },
           "then": { "required": ["persons"] }
+        },
+        {
+          "$comment": "Outside DRAFT schedules, every non-meta event must satisfy PublishedEvent.",
+          "if": {
+            "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
+          },
+          "then": {
+            "properties": {
+              "events": {
+                "items": {
+                  "if": { "required": ["type"], "properties": { "type": { "enum": ["BREAK", "META"] } } },
+                  "else": { "$ref": "#/definitions/PublishedEvent" }
+                }
+              }
+            }
+          }
         }
       ]
     },
@@ -430,7 +446,6 @@
         "abstract",
         "guid",
         "language",
-        "links",
         "participants",
         "subtitle",
         "title",
@@ -439,7 +454,7 @@
       ],
       "allOf": [
         {
-          "$comment": "An event takes place either in a room or at a location, never both. Only DRAFT events may have neither.",
+          "$comment": "An event takes place either in a room or at a location, never both. Requiring one of them is enforced by PublishedEvent.",
           "not": { "required": ["room", "location"] },
           "if": {
             "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
@@ -490,7 +505,21 @@
           "description": "Person UUID generated from email address via uuid5(NS_URL, 'acct:user@domain.tld') or random uuid4() if email not available"
         }
       },
-      "required": ["guid", "name"]
+      "required": ["name"]
+    },
+    "PublishedEvent": {
+      "$comment": "Additional constraints for events in a non-DRAFT schedule, applied from Schedule. DRAFT schedules (e.g. Halfnarp) may omit room/location, links and participant guids.",
+      "type": "object",
+      "required": ["links"],
+      "properties": {
+        "participants": {
+          "items": { "required": ["guid"] }
+        }
+      },
+      "if": {
+        "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
+      },
+      "then": { "anyOf": [{ "required": ["room"] }, { "required": ["location"] }] }
     },
     "MetaEvent": {
       "type": "object",
