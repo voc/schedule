@@ -29,6 +29,11 @@ jobs:
         check-jsonschema --schemafile validator/json/schema2.json \
           validator/json/examples/*-schedule2.json
 
+    - name: Run schema2 rule tests
+      run: |
+        pip install pytest jsonschema
+        pytest validator/json
+
     - name: Validate schedule1-json examples against schema1
       run: |
         check-jsonschema --schemafile validator/json/schema.json \
