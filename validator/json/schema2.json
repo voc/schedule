@@ -38,6 +38,15 @@
         "version": {
           "type": "string"
         },
+        "state": {
+          "description": "The state of the schedule, indicating whether it is a draft or has been published.",
+          "type": "string",
+          "enum": [
+            "DRAFT",
+            "PUBLISHED",
+            "ARCHIVED"
+          ]
+        },
         "baseUrl": {
           "description": "Base URL for the conference schedule system",
           "type": "string",
