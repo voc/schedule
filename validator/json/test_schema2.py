@@ -195,6 +195,13 @@ def test_meta_event_in_published_schedule_needs_no_links_or_room(published):
     assert_valid(published)
 
 
+# --- event state -------------------------------------------------------------------
+
+def test_unknown_event_state_is_rejected(published):
+    published['schedule']['events'][0]['state'] = 'FOO'
+    assert_invalid(published, "'FOO' is not valid under any of the given schemas")
+
+
 # --- start / end / duration --------------------------------------------------------
 
 def test_duration_with_start_and_end_is_rejected(published):
@@ -209,7 +216,12 @@ def test_duration_requires_pre_schedule_state(draft):
 
 def test_duration_with_confirmed_state_is_rejected(draft):
     draft['schedule']['events'][0]['state'] = 'CONFIRMED'
-    assert_invalid(draft, "is not one of ['DRAFT', 'SUBMITTED', 'ACCEPTED', 'REJECTED']")
+    assert_invalid(draft, "is not one of ['DRAFT', 'SUBMITTED', 'WITHDRAWN', 'ACCEPTED', 'REJECTED']")
+
+
+def test_duration_with_withdrawn_state_is_valid(draft):
+    draft['schedule']['events'][0]['state'] = 'WITHDRAWN'
+    assert_valid(draft)
 
 
 def test_duration_must_be_iso8601(draft):

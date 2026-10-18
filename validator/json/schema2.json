@@ -431,16 +431,16 @@
           "type": "string",
           "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when it got canceled or delayed. Missing, empty or null means CONFIRMED. Initally based on https://docs.pretalx.org/user/sessions/#session-lifecycle",
           "default": "CONFIRMED",
-          "enum": [
-            "DRAFT",
-            "SUBMITTED",
-            "ACCEPTED",
-            "REJECTED",
-            "CONFIRMED",
-            "DELAYED",
-            "CANCELED",
-            "WITHDRAWN",
-            "DELETED"
+          "oneOf": [
+            { "const": "DRAFT", "description": "Not submitted yet, still being prepared by the submitter." },
+            { "const": "SUBMITTED", "description": "Submitted and waiting for review by curation team." },
+            { "const": "ACCEPTED", "description": "Accepted by organizer, but not yet confirmed by the speakers." },
+            { "const": "REJECTED", "description": "Initial Submission was rejected by organizer curation team (for the selected track)." },
+            { "const": "WITHDRAWN", "description": "Withdrawn by the submitter before it was placed in schedule." },
+            { "const": "CONFIRMED", "description": "Confirmed by the speakers and takes place as scheduled." },
+            { "const": "DELAYED", "description": "Takes place, but later (≥5 minutes) than initially scheduled e.g. due technical issues." },
+            { "const": "CANCELED", "description": "Was scheduled, but will not take place. Schedule consumers should still display it, but strike through the event." },
+            { "const": "DELETED", "description": "Removed from the schedule for other reasons; consumers should hide it." }
           ]
         }
       },
@@ -468,7 +468,7 @@
           },
           "then": {
             "required": ["state"],
-            "properties": { "state": { "enum": ["DRAFT", "SUBMITTED", "ACCEPTED", "REJECTED"] } }
+            "properties": { "state": { "enum": ["DRAFT", "SUBMITTED", "WITHDRAWN", "ACCEPTED", "REJECTED"] } }
           }
         },
         {
