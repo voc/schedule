@@ -388,6 +388,7 @@
             "HANDS-ON",
             "MEETING",
             "DISCUSSION",
+            "CEREMONY",
             "PERFORMANCE",
             "CONCERT",
             "GAME",
@@ -428,7 +429,7 @@
         },
         "state": {
           "type": "string",
-          "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when it got canceled or delayed. Missing, empty or null means CONFIRMED.",
+          "description": "Current state of the event, e.g. during submission phase, or the actual conference. It represents the current state of the event in the real world e.g. when it got canceled or delayed. Missing, empty or null means CONFIRMED. Initally based on https://docs.pretalx.org/user/sessions/#session-lifecycle",
           "default": "CONFIRMED",
           "enum": [
             "DRAFT",
@@ -455,11 +456,7 @@
       "allOf": [
         {
           "$comment": "An event takes place either in a room or at a location, never both. Requiring one of them is enforced by PublishedEvent.",
-          "not": { "required": ["room", "location"] },
-          "if": {
-            "not": { "required": ["state"], "properties": { "state": { "const": "DRAFT" } } }
-          },
-          "then": { "anyOf": [{ "required": ["room"] }, { "required": ["location"] }] }
+          "not": { "required": ["room", "location"] }
         },
         {
           "$comment": "An event not fully scheduled (it has a duration, or a start without an end) needs an explicit pre-schedule state.",
